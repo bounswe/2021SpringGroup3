@@ -1,5 +1,5 @@
 # Boun Swe 2021 Group 3
-This is the project repository of Group 3 from Software Engineering Course.
+This is the project repository of Group 3 from Software Engineering Course. You may reach additional information from our [wiki](https://github.com/bounswe/2021SpringGroup3/wiki) page.
 
 ### Team Members
 * [Kıymet Akdemir](https://github.com/bounswe/2021SpringGroup3/wiki/K%C4%B1ymet-Akdemir)
