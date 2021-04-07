@@ -1,7 +1,7 @@
 # CMPE 352 2021 Group 3
 This is the project repository of Group 3 from Software Engineering Course. You may reach additional information from our [wiki](https://github.com/bounswe/2021SpringGroup3/wiki) page.
 
-### Our Project
+## Our Project
 Our project aims to provide cumulative data flow about various range topics and fields that people desire to dive into. With our application, people will find the information they wish, in centralized community structures that they can create, join and follow.  
 
 For additional details of the platform, look at the [Project Description](https://github.com/bounswe/2021SpringGroup3/blob/master/ProjectDescription.pdf).  
