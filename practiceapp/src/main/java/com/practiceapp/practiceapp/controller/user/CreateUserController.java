@@ -28,7 +28,7 @@ public class CreateUserController {
         return null;
     }
 
-    @RequestMapping(path = "/userName",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
     public UserEntity getUserByName(@RequestParam String userName){
        return userService.getByUserName(userName);
     }

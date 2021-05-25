@@ -14,7 +14,7 @@ public class UserService {
 
     public String saveUser(UserEntity userEntity){
         UserEntity user = userRepository.save(userEntity);
-        return "Succes";
+        return "Success";
     }
 
     public UserEntity getByUserName(String userName) {
