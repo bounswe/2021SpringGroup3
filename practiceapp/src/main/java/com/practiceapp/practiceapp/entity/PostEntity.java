@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @ToString
@@ -16,6 +17,6 @@ import java.util.Set;
 @Document(collection = "posts")
 public class PostEntity {
 
-    private Set<PostEntity> communities;
+    private List<CommunityEntity> communities = new ArrayList<>();
 
 }

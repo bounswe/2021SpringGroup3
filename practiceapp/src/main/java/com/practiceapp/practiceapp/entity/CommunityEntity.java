@@ -9,8 +9,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @ToString
@@ -42,10 +42,10 @@ public class CommunityEntity {
     @Field
     private String city;
 
-    private Set<String> topics = new HashSet<>();
+    private List<String> topics = new ArrayList<>();
 
-    private Set<UserEntity> members = new HashSet<>();
-
-    private Set<PostEntity> posts = new HashSet<>();
+    // References to users and posts:
+    private List<UserEntity> members = new ArrayList<>();
+    private List<PostEntity> posts = new ArrayList<>();
 
 }
