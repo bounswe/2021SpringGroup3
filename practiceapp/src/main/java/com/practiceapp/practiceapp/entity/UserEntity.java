@@ -9,6 +9,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @ToString
 @AllArgsConstructor
@@ -25,4 +28,10 @@ public class UserEntity {
 
     @Field
     private String email;
+
+    private List<CommunityEntity> joined_communities = new ArrayList<>();
+
+    private List<CommunityEntity> created_communities = new ArrayList<>();
+
+
 }
