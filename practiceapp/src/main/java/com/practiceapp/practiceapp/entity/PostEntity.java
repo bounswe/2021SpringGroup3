@@ -35,7 +35,7 @@ public class PostEntity {
     private String location;
 
     @Field
-    private String author_id;
+    private UserEntity author;
 
     @Field
     private List<CommunityEntity> communities = new ArrayList<>();
