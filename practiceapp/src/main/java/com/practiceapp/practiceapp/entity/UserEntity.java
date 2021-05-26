@@ -9,6 +9,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @ToString
 @AllArgsConstructor
@@ -25,4 +28,10 @@ public class UserEntity {
 
     @Field
     private String email;
+
+    private Set<CommunityEntity> joined_communities = new HashSet<>();
+
+    private Set<CommunityEntity> created_communities = new HashSet<>();
+
+
 }
