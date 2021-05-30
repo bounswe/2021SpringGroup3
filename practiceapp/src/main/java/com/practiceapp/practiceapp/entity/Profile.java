@@ -1,6 +1,5 @@
 package com.practiceapp.practiceapp.entity;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,32 +8,32 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "users")
-public class UserEntity {
+@Document(collection = "profiles")
+public class Profile {
 
     @Id
     @Field
     private String id;
 
     @Field
-    private String username;
+    private String name;
 
     @Field
-    private String email;
+    private String description;
 
     @Field
-    private String profileId;
+    private boolean isPublic = true;
 
-    private List<CommunityEntity> joined_communities = new ArrayList<>();
+    @Field
+    private String photo;
 
-    private List<CommunityEntity> created_communities = new ArrayList<>();
+    @Field
+    private boolean isPhotoPublic = true;
 
 
 }
