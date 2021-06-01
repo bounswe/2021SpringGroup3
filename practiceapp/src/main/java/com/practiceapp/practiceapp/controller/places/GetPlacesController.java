@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/places")
 public class GetPlacesController {
@@ -18,7 +20,7 @@ public class GetPlacesController {
     private PostService postService;
 
     @RequestMapping(path = "/{input}",method = RequestMethod.GET)
-    public ResponseEntity<String> getPlaces(@PathVariable("input") String input) throws UnirestException {
+    public ResponseEntity<List<String>> getPlaces(@PathVariable("input") String input) throws UnirestException {
         return ResponseEntity.ok(postService.getPlaces(input));
     }
 

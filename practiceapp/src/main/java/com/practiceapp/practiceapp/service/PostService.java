@@ -20,12 +20,24 @@ public class PostService {
     @Autowired
     private PlacesApi placesApi;
 
+
+    /**
+     * Saves the given post entity to database
+     * @param postEntity to be created
+     * @return success code
+     */
     public int savePost(PostEntity postEntity){
         postRepository.save(postEntity);
         return 1;
     }
 
-    public String getPlaces(String input) throws UnirestException {
+    /**
+     * Calls third party Places API of Google with given input location
+     * @param input is the location to search by text
+     * @return the list of locations possible with given inputs
+     * @throws UnirestException
+     */
+    public List<String> getPlaces(String input) throws UnirestException {
         return placesApi.getPlaces(input);
     }
 
