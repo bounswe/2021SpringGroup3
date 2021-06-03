@@ -28,12 +28,5 @@ public class UserService {
         return userRepository.getById(id);
     }
 
-    public UserEntity joinCommunity(UserEntity user, CommunityEntity community){
-        List<CommunityEntity> joinedCommunities= user.getJoined_communities();
-        joinedCommunities.add(community);
-        user.setJoined_communities(joinedCommunities);
-        userRepository.save(user);
 
-        return user;
-    }
 }

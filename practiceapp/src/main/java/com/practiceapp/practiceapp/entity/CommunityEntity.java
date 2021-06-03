@@ -1,11 +1,13 @@
 package com.practiceapp.practiceapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -45,7 +47,12 @@ public class CommunityEntity {
     private List<String> topics = new ArrayList<>();
 
     // References to users and posts:
+    @JsonBackReference
+    @DBRef(lazy = true)
     private List<UserEntity> members = new ArrayList<>();
+
+    @JsonBackReference
+    @DBRef(lazy = true)
     private List<PostEntity> posts = new ArrayList<>();
 
 }

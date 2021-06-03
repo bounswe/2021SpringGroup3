@@ -18,12 +18,4 @@ public class CommunityService {
         return communityRepository.getById(id);
     }
 
-    public CommunityEntity addUser(UserEntity user, CommunityEntity community) {
-        List<UserEntity> members = community.getMembers();
-        members.add(user);
-        community.setMembers(members);
-        communityRepository.save(community);
-
-        return community;
-    }
 }
