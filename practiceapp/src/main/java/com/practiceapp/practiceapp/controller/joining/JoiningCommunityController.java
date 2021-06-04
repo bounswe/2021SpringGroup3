@@ -1,4 +1,4 @@
-package com.practiceapp.practiceapp.controller.user;
+package com.practiceapp.practiceapp.controller.joining;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.practiceapp.practiceapp.entity.CommunityEntity;

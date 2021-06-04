@@ -24,23 +24,34 @@ public class JoiningCommunityService {
     private AdviceApi adviceApi;
 
     public String joinCommunity(String user_id, String community_id){
+        // Retrieving the entities
         UserEntity user = userRepository.getById(user_id);
         CommunityEntity community = communityRepository.getById(community_id);
 
+        // If there is an entity that does not exist in the database, return "Fail"
         if(user == null || community == null){
             return "Fail";
         }
 
-        //Adding the community to the user's joinedCommunity list
+        // Retrieving the joined communities list
         List<CommunityEntity> joinedCommunities = user.getJoined_communities();
+
+        // Checking if the community does not exist in the list
         if(!joinedCommunities.contains(community))
             joinedCommunities.add(community);
+
+        // Setting the new community list
         user.setJoined_communities(joinedCommunities);
         userRepository.save(user);
 
+        // Retrieving the members list
         List<UserEntity> members = community.getMembers();
+
+        // Checking if the user does not exist in the list
         if(!members.contains(user))
             members.add(user);
+
+        // Setting the new members list
         community.setMembers(members);
         communityRepository.save(community);
 

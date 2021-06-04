@@ -11,6 +11,7 @@ public class AdviceApi {
 
     private String base_url = "https://api.adviceslip.com/";
 
+    //Returns a random advice
     public String getAdvice(){
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(base_url + "advice",String.class);
@@ -18,6 +19,7 @@ public class AdviceApi {
         return response.getBody();
     }
 
+    //Returns a list of advices with the given keyword
     public String searchAdvice(String query){
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(base_url + "advice/search/" + query,String.class);
