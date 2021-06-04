@@ -25,25 +25,9 @@ public class JoiningCommunityController {
     private JoiningCommunityService joiningCommunityService;
 
     @ApiOperation(value="Joining Community", notes="Community will be added to the user's joined communities list and the user will be added to the community's members list.", response = String.class)
-    @RequestMapping(path = "/{user_id}_{community_id}", method = RequestMethod.PUT)
+    @RequestMapping(path = "/{user_id}/{community_id}", method = RequestMethod.PUT)
     public String joiningCommunity(@PathVariable("user_id") String user_id, @PathVariable("community_id") String community_id){
         return joiningCommunityService.joinCommunity(user_id,community_id);
     }
-
-    @ApiOperation(value="Getting an advice", notes="This API call will return a random advice in json format.", response = String.class)
-    @RequestMapping(path = "/getadvice", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getAdvice(){
-        return joiningCommunityService.getAdvice();
-    }
-
-    @ApiOperation(value="Searching advices with a keyword", notes="This API call will return a list of advices with the given keyword in json format.", response = String.class)
-    @RequestMapping(path = "/searchadvice/{query}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String searchAdvice(@PathVariable("query") String query){
-        return joiningCommunityService.searchAdvice(query);
-    }
-
-
-
-
 
 }
