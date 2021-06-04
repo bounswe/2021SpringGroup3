@@ -21,8 +21,8 @@ public class GetPostsController {
     @Autowired
     private CommunityService communityService;
 
-    @RequestMapping(path = "/posts",method = RequestMethod.GET)
-    public List<PostEntity> getPosts(@RequestParam String communityid){
+    @RequestMapping(path = "/posts/{communityid}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PostEntity> getPosts(@PathVariable("communityid") String communityid){
         return communityService.getPosts(communityid);
     }
 
