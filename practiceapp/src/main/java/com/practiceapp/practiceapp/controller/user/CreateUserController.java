@@ -30,7 +30,7 @@ public class CreateUserController {
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserEntity getUser(@PathVariable("id") String id){
-        return null;
+        return userService.getById(id);
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

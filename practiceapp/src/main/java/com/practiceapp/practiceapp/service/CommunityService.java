@@ -10,9 +10,9 @@ import com.practiceapp.practiceapp.utils.DictionaryApi;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import com.practiceapp.practiceapp.entity.CommunityEntity;
+import com.practiceapp.practiceapp.entity.UserEntity;
 import com.practiceapp.practiceapp.repository.CommunityRepository;
 import com.practiceapp.practiceapp.utils.DetectLanguageApi;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +25,16 @@ public class CommunityService {
     @Autowired
     private CommunityRepository communityRepository;
 
+    public CommunityEntity getById(String id){
+        return communityRepository.getById(id);
+    }
+
     @Autowired
     private DictionaryApi dictionaryApi;
-  
+
     @Autowired
     private DetectLanguageApi detectLanguageApi;
-    
+
     /**
     *Gets the posts of given community
     *
@@ -40,7 +44,7 @@ public class CommunityService {
     public List<PostEntity> getPosts(String id){
         return communityRepository.findById(id).get().getPosts();
     }
-  
+
     /**
     *Communicates with "http://dictionaryapi.dev" dictionary api
     *
