@@ -36,15 +36,15 @@ public class UserEntity {
     @DBRef(lazy = true)
     private Profile profile;
 
-    //@JsonManagedReference annotation here is to resolve the infinite loop issue (which ends up in stack overflow error) when trying to load a user or a community
+    //@JsonIgnore annotation here is to resolve the infinite loop issue (which ends up in stack overflow error) when trying to load a user or a community
     // The reasoning is that, when trying to load a user, it tries to load the dbref for the community in its joined communities list, and when trying to load that community,
     // it tries to load the dbref for the user in its members list. This goes on forever and ends up in an infinite loop.
 
-    @JsonManagedReference
+    @JsonIgnore
     @DBRef(lazy = true)
     private List<CommunityEntity> joined_communities = new ArrayList<>();
 
-    @JsonManagedReference
+    @JsonIgnore
     @DBRef(lazy = true)
     private List<CommunityEntity> created_communities = new ArrayList<>();
 

@@ -29,9 +29,18 @@ public class UserService {
         return userRepository.getByUsername(userName);
     }
 
+
+
     public UserEntity getById(String id){
         return userRepository.getById(id);
     }
 
 
+    public List<CommunityEntity> getUserJoinedCommunitiesByName(String userName) {
+        return userRepository.getByUsername(userName).getJoined_communities();
+    }
+
+    public List<CommunityEntity> getUserCreatedCommunitiesByName(String userName) {
+        return userRepository.getByUsername(userName).getCreated_communities();
+    }
 }

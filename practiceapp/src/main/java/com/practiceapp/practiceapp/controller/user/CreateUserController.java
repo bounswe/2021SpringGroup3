@@ -1,6 +1,7 @@
 package com.practiceapp.practiceapp.controller.user;
 
 
+import com.practiceapp.practiceapp.entity.CommunityEntity;
 import com.practiceapp.practiceapp.entity.Profile;
 import com.practiceapp.practiceapp.entity.UserEntity;
 import com.practiceapp.practiceapp.service.ProfileService;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/user")
@@ -36,6 +38,16 @@ public class CreateUserController {
     @RequestMapping(path = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserEntity getUserByName(@RequestParam String userName){
        return userService.getByUserName(userName);
+    }
+
+    @RequestMapping(path = "/joinedcommunities", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CommunityEntity> getUserJoinedCommunitiesByName(@RequestParam String userName){
+        return userService.getUserJoinedCommunitiesByName(userName);
+    }
+
+    @RequestMapping(path = "/createdcommunities", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CommunityEntity> getUserCreatedCommunitiesByName(@RequestParam String userName){
+        return userService.getUserCreatedCommunitiesByName(userName);
     }
 
     @RequestMapping(path = "/updateProfile", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
