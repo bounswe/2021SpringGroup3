@@ -1,11 +1,13 @@
 package com.practiceapp.practiceapp.controller.user;
 
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.practiceapp.practiceapp.entity.UserEntity;
 import com.practiceapp.practiceapp.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,6 +34,5 @@ public class CreateUserController {
     public UserEntity getUserByName(@RequestParam String userName){
        return userService.getByUserName(userName);
     }
-
 
 }
