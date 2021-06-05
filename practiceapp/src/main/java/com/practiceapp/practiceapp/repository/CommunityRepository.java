@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface CommunityRepository extends MongoRepository<CommunityEntity, String> {
 
     CommunityEntity getByName(String name);
+    CommunityEntity getById(String id);
 }

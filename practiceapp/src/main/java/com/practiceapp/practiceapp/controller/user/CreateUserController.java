@@ -20,23 +20,19 @@ public class CreateUserController {
     private UserService userService;
 
     @ApiOperation(value="Save User",notes="User can be verify by verification token",response=String.class)
-    @RequestMapping(path = "/save",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/save", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public String saveUser(@Valid @RequestBody UserEntity userEntity){
         return userService.saveUser(userEntity);
     }
 
-    @RequestMapping(path = "/{id}",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserEntity getUser(@PathVariable("id") String id){
-        return null;
+        return userService.getById(id);
     }
 
-    @RequestMapping(path = "/",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserEntity getUserByName(@RequestParam String userName){
        return userService.getByUserName(userName);
     }
 
-    @RequestMapping(path = "/lyrics/{artist}/{title}",method = RequestMethod.GET)
-    public ResponseEntity<String> getLyrics(@PathVariable("artist") String artist, @PathVariable("title") String title) throws UnirestException {
-        return ResponseEntity.ok(userService.getLyrics(artist,title));
-    }
 }
