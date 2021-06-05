@@ -63,14 +63,6 @@ public class CommunityEntity {
 
     // References to users and posts:
 
-    public List<UserEntity> getMembers() {
-        return members;
-    }
-
-    public List<PostEntity> getPosts() {
-        return posts;
-    }
-
     @DBRef(lazy=true)
     @JsonIgnore
     @ApiModelProperty(
