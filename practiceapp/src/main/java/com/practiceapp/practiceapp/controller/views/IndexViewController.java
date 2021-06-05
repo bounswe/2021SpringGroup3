@@ -7,12 +7,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/home")
 public class IndexViewController {
 
-    private String placesUrl = "http://localhost:9090/home/places/ist";
+    private String baseUrl = "/home/";
 
-    @GetMapping("/")
+    private String placesUrl = baseUrl + "places/ist";
+
+
+
+    //private String adviceUrl = ""
+
+    @GetMapping(path= "/home")
     public String getIndex(Model model){
 
         model.addAttribute("places",placesUrl);
