@@ -2,7 +2,6 @@ package com.practiceapp.practiceapp.controller.user;
 
 
 import com.practiceapp.practiceapp.entity.CommunityEntity;
-import com.practiceapp.practiceapp.entity.Profile;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.practiceapp.practiceapp.entity.UserEntity;
 import com.practiceapp.practiceapp.service.UserService;
