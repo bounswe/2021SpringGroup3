@@ -1,8 +1,8 @@
 package com.practiceapp.practiceapp.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mongodb.lang.Nullable;
+import io.swagger.annotations.ApiModelProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.validation.constraints.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,44 +27,61 @@ public class CommunityEntity {
 
     @Id
     @Field
+    @ApiModelProperty(
+            notes = "The database generated community ID",
+            hidden = true)
     private String id;
 
     @Field
-    @NotNull
+    @NotNull(message="Community name can not be null")
+    @ApiModelProperty(
+            required = true,
+            value = "Name of the community",
+            example = "CmpE352")
     private String name;
 
     @Field
-    @NotNull
+    @NotNull(message="Community description can not be null")
+    @ApiModelProperty(
+            required = true,
+            value = "Description of the community",
+            example = "Community about the fundamentals of software engineering")
     private String description;
 
     @Field
-    // Communities are public by default
-    private boolean isPublic = true;
+    @ApiModelProperty(
+            value = "Privacy setting of the community",
+            notes= "Communities are public by default")
+    private boolean publicity = true;
 
     @Field
+    @ApiModelProperty(
+            value = "Preferred language in the community",
+            example = "")
     private String language;
 
-    @Field
-    @Nullable
-    private String country;
-
-    @Field
-    @Nullable
-    private String city;
-
-    private List<String> topics = new ArrayList<>();
-
-    //@JsonIgnore annotation here is to resolve the infinite loop issue (which ends up in stack overflow error) when trying to load a user or a community
-    // The reasoning is that, when trying to load a user, it tries to load the dbref for the community in its joined communities list, and when trying to load that community,
-    // it tries to load the dbref for the user in its members list. This goes on forever and ends up in an infinite loop.
-
     // References to users and posts:
+
+    public List<UserEntity> getMembers() {
+        return members;
+    }
+
+    public List<PostEntity> getPosts() {
+        return posts;
+    }
+
+    @DBRef(lazy=true)
     @JsonIgnore
-    @DBRef(lazy = true)
+    @ApiModelProperty(
+            value = "Members of the community",
+            hidden = true)
     private List<UserEntity> members = new ArrayList<>();
 
+    @DBRef(lazy=true)
     @JsonIgnore
-    @DBRef(lazy = true)
+    @ApiModelProperty(
+            value = "Posts of the community",
+            hidden = true)
     private List<PostEntity> posts = new ArrayList<>();
 
 }

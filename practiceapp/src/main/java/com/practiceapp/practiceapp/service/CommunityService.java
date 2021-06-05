@@ -1,5 +1,6 @@
 package com.practiceapp.practiceapp.service;
 
+
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.practiceapp.practiceapp.entity.CommunityEntity;
@@ -13,11 +14,14 @@ import com.practiceapp.practiceapp.entity.CommunityEntity;
 import com.practiceapp.practiceapp.entity.UserEntity;
 import com.practiceapp.practiceapp.repository.CommunityRepository;
 import com.practiceapp.practiceapp.utils.DetectLanguageApi;
+import com.practiceapp.practiceapp.utils.UniversitiesListApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+
+import java.util.List;
 
 @Service
 public class CommunityService {
@@ -35,6 +39,18 @@ public class CommunityService {
     @Autowired
     private DetectLanguageApi detectLanguageApi;
 
+  
+    @Autowired
+    private UniversitiesListApi universitiesListApi;
+    
+    /*
+      Gets a community by name. name is the name of the requested community. Returns corresponding community entity.
+    */
+    public CommunityEntity getByName(String name)
+    {
+        return communityRepository.getByName(name);
+    }
+  
     /**
     *Gets the posts of given community
     *
@@ -67,6 +83,28 @@ public class CommunityService {
         return communityRepository.save(communityEntity);
     }
 
+
+    /**
+     * Interacts with community repository to create community
+     *
+     * @String name of the community
+     * @return whether community with specified name exists
+     */
+    public boolean exists(String name){
+        return communityRepository.getByName(name) != null;
+    }
+
+    /**
+     * Interacts with community repository to get communities with specified publicity
+     *
+     * @param isPublic publicity of community
+     * @return List of private/public communities
+     */
+    public List<CommunityEntity> findByPublicity(Boolean isPublic){
+        return communityRepository.findAllByPublicity(isPublic);
+    }
+
+
     /**
      * Communicates with third-party <a href="https://detectlanguage.com/">Detect Language API</a>
      *
@@ -79,6 +117,7 @@ public class CommunityService {
         return detectLanguageApi.detectLanguage(text);
     }
 
+
     /**
      * Communicates with third-party <a href="https://detectlanguage.com/">Detect Language API</a>
      *
@@ -89,5 +128,14 @@ public class CommunityService {
     public String getALlLanguages(){
         return detectLanguageApi.getAllLanguages();
     }
+  
+    /*
+      Gets the list of universities of a given country via third-party api. country is the name of the requested country. Returns a list of universities as string.
+    */
+    public String getUniversitiesList(String country) throws UnirestException
+    {
+        return universitiesListApi.getUniversitiesList(country);
+    }
+
 
 }
