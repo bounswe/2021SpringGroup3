@@ -21,6 +21,9 @@ public class PostService {
     @Autowired
     private KanyeRestApi kanyeRestApi;
 
+    @Autowired
+    private PlacesApi placesApi;
+
     public PostEntity updatePost(PostEntity postEntity){
         PostEntity post = postRepository.save(postEntity);
         return post;
@@ -29,9 +32,6 @@ public class PostService {
     public String getRandomKanyeQuote() throws UnirestException {
         return kanyeRestApi.getRandomKanyeQuote();
     }
-    
-    @Autowired
-    private PlacesApi placesApi;
 
     /**
      * Saves the given post entity to database
