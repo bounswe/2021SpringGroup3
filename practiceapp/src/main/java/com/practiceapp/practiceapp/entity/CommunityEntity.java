@@ -1,7 +1,7 @@
 package com.practiceapp.practiceapp.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 
 import lombok.AllArgsConstructor;
@@ -36,9 +36,9 @@ public class CommunityEntity {
     @Field
     @NotNull(message="Community name can not be null")
     @ApiModelProperty(
-                required = true,
-                value = "Name of the community",
-                example = "CmpE352")
+            required = true,
+            value = "Name of the community",
+            example = "CmpE352")
     private String name;
 
     @Field
@@ -63,15 +63,23 @@ public class CommunityEntity {
 
     // References to users and posts:
 
+    public List<UserEntity> getMembers() {
+        return members;
+    }
+
+    public List<PostEntity> getPosts() {
+        return posts;
+    }
+
     @DBRef(lazy=true)
-    @JsonBackReference(value="members")
+    @JsonIgnore
     @ApiModelProperty(
             value = "Members of the community",
             hidden = true)
     private List<UserEntity> members = new ArrayList<>();
 
     @DBRef(lazy=true)
-    @JsonBackReference(value="posts")
+    @JsonIgnore
     @ApiModelProperty(
             value = "Posts of the community",
             hidden = true)
