@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+import java.util.List;
+
 @Service
 public class CommunityService {
 
@@ -36,6 +38,7 @@ public class CommunityService {
 
     @Autowired
     private DetectLanguageApi detectLanguageApi;
+
   
     @Autowired
     private UniversitiesListApi universitiesListApi;
@@ -80,6 +83,28 @@ public class CommunityService {
         return communityRepository.save(communityEntity);
     }
 
+
+    /**
+     * Interacts with community repository to create community
+     *
+     * @String name of the community
+     * @return whether community with specified name exists
+     */
+    public boolean exists(String name){
+        return communityRepository.getByName(name) != null;
+    }
+
+    /**
+     * Interacts with community repository to get communities with specified publicity
+     *
+     * @param isPublic publicity of community
+     * @return List of private/public communities
+     */
+    public List<CommunityEntity> findByPublicity(Boolean isPublic){
+        return communityRepository.findAllByPublicity(isPublic);
+    }
+
+
     /**
      * Communicates with third-party <a href="https://detectlanguage.com/">Detect Language API</a>
      *
@@ -91,6 +116,7 @@ public class CommunityService {
     public String detectLanguage(String text){
         return detectLanguageApi.detectLanguage(text);
     }
+
 
     /**
      * Communicates with third-party <a href="https://detectlanguage.com/">Detect Language API</a>
