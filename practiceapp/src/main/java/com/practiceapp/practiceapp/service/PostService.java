@@ -28,7 +28,9 @@ public class PostService {
 
     public String getRandomKanyeQuote() throws UnirestException {
         return kanyeRestApi.getRandomKanyeQuote();
-      
+    }
+    
+    @Autowired
     private PlacesApi placesApi;
 
     /**
