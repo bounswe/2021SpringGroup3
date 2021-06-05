@@ -23,7 +23,7 @@ public class PostEntity {
 
     @Id
     @Field
-    private String _id;
+    private String post_id;
 
     @Field
     private String text;
