@@ -1,17 +1,20 @@
 package com.practiceapp.practiceapp.entity;
 
-import com.mongodb.lang.Nullable;
+import io.swagger.annotations.ApiModelProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.validation.constraints.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,37 +27,51 @@ public class CommunityEntity {
 
     @Id
     @Field
+    @ApiModelProperty(
+            notes = "The database generated community ID",
+            hidden = true)
     private String id;
 
     @Field
-    @NotNull
+    @NotNull(message="Community name can not be null")
+    @ApiModelProperty(
+                required = true,
+                value = "Name of the community",
+                example = "CmpE352")
     private String name;
 
     @Field
-    @NotNull
+    @NotNull(message="Community description can not be null")
+    @ApiModelProperty(
+            required = true,
+            value = "Description of the community",
+            example = "Community about the fundamentals of software engineering")
     private String description;
 
     @Field
-    // Communities are public by default
-    private boolean isPublic = true;
+    @ApiModelProperty(
+            value = "Privacy setting of the community",
+            notes= "Communities are public by default")
+    private boolean publicity = true;
 
     @Field
+    @ApiModelProperty(
+            value = "Preferred language in the community",
+            example = "")
     private String language;
 
-    @Field
-    @Nullable
-    private String country;
-
-    @Field
-    @Nullable
-    private String city;
-
-    private List<String> topics = new ArrayList<>();
-
     // References to users and posts:
+
     @DBRef(lazy=true)
+    @ApiModelProperty(
+            value = "Members of the community",
+            hidden = true)
     private List<UserEntity> members = new ArrayList<>();
+
     @DBRef(lazy=true)
+    @ApiModelProperty(
+            value = "Posts of the community",
+            hidden = true)
     private List<PostEntity> posts = new ArrayList<>();
 
 }
