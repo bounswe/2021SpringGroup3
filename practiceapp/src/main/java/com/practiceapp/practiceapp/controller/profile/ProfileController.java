@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(path = "/post")
+@RequestMapping(path = "/profile")
 public class ProfileController {
 
     @Autowired
