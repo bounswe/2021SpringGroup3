@@ -1,5 +1,7 @@
 package com.practiceapp.practiceapp.entity;
 
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModelProperty;
 
 import lombok.AllArgsConstructor;
@@ -62,12 +64,14 @@ public class CommunityEntity {
 
     // References to users and posts:
 
+    @JsonBackReference
     @DBRef(lazy=true)
     @ApiModelProperty(
             value = "Members of the community",
             hidden = true)
     private List<UserEntity> members = new ArrayList<>();
 
+    @JsonBackReference
     @DBRef(lazy=true)
     @ApiModelProperty(
             value = "Posts of the community",
