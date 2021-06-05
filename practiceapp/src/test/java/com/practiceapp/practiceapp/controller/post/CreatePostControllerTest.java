@@ -59,11 +59,9 @@ public class CreatePostControllerTest {
 
 
         PostService postService = mock(PostService.class);  //mock the post service
-        PostRepository postRepository = mock(PostRepository.class);   //mock post repository
 
         //mock the behavior of service entity and repository
         when(postService.savePost(any(PostEntity.class))).thenReturn(1);
-        when(postRepository.save(any(PostEntity.class))).thenReturn(mock_post);
 
 
         //Prepare the request
@@ -78,7 +76,7 @@ public class CreatePostControllerTest {
         MockHttpServletResponse response = result.getResponse();
 
         assertEquals(200, response.getStatus());  //check response status
-        assertEquals(result.getResponse().getContentAsString(),"1");  //check the response
+        assertEquals(result.getResponse().getContentAsString(),"1");  //check the response(1 represents success)
 
 
     }
