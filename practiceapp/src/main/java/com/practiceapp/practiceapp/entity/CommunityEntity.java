@@ -1,6 +1,5 @@
 package com.practiceapp.practiceapp.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 
