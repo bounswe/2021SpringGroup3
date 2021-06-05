@@ -1,5 +1,6 @@
 package com.practiceapp.practiceapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModelProperty;
 
 import lombok.AllArgsConstructor;
@@ -8,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -63,12 +63,14 @@ public class CommunityEntity {
     // References to users and posts:
 
     @DBRef(lazy=true)
+    @JsonBackReference(value="members")
     @ApiModelProperty(
             value = "Members of the community",
             hidden = true)
     private List<UserEntity> members = new ArrayList<>();
 
     @DBRef(lazy=true)
+    @JsonBackReference(value="posts")
     @ApiModelProperty(
             value = "Posts of the community",
             hidden = true)
