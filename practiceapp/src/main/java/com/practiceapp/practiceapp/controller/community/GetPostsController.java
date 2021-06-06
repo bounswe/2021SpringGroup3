@@ -22,8 +22,8 @@ public class GetPostsController {
     private CommunityService communityService;
 
     @RequestMapping(path = "/posts/{name}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<PostEntity> getPosts(@PathVariable("name") String communityid){
-        return communityService.getPosts(communityid);
+    public List<PostEntity> getPosts(@PathVariable("name") String communityName){
+        return communityService.getPosts(communityName);
     }
 
     @RequestMapping(path = "/definition/{lang_code}/{word}",method = RequestMethod.GET)
