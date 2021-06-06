@@ -60,16 +60,6 @@ public class CommunityEntity {
             example = "")
     private String language;
 
-    // References to users and posts:
-
-    public List<UserEntity> getMembers() {
-        return members;
-    }
-
-    public List<PostEntity> getPosts() {
-        return posts;
-    }
-
     @DBRef(lazy=true)
     @JsonIgnore
     @ApiModelProperty(
