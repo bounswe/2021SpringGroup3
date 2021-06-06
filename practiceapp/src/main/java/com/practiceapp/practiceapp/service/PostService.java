@@ -3,6 +3,7 @@ package com.practiceapp.practiceapp.service;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.practiceapp.practiceapp.entity.PostEntity;
 import com.practiceapp.practiceapp.repository.PostRepository;
+import com.practiceapp.practiceapp.utils.KanyeRestApi;
 import com.practiceapp.practiceapp.utils.PlacesApi;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,17 @@ public class PostService {
     private PostRepository postRepository;
 
     @Autowired
-    private PlacesApi placesApi;
+    private KanyeRestApi kanyeRestApi;
 
+    public PostEntity updatePost(PostEntity postEntity){
+        PostEntity post = postRepository.save(postEntity);
+        return post;
+    }
+
+    public String getRandomKanyeQuote() throws UnirestException {
+        return kanyeRestApi.getRandomKanyeQuote();
+      
+    private PlacesApi placesApi;
 
     /**
      * Saves the given post entity to database
