@@ -11,9 +11,9 @@ public class IndexViewController {
 
     private String baseUrl = "/home/";
 
-    private String placesUrl = baseUrl + "places/ist";
+    private String placesUrl = baseUrl + "places/ist";  //şimdilik form lazım  daha
 
-
+    private String searchCommunitiesUrl = baseUrl +"communities";
 
     //private String adviceUrl = ""
 

@@ -8,8 +8,23 @@
 </head>
 <body>
 
-<h1>Practice App Main Menu</h1>
-<a th:href="${places}"> link</a>
+<table class="table">
+  <thead>
+  <tr>
+    <th scope="col">Place</th>
+  </tr>
+  </thead>
 
+  <tbody>
+  <tr th:each="post: ${posts}">
+    <td th:text="${post.post_id}"/>
+    <td th:text="${post.text}"/>
+    <td th:text="${post.date}"/>
+    <td th:text="${post.location}"/>
+    <td th:text="${post.author.username}"/>
+  </tr>
+  </tbody>
+
+</table>
 </body>
 </html>
