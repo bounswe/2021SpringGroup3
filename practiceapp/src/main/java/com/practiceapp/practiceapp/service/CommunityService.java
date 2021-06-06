@@ -57,8 +57,8 @@ public class CommunityService {
     *@param id is the id of the community
     *@return list of post entities
     */
-    public List<PostEntity> getPosts(String id){
-        return communityRepository.findById(id).get().getPosts();
+    public List<PostEntity> getPosts(String name){
+        return communityRepository.getByName(name).getPosts();
     }
 
     /**

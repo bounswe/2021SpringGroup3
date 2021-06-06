@@ -23,10 +23,10 @@ public class JoiningCommunityService {
     @Autowired
     private AdviceApi adviceApi;
 
-    public String joinCommunity(String user_id, String community_id){
+    public String joinCommunity(String user_name, String community_name){
         // Retrieving the entities
-        UserEntity user = userRepository.getById(user_id);
-        CommunityEntity community = communityRepository.getById(community_id);
+        UserEntity user = userRepository.getByUsername(user_name);
+        CommunityEntity community = communityRepository.getByName(community_name);
 
         // If there is an entity that does not exist in the database, return "Fail"
         if(user == null || community == null){
