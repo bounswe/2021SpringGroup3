@@ -11,7 +11,11 @@
 <table class="table">
   <thead>
   <tr>
-    <th scope="col">Place</th>
+    <th scope="col">Post Id</th>
+    <th scope="col">Content</th>
+    <th scope="col">Date</th>
+    <th scope="col">Location</th>
+    <th scope="col">Author</th>
   </tr>
   </thead>
 
@@ -21,7 +25,7 @@
     <td th:text="${post.text}"/>
     <td th:text="${post.date}"/>
     <td th:text="${post.location}"/>
-    <td th:text="${post.author.username}"/>
+    <td th:text="${post.author}"/>
   </tr>
   </tbody>
 

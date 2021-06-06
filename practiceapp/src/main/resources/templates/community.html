@@ -17,6 +17,10 @@
     <li class="list-group-item" th:case="${false}">Coommunity Publicity: Private </li>
   </div>
 </ul>
+<form action="#" th:action="@{/home/communities/}" method="post" th:object="${community}">
+  <input type="text" th:field="*{name}" /><br/>
+  <button type="submit" class="btn btn-primary">See Posts</button>
+</form>
 
 
 <!--SEE USERS GİBİ BUTON EKLENEBİLİR!!! -->

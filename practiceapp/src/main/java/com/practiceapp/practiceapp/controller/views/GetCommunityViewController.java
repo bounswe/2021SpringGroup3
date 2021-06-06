@@ -26,6 +26,13 @@ public class GetCommunityViewController {
         return "community";
     }
 
+    @RequestMapping(path = "/",method = RequestMethod.POST)
+    public String seePosts(@ModelAttribute("community") CommunityEntity communityEntity) {
+        String name = communityEntity.getName();
+        return "redirect:/home/posts/"+name;
+    }
+
+
     @RequestMapping(path = "/search",method = RequestMethod.GET)
     public String showCommunitySearchForm(Model model) {
         CommunityEntity communityEntity = new CommunityEntity();

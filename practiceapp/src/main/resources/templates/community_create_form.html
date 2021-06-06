@@ -10,9 +10,13 @@
 
 <div align="center">
   <h1>Search Community By Name</h1>
-  <form action="#" th:action="@{/home/communities/search}" method="post" th:object="${community}">
+  <form action="#" th:action="@{/home/communities/add}" method="post" th:object="${community}">
     <label>Name:</label>
     <input type="text" th:field="*{name}" /><br/>
+    <label>Description:</label>
+    <input type="text" th:field="*{description}" /><br/>
+    <label>Publicity:</label>
+    <input type="text" th:field="*{publicity}" /><br/>
     <button type="submit" class="btn btn-primary">Search</button>
   </form>
 </div>

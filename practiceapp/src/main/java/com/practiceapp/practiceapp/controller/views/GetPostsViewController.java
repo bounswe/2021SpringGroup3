@@ -21,10 +21,10 @@ public class GetPostsViewController {
 
     RestTemplate restTemplate = new RestTemplate();
 
-    @RequestMapping(path = "/{community_id}",method = RequestMethod.GET)
-    public String showPostsByCommunityId(Model model, @PathVariable("community_id") String community_id){
+    @RequestMapping(path = "/{community_name}",method = RequestMethod.GET)
+    public String showPostsByCommunityName(Model model, @PathVariable("community_name") String community_name){  //TEST AFTER POSTS ADDED!
 
-        List<PostEntity> posts = restTemplate.getForObject(url + community_id, List.class);
+        List<PostEntity> posts = restTemplate.getForObject(url + "/" + community_name, List.class);
         model.addAttribute("posts",posts);
         return "posts";
     }
