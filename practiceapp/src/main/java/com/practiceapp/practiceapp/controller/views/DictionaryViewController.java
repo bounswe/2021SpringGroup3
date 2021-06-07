@@ -42,7 +42,6 @@ public class DictionaryViewController {
 
     @RequestMapping(path = "/search",method = RequestMethod.POST)
     public String submitForm(@ModelAttribute("word") String word) {
-        System.out.println(word);
         return "redirect:/home/dict/"+word;
     }
 

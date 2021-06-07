@@ -8,16 +8,15 @@
 </head>
 <body>
 <ul class="list-group">
-  <li class="list-group-item" th:text="${'Community Id: '+community.id}"> </li>
   <li class="list-group-item" th:text="${'Community Name: '+community.name}"></li>
   <li class="list-group-item" th:text="${'Community Description: '+community.description}"></li>
   <li class="list-group-item" th:text="${'Community Language: '+community.language}"></li>
   <div th:switch="${community.publicity}">
-    <li class="list-group-item" th:case="${true}">Coommunity Publicity: Public </li>
-    <li class="list-group-item" th:case="${false}">Coommunity Publicity: Private </li>
+    <li class="list-group-item" th:case="${true}"> Coommunity Publicity: Public </li>
+    <li class="list-group-item" th:case="${false}"> Coommunity Publicity: Private </li>
   </div>
 </ul>
-<form action="#" th:action="@{/home/communities/}" method="post" th:object="${community}">
+<form action="#" th:action="@{/home/community/}" method="post" th:object="${community}">
   <input type="text" th:field="*{name}" /><br/>
   <button type="submit" class="btn btn-primary">See Posts</button>
 </form>

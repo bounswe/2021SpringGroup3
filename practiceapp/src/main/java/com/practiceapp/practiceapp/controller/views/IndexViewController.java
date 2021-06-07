@@ -4,16 +4,19 @@ package com.practiceapp.practiceapp.controller.views;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class IndexViewController {
 
     private String baseUrl = "/home/";
 
-    private String placesUrl = baseUrl + "places/ist";  //şimdilik form lazım  daha
+    private String placesUrl = baseUrl + "places/search";  //şimdilik form lazım  daha
+
+    private String searchCommunityUrl = baseUrl +"community/search";
 
     private String searchCommunitiesUrl = baseUrl +"communities/search";
+
+    private String createCommunitiesUrl = baseUrl + "communities/create";
 
     private String dictionaryUrl = baseUrl +"dict/search";
 
@@ -23,8 +26,10 @@ public class IndexViewController {
     public String getIndex(Model model){
 
         model.addAttribute("places",placesUrl);
+        model.addAttribute("community",searchCommunityUrl);
         model.addAttribute("communities",searchCommunitiesUrl);
         model.addAttribute("dictionary",dictionaryUrl);
+        model.addAttribute("create_community",createCommunitiesUrl);
 
         return "index";
     }
