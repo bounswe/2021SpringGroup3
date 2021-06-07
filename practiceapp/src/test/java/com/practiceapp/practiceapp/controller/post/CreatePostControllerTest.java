@@ -45,7 +45,7 @@ public class CreatePostControllerTest {
 
     List<CommunityEntity> communities = new ArrayList<>(List.of(new CommunityEntity()));
 
-    PostEntity mock_post = new PostEntity("123","this is a mock post",mock_date,"istanbul",mock_user,communities);
+
 
     String examplePost = "{\"post_id\":\"123\",\"text\":\"this is a mock post\"}";
 

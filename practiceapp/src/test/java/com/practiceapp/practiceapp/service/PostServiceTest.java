@@ -29,7 +29,7 @@ public class PostServiceTest {
     @BeforeEach
     void initiate() {
         postEntity =new PostEntity();
-        postEntity.setPost_id("abc123");
+        //postEntity.setPost_id("abc123");
         postEntity.setText("Mock post");
     }
 

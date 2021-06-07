@@ -15,6 +15,10 @@ public class ProfileService {
         return profileRepository.getById(id);
     }
 
+    public Profile getProfileByName(String name){
+        return profileRepository.getByName(name);
+    }
+
     public Profile updateProfile(Profile profile) {
         return profileRepository.save(profile);
     }

@@ -22,10 +22,10 @@ public class ProfileController {
     private PicturesApi picturesApi;
 
 
-    @ApiOperation(value="Get profile by id",response=Profile.class)
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Profile updateProfile(@PathVariable("id") String id){
-        return profileService.getProfile(id);
+    @ApiOperation(value="Get profile by name",response=Profile.class)
+    @RequestMapping(path = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Profile getProfile(@PathVariable("name") String name){
+        return profileService.getProfileByName(name);
     }
 
 
@@ -37,9 +37,9 @@ public class ProfileController {
 
 
     @ApiOperation(value="Set random profile picture if the user didn't upload one",response=Profile.class)
-    @RequestMapping(path = "/setRandomPic/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Profile setRandomPic(@PathVariable("id") String id){
-        Profile profile = profileService.getProfile(id);
+    @RequestMapping(path = "/setRandomPic/{name}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Profile setRandomPic(@PathVariable("name") String name){
+        Profile profile = profileService.getProfileByName(name);
         String generatedPic = picturesApi.getRandomCatPic();
         profile.setPhoto(generatedPic);
         return profileService.updateProfile(profile);
