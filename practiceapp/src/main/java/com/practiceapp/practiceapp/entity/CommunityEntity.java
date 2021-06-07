@@ -60,6 +60,8 @@ public class CommunityEntity {
             example = "")
     private String language;
 
+    // References to users and posts:
+
     @DBRef(lazy=true)
     @JsonIgnore
     @ApiModelProperty(

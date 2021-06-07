@@ -2,16 +2,13 @@ package com.practiceapp.practiceapp.controller.views;
 
 
 import com.practiceapp.practiceapp.entity.CommunityEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-
 @Controller
-@RequestMapping(path = "/home/communities")
+@RequestMapping(path = "/home/community")
 public class GetCommunityViewController {
 
     private String url = "http://localhost:9090/community";
@@ -25,6 +22,7 @@ public class GetCommunityViewController {
         model.addAttribute("community",community);
         return "community";
     }
+
 
     @RequestMapping(path = "/",method = RequestMethod.POST)
     public String seePosts(@ModelAttribute("community") CommunityEntity communityEntity) {
@@ -41,10 +39,11 @@ public class GetCommunityViewController {
         return "community_search_form";
     }
 
+
     @RequestMapping(path = "/search",method = RequestMethod.POST)
     public String submitForm(@ModelAttribute("community") CommunityEntity communityEntity) {
         String name = communityEntity.getName();
-        return "redirect:/home/communities/?name="+name;
+        return "redirect:/home/community/?name="+name;
     }
 
 

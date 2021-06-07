@@ -2,6 +2,7 @@ package com.practiceapp.practiceapp.controller.views;
 
 
 import com.practiceapp.practiceapp.entity.CommunityEntity;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,15 +18,18 @@ public class CreateCommunityViewController {
 
     RestTemplate restTemplate = new RestTemplate();
 
-    @RequestMapping(path = "/add",method = RequestMethod.GET)
-    public String showCommunitySearchForm(Model model) {
+    @RequestMapping(path = "/create",method = RequestMethod.GET)
+    public String createCommunityForm(Model model) {
         CommunityEntity communityEntity = new CommunityEntity();
         model.addAttribute("community", communityEntity);
-
         return "community_create_form";
     }
 
-    //SUBMIT FORM LAZIM
-
-
+    @RequestMapping(path = "/create",method = RequestMethod.POST)
+    public String createCommunity(Model model, @ModelAttribute("community") CommunityEntity communityEntity) {
+        HttpEntity<CommunityEntity> request = new HttpEntity<>(communityEntity);
+        CommunityEntity createdCommunityEntity = restTemplate.postForObject(url + "/create", request, CommunityEntity.class);
+        model.addAttribute("community", createdCommunityEntity);
+        return "community";
+    }
 }
