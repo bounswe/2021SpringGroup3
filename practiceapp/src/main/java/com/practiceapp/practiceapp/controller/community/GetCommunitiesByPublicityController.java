@@ -14,7 +14,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(path = "/community")
+@RequestMapping(path = "/communities")
 public class GetCommunitiesByPublicityController {
 
     @Autowired
