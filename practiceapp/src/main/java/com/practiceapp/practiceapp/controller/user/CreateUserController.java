@@ -1,14 +1,18 @@
 package com.practiceapp.practiceapp.controller.user;
 
 
+import com.practiceapp.practiceapp.entity.CommunityEntity;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.practiceapp.practiceapp.entity.UserEntity;
 import com.practiceapp.practiceapp.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/user")
@@ -25,7 +29,7 @@ public class CreateUserController {
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserEntity getUser(@PathVariable("id") String id){
-        return null;
+        return userService.getById(id);
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -33,5 +37,13 @@ public class CreateUserController {
        return userService.getByUserName(userName);
     }
 
+    @RequestMapping(path = "/joinedcommunities", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CommunityEntity> getUserJoinedCommunitiesByName(@RequestParam String userName){
+        return userService.getUserJoinedCommunitiesByName(userName);
+    }
 
+    @RequestMapping(path = "/createdcommunities", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CommunityEntity> getUserCreatedCommunitiesByName(@RequestParam String userName){
+        return userService.getUserCreatedCommunitiesByName(userName);
+    }
 }
