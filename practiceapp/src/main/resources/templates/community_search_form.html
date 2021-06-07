@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+</head>
+<body>
+
+<div align="center">
+  <h1>Search Community By Name</h1>
+  <form action="#" th:action="@{/home/communities/search}" method="post" th:object="${community}">
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" /><br/>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+</div>
+
+
+</body>
+</html>

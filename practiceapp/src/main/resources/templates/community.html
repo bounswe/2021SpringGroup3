@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+</head>
+<body>
+<ul class="list-group">
+  <li class="list-group-item" th:text="${'Community Id: '+community.id}"> </li>
+  <li class="list-group-item" th:text="${'Community Name: '+community.name}"></li>
+  <li class="list-group-item" th:text="${'Community Description: '+community.description}"></li>
+  <li class="list-group-item" th:text="${'Community Language: '+community.language}"></li>
+  <div th:switch="${community.publicity}">
+    <li class="list-group-item" th:case="${true}">Coommunity Publicity: Public </li>
+    <li class="list-group-item" th:case="${false}">Coommunity Publicity: Private </li>
+  </div>
+</ul>
+<form action="#" th:action="@{/home/communities/}" method="post" th:object="${community}">
+  <input type="text" th:field="*{name}" /><br/>
+  <button type="submit" class="btn btn-primary">See Posts</button>
+</form>
+
+
+<!--SEE USERS GİBİ BUTON EKLENEBİLİR!!! -->
+
+</body>
+</html>
