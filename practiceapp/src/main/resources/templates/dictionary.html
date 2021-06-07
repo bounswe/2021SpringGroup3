@@ -7,11 +7,7 @@
 
 </head>
 <body>
-
-<h1>Practice App Main Menu</h1>
-<a th:href="${places}"> places link</a>
-<a th:href="${communities}"> communities link</a>
-<a th:href="${dictionary}"> dictionary link</a>
-
+<p th:text="${'Word: '+word}"></p>
+<p th:text="${'Definition: '+definition}"></p>
 </body>
 </html>

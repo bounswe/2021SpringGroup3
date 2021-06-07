@@ -8,10 +8,15 @@
 </head>
 <body>
 
-<h1>Practice App Main Menu</h1>
-<a th:href="${places}"> places link</a>
-<a th:href="${communities}"> communities link</a>
-<a th:href="${dictionary}"> dictionary link</a>
+<div align="center">
+  <h1>Dictionary</h1>
+  <form action="#" th:action="@{/home/dict/search}" method="post" >
+    <label>Word:</label>
+    <input type="text" th:value="${word}" name="word"/>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+</div>
+
 
 </body>
 </html>

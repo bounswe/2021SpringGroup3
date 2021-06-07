@@ -13,7 +13,9 @@ public class IndexViewController {
 
     private String placesUrl = baseUrl + "places/ist";  //şimdilik form lazım  daha
 
-    private String searchCommunitiesUrl = baseUrl +"communities";
+    private String searchCommunitiesUrl = baseUrl +"communities/search";
+
+    private String dictionaryUrl = baseUrl +"dict/search";
 
     //private String adviceUrl = ""
 
@@ -21,6 +23,8 @@ public class IndexViewController {
     public String getIndex(Model model){
 
         model.addAttribute("places",placesUrl);
+        model.addAttribute("communities",searchCommunitiesUrl);
+        model.addAttribute("dictionary",dictionaryUrl);
 
         return "index";
     }
