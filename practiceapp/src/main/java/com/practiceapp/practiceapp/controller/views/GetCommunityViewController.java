@@ -2,21 +2,33 @@ package com.practiceapp.practiceapp.controller.views;
 
 
 import com.practiceapp.practiceapp.entity.CommunityEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 @Controller
 @RequestMapping(path = "/home/community")
 public class GetCommunityViewController {
 
-    private String url = "http://localhost:9090/community";
+
+    @Autowired
+    Environment environment;
+
+    private String url = "http://localhost:9090/community/";
+
+
 
     RestTemplate restTemplate = new RestTemplate();
 
     @RequestMapping(path = "/",method = RequestMethod.GET)
-    public String showCommunity(Model model, @RequestParam String name){
+    public String showCommunity(Model model, @RequestParam String name)  {
 
         CommunityEntity community = restTemplate.getForObject(url + "/?name=" + name, CommunityEntity.class);
         model.addAttribute("community",community);
