@@ -25,9 +25,12 @@ public class ProfileService {
 
     public Profile setRandomPic(String id) {
         Profile profile = getProfile(id);
+        if (profile != null) {
         String generatedPic = picturesApi.getRandomCatPic();
-        profile.setPhoto(generatedPic);
-        return updateProfile(profile);
+            profile.setPhoto(generatedPic);
+            profile = updateProfile(profile);
+        }
+        return profile;
     }
 
 

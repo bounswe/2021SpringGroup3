@@ -21,18 +21,16 @@ public class ProfileServiceTest {
     @MockBean
     private ProfileRepository profileRepository;
 
-    @MockBean
-    private PicturesApi picturesApi;
 
     private Profile profile;
 
     @BeforeEach
     void setUp() {
         profile = new Profile();
-        profile.setId("1233");
+        profile.setId("1222");
         profile.setName("name");
         profile.setDescription("Hi! I am <name>");
-        profile.setPhoto("www.image.com");
+        profile.setPhoto("");
     }
 
     @Test
@@ -49,11 +47,4 @@ public class ProfileServiceTest {
         assertEquals(response.getId(),profile.getId());
     }
 
-    @Test
-    void setRandomPic(){
-        String url = "www.com";
-        when(picturesApi.getRandomCatPic()).thenReturn(url);
-        Profile response = profileService.setRandomPic(profile.getId());
-        assertEquals(response.getPhoto().getClass(), url.getClass());
-    }
 }
