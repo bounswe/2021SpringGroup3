@@ -26,6 +26,10 @@ public class PostServiceTest {
 
     private PostEntity postEntity;
 
+
+    /**
+     * Mock post entity generated to be given as parameter
+     */
     @BeforeEach
     void initiate() {
         postEntity =new PostEntity();
@@ -34,13 +38,14 @@ public class PostServiceTest {
     }
 
 
+    /**
+     * Checks if postservice returns with success assuming the post repository works fine.
+     */
     @Test
     void savePost() {
 
         when(postRepository.save(any(PostEntity.class))).thenReturn(postEntity);
-
         int response = postService.savePost(postEntity);
-
         assertEquals(response,1);
 
     }
