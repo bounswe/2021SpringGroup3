@@ -24,7 +24,7 @@ public class ProfileController {
 
     @ApiOperation(value="Get profile by id",response=Profile.class)
     @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Profile updateProfile(@PathVariable("id") String id){
+    public Profile getProfile(@PathVariable("id") String id){
         return profileService.getProfile(id);
     }
 
