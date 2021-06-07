@@ -2,6 +2,7 @@ package com.practiceapp.practiceapp.service;
 
 import com.practiceapp.practiceapp.entity.PostEntity;
 import com.practiceapp.practiceapp.repository.PostRepository;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class PostServiceTest {
     @BeforeEach
     void initiate() {
         postEntity =new PostEntity();
-        postEntity.setPost_id("abc123");
+        postEntity.setPost_id(new ObjectId());
         postEntity.setText("Mock post");
     }
 
