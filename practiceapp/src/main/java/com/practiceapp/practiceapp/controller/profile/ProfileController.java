@@ -3,7 +3,6 @@ package com.practiceapp.practiceapp.controller.profile;
 
 import com.practiceapp.practiceapp.entity.Profile;
 import com.practiceapp.practiceapp.service.ProfileService;
-import com.practiceapp.practiceapp.utils.PicturesApi;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,10 +16,6 @@ public class ProfileController {
 
     @Autowired
     private ProfileService profileService;
-
-    @Autowired
-    private PicturesApi picturesApi;
-
 
     @ApiOperation(value="Get profile by id",response=Profile.class)
     @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,10 +34,7 @@ public class ProfileController {
     @ApiOperation(value="Set random profile picture if the user didn't upload one",response=Profile.class)
     @RequestMapping(path = "/setRandomPic/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Profile setRandomPic(@PathVariable("id") String id){
-        Profile profile = profileService.getProfile(id);
-        String generatedPic = picturesApi.getRandomCatPic();
-        profile.setPhoto(generatedPic);
-        return profileService.updateProfile(profile);
+        return profileService.setRandomPic(id);
     }
 
 
