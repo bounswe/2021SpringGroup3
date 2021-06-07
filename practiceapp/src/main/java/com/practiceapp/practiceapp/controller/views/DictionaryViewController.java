@@ -1,7 +1,7 @@
 package com.practiceapp.practiceapp.controller.views;
 
 
-import com.practiceapp.practiceapp.entity.CommunityEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,20 +11,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 
 @Controller
 @RequestMapping(path = "/home/dict")
 public class DictionaryViewController {
 
-    private String url = "http://localhost:9090/community/definition/en_US/";
+    @Value("${base.url}")
+    private String base_url;
+    private String target_url = "community/definition/en_US/";
+
     RestTemplate restTemplate = new RestTemplate();
 
     @RequestMapping(path = "/{word}",method = RequestMethod.GET)
     public String showDefinition(Model model, @PathVariable("word") String word){
 
 
-        ResponseEntity<String> response = restTemplate.getForEntity(url + word, String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(base_url + target_url + word, String.class);
         String definition = response.getBody();
         model.addAttribute("word",word);
         model.addAttribute("definition",definition);

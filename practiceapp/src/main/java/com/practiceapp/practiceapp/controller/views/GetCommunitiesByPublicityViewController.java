@@ -3,6 +3,7 @@ package com.practiceapp.practiceapp.controller.views;
 import com.practiceapp.practiceapp.entity.CommunityEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +14,15 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping(path = "/home/communities")
 public class GetCommunitiesByPublicityViewController {
 
-    private String url = "http://localhost:9090/communities";
+    @Value("${base.url}")
+    private String base_url;
+    private String target_url = "communities/";
 
     RestTemplate restTemplate = new RestTemplate();
 
     @RequestMapping(path = "/{publicity}",method = RequestMethod.GET)
     public String viewCommunities(Model model, @PathVariable boolean publicity){
-        CommunityEntity[] communities = restTemplate.getForObject(url + "/?public=" + publicity, CommunityEntity[].class);
+        CommunityEntity[] communities = restTemplate.getForObject(base_url + target_url + "?public=" + publicity, CommunityEntity[].class);
         JSONArray rows = new JSONArray();
         for (CommunityEntity community: communities) {
             JSONObject row = new JSONObject()

@@ -3,6 +3,7 @@ package com.practiceapp.practiceapp.controller.views;
 
 import com.practiceapp.practiceapp.entity.CommunityEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,16 +22,16 @@ public class GetCommunityViewController {
     @Autowired
     Environment environment;
 
-    private String url = "http://localhost:9090/community/";
-
-
+    @Value("${base.url}")
+    private String base_url;
+    private String target_url = "community/";
 
     RestTemplate restTemplate = new RestTemplate();
 
     @RequestMapping(path = "/",method = RequestMethod.GET)
     public String showCommunity(Model model, @RequestParam String name)  {
 
-        CommunityEntity community = restTemplate.getForObject(url + "/?name=" + name, CommunityEntity.class);
+        CommunityEntity community = restTemplate.getForObject(base_url + target_url + "/?name=" + name, CommunityEntity.class);
         model.addAttribute("community",community);
         return "community";
     }

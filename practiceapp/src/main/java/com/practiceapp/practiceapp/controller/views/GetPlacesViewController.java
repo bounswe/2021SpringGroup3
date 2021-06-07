@@ -2,6 +2,7 @@ package com.practiceapp.practiceapp.controller.views;
 
 import com.practiceapp.practiceapp.entity.CommunityEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,14 +17,16 @@ import java.util.Arrays;
 @RequestMapping(path = "/home/places")
 public class GetPlacesViewController {
 
-    private String url = "http://localhost:9090/places/";
+    @Value("${base.url}")
+    private String base_url;
+    private String target_url = "places/";
 
     RestTemplate restTemplate = new RestTemplate();
 
     @RequestMapping(path = "/{input}",method = RequestMethod.GET)
     public String showPlaces(Model model,@PathVariable("input") String input){
 
-        ResponseEntity<ArrayList> response = restTemplate.getForEntity(url + input, ArrayList.class);
+        ResponseEntity<ArrayList> response = restTemplate.getForEntity(base_url + target_url + input, ArrayList.class);
         ArrayList<String> places = response.getBody();
 
         model.addAttribute("places",places);
