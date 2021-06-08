@@ -21,7 +21,7 @@ public class UpdatePostController {
 
     @ApiOperation(value="Update Post",response=String.class)
     @RequestMapping(path = "/update",method = RequestMethod.PUT,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public PostEntity updatePost(@Valid @RequestBody PostEntity postEntity){
+    public int updatePost(@Valid @RequestBody PostEntity postEntity){
         return postService.updatePost(postEntity);
     }
 
