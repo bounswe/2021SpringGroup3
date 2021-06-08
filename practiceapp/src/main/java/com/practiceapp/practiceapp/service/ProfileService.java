@@ -16,7 +16,7 @@ public class ProfileService {
     private PicturesApi picturesApi;
 
     public Profile getProfile(String id) {
-        return profileRepository.getById(id);
+        return profileRepository.getByName(id);
     }
 
     public Profile updateProfile(Profile profile) {

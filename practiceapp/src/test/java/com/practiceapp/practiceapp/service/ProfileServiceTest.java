@@ -21,13 +21,14 @@ public class ProfileServiceTest {
     @MockBean
     private ProfileRepository profileRepository;
 
+    @MockBean
+    private PicturesApi picturesApi;
 
     private Profile profile;
 
     @BeforeEach
     void setUp() {
         profile = new Profile();
-        profile.setId("1222");
         profile.setName("name");
         profile.setDescription("Hi! I am <name>");
         profile.setPhoto("");
@@ -37,14 +38,14 @@ public class ProfileServiceTest {
     void updateProfile(){
         when(profileRepository.save(any(Profile.class))).thenReturn(profile);
         Profile response = profileService.updateProfile(profile);
-        assertEquals(response, profile);
+        assertEquals(profile, response);
     }
 
     @Test
     void getProfile(){
-        when(profileRepository.getById(any(String.class))).thenReturn(profile);
-        Profile response = profileService.getProfile(profile.getId());
-        assertEquals(response.getId(),profile.getId());
+        when(profileRepository.getByName(any(String.class))).thenReturn(profile);
+        Profile response = profileService.getProfile(profile.getName());
+        assertEquals(profile.getId(), response.getId());
     }
 
 }

@@ -40,7 +40,6 @@ public class ProfileControllerTest {
     @BeforeEach
     void setUp() {
         profile = new Profile();
-        profile.setId("1222");
         profile.setName("name");
         profile.setDescription("Hi! I am <name>");
         profile.setPhoto("www.image.com");
@@ -50,11 +49,11 @@ public class ProfileControllerTest {
     void getProfile() throws Exception {
 
         when(profileService.getProfile(any(String.class))).thenReturn(profile);
-        when(profileRepository.getById(any(String.class))).thenReturn(profile);
+        when(profileRepository.getByName(any(String.class))).thenReturn(profile);
 
-        mockMvc.perform(get("/profile/{id}", profile.getId()))
+        mockMvc.perform(get("/profile/{username}", profile.getName()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(profile.getId()));
+                .andExpect(jsonPath("$.name").value(profile.getName()));
     }
 
     @Test
@@ -75,7 +74,7 @@ public class ProfileControllerTest {
     void setRandomPic() throws Exception {
         when(profileService.setRandomPic(any(String.class))).thenReturn(profile);
 
-        MvcResult result = mockMvc.perform(post("/profile/setRandomPic/{id}", profile.getId())
+        MvcResult result = mockMvc.perform(post("/profile/setRandomPic/{username}", profile.getName())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(profile)))
                 .andExpect(status().isOk()).andReturn();

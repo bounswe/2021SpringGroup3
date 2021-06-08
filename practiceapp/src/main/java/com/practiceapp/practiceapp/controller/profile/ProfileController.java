@@ -18,9 +18,9 @@ public class ProfileController {
     private ProfileService profileService;
 
     @ApiOperation(value="Get profile by id",response=Profile.class)
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Profile getProfile(@PathVariable("id") String id){
-        return profileService.getProfile(id);
+    @RequestMapping(path = "/{username}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Profile getProfile(@PathVariable("username") String username){
+        return profileService.getProfile(username);
     }
 
 
@@ -32,9 +32,9 @@ public class ProfileController {
 
 
     @ApiOperation(value="Set random profile picture if the user didn't upload one",response=Profile.class)
-    @RequestMapping(path = "/setRandomPic/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Profile setRandomPic(@PathVariable("id") String id){
-        return profileService.setRandomPic(id);
+    @RequestMapping(path = "/setRandomPic/{username}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Profile setRandomPic(@PathVariable("username") String username){
+        return profileService.setRandomPic(username);
     }
 
 
