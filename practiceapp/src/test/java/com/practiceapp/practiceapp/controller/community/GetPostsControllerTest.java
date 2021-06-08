@@ -47,8 +47,6 @@ public class GetPostsControllerTest {
         post1 = new PostEntity();
         post2 = new PostEntity();
         communityEntity = new CommunityEntity();
-        post1.setPost_id("post1");
-        post2.setPost_id("post2");
         communityEntity.setName("CmpE352");
         communityEntity.setPosts(List.of(post1, post2));
     }
