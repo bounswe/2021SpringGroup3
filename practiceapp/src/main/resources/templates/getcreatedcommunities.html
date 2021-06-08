@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Get User</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+</head>
+<body>
+<a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
+
+<form th:action="@{/home/getcreatedcommunities}" method="post">
+  <label>Username:</label>
+  <input type="text" th:value="${username}" name="username"/><br/>
+
+  <button type="submit">Get</button>
+</form>
+
+
+<div th:if="${showlist}">
+  <h3>Created Communities:</h3>
+  <div th:each="community : ${communitylist}">
+    <h4>Community Name:</h4>
+    <p th:text="${community.name}"/>
+    <h4>Description</h4>
+    <p th:text="${community.description}"/>
+    <h4>Is Community Public</h4>
+    <p th:text="${community.publicity}"/>
+    <br><br>
+  </div>
+</div>
+</body>
+</html>

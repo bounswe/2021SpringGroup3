@@ -21,8 +21,6 @@ public class GetPlacesViewController {
 
     @RequestMapping(path = "/{input}",method = RequestMethod.GET)
     public String showPlaces(Model model,@PathVariable("input") String input){
-
-
         ResponseEntity<ArrayList> response = restTemplate.getForEntity(url + input, ArrayList.class);
         ArrayList<String> places = response.getBody();
 

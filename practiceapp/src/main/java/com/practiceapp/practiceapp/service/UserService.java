@@ -21,9 +21,14 @@ public class UserService {
     private ProfileService profileService;
 
     public String saveUser(UserEntity userEntity){
-        UserEntity user = userRepository.save(userEntity);
-        if(userEntity.getProfile() != null)
-            profileService.updateProfile(userEntity.getProfile());
+        Profile profile = new Profile();
+        profile.setName(userEntity.getUsername());
+        profile.setDescription("Default description");
+        Profile updatedProfile = profileService.updateProfile(profile);
+
+        userEntity.setProfile(updatedProfile);
+        userRepository.save(userEntity);
+
         return "Success";
     }
 

@@ -2,6 +2,7 @@ package com.practiceapp.practiceapp.controller.views;
 
 import com.practiceapp.practiceapp.controller.profile.ProfileController;
 import com.practiceapp.practiceapp.controller.user.CreateUserController;
+import com.practiceapp.practiceapp.entity.CommunityEntity;
 import com.practiceapp.practiceapp.entity.Profile;
 import com.practiceapp.practiceapp.entity.UserEntity;
 import org.apache.catalina.User;
@@ -19,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import springfox.documentation.spring.web.json.Json;
 
 import java.net.http.HttpResponse;
+import java.util.List;
 
 @Controller
 public class CreateUserViewController {
@@ -54,7 +56,6 @@ public class CreateUserViewController {
         return "getuserbyname";
     }
 
-    /* NOT WORKING
     @GetMapping(path="home/saveuser")
     public String saveUser(Model model){
         UserEntity user = new UserEntity();
@@ -74,6 +75,42 @@ public class CreateUserViewController {
 
         return "saveuser";
     }
-    */
+
+    @GetMapping(path = "home/getjoinedcommunities")
+    public String getJoinedCommunities(Model model){
+        model.addAttribute("username","");
+        model.addAttribute("showlist",false);
+
+        return "getjoinedcommunities";
+    }
+
+    @PostMapping(path = "home/getjoinedcommunities")
+    public String getJoinedCommunitiesSent(Model model,@RequestParam("username") String username){
+        List<CommunityEntity> communityList = createUserController.getUserJoinedCommunitiesByName(username);
+
+        model.addAttribute("communitylist",communityList);
+        model.addAttribute("showlist",true);
+
+
+        return "getJoinedCommunities";
+    }
+
+    @GetMapping(path = "home/getcreatedcommunities")
+    public String getCreatedCommunities(Model model){
+        model.addAttribute("username","");
+        model.addAttribute("showlist",false);
+
+        return "getcreatedcommunities";
+    }
+
+    @PostMapping(path = "home/getcreatedcommunities")
+    public String getCreatedCommunitiesSent(Model model,@RequestParam("username") String username){
+        List<CommunityEntity> communityList = createUserController.getUserCreatedCommunitiesByName(username);
+
+        model.addAttribute("communitylist",communityList);
+        model.addAttribute("showlist",true);
+
+        return "getcreatedcommunities";
+    }
 
 }
