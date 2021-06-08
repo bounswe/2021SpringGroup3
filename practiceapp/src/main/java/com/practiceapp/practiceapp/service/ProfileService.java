@@ -15,16 +15,16 @@ public class ProfileService {
     @Autowired
     private PicturesApi picturesApi;
 
-    public Profile getProfile(String id) {
-        return profileRepository.getByName(id);
+    public Profile getProfile(String username) {
+        return profileRepository.getByName(username);
     }
 
     public Profile updateProfile(Profile profile) {
         return profileRepository.save(profile);
     }
 
-    public Profile setRandomPic(String id) {
-        Profile profile = getProfile(id);
+    public Profile setRandomPic(String username) {
+        Profile profile = getProfile(username);
         if (profile != null) {
         String generatedPic = picturesApi.getRandomCatPic();
             profile.setPhoto(generatedPic);
