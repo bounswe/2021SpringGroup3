@@ -38,25 +38,16 @@ public class CreatePostControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    //Fields for mock post
-    Date mock_date = new Date();
-
-    UserEntity mock_user = new UserEntity();
-
-    List<CommunityEntity> communities = new ArrayList<>(List.of(new CommunityEntity()));
-
-    PostEntity mock_post = new PostEntity("123","this is a mock post",mock_date,"istanbul",mock_user,communities);
-
     String examplePost = "{\"post_id\":\"123\",\"text\":\"this is a mock post\"}";
 
 
-
-
-
+    /**
+     * Checks if the request runs the correct service function.
+     * Expected response: 200
+     * Expected return: 1
+     */
     @Test
     public void savePostTest() throws Exception {
-
-
 
         PostService postService = mock(PostService.class);  //mock the post service
 
