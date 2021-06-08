@@ -7,21 +7,7 @@
 
 </head>
 <body>
-
-<table class="table">
-  <thead>
-  <tr>
-    <th scope="col">Place</th>
-  </tr>
-  </thead>
-
-  <tbody>
-  <tr th:each="place: ${places}">
-    <td th:text="${place}"/>
-  </tr>
-  </tbody>
-
-
-</table>
+<p th:text="${'Word: '+word}"></p>
+<p th:text="${'Definition: '+definition}"></p>
 </body>
 </html>

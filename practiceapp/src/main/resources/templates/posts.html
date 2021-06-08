@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title> Posts </title>
+  <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
+  <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-alpine.css">
+</head>
+<body>
+<h1> Posts </h1>
+<div id="myGrid" class="ag-theme-alpine" style="overflow:scroll;"></div>
+
+<script th:inline="javascript" type="text/javascript" charset="utf-8">
+
+  // specify the columns
+  const columnDefs = [
+    { field: "Content" , autoHeight: true, wrapText: true, resizable: true, flex: 8},
+    { field: "Date", autoHeight: true, wrapText: true, resizable: true, flex: 2},
+    { field: "Location", autoHeight: true, wrapText: true, resizable: true, flex: 6},
+    { field: "Author", autoHeight: true, wrapText: true, resizable: true, flex: 3}
+  ];
+
+  /*<![CDATA[*/
+  const data = /*[[${posts}]]*/ 'posts';
+  /*<![CDATA[*/
+
+
+  // let the grid know which columns and what data to use
+  const gridOptions = {
+      columnDefs: columnDefs,
+      rowData: data,
+      pagination: true,
+      animateRows: true,
+      enableCellChangeFlash: true,
+      paginationPageSize: 10,
+      autoHeight: true,
+      domLayout: "autoHeight"
+  };
+
+  // lookup the container we want the Grid to use
+  const eGridDiv = document.querySelector('#myGrid');
+
+  // create the grid passing in the div to use together with the columns & data we want to use
+  new agGrid.Grid(eGridDiv, gridOptions);
+
+</script>
+</body>
+</html>
+
+

@@ -33,8 +33,6 @@ public class PostService {
         return kanyeRestApi.getRandomKanyeQuote();
     }
 
-
-
     /**
      * Saves the given post entity to database
      * @param postEntity to be created
