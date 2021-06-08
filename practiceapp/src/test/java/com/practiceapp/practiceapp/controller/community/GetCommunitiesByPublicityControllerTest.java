@@ -43,18 +43,18 @@ public class GetCommunitiesByPublicityControllerTest {
     @BeforeEach
     void setUp() {
         privateCommunity = new CommunityEntity();
-        privateCommunity.setId("1");
+        //privateCommunity.setId("1");
         privateCommunity.setName("Mock_Private1");
         privateCommunity.setDescription("This is private community 1");
         privateCommunity.setPublicity(false);
 
         publicCommunity1 = new CommunityEntity();
-        publicCommunity1.setId("2");
+        //publicCommunity1.setId("2");
         publicCommunity1.setName("Mock_Public1");
         publicCommunity1.setDescription("This is public community 1");
 
         publicCommunity2 = new CommunityEntity();
-        publicCommunity2.setId("3");
+        //publicCommunity2.setId("3");
         publicCommunity2.setName("Mock_Public_2");
         publicCommunity2.setDescription("This is public community 2");
     }
