@@ -26,7 +26,13 @@ public class CreateCommunityController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @ApiOperation(value="Create Community", notes=" This method creates new community", response=String.class)
+    @ApiOperation(value="Create Community",
+            notes=" This method creates new community. \n" +
+                    "If language of community is not given, detects language using " +
+                    "[third-party API](https://ws.detectlanguage.com). \n" +
+                    "Community name and description can not be empty. \n" +
+                    "Name of the community should be **unique**.",
+            response=String.class)
     @ApiResponses(value={
             @ApiResponse(code = 201, message = "Successfully created community"),
             @ApiResponse(code = 400, message = "Bad Request: Ie.Mandatory fields are missing"),
