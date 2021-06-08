@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <title>Create New Post</title>
+</head>
+<body>
+<div align="center">
+  <h1>Create New Post</h1>
+  <br />
+  <form action="#" th:action="@{/home/post/update/save}" th:object="${post}"
+        method="post">
+
+    <table border="0" cellpadding="10">
+
+      <tr>
+        <td>Post ID:</td>
+        <td><input type="text" th:field="*{post_id}" /></td>
+      </tr>
+      <tr>
+        <td>Location to Update:</td>
+        <td><input type="text" th:field="*{location}" /></td>
+      </tr>
+      <tr>
+        <td>Content to Update:</td>
+        <td><input type="text" th:field="*{text}" /></td>
+      </tr>
+      <tr>
+        <td colspan="2"><button type="submit">Save</button> </td>
+      </tr>
+    </table>
+  </form>
+</div>
+</body>
+</html>
