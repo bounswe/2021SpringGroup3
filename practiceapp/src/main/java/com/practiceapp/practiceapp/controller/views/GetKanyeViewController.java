@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(path = "home/kanyequote")
-public class GetKanyeController {
+public class GetKanyeViewController {
 
     @Autowired
     UpdatePostController updatePostController;
