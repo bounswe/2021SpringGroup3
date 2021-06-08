@@ -111,7 +111,7 @@ public class CommunityServiceTest {
      *  calls CommunityRepository and returns respond of the repository without error
      *
      *  Expected:
-     *              - Return community as repository {@link CommunityRepository#save(Object)} responded
+     *              - Return community as repository {@link CommunityRepository#findAllByPublicity(Boolean)} responded
      *
      */
     @Test
@@ -131,7 +131,7 @@ public class CommunityServiceTest {
      *
      *  Expected:
      *              - Calling repository with correct parameter (true)
-     *              - Return community as repository {@link CommunityRepository#save(Object)} responded
+     *              - Return community as repository {@link CommunityRepository#findAllByPublicity(Boolean)} responded
      *
      */
     @Test
