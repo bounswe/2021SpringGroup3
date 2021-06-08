@@ -3,6 +3,7 @@ package com.practiceapp.practiceapp.controller.views;
 import com.practiceapp.practiceapp.entity.PostEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,15 +18,16 @@ import java.util.List;
 @RequestMapping(path = "/home/posts")
 public class GetPostsViewController {
 
-
-    private String url = "http://localhost:9090/community/posts";
+    @Value("${base.url}")
+    private String base_url;
+    private String target_url = "/community/posts/";
 
     RestTemplate restTemplate = new RestTemplate();
 
     @RequestMapping(path = "/{community_name}",method = RequestMethod.GET)
     public String showPostsByCommunityName(Model model, @PathVariable("community_name") String community_name){  //TEST AFTER POSTS ADDED!
 
-        List<PostEntity> posts = restTemplate.getForObject(url + "/" + community_name, List.class);
+        List<PostEntity> posts = restTemplate.getForObject(base_url + target_url + "/" + community_name, List.class);
         JSONArray rows = new JSONArray();
         for (PostEntity post: posts) {
             JSONObject row = new JSONObject()
