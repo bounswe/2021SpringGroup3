@@ -5,7 +5,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface ProfileRepository extends MongoRepository<Profile, String> {
 
-    Profile getById(String id);
-    Profile getByName(String name);
+
+    Profile getByName(String username);
+
 
 }
