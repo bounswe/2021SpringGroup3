@@ -1,7 +1,9 @@
 package com.practiceapp.practiceapp.service;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.practiceapp.practiceapp.entity.CommunityEntity;
 import com.practiceapp.practiceapp.entity.PostEntity;
+import com.practiceapp.practiceapp.repository.CommunityRepository;
 import com.practiceapp.practiceapp.repository.PostRepository;
 import com.practiceapp.practiceapp.utils.KanyeRestApi;
 import com.practiceapp.practiceapp.utils.PlacesApi;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -17,6 +20,9 @@ public class PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private CommunityRepository communityRepository;
 
     @Autowired
     private KanyeRestApi kanyeRestApi;
@@ -39,7 +45,15 @@ public class PostService {
      * @return success code
      */
     public int savePost(PostEntity postEntity){
-        postRepository.save(postEntity);
+        postEntity.setDate(new Date());
+        List<CommunityEntity>communities = postEntity.getCommunities();
+        postEntity = postRepository.save(postEntity);
+        for (int i = 0;i<communities.size();i++) {
+            CommunityEntity community=communities.get(i);
+            community.getPosts().add(postEntity);
+            communityRepository.save(community);
+        }
+
         return 1;
     }
 
