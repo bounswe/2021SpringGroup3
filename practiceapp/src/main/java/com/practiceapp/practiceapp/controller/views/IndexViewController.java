@@ -32,7 +32,6 @@ public class IndexViewController {
     private String getUserByNameUrl = baseUrl + "getuserbyname";
     private String saveUserUrl = baseUrl + "saveuser";
     private String getJoinedCommunitiesUrl = baseUrl + "getjoinedcommunities";
-    private String getCreatedCommunitiesUrl = baseUrl + "getcreatedcommunities";
 
     @GetMapping(path= "/home")
     public String getIndex(Model model){
@@ -46,7 +45,6 @@ public class IndexViewController {
         model.addAttribute("getuserbyname",getUserByNameUrl);
         model.addAttribute("saveuser",saveUserUrl);
         model.addAttribute("getjoinedcommunities",getJoinedCommunitiesUrl);
-        model.addAttribute("getcreatedcommunities",getCreatedCommunitiesUrl);
         model.addAttribute("community",searchCommunityUrl);
         model.addAttribute("communities",searchCommunitiesUrl);
         model.addAttribute("dictionary",dictionaryUrl);

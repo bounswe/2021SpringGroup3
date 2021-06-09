@@ -98,22 +98,4 @@ public class CreateUserViewController {
         return "getJoinedCommunities";
     }
 
-    @GetMapping(path = "home/getcreatedcommunities")
-    public String getCreatedCommunities(Model model){
-        model.addAttribute("username","");
-        model.addAttribute("showlist",false);
-
-        return "getcreatedcommunities";
-    }
-
-    @PostMapping(path = "home/getcreatedcommunities")
-    public String getCreatedCommunitiesSent(Model model,@RequestParam("username") String username){
-        List<CommunityEntity> communityList = createUserController.getUserCreatedCommunitiesByName(username);
-
-        model.addAttribute("communitylist",communityList);
-        model.addAttribute("showlist",true);
-
-        return "getcreatedcommunities";
-    }
-
 }
