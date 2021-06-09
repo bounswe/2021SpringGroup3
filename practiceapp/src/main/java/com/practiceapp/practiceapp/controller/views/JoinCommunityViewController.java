@@ -18,7 +18,7 @@ public class JoinCommunityViewController {
     @Autowired
     private JoiningCommunityController joiningCommunityController;
 
-    @RequestMapping(path = "/join")
+    @RequestMapping(path = "/join", method = RequestMethod.GET)
     public String joinCommunity(Model model){
         String user_name = "";
         String community_name = "";
