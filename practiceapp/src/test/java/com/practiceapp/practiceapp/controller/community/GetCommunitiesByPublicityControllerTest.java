@@ -63,11 +63,7 @@ public class GetCommunitiesByPublicityControllerTest {
      *  returns public communities as requested
      *
      *  Expected:
-     *              - Return OK-200
-     *              - Calling service to get public communities
-     *              - Return communities as service responded
-     *              - Calling specified method of service exactly once
-     *              - no other methods of the service is called during this test
+     *              - Returning OK-200 and public communities as requested
      *
      */
 
@@ -79,9 +75,6 @@ public class GetCommunitiesByPublicityControllerTest {
 
         JSONAssert.assertEquals(objectMapper.writeValueAsString(List.of(publicCommunity1, publicCommunity2)),
                 result.getResponse().getContentAsString(), false);
-
-        verify(communityService, times(1)).findByPublicity(true);
-        verifyNoMoreInteractions(communityService);
     }
 
 
@@ -90,11 +83,7 @@ public class GetCommunitiesByPublicityControllerTest {
      *  returns private communities as requested
      *
      *  Expected:
-     *              - Return OK-200
-     *              - Calling service to get private communities
-     *              - Return communities as service responded
-     *              - Calling specified method of service exactly once (findByPublicity)
-     *              - no other methods of the service is called during this test
+     *              - Return OK-200 and private communities as requested
      *
      */
 
@@ -106,8 +95,25 @@ public class GetCommunitiesByPublicityControllerTest {
 
         JSONAssert.assertEquals(objectMapper.writeValueAsString(List.of(privateCommunity)),
                 result.getResponse().getContentAsString(), false);
+    }
 
-        verify(communityService, times(1)).findByPublicity(false);
+
+    /**
+     *  Checks whether {@link GetCommunitiesByPublicityController#getCommunitiesByPublicity(boolean)}
+     *  returns public communities as requested
+     *
+     *  Expected:
+     *              - Calling correct methods of the communityService with correct parameter exactly once
+     *
+     */
+
+    @Test
+    void getCommunitiesByPublicity_isCommunityServiceCalledCorrectly() throws Exception {
+        when(communityService.findByPublicity(any(Boolean.class))).thenReturn(List.of(publicCommunity1, publicCommunity2));
+
+        mockMvc.perform(get("/communities/").param("public", "true")).andExpect(status().isOk()).andReturn();
+
+        verify(communityService, times(1)).findByPublicity(true);
         verifyNoMoreInteractions(communityService);
     }
 }
