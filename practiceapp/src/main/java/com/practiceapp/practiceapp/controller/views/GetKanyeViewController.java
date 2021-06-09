@@ -22,7 +22,9 @@ public class GetKanyeViewController {
     public String getQuote(Model model) throws UnirestException {
 
         ResponseEntity<String> kanye_quote = updatePostController.getRandomKanyeQuote();
-        model.addAttribute("kanye_quote", kanye_quote);
+        String s = kanye_quote.getBody();
+        String[] arrayString = s.split("\"");
+        model.addAttribute("kanye_quote", arrayString[3]);
         return "get_kanye";
     }
 
