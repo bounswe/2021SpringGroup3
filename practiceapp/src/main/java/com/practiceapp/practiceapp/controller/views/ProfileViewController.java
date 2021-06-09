@@ -64,7 +64,7 @@ public class ProfileViewController {
 
         profileController.updateProfile(updatedProfile);
 
-        return "updateprofile";
+        return "getprofile";
     }
 
     @GetMapping(path = "home/setrandompic")

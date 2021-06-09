@@ -8,7 +8,11 @@
 </head>
 <body>
 <a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
-<p th:text="${'Word: '+word}"></p>
-<p th:text="${'Definition: '+definition}"></p>
+<div class="row">
+  <div class="text-center">
+      <p th:text="${'Word: '+word}"></p>
+      <p th:text="${'Definition: '+definition}"></p>
+  </div>
+</div>
 </body>
 </html>

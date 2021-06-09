@@ -9,28 +9,45 @@
 <body>
   <a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
 
-  <form th:action="@{/home/getprofile}" method="post">
+  <div class="headerType1">
+    <h2 style="margin: 0;padding: 19px;padding-bottom: 15px";> See Profile </h2>
+  </div>
+
+  <form th:action="@{/home/getprofile}" method="post" style="margin: 15px">
     <label>Profile name:</label>
     <input type="text" th:value="${profilename}" name="profilename"/><br/>
 
-    <button type="submit">Get</button>
+    <button type="submit" class="btn btn-primary">Get</button>
   </form>
 
   <div th:if="${noprofile}">
     <h3>No such profile.</h3>
   </div>
   <div th:if="${showProfile}">
-    <h3>Profile Details:</h3>
-    <h4>Name:</h4><br>
-    <p th:text="${profile.name}"/><br>
-    <h4>Description:</h4><br>
-    <p th:text="${profile.description}"/><br>
-    <h4>Is Public:</h4><br>
-    <p th:text="${profile.isPublic}"/><br>
-    <h4>Photo:</h4><br>
-    <img th:src="${profile.photo}" height="300px">
-    <h4>Is Photo Public:</h4><br>
-    <p th:text="${profile.isPhotoPublic}"/><br>
+    <table class="table">
+      <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Publicity</th>
+        <th scope="col">Photo</th>
+        <th scope="col">Photo publicity</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:object="${profile}">
+        <td th:text="*{name}"></td>
+        <td th:text="${profile.description}"></td>
+        <td th:text="${profile.isPublic}"></td>
+        <td>
+        <img th:src="${profile.photo}" height="300px">
+        </td>
+        <td th:text="${profile.isPhotoPublic}"></td>
+      </tr>
+
+      </tbody>
+    </table>
   </div>
+
 </body>
 </html>
