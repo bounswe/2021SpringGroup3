@@ -65,51 +65,56 @@ public class CreateCommunityControllerTest {
      *  Expected:
      *              - Return CREATED-201
      *              - Return service's response for community creation
+     *              - Calling services with correct parameter (detectLanguage, createCommunity, exists)
+     *              - Calling specified method of service exactly once
+     *              - no other methods of the service is called during this test
      *
      */
-
     @Test
-    void createCommunity() throws Exception{
+    void createCommunity_isCommunityCreatedSuccessfully() throws Exception{
 
         when(communityService.detectLanguage(any(String.class))).thenReturn("en");
         when(communityService.createCommunity(any(CommunityEntity.class))).thenReturn(communityLangDetected);
+        when(communityService.exists(any(String.class))).thenReturn(false);
 
         MvcResult result = mockMvc.perform(post("/community/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(community)))
                 .andExpect(status().isCreated()).andReturn();
-
 
         JSONAssert.assertEquals(objectMapper.writeValueAsString(communityLangDetected),
                 result.getResponse().getContentAsString(), false);
 
+        verify(communityService, times(1)).detectLanguage(community.getDescription());
+        verify(communityService, times(1)).createCommunity(communityLangDetected);
+        verify(communityService, times(1)).exists(communityLangDetected.getName());
+        verifyNoMoreInteractions(communityService);
     }
 
+
     /**
-     *  Checks whether communityService is called with correct parameter for community creation
+     *  Checks whether controller returns 403 since there exists a community with specified name
      *
      *  Expected:
-     *              - Return CREATED-201
-     *              - Set community's language as returned from communityService.
-     *              - Call communityService to save the community with detected language
+     *              - Return FORBIDDEN-403
+     *              - Calling services with correct parameter (exists)
+     *              - Calling specified services exactly once
+     *              - no other methods of the service is called during this test
      *
      */
 
     @Test
-    void isServiceForCreationCalledCorrectly() throws Exception{
+    void createCommunity_nameIsNotUnique() throws Exception{
 
-        when(communityService.detectLanguage(any(String.class))).thenReturn("en");
-        when(communityService.createCommunity(any(CommunityEntity.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(communityService.exists(any(String.class))).thenReturn(true);
 
         MvcResult result = mockMvc.perform(post("/community/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(community)))
-                .andExpect(status().isCreated()).andReturn();
+                .andExpect(status().isForbidden()).andReturn();
 
-
-        JSONAssert.assertEquals(objectMapper.writeValueAsString(communityLangDetected),
-                                result.getResponse().getContentAsString(), false);
-        
+        verify(communityService, times(1)).exists(communityLangDetected.getName());
+        verifyNoMoreInteractions(communityService);
     }
 
 
@@ -120,21 +125,27 @@ public class CreateCommunityControllerTest {
      *              - Return CREATED-201
      *              - Set community's language as given (success: returns "tr").
      *              - Do not call third-party API to detect language (fails: returns "en").
+     *              - Calling services with correct parameter (createCommunity, exists)
+     *              - Calling specified services exactly once
+     *              - no other methods of the service is called during this test
      *
      */
 
     @Test
-    void isGivenLanguagePreserved() throws Exception{
+    void createCommunity_isGivenLanguagePreserved() throws Exception{
 
+        when(communityService.exists(any(String.class))).thenReturn(false);
         when(communityService.detectLanguage(any(String.class))).thenReturn("en");
-
-        when(communityService.createCommunity(communityWithLang)).thenReturn(communityWithLang);
-        when(communityService.createCommunity(communityLangDetected)).thenReturn(communityLangDetected);
+        when(communityService.createCommunity(any(CommunityEntity.class))).thenReturn(communityWithLang);
 
         MvcResult result = mockMvc.perform(post("/community/create").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(communityWithLang))).andExpect(status().isCreated()).andReturn();
 
         JSONAssert.assertEquals(objectMapper.writeValueAsString(communityWithLang),
                 result.getResponse().getContentAsString(), false);
+
+        verify(communityService, times(1)).createCommunity(communityWithLang);
+        verify(communityService, times(1)).exists(communityWithLang.getName());
+        verifyNoMoreInteractions(communityService);
     }
 }

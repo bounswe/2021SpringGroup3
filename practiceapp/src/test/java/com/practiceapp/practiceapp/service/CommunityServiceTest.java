@@ -16,7 +16,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @WebMvcTest(CommunityService.class)
 public class CommunityServiceTest {
@@ -72,35 +73,21 @@ public class CommunityServiceTest {
      *
      *  Expected:
      *              - Return community as repository {@link CommunityRepository#save(Object)} responded
+     *              - Calling repository with correct parameter (save)
+     *              - Calling specified method of repository exactly once
+     *              - No other methods of the repository is called during this test
      *
      */
     @Test
-    void createCommunity_isCreatedCommunityReturnedCorrectly() {
+    void createCommunity_isCommunityCreatedSuccessfully() {
 
         when(communityRepository.save(any(CommunityEntity.class))).thenReturn(publicCommunity);
         CommunityEntity response = communityService.createCommunity(publicCommunity);
 
         assertEquals(publicCommunity, response);
 
-    }
-
-
-    /**
-     *  Checks whether
-     *  {@link CommunityService#createCommunity(CommunityEntity)}
-     *  calls repository with correct parameters
-     *
-     *  Expected:
-     *              - Call repository {@link CommunityRepository#save(Object)} with specified community entity
-     *
-     */
-    @Test
-    void createCommunity_isRepositoryCalledCorrectly() {
-
-        when(communityRepository.save(any(CommunityEntity.class))).thenAnswer(i -> i.getArguments()[0]);
-        CommunityEntity response = communityService.createCommunity(publicCommunity);
-
-        assertEquals(publicCommunity, response);
+        verify(communityRepository, times(1)).save(publicCommunity);
+        verifyNoMoreInteractions(communityRepository);
 
     }
 
@@ -112,7 +99,9 @@ public class CommunityServiceTest {
      *
      *  Expected:
      *              - Return community as repository {@link CommunityRepository#findAllByPublicity(Boolean)} responded
-     *
+     *              - Calling specified method of the repository with correct parameter (findAllByPublicity)
+     *              - Calling specified method of repository exactly once
+     *              - No other methods of the repository is called during this test
      */
     @Test
     void findByPublicity_isCommunitiesReturnedCorrectly() {
@@ -121,28 +110,9 @@ public class CommunityServiceTest {
         List<CommunityEntity> communityEntities = communityService.findByPublicity(publicCommunity.isPublicity());
 
         assertEquals(List.of(publicCommunity), communityEntities);
-    }
 
-
-    /**
-     *  Checks whether 
-     *  {@link CommunityService#findByPublicity(Boolean)}
-     *  calls repository with correct parameter
-     *
-     *  Expected:
-     *              - Calling repository with correct parameter (true)
-     *              - Return community as repository {@link CommunityRepository#findAllByPublicity(Boolean)} responded
-     *
-     */
-    @Test
-    void findByPublicity_isRepositoryCalledCorrectly() {
-
-        when(communityRepository.findAllByPublicity(true)).thenReturn(List.of(publicCommunity));
-        when(communityRepository.findAllByPublicity(false)).thenReturn(List.of(publicCommunity));
-
-        List<CommunityEntity> communityEntities = communityService.findByPublicity(publicCommunity.isPublicity());
-
-        assertEquals( publicCommunity.isPublicity(), communityEntities.get(0).isPublicity());
+        verify(communityRepository, times(1)).findAllByPublicity(publicCommunity.isPublicity());
+        verifyNoMoreInteractions(communityRepository);
     }
 
 
@@ -153,15 +123,21 @@ public class CommunityServiceTest {
      *
      *  Expected:
      *              - Return community entity as {@link CommunityRepository#getByName(String)} responded
+     *              - Calling specified method of the repository with correct parameter
+     *              - Calling specified method of the repository exactly once
+     *              - No other methods of the repository is called during this test
      *
      */
     @Test
-    void getByName() {
+    void getByName_isCommunityReturnedSuccessfully() {
         when(communityRepository.getByName(any(String.class))).thenReturn(publicCommunity);
 
         CommunityEntity response = communityService.getByName(publicCommunity.getName());
 
         assertEquals(publicCommunity, response);
+
+        verify(communityRepository, times(1)).getByName(publicCommunity.getName());
+        verifyNoMoreInteractions(communityRepository);
     }
 
 
@@ -173,6 +149,9 @@ public class CommunityServiceTest {
      *  Expected:
      *              - Return true since {@link CommunityRepository#getByName(String)} responds as
      *                there is no community with specified name.
+     *              - Calling specified method of the repository with correct parameter
+     *              - Calling specified method of the repository exactly once
+     *              - No other methods of the repository is called during this test
      *
      */
     @Test
@@ -182,6 +161,9 @@ public class CommunityServiceTest {
         Boolean response = communityService.exists("new community name");
 
         assertEquals(false, response);
+
+        verify(communityRepository, times(1)).getByName("new community name");
+        verifyNoMoreInteractions(communityRepository);
     }
 
 
@@ -193,7 +175,9 @@ public class CommunityServiceTest {
      *  Expected:
      *              - Return false since {@link CommunityRepository#getByName(String)}
      *                returns community
-     *
+     *              - Calling specified method of the repository with correct parameter
+     *              - Calling specified method of the repository exactly once
+     *              - No other methods of the repository is called during this test
      */
     @Test
     void exists_isTrueWhenExists() {
@@ -202,6 +186,9 @@ public class CommunityServiceTest {
         Boolean response = communityService.exists(publicCommunity.getName());
 
         assertEquals(true, response);
+
+        verify(communityRepository, times(1)).getByName(publicCommunity.getName());
+        verifyNoMoreInteractions(communityRepository);
     }
 
 
@@ -213,7 +200,9 @@ public class CommunityServiceTest {
      *
      *  Expected:
      *              - Return list of posts as {@link CommunityRepository#getByName(String)}.getPosts() responded
-     *
+     *              - Calling specified method of the repository with correct parameter
+     *              - Calling specified method of the repository exactly once
+     *              - No other methods of the repository is called during this test
      */
     @Test
     void getPosts() {
@@ -222,6 +211,9 @@ public class CommunityServiceTest {
         List<PostEntity> response = communityService.getPosts(communityWithPost.getName());
 
         assertEquals(communityWithPost.getPosts(), response);
+
+        verify(communityRepository, times(1)).getByName(communityWithPost.getName());
+        verifyNoMoreInteractions(communityRepository);
     }
 
 
@@ -235,7 +227,9 @@ public class CommunityServiceTest {
      *  Expected:
      *              - Return language code as
      *                {@link DetectLanguageApi#detectLanguage(String)} responded
-     *
+     *              - Calling specified method of the DetectLanguageApi with correct parameter
+     *              - Calling specified method of the DetectLanguageApi exactly once
+     *              - No other methods of the DetectLanguageApi is called during this test
      */
     @Test
     void detectLanguage() {
@@ -244,6 +238,10 @@ public class CommunityServiceTest {
 
         String language = communityService.detectLanguage(publicCommunity.getDescription());
         assertEquals("en", language);
+
+        verify(detectLanguageApi, times(1)).detectLanguage(publicCommunity.getDescription());
+        verifyNoMoreInteractions(detectLanguageApi);
+        verifyNoMoreInteractions(communityRepository);
     }
 }
 
