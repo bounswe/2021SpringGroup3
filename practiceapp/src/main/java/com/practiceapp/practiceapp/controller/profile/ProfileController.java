@@ -19,6 +19,7 @@ public class ProfileController {
     @Autowired
     private ProfileService profileService;
 
+
     @ApiOperation(
             value="Get Profile by its username",
             notes=" This method returns a profile which has the given username ",
@@ -29,6 +30,7 @@ public class ProfileController {
     @RequestMapping(path = "/{username}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Profile getProfile(@PathVariable("username") String username){
         return profileService.getProfile(username);
+
     }
 
 
@@ -43,6 +45,7 @@ public class ProfileController {
     }
 
 
+
     @ApiOperation(value="Set Random Profile Pic", notes=" This method updates the existed profile's pic", response=Profile.class)
     @ApiResponses(value={
             @ApiResponse(code = 201, message = "Successfully updated"),
@@ -50,6 +53,7 @@ public class ProfileController {
     })    @RequestMapping(path = "/setRandomPic/{username}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Profile setRandomPic(@PathVariable("username") String username){
         return profileService.setRandomPic(username);
+
     }
 
 
