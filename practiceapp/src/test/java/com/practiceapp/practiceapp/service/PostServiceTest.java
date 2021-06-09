@@ -55,8 +55,8 @@ public class PostServiceTest {
     void updatePost() {
 
         when(postRepository.save(any(PostEntity.class))).thenReturn(postEntity);
-        int response = postService.updatePost(postEntity);
-        assertEquals(response,1);
+        PostEntity response = postService.updatePost(postEntity);
+        assertEquals(postEntity,response);
 
     }
 

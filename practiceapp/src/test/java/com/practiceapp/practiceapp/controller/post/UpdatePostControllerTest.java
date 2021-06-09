@@ -53,13 +53,14 @@ public class UpdatePostControllerTest {
     @BeforeEach
     void setUp() {                   //create a post to be updated later
         post = new PostEntity();
+        post.setText("This is the first text of the post.");
         examplePost = "{\"_id\":\"" + post.getPost_id() + "\",\"text\":\"This is the updated text of the post.\"}";
     }
 
     /**
      * Checks if the request runs the correct service function.
      * Expected response: 200
-     * Expected return: 1
+     * Expected return: updated postEntity
      */
     @Test
     public void updatePostTest() throws Exception {
@@ -67,7 +68,7 @@ public class UpdatePostControllerTest {
         PostService postService = mock(PostService.class);  //mock the post service
 
         //mock the behavior of service entity and repository
-        when(postService.updatePost(any(PostEntity.class))).thenReturn(1);
+        when(postService.updatePost(any(PostEntity.class))).thenReturn(post);
 
 
         //Prepare the request
@@ -76,14 +77,13 @@ public class UpdatePostControllerTest {
                 .accept(MediaType.APPLICATION_JSON).content(examplePost)
                 .contentType(MediaType.APPLICATION_JSON);
 
-
         //Mock the request
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
 
         assertEquals(200, response.getStatus());  //check response status
-        assertEquals(result.getResponse().getContentAsString(),"1");  //check the response(1 represents success)
-
+        assertEquals(objectMapper.writeValueAsString(post),
+                result.getResponse().getContentAsString()); //check the response content
 
     }
 
