@@ -8,16 +8,18 @@
 </head>
 <body>
 <a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
-
+<div align="center">
+  <h1>Set Random Picture</h1>
   <form th:action="@{/home/setrandompic}" method="post">
     <label>Profile name:</label>
     <input type="text" th:value="${profilename}" name="profilename"/><br/>
-
-    <button type="submit">Set Random Pic</button>
+  </br>
+    <button type="submit" class="btn btn-primary">Set Random Pic</button>
   </form>
 
   <div th:if="${showpic}">
     <img th:src="${randompic}" height="600px">
   </div>
+</div>
 </body>
 </html>

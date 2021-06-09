@@ -7,27 +7,39 @@
 
 </head>
 <body>
-<a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
 
+<a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
+<div align="center">
+    <h1>Get Joined Communities</h1>
     <form th:action="@{/home/getjoinedcommunities}" method="post">
         <label>Username:</label>
         <input type="text" th:value="${username}" name="username"/><br/>
-
-        <button type="submit">Get</button>
+        </br>
+        <button type="submit" class="btn btn-primary">Get</button>
     </form>
-
+    </br>
 
     <div th:if="${showlist}">
-        <h3>Joined Communities:</h3>
-        <div th:each="community : ${communitylist}">
-            <h4>Community Name:</h4>
-            <p th:text="${community.name}"/>
-            <h4>Description</h4>
-            <p th:text="${community.description}"/>
-            <h4>Is Community Public</h4>
-            <p th:text="${community.publicity}"/>
-            <br><br>
-        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Publicity</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="community :${communitylist}">
+                <td th:text="${community.name}"></td>
+                <td th:text="${community.description}"></td>
+                <td th:text="${community.publicity}"></td>
+            </tr>
+
+            </tbody>
+        </table>
+
+
     </div>
+</div>
 </body>
 </html>

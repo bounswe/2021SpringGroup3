@@ -9,14 +9,13 @@
 <body>
   <a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
 
-  <div class="headerType1">
-    <h2 style="margin: 0;padding: 19px;padding-bottom: 15px";> See Profile </h2>
-  </div>
+  <div align="center">
+    <h1>Search Profile</h1>
 
   <form th:action="@{/home/getprofile}" method="post" style="margin: 15px">
     <label>Profile name:</label>
     <input type="text" th:value="${profilename}" name="profilename"/><br/>
-
+    </br>
     <button type="submit" class="btn btn-primary">Get</button>
   </form>
 
@@ -48,6 +47,6 @@
       </tbody>
     </table>
   </div>
-
+  </div>
 </body>
 </html>

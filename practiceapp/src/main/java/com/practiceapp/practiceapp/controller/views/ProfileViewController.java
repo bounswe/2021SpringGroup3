@@ -63,6 +63,7 @@ public class ProfileViewController {
         updatedProfile.setIsPhotoPublic(profile.getIsPhotoPublic());
 
         profileController.updateProfile(updatedProfile);
+        getProfileSent(model,profile.getName());
 
         return "getprofile";
     }
@@ -80,7 +81,7 @@ public class ProfileViewController {
         Profile profile = profileController.setRandomPic(profilename);
         model.addAttribute("randompic",profile.getPhoto());
         model.addAttribute("showpic",true);
-
-        return "setrandompic";
+        getProfileSent(model,profilename);
+        return "getProfile";
     }
 }

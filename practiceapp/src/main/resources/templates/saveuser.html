@@ -29,7 +29,8 @@
 </head>
 <body>
 <a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
-
+<div align="center">
+    <h1>Add User</h1>
 <div th:if="${showmessage}">
     <p>User created.</p>
 </div>
@@ -39,8 +40,8 @@
     <input type="text" th:field="*{username}" /><br/>
     <label>Email:</label>
     <input type="text" th:field="*{email}" /><br/>
-    <button type="submit">Update</button>
+    <button type="submit" class="btn btn-primary">Add</button>
 </form>
-
+</div>
 </body>
 </html>

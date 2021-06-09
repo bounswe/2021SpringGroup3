@@ -36,6 +36,10 @@ public class IndexViewController {
 
     private String kanyeUrl = baseUrl + "kanyequote";
 
+
+    private String updatePostUrl = baseUrl + "post/update";
+    private String createPostUrl = baseUrl + "post/create";
+
     @GetMapping(path= "/home")
     public String getIndex(Model model){
 
@@ -54,6 +58,8 @@ public class IndexViewController {
         model.addAttribute("create_community",createCommunitiesUrl);
         model.addAttribute("join_community",joinCommunityUrl);
         model.addAttribute("kanye",kanyeUrl);
+        model.addAttribute("createPost",createPostUrl);
+        model.addAttribute("updatePost",updatePostUrl);
 
         return "index";
     }
