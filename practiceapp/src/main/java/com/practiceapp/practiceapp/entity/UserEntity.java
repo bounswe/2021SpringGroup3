@@ -49,5 +49,14 @@ public class UserEntity {
     @DBRef(lazy = true)
     private List<CommunityEntity> created_communities = new ArrayList<>();
 
+    @JsonIgnore
+    @DBRef(lazy = true)
+    private List<UserEntity> followed_users = new ArrayList<>();
+
+    @JsonIgnore
+    @DBRef(lazy = true)
+    private List<UserEntity> follower_users = new ArrayList<>();
+
+
 
 }
