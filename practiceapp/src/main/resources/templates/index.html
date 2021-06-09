@@ -2,12 +2,11 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Home Page</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 
 </head>
 <body>
-
 <h1>Practice App Main Menu</h1>
 <a th:href="${places}"> places link</a>
 <a th:href="${community}"> search community by name</a>
@@ -15,5 +14,20 @@
 <a th:href="${dictionary}"> dictionary link</a>
 <a th:href="${create_community}"> create community</a>
 
+  <h2>Advice Links</h2><br>
+  <a th:href="${advice}" class="btn btn-primary" style="margin:15px">Random Advice</a>
+  <a th:href="${searchadvice}" class="btn btn-primary" style="margin:15px">Search Advice</a>
+  <br>
+
+  <h2>Profile Links</h2><br>
+  <a th:href="${getprofile}" class="btn btn-primary" style="margin:15px">Get Profile</a>
+  <a th:href="${updateProfile}" class="btn btn-primary" style="margin:15px">Update Profile</a>
+  <a th:href="${setrandompic}" class="btn btn-primary" style="margin:15px">Set Random Picture</a>
+  <br>
+
+  <h2>User Links</h2><br>
+  <a th:href="${getuserbyname}" class="btn btn-primary" style="margin:15px">Get User By Name</a>
+  <a th:href="${saveuser}" class="btn btn-primary" style="margin:15px">Save User</a>
+  <a th:href="${getjoinedcommunities}" class="btn btn-primary" style="margin:15px">Get Joined Communities</a>
 </body>
 </html>
