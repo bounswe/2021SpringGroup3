@@ -45,10 +45,12 @@ public class UserEntity {
     // it tries to load the dbref for the user in its members list. This goes on forever and ends up in an infinite loop.
 
     @JsonIgnore
+    @ToString.Exclude
     @DBRef(lazy = true)
     private List<CommunityEntity> joined_communities = new ArrayList<>();
 
     @JsonIgnore
+    @ToString.Exclude
     @DBRef(lazy = true)
     private List<CommunityEntity> created_communities = new ArrayList<>();
 
