@@ -18,7 +18,7 @@ public class IndexViewController {
 
     //Profile Links
     private String getProfileUrl = baseUrl + "getprofile";
-    private String updateProfileUrl = baseUrl + "updateprofile";
+    private String updateProfileUrl = baseUrl + "updateprofileform";
     private String setRandomPicUrl = baseUrl + "setrandompic";
     private String searchCommunityUrl = baseUrl +"community/search";
 

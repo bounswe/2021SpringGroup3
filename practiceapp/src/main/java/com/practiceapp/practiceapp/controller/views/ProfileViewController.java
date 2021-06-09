@@ -41,9 +41,29 @@ public class ProfileViewController {
     }
 
     //--------------------------------
+
+    @GetMapping(path = "home/updateprofileform")
+    public String updateProfileForm(Model model){
+        String username ="";
+        model.addAttribute("username",username);
+
+        return "updateProfileForm";
+    }
+
+    @PostMapping(path = "home/updateprofileform")
+    public String updateProfileFormSent(Model model, @ModelAttribute("username") String username){
+
+        Profile profile = profileController.getProfile(username);
+        updateProfile(model,profile);
+
+        return "updateprofile";
+    }
+
+
+
     @GetMapping(path = "home/updateprofile")
-    public String updateProfile(Model model){
-        Profile profile = new Profile();
+    public String updateProfile(Model model, Profile profile){
+        //Profile profile = new Profile();
         model.addAttribute("profile",profile);
         model.addAttribute("showmessage",false);
 
