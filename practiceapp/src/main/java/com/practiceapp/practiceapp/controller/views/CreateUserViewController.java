@@ -9,6 +9,7 @@ import org.apache.catalina.User;
 import org.bson.json.JsonObject;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +32,9 @@ public class CreateUserViewController {
     private ProfileController profileController;
 
     RestTemplate restTemplate = new RestTemplate();
-
+    
+    @Value("${base.url}") private String base_url;
+    
     @GetMapping(path="home/getuserbyname")
     public String getUserByName(Model model){
         model.addAttribute("username","");
@@ -69,7 +72,7 @@ public class CreateUserViewController {
     public String saveUserSent(Model model, @ModelAttribute("user") UserEntity user){
 
         HttpEntity<UserEntity> request = new HttpEntity<>(user);
-        restTemplate.postForObject("http://localhost:9090/user/save",request,String.class);
+        restTemplate.postForObject(base_url + "user/save",request,String.class);
         //model.addAttribute("user",createdUser);
         model.addAttribute("showmessage",true);
 
