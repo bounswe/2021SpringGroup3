@@ -50,7 +50,7 @@ public class DetectLanguageApi {
         }
         catch(Exception e)
         {
-            return e.toString();
+            return "";
         }
 
     }
