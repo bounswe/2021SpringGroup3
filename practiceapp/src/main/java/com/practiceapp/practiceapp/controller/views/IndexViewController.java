@@ -36,6 +36,7 @@ public class IndexViewController {
     //User Links
     private String getUserByNameUrl = baseUrl + "getuserbyname";
     private String saveUserUrl = baseUrl + "saveuser";
+    private String userFollowUrl = baseUrl + "userfollow";
 
     //Post Links
     private String updatePostUrl = baseUrl + "post/update";
@@ -64,6 +65,7 @@ public class IndexViewController {
         model.addAttribute("createPost",createPostUrl);
         model.addAttribute("updatePost",updatePostUrl);
         model.addAttribute("searchPost",searchPostUrl);
+        model.addAttribute("user_follow",userFollowUrl);
 
         return "index";
     }
