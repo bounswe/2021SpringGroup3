@@ -30,6 +30,9 @@
 <body>
 <a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
 
+<div align="center">
+    <h1>Update Profile</h1>
+
 <div th:if="${showmessage}">
     <p>Profile updated. If there is no such profile with given ID, a new one is created.</p>
 </div>
@@ -44,8 +47,8 @@
     <label>Is Photo Public:</label>
     <input type="checkbox" th:field="*{isPhotoPublic}" name="isPhotoPublic"/><br>
 
-    <button type="submit">Update</button>
+    <button type="submit" class="btn btn-primary">Update</button>
 </form>
-
+</div>
 </body>
 </html>

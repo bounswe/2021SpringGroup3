@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Random Advice</title>
+    <title>Kanye Quote</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 
 </head>
 <body>
 <a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
-<div class="text-center">
-    <h1 th:text="${id}"/>
-    <p th:text="${advice}"/>
-
+<div align="center">
+    <h1>Kanye Quote</h1>
+    <div th:text="${kanye_quote}"></div>
 </div>
 </body>
 </html>

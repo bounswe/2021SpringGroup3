@@ -8,26 +8,39 @@
 </head>
 <body>
   <a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
-
+  <div align="center">
+    <h1>Search User</h1>
   <form th:action="@{/home/getuserbyname}" method="post">
     <label>Username:</label>
     <input type="text" th:value="${username}" name="username"/><br/>
-
-    <button type="submit">Get</button>
+    </br>
+    <button type="submit" class="btn btn-primary" >Get</button>
   </form>
   <div th:if="${nouser}">
     <h3>No such user.</h3>
   </div>
   <div th:if="${showuser}">
-    <h3>Profile Details:</h3>
-    <h4>ID:</h4><br>
-    <p th:text="${user.id}"/><br>
-    <h4>Name:</h4><br>
-    <p th:text="${user.username}"/><br>
-    <h4>Email:</h4><br>
-    <p th:text="${user.email}"/><br>
+
+    <table class="table">
+      <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Username</th>
+        <th scope="col">Email</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:object="${user}">
+        <td th:text="*{id}"></td>
+        <td th:text="*{username}"></td>
+        <td th:text="*{email}"></td>
+      </tr>
+
+      </tbody>
+    </table>
+
   </div>
 
-
+  </div>
 </body>
 </html>

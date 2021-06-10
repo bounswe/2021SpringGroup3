@@ -8,6 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
 </head>
 <body>
+<a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -16,6 +17,8 @@
                         <h2 style="margin: 0;padding: 19px;padding-bottom: 15px";> SEARCH COMMUNITY </h2>
                     </div>
                 </div>
+
+                <p th:if="${show_not_found}">Community not found</p>
                 <!-- Header of the form -->
                 <div class="card-body">
                     <div class="container">
@@ -39,7 +42,8 @@
                 </div>
                 <!-- Body of the form -->
             </div>
-        </div>
+            </div>
+
     </div>
   </body>
 </html>

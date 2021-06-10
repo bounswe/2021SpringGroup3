@@ -41,9 +41,35 @@ public class ProfileViewController {
     }
 
     //--------------------------------
+
+    @GetMapping(path = "home/updateprofileform")
+    public String updateProfileForm(Model model){
+        String username ="";
+        model.addAttribute("username",username);
+        model.addAttribute("showmessage",false);
+
+        return "updateProfileForm";
+    }
+
+    @PostMapping(path = "home/updateprofileform")
+    public String updateProfileFormSent(Model model, @ModelAttribute("username") String username){
+
+        Profile profile = profileController.getProfile(username);
+        if(profile == null){
+            model.addAttribute("username","");
+            model.addAttribute("showmessage",true);
+            return "updateProfileForm";
+        }
+        updateProfile(model,profile);
+
+        return "updateprofile";
+    }
+
+
+
     @GetMapping(path = "home/updateprofile")
-    public String updateProfile(Model model){
-        Profile profile = new Profile();
+    public String updateProfile(Model model, Profile profile){
+        //Profile profile = new Profile();
         model.addAttribute("profile",profile);
         model.addAttribute("showmessage",false);
 
@@ -54,7 +80,6 @@ public class ProfileViewController {
     public String updateProfileSent(Model model,@ModelAttribute("profile") Profile profile){
         Profile updatedProfile = profileController.getProfile(profile.getName());
         if(updatedProfile == null){
-
             return "updateprofile";
         }
 
@@ -63,8 +88,9 @@ public class ProfileViewController {
         updatedProfile.setIsPhotoPublic(profile.getIsPhotoPublic());
 
         profileController.updateProfile(updatedProfile);
+        getProfileSent(model,profile.getName());
 
-        return "updateprofile";
+        return "getprofile";
     }
 
     @GetMapping(path = "home/setrandompic")
@@ -78,9 +104,15 @@ public class ProfileViewController {
     @PostMapping(path = "home/setrandompic")
     public String setRandomPicSent(Model model, @RequestParam("profilename") String profilename){
         Profile profile = profileController.setRandomPic(profilename);
+        if(profile==null){
+            model.addAttribute("profilename","");
+            model.addAttribute("showpic",false);
+            model.addAttribute("showmessage",true);
+            return "setrandompic";
+        }
         model.addAttribute("randompic",profile.getPhoto());
         model.addAttribute("showpic",true);
-
-        return "setrandompic";
+        getProfileSent(model,profilename);
+        return "getProfile";
     }
 }

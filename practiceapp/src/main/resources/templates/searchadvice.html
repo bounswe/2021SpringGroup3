@@ -36,15 +36,17 @@
 </head>
 <body>
   <a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
-
+  <div class="row justify-content-center">
+    <div class="col-auto">
+      <h1> Search Advice with Keyword</h1>
   <form th:action="@{/home/searchadvice}" method="post">
     <label>Keyword:</label>
     <input type="text" th:value="${keyword}" name="keyword"/><br/>
 
-    <button type="submit">Search</button>
+    <button type="submit" class="btn btn-primary">Search</button>
   </form>
 
-  <table th:if="${showAdvices}">
+  <table table class="table table-striped" th:if="${showAdvices}">
     <tr>
       <th>ID</th>
       <th>Advice</th>
@@ -54,5 +56,7 @@
       <td th:text="${slip.value}"></td>
     </tr>
   </table>
+    </div>
+  </div>
 </body>
 </html>

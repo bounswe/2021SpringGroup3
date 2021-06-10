@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,6 +47,20 @@ public class GetPostsViewController {
         
         model.addAttribute("rows", rows.toString());
         return "posts";
+    }
+
+    @RequestMapping(path = "/search",method = RequestMethod.GET)
+    public String showCommunitySearchForm(Model model) {
+        String community_name = new String();
+        model.addAttribute("community_name", community_name);
+
+        return "posts_search_form";
+    }
+
+
+    @RequestMapping(path = "/search",method = RequestMethod.POST)
+    public String submitForm(@ModelAttribute("community_name") String community_name) {
+        return "redirect:/home/posts/"+community_name;
     }
 
 }
