@@ -70,7 +70,9 @@ public class CreateUserViewController {
 
     @PostMapping(path = "home/saveuser")
     public String saveUserSent(Model model, @ModelAttribute("user") UserEntity user){
-
+        if(user.getUsername().equals("")){
+            return "saveuser";
+        }
         HttpEntity<UserEntity> request = new HttpEntity<>(user);
         restTemplate.postForObject(base_url + "user/save",request,String.class);
         //model.addAttribute("user",createdUser);

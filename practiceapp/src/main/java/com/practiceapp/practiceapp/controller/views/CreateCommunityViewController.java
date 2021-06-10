@@ -30,6 +30,9 @@ public class CreateCommunityViewController {
 
     @RequestMapping(path = "/create",method = RequestMethod.POST)
     public String createCommunity(Model model, @ModelAttribute("community") CommunityEntity communityEntity) {
+        if(communityEntity.getName().equals("")){
+            return "community_create_form";
+        }
         HttpEntity<CommunityEntity> request = new HttpEntity<>(communityEntity);
         CommunityEntity createdCommunityEntity = restTemplate.postForObject(base_url + target_url + "/create", request, CommunityEntity.class);
         model.addAttribute("community", createdCommunityEntity);
