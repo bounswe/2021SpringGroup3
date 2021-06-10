@@ -28,9 +28,7 @@ public class GetPostsViewController {
     @RequestMapping(path = "/{community_name}",method = RequestMethod.GET)
     public String showPostsByCommunityName(Model model, @PathVariable("community_name") String community_name){  //TEST AFTER POSTS ADDED!
 
-        System.out.println("NEREDE");
-        System.out.println("NEREDE");
-        System.out.println("NEREDE");
+       
 
         PostEntity[] posts = restTemplate.getForObject(base_url + target_url + "/" + community_name, PostEntity[].class);
 
