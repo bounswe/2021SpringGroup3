@@ -1,4 +1,5 @@
 package com.practiceapp.practiceapp.service;
+import java.io.*;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.practiceapp.practiceapp.entity.PostEntity;
@@ -24,14 +25,19 @@ public class PostService {
     @Autowired
     private PlacesApi placesApi;
 
-    public PostEntity updatePost(PostEntity postEntity){
-        PostEntity post = postRepository.save(postEntity);
-        return post;
-    }
+    /**
+     * Updatees the given post entity in database
+     * @param postEntity to be updated
+     * @return updated postEntity
+     */
+    public PostEntity updatePost(PostEntity postEntity) { return postRepository.save(postEntity); }
 
-    public String getRandomKanyeQuote() throws UnirestException {
-        return kanyeRestApi.getRandomKanyeQuote();
-    }
+    /**
+     * Calls Kanye Rest API
+     * @return a random Kanye Wst quote as a String
+     * @throws UnirestException
+     */
+    public String getRandomKanyeQuote() throws UnirestException { return kanyeRestApi.getRandomKanyeQuote(); }
 
     /**
      * Saves the given post entity to database

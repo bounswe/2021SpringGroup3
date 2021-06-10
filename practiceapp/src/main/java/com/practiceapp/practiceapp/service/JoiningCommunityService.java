@@ -9,9 +9,11 @@ import com.practiceapp.practiceapp.utils.AdviceApi;
 import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 
 @Service
 public class JoiningCommunityService {
@@ -23,6 +25,7 @@ public class JoiningCommunityService {
     @Autowired
     private AdviceApi adviceApi;
 
+    @Transactional
     public String joinCommunity(String user_name, String community_name){
         // Retrieving the entities
         UserEntity user = userRepository.getByUsername(user_name);

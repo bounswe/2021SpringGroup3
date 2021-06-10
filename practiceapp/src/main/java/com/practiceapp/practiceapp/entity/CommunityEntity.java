@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -30,7 +31,7 @@ public class CommunityEntity {
     @ApiModelProperty(
             notes = "The database generated community ID",
             hidden = true)
-    private String id;
+    private ObjectId id;
 
     @Field
     @NotNull(message="Community name can not be null")
@@ -60,8 +61,11 @@ public class CommunityEntity {
             example = "")
     private String language;
 
+    // References to users and posts:
+
     @DBRef(lazy=true)
     @JsonIgnore
+    @ToString.Exclude
     @ApiModelProperty(
             value = "Members of the community",
             hidden = true)
