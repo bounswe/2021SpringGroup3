@@ -15,7 +15,7 @@ public class UniversitiesListController {
     private CommunityService communityService;
 
     @RequestMapping(path = "/{country}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getUniversitiesList(@PathVariable("country") String country) throws UnirestException {
+    public ResponseEntity<List<String>> getUniversitiesList(@PathVariable("country") String country) throws UnirestException {
         return ResponseEntity.ok(communityService.getUniversitiesList(country));
     }
 
