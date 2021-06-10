@@ -43,7 +43,7 @@ public class GetPostsViewController {
             rows.put(row);
         }
 
-        System.out.println(rows);
+        
         model.addAttribute("rows", rows.toString());
         return "posts";
     }
