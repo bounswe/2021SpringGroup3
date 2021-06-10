@@ -91,7 +91,7 @@ public class DetectLanguageApi {
     // Gets API key from the api-keys.json file
     private String getApi_key(){
         try {
-            String path = Paths.get("practiceapp/src/main/resources/api_keys.json").toAbsolutePath().toString();
+            String path = Paths.get("./api_keys.json").toAbsolutePath().toString();
             Object key_obj = new JSONParser().parse(new FileReader(path));
             JSONObject jsonObject = (JSONObject) key_obj;
             return jsonObject.get("languages").toString();

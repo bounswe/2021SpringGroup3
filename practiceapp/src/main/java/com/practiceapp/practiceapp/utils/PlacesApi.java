@@ -38,7 +38,7 @@ public class PlacesApi {
         List<String> places = new ArrayList<String>();
 
         try {
-            String path = "src/main/resources/api_keys.json";
+            String path = "./api_keys.json";
             Object key_obj = new JSONParser().parse(new FileReader(path));
 
             JSONObject jsonObject = (JSONObject) key_obj;
