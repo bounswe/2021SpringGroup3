@@ -98,7 +98,7 @@ public class CreateUserViewController {
         model.addAttribute("showlist",true);
 
 
-        return "getJoinedCommunities";
+        return "getjoinedcommunities";
     }
 
 }
