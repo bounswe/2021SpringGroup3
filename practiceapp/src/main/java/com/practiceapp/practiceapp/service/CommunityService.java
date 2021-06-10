@@ -9,6 +9,7 @@ import com.practiceapp.practiceapp.entity.PostEntity;
 import com.practiceapp.practiceapp.repository.CommunityRepository;
 import com.practiceapp.practiceapp.utils.DictionaryApi;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import com.practiceapp.practiceapp.entity.CommunityEntity;
 import com.practiceapp.practiceapp.entity.UserEntity;
@@ -69,8 +70,19 @@ public class CommunityService {
     *@return definition of the word
     */
     public String getDefinition(String lang_code, String word)throws UnirestException {
+        String definition;
         JsonNode s = dictionaryApi.getDefinition(lang_code,word).getBody();
-        return s.getArray().getJSONObject(0).getJSONArray("meanings").getJSONObject(0).getJSONArray("definitions").getJSONObject(0).get("definition").toString();
+        JSONObject obj = s.getObject();
+        if(obj==null){                                  //if api returns the definition it returns a JSON array
+            definition = s.getArray().getJSONObject(0).getJSONArray("meanings").getJSONObject(0).getJSONArray("definitions").getJSONObject(0).get("definition").toString();
+            return definition;
+        }
+        else if(obj.has("message")){                // if word is not found a message will be returned that indicates word is not found
+            return s.getObject().get("message").toString();
+        }
+        else{                                           //this part may not be used since the api returns a message
+            return "The word you look is not found.";
+        }
     }
 
     /**
