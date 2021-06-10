@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title>Join Community</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+</head>
+<body>
+<div align="center">
+    <a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
+    <h1>Join Community</h1>
+    <br />
+    <form th:action="@{/home/joincommunity/join/save}" method="post">
+        <table border="0" cellpadding="10">
+
+            <tr>
+                <td>Username:</td>
+                <td><input type="text" th:value="${user_name}" name="user_name"/></td>
+            </tr>
+
+            <tr>
+                <td>Community Name:</td>
+                <td><input type="text" th:value="${community_name}" name="community_name"/></td>
+            </tr>
+            <tr>
+                <td colspan="2"><button type="submit">Save</button> </td>
+            </tr>
+        </table>
+
+    </form>
+</div>
+</body>
+</html>

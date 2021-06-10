@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="UTF-8">
+  <title>Home Page</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+</head>
+<body>
+
+<div align="center">
+
+<h1>Practice App Main Menu</h1>
+
+<h2>Extra Features</h2>
+  <a class="btn btn-primary"  th:href="${places}" style="margin:15px"> Search Places</a>
+  <a class="btn btn-primary"  th:href="${dictionary}"style="margin:15px"> Dictionary</a>
+  <a class="btn btn-primary" th:href="${kanye}"style="margin:15px"> Kanye Quotes</a>
+  <a th:href="${advice}" class="btn btn-primary" style="margin:15px">Random Advice</a>
+  <a th:href="${searchadvice}" class="btn btn-primary" style="margin:15px">Search Advice</a>
+  <a th:href="${universities}" class="btn btn-primary" style="margin:15px">Search Universities</a>
+
+<br>
+
+<h2>Community Features</h2>
+
+<a th:href="${community}" class="btn btn-primary" style="margin:15px"> search community by name</a>
+<a th:href="${communities}" class="btn btn-primary" style="margin:15px"> search communities by publicity</a>
+<a th:href="${create_community}" class="btn btn-primary" style="margin:15px"> create community</a>
+<a th:href="${join_community}" class="btn btn-primary" style="margin:15px"> join community</a>
+<a th:href="${getjoinedcommunities}" class="btn btn-primary" style="margin:15px">Get Joined Communities</a>
+
+<br>
+
+<h2>User Features</h2>
+<a th:href="${getuserbyname}" class="btn btn-primary" style="margin:15px">Get User By Name</a>
+<a th:href="${saveuser}" class="btn btn-primary" style="margin:15px">Save User</a>
+  <a th:href="${user_follow}" class="btn btn-primary" style="margin:15px">Follow User</a>
+
+<br>
+
+<h2>Profile Features</h2>
+<a th:href="${getprofile}" class="btn btn-primary" style="margin:15px">Get Profile</a>
+<a th:href="${updateProfile}" class="btn btn-primary" style="margin:15px">Update Profile</a>
+<a th:href="${setrandompic}" class="btn btn-primary" style="margin:15px">Set Random Picture</a>
+
+<br>
+
+<h2>Post Features</h2>
+
+<a th:href="${createPost}" class="btn btn-primary" style="margin:15px"> Create Post</a>
+<a th:href="${updatePost}" class="btn btn-primary" style="margin:15px"> Update Post</a>
+  <a th:href="${searchPost}" class="btn btn-primary" style="margin:15px"> Search Post</a>
+</div>
+
+</body>
+</html>

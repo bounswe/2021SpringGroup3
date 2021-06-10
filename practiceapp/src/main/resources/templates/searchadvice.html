@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Advice</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <style type="text/css">
+    label {
+      display: inline-block;
+      width: 200px;
+      margin: 5px;
+      text-align: left;
+    }
+    input[type=text], input[type=password], select {
+      display: inline-block;
+      width: 200px;
+    }
+    input[type=radio] {
+      margin-left: 45px;
+    }
+    input[type=checkbox] {
+      margin-right: 190px;
+    }
+    button {
+      padding: 5px;
+      margin: 10px;
+    }
+    table, th, td {
+      border: 1px solid black;
+      padding: 15px;
+    }
+    table {
+      border-spacing: 15px;
+    }
+  </style>
+</head>
+<body>
+  <a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
+  <div class="row justify-content-center">
+    <div class="col-auto">
+      <h1> Search Advice with Keyword</h1>
+  <form th:action="@{/home/searchadvice}" method="post">
+    <label>Keyword:</label>
+    <input type="text" th:value="${keyword}" name="keyword"/><br/>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  <table table class="table table-striped" th:if="${showAdvices}">
+    <tr>
+      <th>ID</th>
+      <th>Advice</th>
+    </tr>
+    <tr th:each="slip : ${slips}">
+      <td th:text="${slip.key}"></td>
+      <td th:text="${slip.value}"></td>
+    </tr>
+  </table>
+    </div>
+  </div>
+</body>
+</html>

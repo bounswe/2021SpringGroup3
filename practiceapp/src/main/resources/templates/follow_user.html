@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title>Follow User</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+</head>
+<body>
+
+<a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
+<div align="center">
+    <h1>Follow User</h1>
+    <br />
+    <form action="#" th:action="@{/home/userfollow/save}" method="post">
+
+        <table border="0" cellpadding="10">
+            <tr>
+                <td>Follower Username:</td>
+                <td><input type="text" th:value="${follower_name}" name="follower_name" /></td>
+            </tr>
+            <tr>
+                <td>Followed Username:</td>
+                <td><input type="text" th:value="${followed_name}" name="followed_name" /></td>
+            </tr>
+            <tr>
+                <td colspan="2"><button type="submit"  class="btn btn-primary" style="margin:15px">Save</button> </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>

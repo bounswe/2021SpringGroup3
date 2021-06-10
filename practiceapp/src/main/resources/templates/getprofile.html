@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+</head>
+<body>
+  <a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
+
+  <div align="center">
+    <h1>Search Profile</h1>
+
+  <form th:action="@{/home/getprofile}" method="post" style="margin: 15px">
+    <label>Profile name:</label>
+    <input type="text" th:value="${profilename}" name="profilename"/><br/>
+    </br>
+    <button type="submit" class="btn btn-primary">Get</button>
+  </form>
+
+  <div th:if="${noprofile}">
+    <h3>No such profile.</h3>
+  </div>
+  <div th:if="${showProfile}">
+    <table class="table">
+      <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Publicity</th>
+        <th scope="col">Photo</th>
+        <th scope="col">Photo publicity</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:object="${profile}">
+        <td th:text="*{name}"></td>
+        <td th:text="${profile.description}"></td>
+        <td th:text="${profile.isPublic}"></td>
+        <td>
+        <img th:src="${profile.photo}" height="300px">
+        </td>
+        <td th:text="${profile.isPhotoPublic}"></td>
+      </tr>
+
+      </tbody>
+    </table>
+  </div>
+  </div>
+</body>
+</html>

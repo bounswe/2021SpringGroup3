@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Community</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
+</head>
+<body>
+<a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-head">
+        <div class="headerType1">
+          <h2 style="margin: 0;padding: 19px;padding-bottom: 15px";> SEARCH POSTS</h2>
+        </div>
+      </div>
+      <!-- Header of the form -->
+      <div class="card-body">
+        <div class="container">
+          <form action="#" th:action="@{/home/posts/search}" method="post" >
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label class="control-label" > Community Name </label><br>
+                <span class="glyphicon glyphicon-asterisk" style="color:red;"></span>
+                <input type="text" th:value="${community_name}" name = "community_name" placeholder="community">
+              </div>
+            </div>
+            <!-- Field for name -->
+            <div class="form-row">
+              <div class="col-auto my-1 buttonContainer">
+                <button id="btn-create" type="submit" class="btn btn-success"> Search </button>
+              </div>
+              <!-- Button for submitting form -->
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- Body of the form -->
+    </div>
+  </div>
+</div>
+</body>
+</html>

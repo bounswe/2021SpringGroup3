@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Get User</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+</head>
+<body>
+  <a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
+  <div align="center">
+    <h1>Search User</h1>
+  <form th:action="@{/home/getuserbyname}" method="post">
+    <label>Username:</label>
+    <input type="text" th:value="${username}" name="username"/><br/>
+    </br>
+    <button type="submit" class="btn btn-primary" >Get</button>
+  </form>
+  <div th:if="${nouser}">
+    <h3>No such user.</h3>
+  </div>
+  <div th:if="${showuser}">
+
+    <table class="table">
+      <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Username</th>
+        <th scope="col">Email</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:object="${user}">
+        <td th:text="*{id}"></td>
+        <td th:text="*{username}"></td>
+        <td th:text="*{email}"></td>
+      </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+
+  </div>
+</body>
+</html>

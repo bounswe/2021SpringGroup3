@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <style type="text/css">
+        label {
+            display: inline-block;
+            width: 200px;
+            margin: 5px;
+            text-align: left;
+        }
+        input[type=text], input[type=password], select {
+            display: inline-block;
+            width: 200px;
+        }
+        input[type=radio] {
+            margin-left: 45px;
+        }
+        input[type=checkbox] {
+            margin-right: 190px;
+        }
+        button {
+            padding: 5px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+<a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
+
+<div align="center">
+    <h1>Update Profile</h1>
+
+<div th:if="${showmessage}">
+    <p>Profile updated. If there is no such profile with given ID, a new one is created.</p>
+</div>
+
+<form action="#" th:action="@{/home/updateprofile}" method="post" th:object="${profile}">
+    <label>Profile name:</label>
+    <input type="text" th:field="*{name}" name="name"/><br/>
+    <label>Description:</label>
+    <input type="text" th:field="*{description}" name="description"/><br/>
+    <label>Is Public:</label>
+    <input type="checkbox" th:field="*{isPublic}" name="isPublic"/><br>
+    <label>Is Photo Public:</label>
+    <input type="checkbox" th:field="*{isPhotoPublic}" name="isPhotoPublic"/><br>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>
+</div>
+</body>
+</html>

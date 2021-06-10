@@ -1,0 +1,11 @@
+spring:
+  name: practice-app
+  data:
+    mongodb:
+        uri:  mongodb+srv://CmpE:568139546@cluster0.zragr.mongodb.net/CmpE352?retryWrites=true&w=majority
+
+server:
+  port: 8080
+
+base:
+  url: http://localhost:8080/

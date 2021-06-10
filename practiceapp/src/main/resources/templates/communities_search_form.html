@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title> Search Communities </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+</head>
+<body>
+<a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-head">
+                <div class="headerType1">
+                    <h2 style="margin: 0;padding: 19px;padding-bottom: 15px";> Search Communities </h2>
+                </div>
+            </div>
+            <!-- Header of the form -->
+            <div class="card-body">
+                <div class="container">
+                    <form action="#" th:action="@{/home/communities/search}" method="post" th:object="${community}" >
+                        <div class="form-row">
+                            <div class="form-group col-md-4 ">
+                                <th style="width:12.5%;">Publicity</th><br>
+                                <td style="width:100%;">
+                                    <select th:field="*{publicity}" class="selectpicker">
+                                        <option selected="selected" type="text" th:value=true placeholder="publicity"> public </option>
+                                        <option type="text" th:value=false placeholder="publicity"> private </option>
+                                    </select>
+                            </div>
+                            <!-- Field for publicity -->
+                            <div class="col-auto my-1 buttonContainer">
+                                <button id="btn-create" type="submit" class="btn btn-success"> Search </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
