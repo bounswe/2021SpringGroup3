@@ -9,11 +9,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,17 +60,15 @@ public class GetCommunitiesByPublicityControllerTest {
 
     /**
      *  Checks whether {@link GetCommunitiesByPublicityController#getCommunitiesByPublicity(boolean)}
-     *  returns communities
+     *  returns public communities as requested
      *
      *  Expected:
-     *              - Return OK-200
-     *              - Calling service to get communities
-     *              - Return communities as service responded
+     *              - Returning OK-200 and public communities as requested
      *
      */
 
     @Test
-    void getPublicCommunities() throws Exception {
+    void getCommunitiesByPublicity_isPublicCommunitiesReturnedSuccessfully() throws Exception {
         when(communityService.findByPublicity(any(Boolean.class))).thenReturn(List.of(publicCommunity1, publicCommunity2));
 
         MvcResult result = mockMvc.perform(get("/communities/").param("public", "true")).andExpect(status().isOk()).andReturn();
@@ -80,25 +79,41 @@ public class GetCommunitiesByPublicityControllerTest {
 
 
     /**
-     *  Checks whether
-     *  {@link GetCommunitiesByPublicityController#getCommunitiesByPublicity(boolean)}
-     *  calls service with correct parameter
+     *  Checks whether {@link GetCommunitiesByPublicityController#getCommunitiesByPublicity(boolean)}
+     *  returns private communities as requested
      *
      *  Expected:
-     *              - Return OK-200
-     *              - Calling service for private communities as it is requested
-     *              - Return communities as service responded
+     *              - Return OK-200 and private communities as requested
      *
      */
 
     @Test
-    void isServiceCalledCorrectly() throws Exception {
-        when(communityService.findByPublicity(false)).thenReturn(List.of(privateCommunity));
-        when(communityService.findByPublicity(true)).thenReturn(List.of(publicCommunity1));
+    void getCommunitiesByPublicity_isPrivateCommunitiesReturnedSuccessfully() throws Exception {
+        when(communityService.findByPublicity(any(Boolean.class))).thenReturn(List.of(privateCommunity));
 
         MvcResult result = mockMvc.perform(get("/communities/").param("public", "false")).andExpect(status().isOk()).andReturn();
 
         JSONAssert.assertEquals(objectMapper.writeValueAsString(List.of(privateCommunity)),
                 result.getResponse().getContentAsString(), false);
+    }
+
+
+    /**
+     *  Checks whether {@link GetCommunitiesByPublicityController#getCommunitiesByPublicity(boolean)}
+     *  returns public communities as requested
+     *
+     *  Expected:
+     *              - Calling correct methods of the communityService with correct parameter exactly once
+     *
+     */
+
+    @Test
+    void getCommunitiesByPublicity_isCommunityServiceCalledCorrectly() throws Exception {
+        when(communityService.findByPublicity(any(Boolean.class))).thenReturn(List.of(publicCommunity1, publicCommunity2));
+
+        mockMvc.perform(get("/communities/").param("public", "true")).andExpect(status().isOk()).andReturn();
+
+        verify(communityService, times(1)).findByPublicity(true);
+        verifyNoMoreInteractions(communityService);
     }
 }

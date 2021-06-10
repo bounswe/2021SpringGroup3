@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 
 @Controller
@@ -49,12 +48,10 @@ public class GetCommunitiesByPublicityViewController {
 
 
     @RequestMapping(path = "/search",method = RequestMethod.POST)
-    public String submitForm(@ModelAttribute("community") CommunityEntity communityEntity) {
+    public String submitForm(@ModelAttribute("community") CommunityEntity communityEntity, RedirectAttributes redirectAttributes) {
         Boolean publicity = communityEntity.isPublicity();
-        RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
+
         redirectAttributes.addAttribute("public", publicity);
         return "redirect:/home/communities/";
     }
-
-
 }
