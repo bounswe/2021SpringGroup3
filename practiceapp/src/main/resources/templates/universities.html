@@ -8,9 +8,22 @@
 </head>
 <body>
 <a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
-<div class="row">
-    <div class="text-center">
-        <p th:text="${'Result: '+universities}"></p>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Place</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+        <tr th:each="uni: ${universities}">
+            <td th:text="${uni}"/>
+        </tr>
+    </tbody>
+
+
+</table>
     </div>
 </div>
 </body>

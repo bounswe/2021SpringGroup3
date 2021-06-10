@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping(path = "/home/universities")
@@ -24,8 +25,8 @@ public class UniversitiesViewController {
     @RequestMapping(path = "/{input}",method = RequestMethod.GET)
     public String showUniversities(Model model,@PathVariable("input") String input) throws UnirestException {
         System.out.println(input);
-        ResponseEntity<String> response = universitiesListController.getUniversitiesList(input);
-        String universities = response.getBody();
+        ResponseEntity<List<String>> response = universitiesListController.getUniversitiesList(input);
+        List<String> universities = response.getBody();
 
         model.addAttribute("universities",universities);
         return "universities";
