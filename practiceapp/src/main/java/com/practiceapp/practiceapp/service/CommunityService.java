@@ -114,14 +114,15 @@ public class CommunityService {
     }
 
 
+
     /**
      * Gets the list of universities of a given country via third-party api.
      *
      * @param country is the name of the requested country.
-     * @return list of universities as string.
+     * @return list of universities as List<string>.
      * @throws UnirestException
      */
-    public String getUniversitiesList(String country) throws UnirestException
+    public List<String> getUniversitiesList(String country) throws UnirestException
     {
         return universitiesListApi.getUniversitiesList(country);
     }
