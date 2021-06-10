@@ -151,17 +151,4 @@ public class CommunityService {
         return universitiesListApi.getUniversitiesList(country);
     }
 
-
-    /**
-     *Communicates with "http://dictionaryapi.dev" dictionary api
-     *
-     *@param lang_code is the language of the word e.g. en_US for English tr for Turkish
-     *@param word to get the definiton of
-     *@return definition of the word
-     */
-    public String getDefinition(String lang_code, String word)throws UnirestException {
-        JsonNode s = dictionaryApi.getDefinition(lang_code,word).getBody();
-        return s.getArray().getJSONObject(0).getJSONArray("meanings").getJSONObject(0).getJSONArray("definitions").getJSONObject(0).get("definition").toString();
-    }
-
 }
