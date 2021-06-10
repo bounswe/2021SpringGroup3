@@ -14,6 +14,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.Mockito.*;
+import com.practiceapp.practiceapp.entity.Profile;
+
+
 @WebMvcTest(UserService.class)
 class UserServiceTest {
 
@@ -23,10 +26,17 @@ class UserServiceTest {
     @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private ProfileService profileService;
+
     private UserEntity userEntity;
+    private Profile profile;
 
     @BeforeEach
     void setUp() {
+        profile = new Profile();
+        profile.setName("cmpe");
+
         userEntity=new UserEntity();
         userEntity.setUsername("cmpe");
     }
@@ -34,13 +44,14 @@ class UserServiceTest {
     @Test
     void saveUser() {
 
+        when(profileService.updateProfile(any(Profile.class))).thenReturn(profile);
+
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
 
         String response = userService.saveUser(userEntity);
 
         assertEquals(response,"Success");
-
     }
 
     @Test
