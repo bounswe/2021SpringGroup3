@@ -17,6 +17,8 @@
                         <h2 style="margin: 0;padding: 19px;padding-bottom: 15px";> SEARCH COMMUNITY </h2>
                     </div>
                 </div>
+
+                <p th:if="${show_not_found}">Community not found</p>
                 <!-- Header of the form -->
                 <div class="card-body">
                     <div class="container">
@@ -40,7 +42,8 @@
                 </div>
                 <!-- Body of the form -->
             </div>
-        </div>
+            </div>
+
     </div>
   </body>
 </html>

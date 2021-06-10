@@ -10,6 +10,7 @@
 <a href="/home" class="btn btn-primary" style="margin:15px">Back to Home</a>
 <div align="center">
   <h1>Set Random Picture</h1>
+  <p th:if="${showmessage}">No such profile.</p>
   <form th:action="@{/home/setrandompic}" method="post">
     <label>Profile name:</label>
     <input type="text" th:value="${profilename}" name="profilename"/><br/>

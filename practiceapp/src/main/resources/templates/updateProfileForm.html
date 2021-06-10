@@ -32,7 +32,7 @@
 
 <div align="center">
   <h1>Update Profile</h1>
-
+  <p th:if="${showmessage}">No such profile.</p>
   <form action="#" th:action="@{/home/updateprofileform}" method="post">
     <label>Username:</label>
     <input type="text" th:value="${username}" name="username"/><br/>

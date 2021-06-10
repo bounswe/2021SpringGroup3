@@ -28,6 +28,7 @@ public class DictionaryViewController {
 
         ResponseEntity<String> response = restTemplate.getForEntity(base_url + target_url + word, String.class);
         String definition = response.getBody();
+        System.out.println(definition);
         model.addAttribute("word",word);
         model.addAttribute("definition",definition);
         return "dictionary";

@@ -42,7 +42,7 @@ public class PostService {
     /**
      * Saves the given post entity to database
      * @param postEntity to be created
-     * @return success code
+     * @return 1 = success code   0 = failure
      */
     public int savePost(PostEntity postEntity){
         postEntity.setDate(new Date());
@@ -53,7 +53,9 @@ public class PostService {
             community.getPosts().add(postEntity);
             communityRepository.save(community);
         }
-
+        if(postEntity==null){
+            return 0;
+        }
         return 1;
     }
 
