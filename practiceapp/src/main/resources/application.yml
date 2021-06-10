@@ -5,7 +5,7 @@ spring:
         uri:  mongodb+srv://CmpE:568139546@cluster0.zragr.mongodb.net/CmpE352?retryWrites=true&w=majority
 
 server:
-  port: 9090
+  port: 8080
 
 base:
-  url: http://localhost:9090/
+  url: http://localhost:8080/
