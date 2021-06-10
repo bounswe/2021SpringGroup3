@@ -36,5 +36,28 @@ public class Profile {
     @Field
     private boolean isPhotoPublic = true;
 
+    /*
+        Lombok getter/setter methodlarını sunuyor, biliyorum. Fakat bu methodlara isimleri yüzünden
+        ihtiyacım var.
+        updateprofile.html'de kullandığım thymeleaf formu bu naming convention'ı arıyor. Bunları
+        bulamadığı takdirde kod patlıyor.
+
+        -burak
+     */
+    public boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public boolean getIsPhotoPublic() {
+        return isPhotoPublic;
+    }
+
+    public void setIsPhotoPublic(boolean photoPublic) {
+        isPhotoPublic = photoPublic;
+    }
 
 }

@@ -38,6 +38,7 @@ public class CreatePostControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+
     String examplePost = "{\"post_id\":\"123\",\"text\":\"this is a mock post\"}";
 
 

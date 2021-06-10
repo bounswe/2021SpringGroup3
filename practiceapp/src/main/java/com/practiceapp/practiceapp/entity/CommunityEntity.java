@@ -65,6 +65,7 @@ public class CommunityEntity {
 
     @DBRef(lazy=true)
     @JsonIgnore
+    @ToString.Exclude
     @ApiModelProperty(
             value = "Members of the community",
             hidden = true)

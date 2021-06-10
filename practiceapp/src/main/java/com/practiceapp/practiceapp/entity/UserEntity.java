@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.bson.types.ObjectId;
+
+import org.hibernate.validator.constraints.UniqueElements;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -42,10 +45,12 @@ public class UserEntity {
     // it tries to load the dbref for the user in its members list. This goes on forever and ends up in an infinite loop.
 
     @JsonIgnore
+    @ToString.Exclude
     @DBRef(lazy = true)
     private List<CommunityEntity> joined_communities = new ArrayList<>();
 
     @JsonIgnore
+    @ToString.Exclude
     @DBRef(lazy = true)
     private List<CommunityEntity> created_communities = new ArrayList<>();
 
