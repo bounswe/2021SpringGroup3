@@ -15,21 +15,20 @@
 
   // specify the columns
   const columnDefs = [
-    { field: "Content" , autoHeight: true, wrapText: true, resizable: true, flex: 8},
+    { field: "Content" , autoHeight: true, wrapText: true, resizable: true, flex: 3},
+    { field: "Author", autoHeight: true, wrapText: true, resizable: true, flex: 1},
     { field: "Date", autoHeight: true, wrapText: true, resizable: true, flex: 2},
-    { field: "Location", autoHeight: true, wrapText: true, resizable: true, flex: 6},
-    { field: "Author", autoHeight: true, wrapText: true, resizable: true, flex: 3}
+    { field: "Location", autoHeight: true, wrapText: true, resizable: true, flex: 1}
   ];
 
   /*<![CDATA[*/
-  const data = /*[[${posts}]]*/ 'posts';
+  const data = /*[[${rows}]]*/ 'rows';
   /*<![CDATA[*/
-
 
   // let the grid know which columns and what data to use
   const gridOptions = {
       columnDefs: columnDefs,
-      rowData: data,
+      rowData: JSON.parse(data),
       pagination: true,
       animateRows: true,
       enableCellChangeFlash: true,

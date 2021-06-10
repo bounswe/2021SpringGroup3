@@ -1,5 +1,6 @@
 package com.practiceapp.practiceapp.controller.views;
 
+import com.practiceapp.practiceapp.entity.CommunityEntity;
 import com.practiceapp.practiceapp.entity.PostEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,7 +28,12 @@ public class GetPostsViewController {
     @RequestMapping(path = "/{community_name}",method = RequestMethod.GET)
     public String showPostsByCommunityName(Model model, @PathVariable("community_name") String community_name){  //TEST AFTER POSTS ADDED!
 
-        List<PostEntity> posts = restTemplate.getForObject(base_url + target_url + "/" + community_name, List.class);
+        System.out.println("NEREDE");
+        System.out.println("NEREDE");
+        System.out.println("NEREDE");
+
+        PostEntity[] posts = restTemplate.getForObject(base_url + target_url + "/" + community_name, PostEntity[].class);
+
         JSONArray rows = new JSONArray();
         for (PostEntity post: posts) {
             JSONObject row = new JSONObject()
@@ -38,7 +44,9 @@ public class GetPostsViewController {
 
             rows.put(row);
         }
-        model.addAttribute("posts", rows);
+
+        System.out.println(rows);
+        model.addAttribute("rows", rows.toString());
         return "posts";
     }
 
