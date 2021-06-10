@@ -2,6 +2,8 @@ package com.practiceapp.practiceapp.service;
 
 
 import com.mashape.unirest.http.JsonNode;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import com.practiceapp.practiceapp.entity.CommunityEntity;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.practiceapp.practiceapp.entity.PostEntity;
@@ -53,6 +55,28 @@ public class CommunityService {
         return communityRepository.getByName(name).getPosts();
     }
 
+    /**
+    *Communicates with "http://dictionaryapi.dev" dictionary api
+    *
+    *@param lang_code is the language of the word e.g. en_US for English tr for Turkish
+    *@param word to get the definiton of
+    *@return definition of the word
+    */
+    public String getDefinition(String lang_code, String word)throws UnirestException {
+        String definition;
+        JsonNode s = dictionaryApi.getDefinition(lang_code,word).getBody();
+        JSONObject obj = s.getObject();
+        if(obj==null){                                  //if api returns the definition it returns a JSON array
+            definition = s.getArray().getJSONObject(0).getJSONArray("meanings").getJSONObject(0).getJSONArray("definitions").getJSONObject(0).get("definition").toString();
+            return definition;
+        }
+        else if(obj.has("message")){                // if word is not found a message will be returned that indicates word is not found
+            return s.getObject().get("message").toString();
+        }
+        else{                                           //this part may not be used since the api returns a message
+            return "The word you look is not found.";
+        }
+    }
 
     /**
      * Interacts with community repository to create community
@@ -125,19 +149,6 @@ public class CommunityService {
     public List<String> getUniversitiesList(String country) throws UnirestException
     {
         return universitiesListApi.getUniversitiesList(country);
-    }
-
-
-    /**
-     *Communicates with "http://dictionaryapi.dev" dictionary api
-     *
-     *@param lang_code is the language of the word e.g. en_US for English tr for Turkish
-     *@param word to get the definiton of
-     *@return definition of the word
-     */
-    public String getDefinition(String lang_code, String word)throws UnirestException {
-        JsonNode s = dictionaryApi.getDefinition(lang_code,word).getBody();
-        return s.getArray().getJSONObject(0).getJSONArray("meanings").getJSONObject(0).getJSONArray("definitions").getJSONObject(0).get("definition").toString();
     }
 
 }
