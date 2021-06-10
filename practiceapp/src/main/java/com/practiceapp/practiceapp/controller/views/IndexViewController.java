@@ -10,28 +10,37 @@ public class IndexViewController {
 
     private String baseUrl = "/home/";
 
-    private String placesUrl = baseUrl + "places/search";  //şimdilik form lazım  daha
-
-    //Advice Links
+    //Third Party Functionalities
+    private String placesUrl = baseUrl + "places/search";
+    private String dictionaryUrl = baseUrl +"dict/search";
+    private String kanyeUrl = baseUrl + "kanyequote";
+    private String universitiesUrl = baseUrl + "universities/search";
     private String adviceUrl = baseUrl + "advice";
     private String searchAdviceUrl = baseUrl + "searchadvice";
 
+
+
+
     //Profile Links
     private String getProfileUrl = baseUrl + "getprofile";
-    private String updateProfileUrl = baseUrl + "updateprofile";
+    private String updateProfileUrl = baseUrl + "updateprofileform";
     private String setRandomPicUrl = baseUrl + "setrandompic";
+
+    //Community Links
     private String searchCommunityUrl = baseUrl +"community/search";
-
     private String searchCommunitiesUrl = baseUrl +"communities/search";
-
     private String createCommunitiesUrl = baseUrl + "communities/create";
-
-    private String dictionaryUrl = baseUrl +"dict/search";
+    private String getJoinedCommunitiesUrl = baseUrl + "getjoinedcommunities";
+    private String joinCommunityUrl = baseUrl + "joincommunity/join";
 
     //User Links
     private String getUserByNameUrl = baseUrl + "getuserbyname";
     private String saveUserUrl = baseUrl + "saveuser";
-    private String getJoinedCommunitiesUrl = baseUrl + "getjoinedcommunities";
+
+    //Post Links
+    private String updatePostUrl = baseUrl + "post/update";
+    private String createPostUrl = baseUrl + "post/create";
+    private String searchPostUrl = baseUrl + "posts/search";
 
     @GetMapping(path= "/home")
     public String getIndex(Model model){
@@ -49,6 +58,12 @@ public class IndexViewController {
         model.addAttribute("communities",searchCommunitiesUrl);
         model.addAttribute("dictionary",dictionaryUrl);
         model.addAttribute("create_community",createCommunitiesUrl);
+        model.addAttribute("join_community",joinCommunityUrl);
+        model.addAttribute("kanye",kanyeUrl);
+        model.addAttribute("universities",universitiesUrl);
+        model.addAttribute("createPost",createPostUrl);
+        model.addAttribute("updatePost",updatePostUrl);
+        model.addAttribute("searchPost",searchPostUrl);
 
         return "index";
     }

@@ -29,7 +29,7 @@ public class CreateUserViewController {
     @Autowired
     private CreateUserController createUserController;
     @Autowired
-    private ProfileController profileController;
+    private ProfileViewController profileViewController;
 
     RestTemplate restTemplate = new RestTemplate();
     
@@ -75,8 +75,9 @@ public class CreateUserViewController {
         restTemplate.postForObject(base_url + "user/save",request,String.class);
         //model.addAttribute("user",createdUser);
         model.addAttribute("showmessage",true);
+        profileViewController.getProfileSent(model,user.getUsername());
 
-        return "saveuser";
+        return "getProfile";
     }
 
     @GetMapping(path = "home/getjoinedcommunities")

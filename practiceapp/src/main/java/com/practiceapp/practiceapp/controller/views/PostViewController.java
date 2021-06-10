@@ -8,11 +8,13 @@ import com.practiceapp.practiceapp.entity.CommunityEntity;
 import com.practiceapp.practiceapp.entity.PostEntity;
 import com.practiceapp.practiceapp.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,9 @@ import java.util.List;
 @Controller
 @RequestMapping(path = "home/post")
 public class PostViewController {
+
+    @Value("${base.url}")
+    private String base_url;
 
     @Autowired
     private CreatePostController createPostController;
@@ -33,6 +38,8 @@ public class PostViewController {
 
     @Autowired
     private GetCommunityController getCommunityController;
+
+    RestTemplate restTemplate = new RestTemplate();
 
     @RequestMapping(path = "")
     public String showPostup(Model model){
@@ -60,7 +67,7 @@ public class PostViewController {
         list.add(communityEntity);
         post.setCommunities(list);
         createPostController.savePost(post);
-        return "redirect:/home/post/create";
+        return "redirect:/home/posts/"+community_name;
     }
 
     @RequestMapping(path = "/update", method = RequestMethod.GET)
