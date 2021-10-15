@@ -1,4 +1,4 @@
-# CMPE 352 2021 Group 3
+# CMPE SWE 2021 Group 3
 This is the project repository of Group 3 from Software Engineering Course. 
 
 ## Our Project
@@ -15,5 +15,6 @@ Our project aims to provide cumulative data flow about various range topics and 
 * [Kutay Saran](https://github.com/bounswe/2021SpringGroup3/wiki/Kutay-Saran)
 * [Sevde Sarıkaya](https://github.com/bounswe/2021SpringGroup3/wiki/Sevde-Sar%C4%B1kaya)
 * [Abdurrahman Emre Yılmaz](https://github.com/bounswe/2021SpringGroup3/wiki/Abdurrahman-Emre-Y%C4%B1lmaz)
+* [Ufuk Karagöz](https://github.com/bounswe/2021SpringGroup3/wiki/Ufuk-Karag%C3%B6z)
 
 You may reach additional information from our [wiki](https://github.com/bounswe/2021SpringGroup3/wiki) page.
