@@ -16,5 +16,6 @@ Our project aims to provide cumulative data flow about various range topics and 
 * [Sevde Sarıkaya](https://github.com/bounswe/2021SpringGroup3/wiki/Sevde-Sar%C4%B1kaya)
 * [Abdurrahman Emre Yılmaz](https://github.com/bounswe/2021SpringGroup3/wiki/Abdurrahman-Emre-Y%C4%B1lmaz)
 * [Ufuk Karagöz](https://github.com/bounswe/2021SpringGroup3/wiki/Ufuk-Karag%C3%B6z)
+* [Kaan Dura](https://github.com/bounswe/2021SpringGroup3/wiki/Kaan-Dura)
 
 You may reach additional information from our [wiki](https://github.com/bounswe/2021SpringGroup3/wiki) page.
