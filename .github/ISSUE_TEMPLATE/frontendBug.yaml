@@ -11,28 +11,28 @@ body:
     id: what-happened
     attributes:
       label: What happened?
-      description: Also tell us, what did you expect to happen?
-      placeholder: Tell us what you see!
+      description: Please first explain the expected behaviour, then explain the current behaviour.
+      placeholder: Expected Behaviour:... Current Behaviour:...
     validations:
       required: true
   - type: textarea
     id: version
     attributes:
       label: Version
-      description: What version of our software are you running?
+      description: Version of our software you are using
     validations:
       required: true
   - type: dropdown
     id: browsers
     attributes:
-      label: What browsers are you seeing the problem on?
+      label: Which browsers are you experiencing the problem on?
       multiple: true
       options:
-        - Firefox
         - Chrome
+        - Opera  
         - Safari
         - Microsoft Edge
-        - Opera
+        - Firefox
   - type: textarea
     id: images
     attributes:
