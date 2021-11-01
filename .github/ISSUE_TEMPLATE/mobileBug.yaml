@@ -1,0 +1,29 @@
+name: Mobile Bug Report
+description: Report a bug on the mobile application
+title: "[Bug]: "
+labels: ["Type: Bug", "Status: Available", "Priority: Medium", Component: Mobile]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this bug!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Please first explain the expected behaviour, then explain the current behaviour.
+      placeholder: Expected Behaviour:... Current Behaviour:...
+    validations:
+      required: true
+  - type: textarea
+    id: version
+    attributes:
+      label: Which version?
+      description: Version of our software you are using
+    validations:
+      required: true
+  - type: textarea
+    id: images
+    attributes:
+      label: Relevant screenshots
+      description: Please copy and paste any relevant screenshots.
