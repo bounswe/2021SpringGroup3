@@ -1,0 +1,40 @@
+name: Web Bug Report
+description: Report a bug on the website
+title: "[Bug]: "
+labels: ["Type: Bug", "Status: Available", "Priority: Medium", Component: Frontend]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this bug!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+  - type: textarea
+    id: version
+    attributes:
+      label: Version
+      description: What version of our software are you running?
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+        - Opera
+  - type: textarea
+    id: images
+    attributes:
+      label: Relevant screenshots
+      description: Please copy and paste any relevant screenshots.
