@@ -18,14 +18,15 @@ body:
   - type: textarea
     id: version
     attributes:
-      label: Version
+      label: Which version?
       description: Version of our software you are using
     validations:
       required: true
   - type: dropdown
     id: browsers
     attributes:
-      label: Which browsers are you experiencing the problem on?
+      label: Which browsers?
+      description: Browsers you are experiencing the problem on
       multiple: true
       options:
         - Chrome
