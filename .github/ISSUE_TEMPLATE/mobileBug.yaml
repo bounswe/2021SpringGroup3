@@ -1,7 +1,7 @@
 name: Mobile Bug Report
 description: Report a bug on the mobile application
 title: "[Bug]: "
-labels: ["Type: Bug", "Status: Available", "Priority: Medium", Component: Mobile]
+labels: ["Type: Bug", "Status: Available", "Priority: Medium", "Component: Mobile"]
 body:
   - type: markdown
     attributes:
