@@ -1,7 +1,7 @@
 name: Web Bug Report
 description: Report a bug on the website
 title: "[Bug]: "
-labels: ["Type: Bug", "Status: Available", "Priority: Medium", Component: Frontend]
+labels: ["Type: Bug", "Status: Available", "Priority: Medium", "Component: Frontend"]
 body:
   - type: markdown
     attributes:
