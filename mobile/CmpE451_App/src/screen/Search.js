@@ -4,7 +4,7 @@ import {View, Text} from 'react-native';
 export default function Search({}) {
   return (
     <View style={styles.container}>
-    <Text style={styles.title}>BURASI Notification SAYFASIDIR</Text>
+    <Text style={styles.title}>BURASI Search SAYFASIDIR</Text>
   </View>
 );
 }
