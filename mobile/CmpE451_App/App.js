@@ -2,6 +2,7 @@ import React from 'react';
 import Chat from './src/screen/Chat';
 import CreatePost from './src/screen/CreatePost';
 import Search from './src/screen/Search';
+import Registration from './src/screen/Registration';
 import Main from './src/screen/Main.js';
 import Notification from './src/screen/Notification';
 import {BackHandler} from 'react-native';
@@ -19,6 +20,11 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen
           options={{headerShown: false}}
+          name="Registration"
+          component={Registration}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
           name="Home"
           component={BottomTabs}
         />
@@ -33,6 +39,7 @@ function BottomTabs() {
       screenOptions={({route}) => ({
         tabBarIcon: ({}) => {
           let iconName;
+          let title;
           if (route.name === 'Main') {
             iconName = 'home';
           } else if (route.name === 'Search') {
@@ -56,6 +63,10 @@ function BottomTabs() {
       <Tab.Screen
         name="Main"
         component={Main}
+        options={{
+          headerShown: false,
+          title: 'Anasayfa',
+        }}
         listeners={({navigation, route}) => {
           BackHandler.addEventListener('hardwareBackPress', () => {
             return true;
@@ -64,21 +75,37 @@ function BottomTabs() {
       />
       <Tab.Screen
         name="Search"
+        options={{
+          headerShown: false,
+          title: 'Arama',
+        }}
         component={Search}
         listeners={({navigation, route}) => ({})}
       />
       <Tab.Screen
         name="CreatePost"
+        options={{
+          headerShown: false,
+          title: 'Gönderi',
+        }}
         component={CreatePost}
         listeners={({navigation, route}) => ({})}
       />
       <Tab.Screen
         name="Chat"
+        options={{
+          headerShown: false,
+          title: 'Mesaj',
+        }}
         component={Chat}
         listeners={({navigation, route}) => ({})}
       />
       <Tab.Screen
         name="Notification"
+        options={{
+          headerShown: false,
+          title: 'Bildirimler',
+        }}
         component={Notification}
         listeners={({navigation, route}) => ({})}
       />
