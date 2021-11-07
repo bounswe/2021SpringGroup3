@@ -1,0 +1,99 @@
+openapi: "3.0.0"
+info:
+  description: "Boxy <span>&#183;</span> Organized Social Media Platform <small> <i> <br> 2021 CMPE451 Application - Group 3"
+  version: "1.0.0"
+  title: "Boxy"
+tags:
+- name: "Authentication"
+paths:
+  /login:
+    post:
+      tags:
+      - "Authentication"
+      description: ""
+      operationId: "login"
+      parameters:
+        - in: header
+          name: X-Platform
+          schema:
+            type: string
+            enum: ["ANDROID", "WEB"]
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentication'
+      responses:
+        '200':
+          description: Login Successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  token:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: Email veya şifre yanlış
+        '400':
+          description: Invalid username/password supplied
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Verdiğiniz bilgiler geçersiz
+        '405':
+          description: Email is not confirmed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Lütfen mailinizi doğrulayın
+
+components:
+  schemas:
+    Authentication:
+      title: 'Authentication model'
+      type: "object"
+      required:
+      - "userName"
+      - "email"
+      - "password"
+      properties:
+        userName:
+          type: "string"
+          example: "jackie"
+        email:
+          type: "string"
+          example: "jackie@gmail.com"
+        password:
+          type: "string"
+          example: ""
