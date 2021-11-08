@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 
 import Loader from '../component/Loader';
+import {COLORS} from '../theme/colors';
 
 export default function Registration({navigation, props}) {
   const [userName, setUserName] = useState('');
@@ -64,7 +65,7 @@ export default function Registration({navigation, props}) {
     );
   }
   return (
-    <View style={{flex: 1, backgroundColor: '#F0FFFF'}}>
+    <View style={{flex: 1}}>
       <Loader loading={loading} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
@@ -174,10 +175,10 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonStyle: {
-    backgroundColor: '#87CEEB',
+    backgroundColor: COLORS.buttonColor,
     borderWidth: 0,
-    color: '#87CEEB',
-    borderColor: '#87CEEB',
+    color: COLORS.buttonColor,
+    borderColor: COLORS.buttonColor,
     height: 40,
     alignItems: 'center',
     borderRadius: 30,
@@ -187,13 +188,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonTextStyle: {
-    color: '#E0FFFF',
+    color: COLORS.buttonTextColor,
     paddingVertical: 10,
     fontSize: 16,
   },
   inputStyle: {
     flex: 1,
-    color: '#2E8B57',
+    color: COLORS.inputTextColor,
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 1,

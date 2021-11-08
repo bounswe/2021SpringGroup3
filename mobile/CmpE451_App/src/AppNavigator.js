@@ -10,6 +10,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {createStackNavigator} from '@react-navigation/stack';
+import Registration from './screen/Registration';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -25,8 +26,13 @@ export default function Navigator() {
         />
         <Stack.Screen
           options={{headerShown: false}}
-          name="Main"
-          component={Main}
+          name="Registration"
+          component={Registration}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="Home"
+          component={BottomTabs}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -59,6 +65,9 @@ function BottomTabs() {
         showLabel: true,
       }}>
       <Tab.Screen
+        options={{
+          headerShown: false,
+        }}
         name="Main"
         component={Main}
         listeners={({navigation, route}) => {
@@ -68,21 +77,33 @@ function BottomTabs() {
         }}
       />
       <Tab.Screen
+        options={{
+          headerShown: false,
+        }}
         name="Search"
         component={Search}
         listeners={({navigation, route}) => ({})}
       />
       <Tab.Screen
+        options={{
+          headerShown: false,
+        }}
         name="CreatePost"
         component={CreatePost}
         listeners={({navigation, route}) => ({})}
       />
       <Tab.Screen
+        options={{
+          headerShown: false,
+        }}
         name="Chat"
         component={Chat}
         listeners={({navigation, route}) => ({})}
       />
       <Tab.Screen
+        options={{
+          headerShown: false,
+        }}
         name="Notification"
         component={Notification}
         listeners={({navigation, route}) => ({})}

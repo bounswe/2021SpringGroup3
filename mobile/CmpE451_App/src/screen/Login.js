@@ -78,7 +78,7 @@ export default function Login({navigation}) {
 
   const navigateRegister = async () => {
     Keyboard.dismiss();
-    navigation.navigate('Register');
+    navigation.navigate('Registration');
   };
 
   return (
