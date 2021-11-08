@@ -1,15 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, Image, FlatList, StatusBar} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function SearchBar() {
+  const [search, setSearch] = useState('Arama....');
   return (
     <View style={styles.container}>
       <Ionicons name="md-search-outline" style={styles.searchIcon}></Ionicons>
       <TextInput
         style={styles.searcHInput}
-        placeholder={'Search here....'}></TextInput>
+        placeholder={search}
+        onChangeText={() => {
+          setSearch(search, ...search);
+        }}></TextInput>
     </View>
   );
 }
@@ -35,6 +39,6 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginTop: 15,
     height: 20,
-    width: 20
+    width: 20,
   },
 });

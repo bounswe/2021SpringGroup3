@@ -14,10 +14,11 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import StyleSwipeableRow from './SwipleableRowForNotification';
+import moment from 'moment';
 
 export default function Dragable({data, navigation, user, id}) {
-  function gotoRoom(){
-    console.log(">>>>>>>>>>>>>>>>>")
+  function gotoRoom() {
+    console.log('>>>>>>>>>>>>>>>>>');
   }
   const SwipeableRow = ({item}) => {
     return (
@@ -32,14 +33,12 @@ export default function Dragable({data, navigation, user, id}) {
             }}
           />
           <View style={{marginLeft: 10, width: wp('63%')}}>
-            <View style={{justifyContent:"flex-start",flexDirection:'row'}}>
-            <Text style={styles.nameText}>{item.name}</Text>
-            <Text>  </Text>
-            <Text style={styles.nameText}>{item.time}</Text>
+            <View style={{justifyContent: 'flex-start', flexDirection: 'row'}}>
+              <Text style={styles.nameText}>{item.name}</Text>
             </View>
             <Text style={styles.messageText}>{item.message}</Text>
           </View>
-          <Text style={styles.timeText}>{item.minute}</Text>
+          <Text style={styles.dateText}>{moment(item.timestamp).fromNow()}</Text>
         </TouchableOpacity>
       </StyleSwipeableRow>
     );
@@ -58,7 +57,7 @@ export default function Dragable({data, navigation, user, id}) {
 const styles = StyleSheet.create({
   SwipeableRow: {
     borderBottomColor: '#ffff',
-    borderColor:'#ffff'
+    borderColor: '#ffff',
   },
   timeText: {
     fontFamily: 'SFProDisplay-Regular',

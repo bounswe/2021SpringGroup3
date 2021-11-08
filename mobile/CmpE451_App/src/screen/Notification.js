@@ -28,68 +28,69 @@ const data = [
   {
     uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
     name: 'r/gaming',
-    time:"12h",
+    timestamp: 1636156949000,
     message: '2022 is shaping up to be good year for gaming',
   },
   {
     uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
     name: 'Bümed',
-    time:"3d",
+    timestamp: 1636156949000,
     message: 'Bümed başarı bursları açıklandı',
   },
   {
     uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
     name: 'r/gaming',
-    time:"12h",
+    timestamp: 1636156949000,
     message: '2022 is shaping up to be good year for gaming',
   },
   {
     uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
     name: 'Bümed',
-    time:"3d",
+    timestamp: 1636156949000,
+
     message: 'Bümed başarı bursları açıklandı',
   },
   {
     uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
     name: 'r/gaming',
-    time:"12h",
+    timestamp: 1636156949000,
     message: '2022 is shaping up to be good year for gaming',
   },
   {
     uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
     name: 'Bümed',
-    time:"3d",
+    timestamp: 1636156949000,
     message: 'Bümed başarı bursları açıklandı',
   },
   {
     uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
     name: 'r/gaming',
-    time:"12h",
+    timestamp: 1636156949000,
     message: '2022 is shaping up to be good year for gaming',
   },
   {
     uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
     name: 'Bümed',
-    time:"3d",
+    timestamp: 1636156949000,
     message: 'Bümed başarı bursları açıklandı',
   },
   {
     uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
     name: 'r/gaming',
-    time:"12h",
+    timestamp: 1636156949000,
     message: '2022 is shaping up to be good year for gaming',
   },
   {
     uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
     name: 'Bümed',
-    time:"3d",
+    timestamp: 1636156949000,
     message: 'Bümed başarı bursları açıklandı',
   },
 ];
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: '#ffff',
+    backgroundColor: '#EBECF4',
   },
   headerBuble: {
     width: wp('100%'),
