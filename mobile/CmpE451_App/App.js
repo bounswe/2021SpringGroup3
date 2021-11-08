@@ -5,6 +5,8 @@ import Search from './src/screen/Search';
 import Registration from './src/screen/Registration';
 import Main from './src/screen/Main.js';
 import Notification from './src/screen/Notification';
+import Room from './src/screen/Room'
+
 import {BackHandler} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -28,6 +30,11 @@ export default function App() {
           name="Home"
           component={BottomTabs}
         />
+         <Stack.Screen
+          options={{headerShown: true}}
+          name="Room"
+          component={Room}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -39,19 +46,24 @@ function BottomTabs() {
       screenOptions={({route}) => ({
         tabBarIcon: ({}) => {
           let iconName;
-          let title;
+          let color;
           if (route.name === 'Main') {
             iconName = 'home';
+            color = 'black'
           } else if (route.name === 'Search') {
             iconName = 'search';
+            color = 'black'
           } else if (route.name === 'CreatePost') {
-            iconName = 'add';
+            iconName = 'add-circle-sharp';
+            color = 'red'
           } else if (route.name === 'Chat') {
             iconName = 'chatbox';
+            color = 'black'
           } else if (route.name === 'Notification') {
             iconName = 'notifications';
+            color = 'black'
           }
-          return <Icon name={iconName} size={23} />;
+          return <Icon name={iconName} size={23} showLabel={false} />;
         },
       })}
       tabBarOptions={{
