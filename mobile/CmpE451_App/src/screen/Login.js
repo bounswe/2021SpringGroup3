@@ -12,8 +12,10 @@ import {
   AsyncStorage,
   ScrollView,
 } from 'react-native';
-import {COLORS} from '../colors';
-import {TEXT} from '../config';
+import {COLORS} from '../theme/colors';
+import {TEXT} from '../constants';
+import {AXIOS_CLIENT} from '../services/axiosCientService';
+import {KEYS} from '../constants';
 
 export default function Login({navigation}) {
   const [userName, setUserName] = useState('');
@@ -21,16 +23,14 @@ export default function Login({navigation}) {
 
   const passwordInputRef = createRef();
 
-  const tokenKey = 'token';
-
   useEffect(() => {
     checkToken();
   }, []);
 
   const checkToken = async () => {
-    let token = await AsyncStorage.getItem(tokenKey);
+    let token = await AsyncStorage.getItem(KEYS.TOKEN_KEY);
     if (token) {
-      loginSuccessfully();
+      navigateMain();
     }
   };
 
@@ -44,22 +44,18 @@ export default function Login({navigation}) {
   };
 
   const requestLogin = () => {
-    fetch('/login', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    AXIOS_CLIENT.post('login', {
+      headers: {'X-Platform': 'ANDROID'},
+      data: {
         userName: userName,
         password: password,
-      }),
+      },
     })
       .then(response => response.json())
       .then(responseData => {
         if (responseData.status === 200) {
-          AsyncStorage.setItem(tokenKey, responseData.token);
-          loginSuccessfully();
+          AsyncStorage.setItem(KEYS.TOKEN_KEY, responseData.token);
+          navigateMain();
         } else if (
           responseData.status === 400 ||
           responseData.status === 401 ||
@@ -76,7 +72,7 @@ export default function Login({navigation}) {
       });
   };
 
-  const loginSuccessfully = async () => {
+  const navigateMain = async () => {
     navigation.navigate('Main');
   };
 
