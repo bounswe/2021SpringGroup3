@@ -16,6 +16,7 @@ import {COLORS} from '../theme/colors';
 import {TEXT} from '../constants';
 import {AXIOS_CLIENT} from '../services/axiosCientService';
 import {KEYS} from '../constants';
+import {CONFIG} from '../constants';
 
 export default function Login({navigation}) {
   const [userName, setUserName] = useState('');
@@ -36,7 +37,10 @@ export default function Login({navigation}) {
 
   const handleLogin = () => {
     Keyboard.dismiss();
-    if (userName.length > 0 && password.length > 0) {
+    if (CONFIG.skipLogin) {
+      AsyncStorage.setItem(KEYS.USER_NAME_KEY, userName);
+      navigateMain();
+    } else if (userName.length > 0 && password.length > 0) {
       requestLogin();
     } else {
       ToastAndroid.show(TEXT.loginMissingInput, ToastAndroid.SHORT);
@@ -45,7 +49,6 @@ export default function Login({navigation}) {
 
   const requestLogin = () => {
     AXIOS_CLIENT.post('login', {
-      headers: {'X-Platform': 'ANDROID'},
       data: {
         userName: userName,
         password: password,
@@ -54,7 +57,8 @@ export default function Login({navigation}) {
       .then(response => response.json())
       .then(responseData => {
         if (responseData.status === 200) {
-          AsyncStorage.setItem(KEYS.TOKEN_KEY, responseData.token);
+          AsyncStorage.setItem(KEYS.TOKEN_KEY, responseData.data.token);
+          AsyncStorage.setItem(KEYS.USER_NAME_KEY, userName);
           navigateMain();
         } else if (
           responseData.status === 400 ||
@@ -73,7 +77,7 @@ export default function Login({navigation}) {
   };
 
   const navigateMain = async () => {
-    navigation.navigate('Main');
+    navigation.navigate('Home');
   };
 
   const navigateRegister = async () => {
