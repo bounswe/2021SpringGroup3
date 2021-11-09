@@ -5,6 +5,7 @@ info:
   title: "Boxy"
 tags:
 - name: "Authentication"
+- name: "DataType"
 paths:
   /login:
     post:
@@ -24,7 +25,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Authentication'
+              $ref: '#/components/schemas/Login'
       responses:
         '200':
           description: Login Successfully
@@ -50,7 +51,7 @@ paths:
                     example: 401
                   message:
                     type: string
-                    example: Email veya şifre yanlış
+                    example: Wrong email or password
         '400':
           description: Invalid username/password supplied
           content:
@@ -63,9 +64,52 @@ paths:
                     example: 400
                   message:
                     type: string
-                    example: Verdiğiniz bilgiler geçersiz
+                    example: Invalid credentials
         '405':
           description: Email is not confirmed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 405
+                  message:
+                    type: string
+                    example: Please verify your email address
+  /register:
+    post:
+      tags:
+      - "Authentication"
+      description: ""
+      operationId: "register"
+      parameters:
+        - in: header
+          name: X-Platform
+          schema:
+            type: string
+            enum: ["ANDROID", "WEB"]
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+      responses:
+        '200':
+          description: Login Successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+        '409':
+          description: username already exists
           content:
             application/json:
               schema:
@@ -76,11 +120,161 @@ paths:
                     example: 400
                   message:
                     type: string
-                    example: Lütfen mailinizi doğrulayın
-
+                    example: Username should be unique
+        '400':
+          description: invalid credential fields
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid credentials
+  /logout:
+    delete:
+       tags:
+       - "Authentication"
+       operationId: "logout"
+       parameters:
+        - in: header
+          name: X-Platform
+          schema:
+            type: string
+            enum: ["ANDROID", "WEB"]
+          required: true
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: Bearer ...
+          required: true
+       responses:
+        '200':
+          description: Logout Successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+  /dataType:
+   post:
+      tags:
+      - "DataType"
+      description: ""
+      operationId: "create dataType"
+      parameters:
+        - in: header
+          name: X-Platform
+          schema:
+            type: string
+            enum: ["ANDROID", "WEB"]
+          required: true
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: Bearer ...
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataType'
+      responses:
+        '201':
+          description: Created data type successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+        '400':
+          description: At least on field should be filled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: "At least one field should be filled"
+        '409':
+          description: Data type name should be unique inside the community
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 409
+                  message:
+                    type: string
+                    example: "Post type name should be unique"
+   get:
+      tags:
+      - "DataType"
+      description: ""
+      operationId: "get dataTypes"
+      parameters:
+        - in: header
+          name: X-Platform
+          schema:
+            type: string
+            enum: ["ANDROID", "WEB"]
+          required: true
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: Bearer ...
+          required: true
+      responses:
+        '201':
+          description: Get data type names successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  dataTypeNames:
+                    type: array
+                    items:
+                      type: string
+                    example: ["Discussion", "Tournament"]
 components:
   schemas:
-    Authentication:
+    Login:
+      title: 'Authentication model'
+      type: "object"
+      required:
+      - "userName"
+      - "password"
+      properties:
+        userName:
+          type: "string"
+          example: "jackie or jackie@gmail.com"
+        password:
+          type: "string"
+          example: ""
+    Register:
       title: 'Authentication model'
       type: "object"
       required:
@@ -90,10 +284,49 @@ components:
       properties:
         userName:
           type: "string"
-          example: "jackie"
+          example: "jackie" 
         email:
           type: "string"
           example: "jackie@gmail.com"
         password:
           type: "string"
           example: ""
+    DataType:
+      title: 'Authentication model'
+      type: "object"
+      required:
+      - "name"
+      - "textFieldNames"
+      - "numberFieldNames"
+      - "dateFieldNames"
+      - "linkFieldNames"
+      - "locationFieldNames"
+      properties:
+        name:
+          type: "string"
+          example: "text" 
+        textFieldNames:
+          type: array
+          items:
+            type: string
+            example: ["Turnuva Adı"]
+        numberFieldNames:
+          type: array
+          items:
+            type: string
+            example: ["Katılımcı Sayısı"]
+        dateFieldNames:
+          type: array
+          items:
+            type: string
+            example: ["Turnuva Tarihi"] 
+        linkFieldNames:
+          type: array
+          items:
+            type: string
+            example: ["Kayıt linki"]
+        locationFieldNames:
+          type: array
+          items:
+            type: string
+            example: ["Turnuva yeri", "Toplanma Alanı"]
