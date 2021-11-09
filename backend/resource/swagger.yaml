@@ -4,13 +4,14 @@ info:
   version: "1.0.0"
   title: "Boxy"
 tags:
-- name: "Authentication"
-- name: "DataType"
+- name: "Authentication Controller"
+- name: "PostType Controller"
+- name: "Post Controller"
 paths:
   /login:
     post:
       tags:
-      - "Authentication"
+      - "Authentication Controller"
       description: ""
       operationId: "login"
       parameters:
@@ -34,9 +35,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 200
                   token:
                     type: string
         '401':
@@ -46,9 +44,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 401
                   message:
                     type: string
                     example: Wrong email or password
@@ -59,9 +54,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 400
                   message:
                     type: string
                     example: Invalid credentials
@@ -72,16 +64,13 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 405
                   message:
                     type: string
                     example: Please verify your email address
   /register:
     post:
       tags:
-      - "Authentication"
+      - "Authentication Controller"
       description: ""
       operationId: "register"
       parameters:
@@ -100,14 +89,6 @@ paths:
       responses:
         '200':
           description: Login Successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 200
         '409':
           description: username already exists
           content:
@@ -115,9 +96,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 400
                   message:
                     type: string
                     example: Username should be unique
@@ -128,16 +106,13 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 400
                   message:
                     type: string
                     example: Invalid credentials
   /logout:
     delete:
        tags:
-       - "Authentication"
+       - "Authentication Controller"
        operationId: "logout"
        parameters:
         - in: header
@@ -155,20 +130,12 @@ paths:
        responses:
         '200':
           description: Logout Successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 200
-  /dataType:
+  /post-type:
    post:
       tags:
-      - "DataType"
+      - "PostType Controller"
       description: ""
-      operationId: "create dataType"
+      operationId: "create postType"
       parameters:
         - in: header
           name: X-Platform
@@ -182,15 +149,175 @@ paths:
             type: string
             example: Bearer ...
           required: true
+        - in: query
+          name: communityId
+          schema:
+            type: string
+          required: true
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DataType'
+              $ref: '#/components/schemas/PostType'
       responses:
         '201':
-          description: Created data type successfully
+          description: Created post type successfully
+        '400':
+          description: At least on field should be filled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "At least one field should be filled"
+        '409':
+          description: Post type name should be unique inside the community
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Post type name should be unique"
+        '404':
+          description: Community does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Community does not exist"
+  /post-type/detail:
+   get:
+      tags:
+      - "PostType Controller"
+      description: ""
+      operationId: "get postTypeDetail"
+      parameters:
+        - in: header
+          name: X-Platform
+          schema:
+            type: string
+            enum: ["ANDROID", "WEB"]
+          required: true
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: Bearer ...
+          required: true
+        - in: query
+          name: communityId
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: postTypeId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Get data type names successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostType'
+        '404':
+          description: Community or post does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Community or post does not exist"
+  /post-types:
+   get:
+      tags:
+      - "PostType Controller"
+      description: ""
+      operationId: "get postTypes"
+      parameters:
+        - in: header
+          name: X-Platform
+          schema:
+            type: string
+            enum: ["ANDROID", "WEB"]
+          required: true
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: Bearer ...
+          required: true
+        - in: query
+          name: communityId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Get post type preview successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTypesPreviews'
+        '404':
+          description: Community does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Community does not exist"
+  /post:
+   post:
+      tags:
+      - "Post Controller"
+      description: ""
+      operationId: "create post"
+      parameters:
+        - in: header
+          name: X-Platform
+          schema:
+            type: string
+            enum: ["ANDROID", "WEB"]
+          required: true
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: Bearer ...
+          required: true
+        - in: query
+          name: communityId
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: postTypeId
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        '201':
+          description: Created post type successfully
           content:
             application/json:
               schema:
@@ -200,7 +327,7 @@ paths:
                     type: integer
                     example: 200
         '400':
-          description: At least on field should be filled
+          description: All fields should be filled
           content:
             application/json:
               schema:
@@ -211,9 +338,9 @@ paths:
                     example: 400
                   message:
                     type: string
-                    example: "At least one field should be filled"
-        '409':
-          description: Data type name should be unique inside the community
+                    example: "Please fill all fields"
+        '404':
+          description: Community or post does not exist
           content:
             application/json:
               schema:
@@ -221,15 +348,16 @@ paths:
                 properties:
                   status:
                     type: integer
-                    example: 409
+                    example: 404
                   message:
                     type: string
-                    example: "Post type name should be unique"
+                    example: "Community does not exist or post Type does not exist "
+  /post/detail:
    get:
       tags:
-      - "DataType"
+      - "Post Controller"
       description: ""
-      operationId: "get dataTypes"
+      operationId: "get postDetail"
       parameters:
         - in: header
           name: X-Platform
@@ -243,9 +371,63 @@ paths:
             type: string
             example: Bearer ...
           required: true
+        - in: query
+          name: communityId
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: postId
+          schema:
+            type: string
+          required: true
       responses:
-        '201':
+        '200':
           description: Get data type names successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostView'
+        '404':
+          description: Community or post does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: "Community or post does not exist"
+  /posts:
+   get:
+      tags:
+      - "Post Controller"
+      description: ""
+      operationId: "get posts"
+      parameters:
+        - in: header
+          name: X-Platform
+          schema:
+            type: string
+            enum: ["ANDROID", "WEB"]
+          required: true
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: Bearer ...
+          required: true
+        - in: query
+          name: communityId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Get data type preview successfully
           content:
             application/json:
               schema:
@@ -254,15 +436,28 @@ paths:
                   status:
                     type: integer
                     example: 200
-                  dataTypeNames:
+                  PostList:
                     type: array
                     items:
-                      type: string
-                    example: ["Discussion", "Tournament"]
+                      oneOf:
+                       - $ref: '#/components/schemas/PostView'
+        '404':
+          description: Community does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: "Community does not exist"
 components:
   schemas:
     Login:
-      title: 'Authentication model'
+      title: 'Login model'
       type: "object"
       required:
       - "userName"
@@ -275,7 +470,7 @@ components:
           type: "string"
           example: ""
     Register:
-      title: 'Authentication model'
+      title: 'Register model'
       type: "object"
       required:
       - "userName"
@@ -291,8 +486,8 @@ components:
         password:
           type: "string"
           example: ""
-    DataType:
-      title: 'Authentication model'
+    PostType:
+      title: 'Post type model'
       type: "object"
       required:
       - "name"
@@ -304,29 +499,151 @@ components:
       properties:
         name:
           type: "string"
-          example: "text" 
+          example: "turnuva" 
         textFieldNames:
           type: array
           items:
             type: string
-            example: ["Turnuva Adı"]
+            example: "Turnuva Adı"
         numberFieldNames:
           type: array
           items:
             type: string
-            example: ["Katılımcı Sayısı"]
+            example: "Katılımcı Sayısı"
         dateFieldNames:
           type: array
           items:
             type: string
-            example: ["Turnuva Tarihi"] 
+            example: "Turnuva Tarihi" 
         linkFieldNames:
           type: array
           items:
             type: string
-            example: ["Kayıt linki"]
+            example: "Kayıt linki"
         locationFieldNames:
           type: array
           items:
             type: string
-            example: ["Turnuva yeri", "Toplanma Alanı"]
+            example: "Turnuva yeri"
+    PostTypesPreviews:
+      title: 'Post Types Previews model'
+      type: "array"
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/PostTypePreview'
+    PostTypePreview:
+      title: 'Post Type Preview model'
+      type: "object"
+      required:
+      - "name"
+      - "id"
+      properties:
+        name:
+          type: "string"
+          example: "text" 
+        id:
+          type: "string"
+          example: "text" 
+    Post:
+      title: 'Post Request model'
+      type: "object"
+      required:
+      - "textFields"
+      - "numberFields"
+      - "dateFields"
+      - "linkFields"
+      - "locationFiels"
+      properties:
+        textFieldNames:
+          type: array
+          items:
+            oneOf:
+             - $ref: '#/components/schemas/PostFieldInput'
+        numberFieldNames:
+          type: array
+          items:
+            oneOf:
+             - $ref: '#/components/schemas/PostFieldInput'
+        dateFieldNames:
+          type: array
+          items:
+            oneOf:
+             - $ref: '#/components/schemas/PostFieldInput'
+        linkFieldNames:
+          type: array
+          items:
+            oneOf:
+             - $ref: '#/components/schemas/PostFieldInput'
+        locationFieldNames:
+          type: array
+          items:
+            oneOf:
+             - $ref: '#/components/schemas/PostFieldInput'
+    PostView:
+      title: 'Post View model'
+      type: "object"
+      required:
+      - "id"
+      - "userName"
+      - "date"
+      - "textFields"
+      - "numberFields"
+      - "dateFields"
+      - "linkFields"
+      - "locationFiels"
+      properties:
+        id:
+          type: "string"
+          example: "" 
+        userName:
+          type: "string"
+          example: "user98" 
+        date:
+          type: number
+          example: "1636156949000" 
+        textFieldNames:
+          type: array
+          items:
+            oneOf:
+             - $ref: '#/components/schemas/PostFieldInput'
+        numberFieldNames:
+          type: array
+          items:
+            oneOf:
+             - $ref: '#/components/schemas/PostFieldInput'
+        dateFieldNames:
+          type: array
+          items:
+            oneOf:
+             - $ref: '#/components/schemas/PostFieldInput'
+        linkFieldNames:
+          type: array
+          items:
+            oneOf:
+             - $ref: '#/components/schemas/PostFieldInput'
+        locationFieldNames:
+          type: array
+          items:
+            oneOf:
+             - $ref: '#/components/schemas/PostFieldInput'
+        likeCount:
+          type: integer
+          example: 67
+        isLiked:
+           type: boolean
+           example: true
+    PostFieldInput:
+      title: 'Post field model'
+      type: "object"
+      required:
+      - "name"
+      - "value"
+      properties:
+        name:
+          type: "string"
+          example: "turnuva adı" 
+        value:
+          type: "string"
+          example: "İstanbul Satranç turnuvası" 
+    
+    
