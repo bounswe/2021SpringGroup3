@@ -1,45 +1,59 @@
 import React from 'react';
+import {BackHandler} from 'react-native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+
 import Login from './screen/Login';
 import Chat from './screen/Chat';
 import CreatePost from './screen/CreatePost';
 import Search from './screen/Search';
 import Main from './screen/Main.js';
 import Notification from './screen/Notification';
-import {BackHandler} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/Ionicons';
-import {createStackNavigator} from '@react-navigation/stack';
 import Registration from './screen/Registration';
+import Profile from './screen/Profile';
+import Settings from './screen/Settings';
+import CreateCommunity from './screen/CreateCommunity';
+import Logout from './screen/Logout';
+
+import Icon from 'react-native-vector-icons/Ionicons';
+import {screenOptionStyle} from './theme/styles';
+import {COLORS} from './theme//colors';
+import styled from 'styled-components/native';
+
+import {
+  DrawerContentScrollView,
+  DrawerItemList,
+} from '@react-navigation/drawer';
+import {KEYS} from './constants';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
-export default function Navigator() {
+export function Navigator() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="login"
-          component={Login}
-        />
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="Registration"
-          component={Registration}
-        />
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="Home"
-          component={BottomTabs}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="login"
+        component={Login}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Registration"
+        component={Registration}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Home"
+        component={BottomNavigator}
+      />
+    </Stack.Navigator>
   );
 }
 
-function BottomTabs() {
+function BottomNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -77,33 +91,25 @@ function BottomTabs() {
         }}
       />
       <Tab.Screen
-        options={{
-          headerShown: false,
-        }}
+        options={screenOptionStyle}
         name="Search"
         component={Search}
         listeners={({navigation, route}) => ({})}
       />
       <Tab.Screen
-        options={{
-          headerShown: false,
-        }}
+        options={screenOptionStyle}
         name="CreatePost"
         component={CreatePost}
         listeners={({navigation, route}) => ({})}
       />
       <Tab.Screen
-        options={{
-          headerShown: false,
-        }}
+        options={screenOptionStyle}
         name="Chat"
         component={Chat}
         listeners={({navigation, route}) => ({})}
       />
       <Tab.Screen
-        options={{
-          headerShown: false,
-        }}
+        options={screenOptionStyle}
         name="Notification"
         component={Notification}
         listeners={({navigation, route}) => ({})}
@@ -111,3 +117,69 @@ function BottomTabs() {
     </Tab.Navigator>
   );
 }
+
+const drawerOptions = {
+  headerShown: false,
+  drawerActiveBackgroundColor: COLORS.drawerActiveBackgroundColor,
+  drawerActiveTintColor: COLORS.buttonTextColor,
+};
+
+function CustomDrawerContent(props) {
+  return (
+    <DrawerContentScrollView {...props}>
+      <FakeDrawerHeader>
+        <AppTitle> BOXY </AppTitle>
+      </FakeDrawerHeader>
+      <DrawerItemList {...props} />
+    </DrawerContentScrollView>
+  );
+}
+
+const DrawerNavigator = () => {
+  return (
+    <Drawer.Navigator
+      screenOptions={screenOptionStyle}
+      drawerStyle={{backgroundColor: 'transparent'}}
+      drawerType={'slide'}
+      overlayColor="transparent"
+      drawerContent={props => {
+        return <CustomDrawerContent {...props} />;
+      }}>
+      <Drawer.Screen
+        name="Home"
+        component={Navigator}
+        options={drawerOptions}
+      />
+      <Drawer.Screen
+        name="Profile"
+        component={Profile}
+        options={drawerOptions}
+      />
+      <Drawer.Screen
+        name="Create Community"
+        component={CreateCommunity}
+        options={drawerOptions}
+      />
+      <Drawer.Screen
+        name="Settings"
+        component={Settings}
+        options={drawerOptions}
+      />
+      <Drawer.Screen name="Logout" component={Logout} options={drawerOptions} />
+    </Drawer.Navigator>
+  );
+};
+
+const FakeDrawerHeader = styled.View`
+  width: 100%;
+  aspect-ratio: 1.5;
+  align-items: center;
+  justify-content: center;
+`;
+const AppTitle = styled.Text`
+  font-size: 22px;
+  color: #00227a;
+  font-weight: bold;
+`;
+
+export default DrawerNavigator;

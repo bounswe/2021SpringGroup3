@@ -10,6 +10,7 @@ export const AXIOS_CLIENT = axios.create({
 });
 
 AXIOS_CLIENT.interceptors.request.use(async config => {
+  config.headers['X-Platform'] = 'ANDROID';
   const token = await AsyncStorage.getItem(KEYS.TOKEN_KEY);
 
   if (token) {

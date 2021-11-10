@@ -1,6 +1,11 @@
+export const CONFIG = {
+  skipLogin: true,
+};
+
 export const KEYS = {
   USER_ROLE_KEY: 'userRole',
   TOKEN_KEY: 'token',
+  USER_NAME_KEY: 'username',
 };
 
 export const TEXT = {

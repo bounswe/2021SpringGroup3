@@ -3,7 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import Header from '../component/HeaderForMainPage'
 import PostList from '../component/PostList';
 
-export default function Main({navigation,route}) {
+export default function Main({navigation, route}) {
   return (
     <View style={styles.container}>
       <Header text={"Gönderiler"}></Header>

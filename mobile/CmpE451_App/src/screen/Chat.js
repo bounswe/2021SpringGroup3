@@ -11,7 +11,6 @@ export default function Message({navigation}) {
   return (
     <View style={container}>
       {/* <Image source={{uri:"https://www.astajans.com/Upload/urunler-upload/img_96.png"}} style={headerBuble} /> */}
-      <Header text="Mesajlar" />
       <View style={{shadowColor: 'black'}}>
         <MessageList
           data={data}
