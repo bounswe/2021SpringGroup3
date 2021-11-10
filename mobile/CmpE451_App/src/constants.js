@@ -13,3 +13,7 @@ export const TEXT = {
   unexpectedError: 'Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.',
   networkError: 'Lütfen internet bağlantınızı kontrol ediniz.',
 };
+
+export const PAGE_VARIABLES = {
+  communityId: 0,
+};
