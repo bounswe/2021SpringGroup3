@@ -35,10 +35,9 @@ export default function SelectPostType({navigation}) {
     AXIOS_CLIENT.get('post-types', {
       params: {communityId: PAGE_VARIABLES.communityId},
     })
-      .then(response => response.json())
-      .then(responseData => {
-        if (responseData.status === 200) {
-          setPostTypeList(responseData.data);
+      .then(response => {
+        if (response.status === 200) {
+          setPostTypeList(response.data);
         }
       })
       .catch(error => {

@@ -33,10 +33,9 @@ export default function SelectCommunity({navigation}) {
 
   const getCommunities = () => {
     AXIOS_CLIENT.get('communities')
-      .then(response => response.json())
-      .then(responseData => {
-        if (responseData.status === 200) {
-          setCommunityList(responseData.data);
+      .then(response => {
+        if (response.status === 200) {
+          setCommunityList(response.data);
         }
       })
       .catch(error => {

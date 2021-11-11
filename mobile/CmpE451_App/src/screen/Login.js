@@ -52,18 +52,17 @@ export default function Login({navigation}) {
         password: password,
       },
     })
-      .then(response => response.json())
-      .then(responseData => {
-        if (responseData.status === 200) {
-          AsyncStorage.setItem(KEYS.TOKEN_KEY, responseData.data.token);
+      .then(response => {
+        if (response.status === 200) {
+          AsyncStorage.setItem(KEYS.TOKEN_KEY, response.data.token);
           AsyncStorage.setItem(KEYS.USER_NAME_KEY, userName);
           navigateMain();
         } else if (
-          responseData.status === 400 ||
-          responseData.status === 401 ||
-          responseData.status === 405
+          response.status === 400 ||
+          response.status === 401 ||
+          response.status === 405
         ) {
-          ToastAndroid.show(responseData.message, ToastAndroid.SHORT);
+          ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
         } else {
           ToastAndroid.show(TEXT.unexpectedError, ToastAndroid.SHORT);
         }
