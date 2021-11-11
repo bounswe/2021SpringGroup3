@@ -4,62 +4,69 @@ import {
   FlatList,
   Image,
   StyleSheet,
-  TouchableOpacity,
   ToastAndroid,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {COLORS} from '../theme/colors';
 import {TEXT, PAGE_VARIABLES} from '../constants';
 import {AXIOS_CLIENT} from '../services/axiosCientService';
 
-export default function SelectCommunity({navigation}) {
-  const [communityList, setCommunityList] = useState([]);
+export default function SelectPostType({navigation}) {
+  const [postTypeList, setPostTypeList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    getCommunities();
+    getPostTypes();
   }, []);
 
   const _onRefresh = () => {
     setRefreshing(true);
-    getCommunities();
+    getPostTypes();
     setRefreshing(false);
   };
 
-  const navigateSelectPostType = selectedCommunityId => {
-    PAGE_VARIABLES.communityId = selectedCommunityId;
-    navigation.navigate('SelectPostType');
+  const navigateCreatePost = selectedPostTypeId => {
+    PAGE_VARIABLES.postTypeId = selectedPostTypeId;
+    navigation.navigate('CreatePost');
   };
 
-  const getCommunities = () => {
-    AXIOS_CLIENT.get('communities')
+  const getPostTypes = () => {
+    AXIOS_CLIENT.get('post-types', {
+      params: {communityId: PAGE_VARIABLES.communityId},
+    })
       .then(response => response.json())
       .then(responseData => {
         if (responseData.status === 200) {
-          setCommunityList(responseData.data);
+          setPostTypeList(responseData.data);
         }
       })
       .catch(error => {
         console.info(error);
         ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
-        setCommunityList(mockCommunityList);
+        setPostTypeList(mockPostTypeList);
       });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Post to</Text>
+      <Text style={styles.header}>Choose your Box</Text>
       <FlatList
         refreshing={refreshing}
         onRefresh={_onRefresh}
-        data={communityList}
+        data={postTypeList}
         renderItem={({item}) => (
           <TouchableOpacity
             onPress={() => {
-              navigateSelectPostType(item.id);
+              navigateCreatePost(item.id);
             }}>
             <View style={styles.list}>
-              <Image source={{uri: item.icon}} style={styles.image} />
+              <Image
+                source={{
+                  uri: 'https://drive.google.com/uc?export=view&id=17UJQPtBS52HLa0GXmBWPqsSFjs9i8oM2',
+                }}
+                style={styles.image}
+              />
               <Text style={styles.item}>{item.name}</Text>
             </View>
           </TouchableOpacity>
@@ -69,31 +76,22 @@ export default function SelectCommunity({navigation}) {
   );
 }
 
-const mockCommunityList = [
+const mockPostTypeList = [
   {
-    name: 'Economics',
+    name: 'Discussion',
     id: 1,
-    icon: 'https://reactnative.dev/docs/assets/p_cat1.png',
   },
   {
-    name: 'Politics',
+    name: 'Tournament',
     id: 2,
-    icon: 'https://reactnative.dev/docs/assets/p_cat2.png',
   },
   {
-    name: 'CatLovers',
+    name: 'Question',
     id: 3,
-    icon: 'https://reactnative.dev/docs/assets/p_cat1.png',
   },
   {
-    name: 'CMPE451',
+    name: 'Story',
     id: 4,
-    icon: 'https://reactnative.dev/docs/assets/p_cat2.png',
-  },
-  {
-    name: 'PCMaster',
-    id: 5,
-    icon: 'https://reactnative.dev/docs/assets/p_cat1.png',
   },
 ];
 
@@ -115,8 +113,8 @@ const styles = StyleSheet.create({
     color: COLORS.textColor,
   },
   image: {
-    width: 30,
-    height: 30,
+    width: 20,
+    height: 20,
   },
   list: {
     flexDirection: 'row',

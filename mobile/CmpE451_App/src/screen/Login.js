@@ -13,10 +13,8 @@ import {
   ScrollView,
 } from 'react-native';
 import {COLORS} from '../theme/colors';
-import {TEXT} from '../constants';
 import {AXIOS_CLIENT} from '../services/axiosCientService';
-import {KEYS} from '../constants';
-import {CONFIG} from '../constants';
+import {TEXT, CONFIG, KEYS} from '../constants';
 
 export default function Login({navigation}) {
   const [userName, setUserName] = useState('');

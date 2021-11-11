@@ -16,4 +16,5 @@ export const TEXT = {
 
 export const PAGE_VARIABLES = {
   communityId: 0,
+  postTypeId: 0,
 };
