@@ -1,5 +1,5 @@
 import React from 'react';
-import {BackHandler} from 'react-native';
+import {BackHandler, Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
@@ -15,6 +15,8 @@ import Profile from './screen/Profile';
 import Settings from './screen/Settings';
 import CreateCommunity from './screen/CreateCommunity';
 import Logout from './screen/Logout';
+import SelectCommunity from './screen/SelectCommunity';
+import SelectDataType from './screen/SelectDataType';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import {screenOptionStyle} from './theme/styles';
@@ -49,6 +51,11 @@ export function Navigator() {
         name="Home"
         component={BottomNavigator}
       />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="SelectDataType"
+        component={SelectDataType}
+      />
     </Stack.Navigator>
   );
 }
@@ -63,7 +70,7 @@ function BottomNavigator() {
             iconName = 'home';
           } else if (route.name === 'Search') {
             iconName = 'search';
-          } else if (route.name === 'CreatePost') {
+          } else if (route.name === 'Create Post') {
             iconName = 'add';
           } else if (route.name === 'Chat') {
             iconName = 'chatbox';
@@ -97,9 +104,9 @@ function BottomNavigator() {
         listeners={({navigation, route}) => ({})}
       />
       <Tab.Screen
-        options={screenOptionStyle}
-        name="CreatePost"
-        component={CreatePost}
+        options={{headerShown: false}}
+        name="Create Post"
+        component={SelectCommunity}
         listeners={({navigation, route}) => ({})}
       />
       <Tab.Screen
@@ -128,7 +135,11 @@ function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
       <FakeDrawerHeader>
-        <AppTitle> BOXY </AppTitle>
+        <Image
+          source={{
+            uri: 'https://reactnative.dev/docs/assets/p_cat2.png',
+          }}style={{ width: 100, height: 100 }}/>
+          <AppTitle> BOXY </AppTitle>
       </FakeDrawerHeader>
       <DrawerItemList {...props} />
     </DrawerContentScrollView>
