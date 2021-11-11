@@ -16,7 +16,7 @@ import Settings from './screen/Settings';
 import CreateCommunity from './screen/CreateCommunity';
 import Logout from './screen/Logout';
 import SelectCommunity from './screen/SelectCommunity';
-import SelectDataType from './screen/SelectDataType';
+import SelectPostType from './screen/SelectPostType';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import {screenOptionStyle} from './theme/styles';
@@ -27,7 +27,6 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import {KEYS} from './constants';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -53,8 +52,13 @@ export function Navigator() {
       />
       <Stack.Screen
         options={{headerShown: false}}
-        name="SelectDataType"
-        component={SelectDataType}
+        name="SelectPostType"
+        component={SelectPostType}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="CreatePost"
+        component={CreatePost}
       />
     </Stack.Navigator>
   );
@@ -153,13 +157,17 @@ const DrawerNavigator = () => {
       drawerStyle={{backgroundColor: 'transparent'}}
       drawerType={'slide'}
       overlayColor="transparent"
+      initialRouteName="Navigator"
       drawerContent={props => {
         return <CustomDrawerContent {...props} />;
       }}>
       <Drawer.Screen
-        name="Home"
+        name="Navigator"
         component={Navigator}
-        options={drawerOptions}
+        options={{
+          drawerItemStyle: {height: 0},
+          headerShown: false,
+        }}
       />
       <Drawer.Screen
         name="Profile"
