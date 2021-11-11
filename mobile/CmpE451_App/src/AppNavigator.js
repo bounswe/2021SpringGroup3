@@ -17,6 +17,8 @@ import CreateCommunity from './screen/CreateCommunity';
 import Logout from './screen/Logout';
 import SelectCommunity from './screen/SelectCommunity';
 import SelectPostType from './screen/SelectPostType';
+import CreatePostType from './screen/CreatePostType';
+import SelectModeratorCommunity from './screen/SelectModeratorCommunity';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import {screenOptionStyle} from './theme/styles';
@@ -59,6 +61,11 @@ export function Navigator() {
         options={{headerShown: false}}
         name="CreatePost"
         component={CreatePost}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="CreatePostType"
+        component={CreatePostType}
       />
     </Stack.Navigator>
   );
@@ -129,12 +136,6 @@ function BottomNavigator() {
   );
 }
 
-const drawerOptions = {
-  headerShown: false,
-  drawerActiveBackgroundColor: COLORS.drawerActiveBackgroundColor,
-  drawerActiveTintColor: COLORS.buttonTextColor,
-};
-
 function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
@@ -142,8 +143,10 @@ function CustomDrawerContent(props) {
         <Image
           source={{
             uri: 'https://reactnative.dev/docs/assets/p_cat2.png',
-          }}style={{ width: 100, height: 100 }}/>
-          <AppTitle> BOXY </AppTitle>
+          }}
+          style={{width: 100, height: 100}}
+        />
+        <AppTitle> BOXY </AppTitle>
       </FakeDrawerHeader>
       <DrawerItemList {...props} />
     </DrawerContentScrollView>
@@ -175,8 +178,13 @@ const DrawerNavigator = () => {
         options={drawerOptions}
       />
       <Drawer.Screen
-        name="Create Community"
+        name="Create Room"
         component={CreateCommunity}
+        options={drawerOptions}
+      />
+      <Drawer.Screen
+        name="Create Custom Box"
+        component={SelectModeratorCommunity}
         options={drawerOptions}
       />
       <Drawer.Screen
@@ -187,6 +195,12 @@ const DrawerNavigator = () => {
       <Drawer.Screen name="Logout" component={Logout} options={drawerOptions} />
     </Drawer.Navigator>
   );
+};
+
+const drawerOptions = {
+  headerShown: false,
+  drawerActiveBackgroundColor: COLORS.drawerActiveBackgroundColor,
+  drawerActiveTintColor: COLORS.buttonTextColor,
 };
 
 const FakeDrawerHeader = styled.View`
