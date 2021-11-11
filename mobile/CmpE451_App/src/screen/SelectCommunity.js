@@ -11,62 +11,6 @@ import {COLORS} from '../theme/colors';
 import {PAGE_VARIABLES} from '../constants';
 import {AXIOS_CLIENT} from '../services/axiosCientService';
 
-const mockCommunityList = [
-  {
-    name: 'Economics',
-    id: 1,
-    icon: 'https://reactnative.dev/docs/assets/p_cat1.png',
-  },
-  {
-    name: 'Politics',
-    id: 2,
-    icon: 'https://reactnative.dev/docs/assets/p_cat2.png',
-  },
-  {
-    name: 'CatLovers',
-    id: 3,
-    icon: 'https://reactnative.dev/docs/assets/p_cat1.png',
-  },
-  {
-    name: 'CMPE451',
-    id: 4,
-    icon: 'https://reactnative.dev/docs/assets/p_cat2.png',
-  },
-  {
-    name: 'PCMaster',
-    id: 5,
-    icon: 'https://reactnative.dev/docs/assets/p_cat1.png',
-  },
-];
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 22,
-  },
-  item: {
-    padding: 10,
-    fontSize: 18,
-    height: 60,
-    color: COLORS.textColor,
-    textAlignVertical: 'center',
-  },
-  header: {
-    fontSize: 25,
-    alignSelf: 'center',
-    color: COLORS.textColor,
-  },
-  image: {
-    width: 30,
-    height: 30,
-  },
-  list: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 16,
-  },
-});
-
 export default function SelectCommunity({navigation}) {
   const [communityList, setCommunityList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -122,3 +66,59 @@ export default function SelectCommunity({navigation}) {
     </View>
   );
 }
+
+const mockCommunityList = [
+  {
+    name: 'Economics',
+    id: 1,
+    icon: 'https://reactnative.dev/docs/assets/p_cat1.png',
+  },
+  {
+    name: 'Politics',
+    id: 2,
+    icon: 'https://reactnative.dev/docs/assets/p_cat2.png',
+  },
+  {
+    name: 'CatLovers',
+    id: 3,
+    icon: 'https://reactnative.dev/docs/assets/p_cat1.png',
+  },
+  {
+    name: 'CMPE451',
+    id: 4,
+    icon: 'https://reactnative.dev/docs/assets/p_cat2.png',
+  },
+  {
+    name: 'PCMaster',
+    id: 5,
+    icon: 'https://reactnative.dev/docs/assets/p_cat1.png',
+  },
+];
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 22,
+  },
+  item: {
+    padding: 10,
+    fontSize: 18,
+    height: 60,
+    color: COLORS.textColor,
+    textAlignVertical: 'center',
+  },
+  header: {
+    fontSize: 25,
+    alignSelf: 'center',
+    color: COLORS.textColor,
+  },
+  image: {
+    width: 30,
+    height: 30,
+  },
+  list: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 16,
+  },
+});
