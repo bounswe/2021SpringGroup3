@@ -1,36 +1,55 @@
-import React, { useState } from 'react';
-import { Row, Col, Typography, Input, Button } from 'antd';
+import React from 'react';
+import { Row, Col, Typography, Form, Input, Button } from 'antd';
+import 'antd/dist/antd.css';
+
+const { Text } = Typography;
 
 const Confirmation = () => {
+    
+    const onFinish = (values) => {
+        console.log("Success: ", values)
+    }
 
-    const [confirmationCode, setConfirmationCode] = useState('')
-
-    const handleConfirmationSend = () => {
-        console.log("Confirmation code sent: ", confirmationCode);
+    const onFinishFailed = (error) => {
+        console.log("Failed: ", error);
     }
 
     const handleCodeResend = () => {
         console.log("Confirmation code resend requested.");
     }
-    
+
     return( 
         <div>
             <Row gutter={[0, 16]}>
                 <Col span={24}></Col>
                 <Col span={8} offset={8} align="middle">
-                    <Typography strong="true">Enter confirmation code below:</Typography>
-                    <Input 
-                        placeholder="Confirmation Code"
-                        value={confirmationCode}
-                        onChange={e => setConfirmationCode(e.target.value)}/> 
+                    <Form 
+                        name="basic" 
+                        onFinish={onFinish} 
+                        onFinishFailed={onFinishFailed}
+                    >
+                    <Text strong="true">Enter your confirmation code below:</Text>
+                        <Form.Item 
+                            name="confirmationCode" 
+                            rules={[
+                                {
+                                    required:true,
+                                    message: "Please input your confirmation code!"
+                                }
+                            ]}
+                        > 
+                            <Input placeholder="Confirmation Code"/>
+                        </Form.Item>
+
+                        <Form.Item>
+                            <Button type="primary" shape="round" htmlType="submit">
+                                Submit
+                            </Button>
+                        </Form.Item>
+                    </Form>
                 </Col>
                 <Col span={24} align="middle">
-                    <Button type="primary" shape="round" onClick={handleConfirmationSend}>
-                        Send Confirmation Code
-                    </Button>
-                </Col>
-                <Col span={24} align="middle" onClick={handleCodeResend}>
-                    <Button type="link">
+                    <Button type="default" shape="round" onClick={handleCodeResend}>
                         Did not receive the code? 
                     </Button>
                 </Col>
