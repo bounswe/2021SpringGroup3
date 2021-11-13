@@ -25,6 +25,12 @@ exports.createPostType = async ({
   linkFieldNames,
   locationFieldNames,
 }) => {
+  const allFields = [textFieldNames, numberFieldNames, dateFieldNames, linkFieldNames, locationFieldNames].filter(
+    (f) => f.length > 0
+  );
+  if (!allFields.length) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You have to enter at least one fieldName');
+  }
   const community = await Community.findById(communityId).lean();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
