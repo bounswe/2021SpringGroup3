@@ -21,11 +21,11 @@ exports.createPost = {
     .keys({
       communityId: Joi.string().custom(objectId).required(),
       name: Joi.string().required(),
-      textFields: Joi.array().items(textField).min(1).max(10).required(),
-      numberFields: Joi.array().items(numberField).min(1).max(10).required(),
-      dateFields: Joi.array().items(textField).min(1).max(10).required(),
+      textFields: Joi.array().items(textField).min(0).max(10).required(),
+      numberFields: Joi.array().items(numberField).min(0).max(10).required(),
+      dateFields: Joi.array().items(textField).min(0).max(10).required(),
       linkFields: Joi.array().items(linkField).min(1).max(10).required(),
-      locationFields: Joi.array().items(textField).min(1).max(10).required(),
+      locationFields: Joi.array().items(textField).min(0).max(10).required(),
     })
     .required(),
 };
