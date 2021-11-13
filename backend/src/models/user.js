@@ -8,12 +8,16 @@ const userSchema = mongoose.Schema(
     name: {
       type: String,
       trim: true,
+      index: true,
+      unique: true,
     },
     email: {
       type: String,
       trim: true,
       lowercase: true,
       sparse: true,
+      index: true,
+      unique: true,
     },
     timezone: { type: String },
     lastActiveAt: { type: Date, default: Date.now },
