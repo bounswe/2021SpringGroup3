@@ -5,7 +5,20 @@
     "version": "1.0.0",
     "title": "Boxy"
   },
-  "tags": [{ "name": "Authentication Controller" }, { "name": "PostType Controller" }, { "name": "Post Controller" }],
+  "tags": [
+    {
+      "name": "Authentication Controller"
+    },
+    {
+      "name": "PostType Controller"
+    },
+    {
+      "name": "Post Controller"
+    },
+    {
+      "name": "Community Controller"
+    }
+  ],
   "paths": {
     "/login": {
       "post": {
@@ -16,19 +29,37 @@
           {
             "in": "header",
             "name": "X-Platform",
-            "schema": { "type": "string", "enum": ["ANDROID", "WEB"] },
+            "schema": {
+              "type": "string",
+              "enum": ["ANDROID", "WEB"]
+            },
             "required": true
           }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Login" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
         },
         "responses": {
           "200": {
             "description": "Login Successfully",
             "content": {
-              "application/json": { "schema": { "type": "object", "properties": { "token": { "type": "string" } } } }
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
             }
           },
           "400": {
@@ -37,7 +68,12 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "message": { "type": "string", "example": "Invalid credentials" } }
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid credentials"
+                    }
+                  }
                 }
               }
             }
@@ -48,7 +84,12 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "message": { "type": "string", "example": "Wrong email or password" } }
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Wrong email or password"
+                    }
+                  }
                 }
               }
             }
@@ -59,7 +100,12 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "message": { "type": "string", "example": "Please verify your email address" } }
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Please verify your email address"
+                    }
+                  }
                 }
               }
             }
@@ -76,23 +122,39 @@
           {
             "in": "header",
             "name": "X-Platform",
-            "schema": { "type": "string", "enum": ["ANDROID", "WEB"] },
+            "schema": {
+              "type": "string",
+              "enum": ["ANDROID", "WEB"]
+            },
             "required": true
           }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Register" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              }
+            }
+          }
         },
         "responses": {
-          "200": { "description": "Login Successfully" },
+          "200": {
+            "description": "Login Successfully"
+          },
           "400": {
             "description": "invalid credential fields",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "message": { "type": "string", "example": "Invalid credentials" } }
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid credentials"
+                    }
+                  }
                 }
               }
             }
@@ -103,7 +165,12 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "message": { "type": "string", "example": "Username should be unique" } }
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Username should be unique"
+                    }
+                  }
                 }
               }
             }
@@ -119,17 +186,27 @@
           {
             "in": "header",
             "name": "X-Platform",
-            "schema": { "type": "string", "enum": ["ANDROID", "WEB"] },
+            "schema": {
+              "type": "string",
+              "enum": ["ANDROID", "WEB"]
+            },
             "required": true
           },
           {
             "in": "header",
             "name": "Authorization",
-            "schema": { "type": "string", "example": "Bearer ..." },
+            "schema": {
+              "type": "string",
+              "example": "Bearer ..."
+            },
             "required": true
           }
         ],
-        "responses": { "200": { "description": "Logout Successfully" } }
+        "responses": {
+          "200": {
+            "description": "Logout Successfully"
+          }
+        }
       }
     },
     "/post-type": {
@@ -141,30 +218,56 @@
           {
             "in": "header",
             "name": "X-Platform",
-            "schema": { "type": "string", "enum": ["ANDROID", "WEB"] },
+            "schema": {
+              "type": "string",
+              "enum": ["ANDROID", "WEB"]
+            },
             "required": true
           },
           {
             "in": "header",
             "name": "Authorization",
-            "schema": { "type": "string", "example": "Bearer ..." },
+            "schema": {
+              "type": "string",
+              "example": "Bearer ..."
+            },
             "required": true
           },
-          { "in": "query", "name": "communityId", "schema": { "type": "string" }, "required": true }
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PostType" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostType"
+              }
+            }
+          }
         },
         "responses": {
-          "201": { "description": "Created post type successfully" },
+          "201": {
+            "description": "Created post type successfully"
+          },
           "400": {
             "description": "At least on field should be filled",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "message": { "type": "string", "example": "At least one field should be filled" } }
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "At least one field should be filled"
+                    }
+                  }
                 }
               }
             }
@@ -175,7 +278,12 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "message": { "type": "string", "example": "Community does not exist" } }
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Community does not exist"
+                    }
+                  }
                 }
               }
             }
@@ -186,7 +294,12 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "message": { "type": "string", "example": "Post type name should be unique" } }
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Post type name should be unique"
+                    }
+                  }
                 }
               }
             }
@@ -203,22 +316,48 @@
           {
             "in": "header",
             "name": "X-Platform",
-            "schema": { "type": "string", "enum": ["ANDROID", "WEB"] },
+            "schema": {
+              "type": "string",
+              "enum": ["ANDROID", "WEB"]
+            },
             "required": true
           },
           {
             "in": "header",
             "name": "Authorization",
-            "schema": { "type": "string", "example": "Bearer ..." },
+            "schema": {
+              "type": "string",
+              "example": "Bearer ..."
+            },
             "required": true
           },
-          { "in": "query", "name": "communityId", "schema": { "type": "string" }, "required": true },
-          { "in": "query", "name": "postTypeId", "schema": { "type": "string" }, "required": true }
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "postTypeId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
         ],
         "responses": {
           "200": {
             "description": "Get data type names successfully",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PostType" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostType"
+                }
+              }
+            }
           },
           "404": {
             "description": "Community or post does not exist",
@@ -226,7 +365,12 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "message": { "type": "string", "example": "Community or post does not exist" } }
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Community or post does not exist"
+                    }
+                  }
                 }
               }
             }
@@ -243,21 +387,40 @@
           {
             "in": "header",
             "name": "X-Platform",
-            "schema": { "type": "string", "enum": ["ANDROID", "WEB"] },
+            "schema": {
+              "type": "string",
+              "enum": ["ANDROID", "WEB"]
+            },
             "required": true
           },
           {
             "in": "header",
             "name": "Authorization",
-            "schema": { "type": "string", "example": "Bearer ..." },
+            "schema": {
+              "type": "string",
+              "example": "Bearer ..."
+            },
             "required": true
           },
-          { "in": "query", "name": "communityId", "schema": { "type": "string" }, "required": true }
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
         ],
         "responses": {
           "200": {
             "description": "Get post type preview successfully",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PostTypesPreviews" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostTypesPreviews"
+                }
+              }
+            }
           },
           "404": {
             "description": "Community does not exist",
@@ -265,7 +428,12 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": { "message": { "type": "string", "example": "Community does not exist" } }
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Community does not exist"
+                    }
+                  }
                 }
               }
             }
@@ -282,30 +450,51 @@
           {
             "in": "header",
             "name": "X-Platform",
-            "schema": { "type": "string", "enum": ["ANDROID", "WEB"] },
+            "schema": {
+              "type": "string",
+              "enum": ["ANDROID", "WEB"]
+            },
             "required": true
           },
           {
             "in": "header",
             "name": "Authorization",
-            "schema": { "type": "string", "example": "Bearer ..." },
+            "schema": {
+              "type": "string",
+              "example": "Bearer ..."
+            },
             "required": true
           },
-          { "in": "query", "name": "communityId", "schema": { "type": "string" }, "required": true },
-          { "in": "query", "name": "postTypeId", "schema": { "type": "string" }, "required": true }
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "postTypeId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
         ],
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Post" } } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Post"
+              }
+            }
+          }
         },
         "responses": {
           "201": {
-            "description": "Created post type successfully",
-            "content": {
-              "application/json": {
-                "schema": { "type": "object", "properties": { "status": { "type": "integer", "example": 200 } } }
-              }
-            }
+            "description": "Created post type successfully"
           },
           "400": {
             "description": "All fields should be filled",
@@ -314,8 +503,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": { "type": "integer", "example": 400 },
-                    "message": { "type": "string", "example": "Please fill all fields" }
+                    "message": {
+                      "type": "string",
+                      "example": "Please fill all fields"
+                    }
                   }
                 }
               }
@@ -328,7 +519,6 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": { "type": "integer", "example": 404 },
                     "message": {
                       "type": "string",
                       "example": "Community does not exist or post Type does not exist "
@@ -350,22 +540,48 @@
           {
             "in": "header",
             "name": "X-Platform",
-            "schema": { "type": "string", "enum": ["ANDROID", "WEB"] },
+            "schema": {
+              "type": "string",
+              "enum": ["ANDROID", "WEB"]
+            },
             "required": true
           },
           {
             "in": "header",
             "name": "Authorization",
-            "schema": { "type": "string", "example": "Bearer ..." },
+            "schema": {
+              "type": "string",
+              "example": "Bearer ..."
+            },
             "required": true
           },
-          { "in": "query", "name": "communityId", "schema": { "type": "string" }, "required": true },
-          { "in": "query", "name": "postId", "schema": { "type": "string" }, "required": true }
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "postId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
         ],
         "responses": {
           "200": {
             "description": "Get data type names successfully",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PostView" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostView"
+                }
+              }
+            }
           },
           "404": {
             "description": "Community or post does not exist",
@@ -374,8 +590,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": { "type": "integer", "example": 404 },
-                    "message": { "type": "string", "example": "Community or post does not exist" }
+                    "message": {
+                      "type": "string",
+                      "example": "Community or post does not exist"
+                    }
                   }
                 }
               }
@@ -393,16 +611,29 @@
           {
             "in": "header",
             "name": "X-Platform",
-            "schema": { "type": "string", "enum": ["ANDROID", "WEB"] },
+            "schema": {
+              "type": "string",
+              "enum": ["ANDROID", "WEB"]
+            },
             "required": true
           },
           {
             "in": "header",
             "name": "Authorization",
-            "schema": { "type": "string", "example": "Bearer ..." },
+            "schema": {
+              "type": "string",
+              "example": "Bearer ..."
+            },
             "required": true
           },
-          { "in": "query", "name": "communityId", "schema": { "type": "string" }, "required": true }
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
         ],
         "responses": {
           "200": {
@@ -410,14 +641,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": { "type": "integer", "example": 200 },
-                    "PostList": {
-                      "type": "array",
-                      "items": { "oneOf": [{ "$ref": "#/components/schemas/PostView" }] }
-                    }
-                  }
+                  "$ref": "#/components/schemas/PostViews"
                 }
               }
             }
@@ -429,9 +653,66 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": { "type": "integer", "example": 404 },
-                    "message": { "type": "string", "example": "Community does not exist" }
+                    "message": {
+                      "type": "string",
+                      "example": "Community does not exist"
+                    }
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/communities": {
+      "get": {
+        "tags": ["Community Controller"],
+        "description": "",
+        "operationId": "get communities",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": ["ANDROID", "WEB"]
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "schema": {
+              "type": "string",
+              "example": "Bearer ..."
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "isModerator",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "isMember",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get community preview successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunitiesPreviews"
                 }
               }
             }
@@ -447,8 +728,14 @@
         "type": "object",
         "required": ["userName", "password"],
         "properties": {
-          "userName": { "type": "string", "example": "jackie or jackie@gmail.com" },
-          "password": { "type": "string", "example": "" }
+          "userName": {
+            "type": "string",
+            "example": "jackie or jackie@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": ""
+          }
         }
       },
       "Register": {
@@ -456,9 +743,18 @@
         "type": "object",
         "required": ["userName", "email", "password"],
         "properties": {
-          "userName": { "type": "string", "example": "jackie" },
-          "email": { "type": "string", "example": "jackie@gmail.com" },
-          "password": { "type": "string", "example": "" }
+          "userName": {
+            "type": "string",
+            "example": "jackie"
+          },
+          "email": {
+            "type": "string",
+            "example": "jackie@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": ""
+          }
         }
       },
       "PostType": {
@@ -466,38 +762,139 @@
         "type": "object",
         "required": ["name", "textFieldNames", "numberFieldNames", "dateFieldNames", "linkFieldNames", "locationFieldNames"],
         "properties": {
-          "name": { "type": "string", "example": "turnuva" },
-          "textFieldNames": { "type": "array", "items": { "type": "string", "example": "Turnuva Adı" } },
-          "numberFieldNames": { "type": "array", "items": { "type": "string", "example": "Katılımcı Sayısı" } },
-          "dateFieldNames": { "type": "array", "items": { "type": "string", "example": "Turnuva Tarihi" } },
-          "linkFieldNames": { "type": "array", "items": { "type": "string", "example": "Kayıt linki" } },
-          "locationFieldNames": { "type": "array", "items": { "type": "string", "example": "Turnuva yeri" } }
+          "name": {
+            "type": "string",
+            "example": "turnuva"
+          },
+          "textFieldNames": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "Turnuva Adı"
+            }
+          },
+          "numberFieldNames": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "Katılımcı Sayısı"
+            }
+          },
+          "dateFieldNames": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "Turnuva Tarihi"
+            }
+          },
+          "linkFieldNames": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "Kayıt linki"
+            }
+          },
+          "locationFieldNames": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "Turnuva yeri"
+            }
+          }
         }
       },
       "PostTypesPreviews": {
         "title": "Post Types Previews model",
         "type": "array",
-        "items": { "oneOf": [{ "$ref": "#/components/schemas/PostTypePreview" }] }
+        "items": {
+          "oneOf": [
+            {
+              "$ref": "#/components/schemas/PostTypePreview"
+            }
+          ]
+        }
       },
       "PostTypePreview": {
         "title": "Post Type Preview model",
         "type": "object",
         "required": ["name", "id"],
-        "properties": { "name": { "type": "string", "example": "text" }, "id": { "type": "string", "example": "text" } }
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "text"
+          },
+          "id": {
+            "type": "string",
+            "example": "text"
+          }
+        }
       },
       "Post": {
         "title": "Post Request model",
         "type": "object",
         "required": ["textFields", "numberFields", "dateFields", "linkFields", "locationFiels"],
         "properties": {
-          "textFieldNames": { "type": "array", "items": { "oneOf": [{ "$ref": "#/components/schemas/PostFieldInput" }] } },
-          "numberFieldNames": { "type": "array", "items": { "oneOf": [{ "$ref": "#/components/schemas/PostFieldInput" }] } },
-          "dateFieldNames": { "type": "array", "items": { "oneOf": [{ "$ref": "#/components/schemas/PostFieldInput" }] } },
-          "linkFieldNames": { "type": "array", "items": { "oneOf": [{ "$ref": "#/components/schemas/PostFieldInput" }] } },
+          "textFieldNames": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PostFieldInput"
+                }
+              ]
+            }
+          },
+          "numberFieldNames": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PostFieldInput"
+                }
+              ]
+            }
+          },
+          "dateFieldNames": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PostFieldInput"
+                }
+              ]
+            }
+          },
+          "linkFieldNames": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PostFieldInput"
+                }
+              ]
+            }
+          },
           "locationFieldNames": {
             "type": "array",
-            "items": { "oneOf": [{ "$ref": "#/components/schemas/PostFieldInput" }] }
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PostFieldInput"
+                }
+              ]
+            }
           }
+        }
+      },
+      "PostViews": {
+        "title": "Post Previews model",
+        "type": "array",
+        "items": {
+          "oneOf": [
+            {
+              "$ref": "#/components/schemas/PostView"
+            }
+          ]
         }
       },
       "PostView": {
@@ -505,19 +902,83 @@
         "type": "object",
         "required": ["id", "userName", "date", "textFields", "numberFields", "dateFields", "linkFields", "locationFiels"],
         "properties": {
-          "id": { "type": "string", "example": "" },
-          "userName": { "type": "string", "example": "user98" },
-          "date": { "type": "number", "example": "1636156949000" },
-          "textFieldNames": { "type": "array", "items": { "oneOf": [{ "$ref": "#/components/schemas/PostFieldInput" }] } },
-          "numberFieldNames": { "type": "array", "items": { "oneOf": [{ "$ref": "#/components/schemas/PostFieldInput" }] } },
-          "dateFieldNames": { "type": "array", "items": { "oneOf": [{ "$ref": "#/components/schemas/PostFieldInput" }] } },
-          "linkFieldNames": { "type": "array", "items": { "oneOf": [{ "$ref": "#/components/schemas/PostFieldInput" }] } },
+          "id": {
+            "type": "string",
+            "example": ""
+          },
+          "userName": {
+            "type": "string",
+            "example": "user98"
+          },
+          "userImageUrl": {
+            "type": "string"
+          },
+          "communityName": {
+            "type": "string",
+            "example": "cmpe451"
+          },
+          "date": {
+            "type": "number",
+            "example": "1636156949000"
+          },
+          "textFieldNames": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PostFieldInput"
+                }
+              ]
+            }
+          },
+          "numberFieldNames": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PostFieldInput"
+                }
+              ]
+            }
+          },
+          "dateFieldNames": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PostFieldInput"
+                }
+              ]
+            }
+          },
+          "linkFieldNames": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PostFieldInput"
+                }
+              ]
+            }
+          },
           "locationFieldNames": {
             "type": "array",
-            "items": { "oneOf": [{ "$ref": "#/components/schemas/PostFieldInput" }] }
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PostFieldInput"
+                }
+              ]
+            }
           },
-          "likeCount": { "type": "integer", "example": 67 },
-          "isLiked": { "type": "boolean", "example": true }
+          "likeCount": {
+            "type": "integer",
+            "example": 67
+          },
+          "isLiked": {
+            "type": "boolean",
+            "example": true
+          }
         }
       },
       "PostFieldInput": {
@@ -525,8 +986,44 @@
         "type": "object",
         "required": ["name", "value"],
         "properties": {
-          "name": { "type": "string", "example": "turnuva adı" },
-          "value": { "type": "string", "example": "İstanbul Satranç turnuvası" }
+          "name": {
+            "type": "string",
+            "example": "turnuva adı"
+          },
+          "value": {
+            "type": "string",
+            "example": "İstanbul Satranç turnuvası"
+          }
+        }
+      },
+      "CommunitiesPreviews": {
+        "title": "Post Types Previews model",
+        "type": "array",
+        "items": {
+          "oneOf": [
+            {
+              "$ref": "#/components/schemas/CommunityPreview"
+            }
+          ]
+        }
+      },
+      "CommunityPreview": {
+        "title": "Community Preview model",
+        "type": "object",
+        "required": ["name", "id"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "text"
+          },
+          "iconUrl": {
+            "type": "string",
+            "example": "text"
+          },
+          "id": {
+            "type": "string",
+            "example": "text"
+          }
         }
       }
     }
