@@ -7,6 +7,7 @@ tags:
 - name: "Authentication Controller"
 - name: "PostType Controller"
 - name: "Post Controller"
+- name: "Community Controller"
 paths:
   /login:
     post:
@@ -318,14 +319,6 @@ paths:
       responses:
         '201':
           description: Created post type successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 200
         '400':
           description: All fields should be filled
           content:
@@ -333,9 +326,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 400
                   message:
                     type: string
                     example: "Please fill all fields"
@@ -346,9 +336,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 404
                   message:
                     type: string
                     example: "Community does not exist or post Type does not exist "
@@ -395,9 +382,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 404
                   message:
                     type: string
                     example: "Community or post does not exist"
@@ -431,16 +415,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 200
-                  PostList:
-                    type: array
-                    items:
-                      oneOf:
-                       - $ref: '#/components/schemas/PostView'
+                $ref: '#/components/schemas/PostViews'
         '404':
           description: Community does not exist
           content:
@@ -448,12 +423,45 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: integer
-                    example: 404
                   message:
                     type: string
                     example: "Community does not exist"
+  /communities:
+     get:
+      tags:
+      - "Community Controller"
+      description: ""
+      operationId: "get communities"
+      parameters:
+        - in: header
+          name: X-Platform
+          schema:
+            type: string
+            enum: ["ANDROID", "WEB"]
+          required: true
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: Bearer ...
+          required: true
+        - in: query
+          name: isModerator
+          schema:
+            type: boolean
+          required: false
+        - in: query
+          name: isMember
+          schema:
+            type: boolean
+          required: false
+      responses:
+        '200':
+          description: Get community preview successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunitiesPreviews'
 components:
   schemas:
     Login:
@@ -579,6 +587,12 @@ components:
           items:
             oneOf:
              - $ref: '#/components/schemas/PostFieldInput'
+    PostViews:
+      title: 'Post Previews model'
+      type: "array"
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/PostView'
     PostView:
       title: 'Post View model'
       type: "object"
@@ -597,7 +611,12 @@ components:
           example: "" 
         userName:
           type: "string"
-          example: "user98" 
+          example: "user98"
+        userImageUrl: 
+          type: "string"
+        communityName:
+          type: "string"
+          example: "cmpe451" 
         date:
           type: number
           example: "1636156949000" 
@@ -645,5 +664,26 @@ components:
         value:
           type: "string"
           example: "İstanbul Satranç turnuvası" 
-    
+    CommunitiesPreviews:
+      title: 'Post Types Previews model'
+      type: "array"
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/CommunityPreview'
+    CommunityPreview:
+      title: 'Community Preview model'
+      type: "object"
+      required:
+      - "name"
+      - "id"
+      properties:
+        name:
+          type: "string"
+          example: "text"
+        iconUrl:
+          type: "string"
+          example: "text" 
+        id:
+          type: "string"
+          example: "text" 
     
