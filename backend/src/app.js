@@ -45,7 +45,7 @@ if (config.env === 'production') {
 }
 
 app.use((req, res, next) => {
-  if (!['ANDROID', 'WEB'].includes(req.headers['x-platform'])) {
+  if (!['ANDROID', 'WEB'].includes(req.headers['x-platform']) && !req.path.includes('/docs')) {
     return next(new ApiError(httpStatus.BAD_REQUEST, 'Invalid X-Platform header'));
   }
   next();

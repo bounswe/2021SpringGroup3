@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { toJSON } = require('./plugins');
 
 const userTokenSchema = mongoose.Schema(
   {
@@ -19,8 +18,6 @@ const userTokenSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-
-userTokenSchema.plugin(toJSON);
 
 const UserToken = mongoose.model('User_Token', userTokenSchema);
 

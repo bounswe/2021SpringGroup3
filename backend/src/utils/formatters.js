@@ -11,3 +11,15 @@ exports.formatUser = function (user) {
     isActivated: user.isActivated,
   };
 };
+
+exports.formatPreviewCommunity = function (community) {
+  return {
+    id: community._id.toString(),
+    name: community.name,
+    iconUrl: community.iconUrl,
+  };
+};
+
+exports.formatCommunities = function (communities = []) {
+  return communities.map(exports.formatPreviewCommunity);
+};
