@@ -9,9 +9,10 @@ export const KEYS = {
 };
 
 export const TEXT = {
-  loginMissingInput: 'Lütfen tüm giriş bilgilerinizi doldurunuz.',
-  unexpectedError: 'Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.',
-  networkError: 'Lütfen internet bağlantınızı kontrol ediniz.',
+  loginMissingInput: 'Please fill all credentials.',
+  unexpectedError: 'Unexpected error occurred. Please try again later.',
+  networkError: 'Please check your network connection.',
+  successfullyCreated: 'Successfully created!',
 };
 
 export const PAGE_VARIABLES = {
