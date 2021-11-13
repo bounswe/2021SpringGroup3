@@ -27,9 +27,7 @@ exports.getCommunities = async ({ token, isModerator, isMember }) => {
     }
   }
   const communities = await Community.find(query).lean();
-  return {
-    communities: formatters.formatCommunities(communities),
-  };
+  return formatters.formatCommunities(communities);
 };
 
 exports.createCommunity = async ({ token, name, iconUrl }) => {

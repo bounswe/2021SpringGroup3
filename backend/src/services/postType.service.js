@@ -10,11 +10,9 @@ exports.getPostTypes = async ({ communityId }) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
   const postTypes = await PostType.find({
-    community: communityId,
+    community: community._id,
   }).lean();
-  return {
-    postTypes: formatters.formatPostTypes(postTypes),
-  };
+  return formatters.formatPostTypes(postTypes);
 };
 
 exports.createPostType = async ({
@@ -33,6 +31,7 @@ exports.createPostType = async ({
   }
   const postyType = await PostType.create({
     name,
+    community: community._id,
     creator: token.user._id,
     moderators: [token.user._id],
     textFieldNames,

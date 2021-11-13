@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const postyTypeSchema = mongoose.Schema(
+const postTypeSchema = mongoose.Schema(
   {
     community: {
       type: mongoose.SchemaTypes.ObjectId,
@@ -27,6 +27,6 @@ const postyTypeSchema = mongoose.Schema(
   }
 );
 
-const PostType = mongoose.model('Post_Type', postyTypeSchema);
+const PostType = mongoose.model('Post_Type', postTypeSchema);
 
 module.exports = PostType;

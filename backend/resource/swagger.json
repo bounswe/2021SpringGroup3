@@ -209,7 +209,78 @@
         }
       }
     },
-    "/post-type": {
+    "/post-type/detail": {
+      "get": {
+        "tags": ["PostType Controller"],
+        "description": "",
+        "operationId": "get postTypeDetail",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": ["ANDROID", "WEB"]
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "schema": {
+              "type": "string",
+              "example": "Bearer ..."
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "postTypeId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get data type names successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostType"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Community or post does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Community or post does not exist"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/post-types": {
       "post": {
         "tags": ["PostType Controller"],
         "description": "",
@@ -297,80 +368,7 @@
             }
           }
         }
-      }
-    },
-    "/post-type/detail": {
-      "get": {
-        "tags": ["PostType Controller"],
-        "description": "",
-        "operationId": "get postTypeDetail",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "X-Platform",
-            "schema": {
-              "type": "string",
-              "enum": ["ANDROID", "WEB"]
-            },
-            "required": true
-          },
-          {
-            "in": "header",
-            "name": "Authorization",
-            "schema": {
-              "type": "string",
-              "example": "Bearer ..."
-            },
-            "required": true
-          },
-          {
-            "in": "query",
-            "name": "communityId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "in": "query",
-            "name": "postTypeId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Get data type names successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PostType"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Community or post does not exist",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Community or post does not exist"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/post-types": {
+      },
       "get": {
         "tags": ["PostType Controller"],
         "description": "",
@@ -424,96 +422,6 @@
                     "message": {
                       "type": "string",
                       "example": "Community does not exist"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/post": {
-      "post": {
-        "tags": ["Post Controller"],
-        "description": "",
-        "operationId": "create post",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "X-Platform",
-            "schema": {
-              "type": "string",
-              "enum": ["ANDROID", "WEB"]
-            },
-            "required": true
-          },
-          {
-            "in": "header",
-            "name": "Authorization",
-            "schema": {
-              "type": "string",
-              "example": "Bearer ..."
-            },
-            "required": true
-          },
-          {
-            "in": "query",
-            "name": "communityId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "in": "query",
-            "name": "postTypeId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Post"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created post type successfully"
-          },
-          "400": {
-            "description": "All fields should be filled",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Please fill all fields"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Community or post does not exist",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Community does not exist or post Type does not exist "
                     }
                   }
                 }
@@ -595,6 +503,78 @@
       }
     },
     "/posts": {
+      "post": {
+        "tags": ["Post Controller"],
+        "description": "",
+        "operationId": "create post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": ["ANDROID", "WEB"]
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "schema": {
+              "type": "string",
+              "example": "Bearer ..."
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created post type successfully"
+          },
+          "400": {
+            "description": "All fields should be filled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Please fill all fields"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Community or post does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Community does not exist or post Type does not exist "
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "get": {
         "tags": ["Post Controller"],
         "description": "",
@@ -889,8 +869,14 @@
       "Post": {
         "title": "Post Request model",
         "type": "object",
-        "required": ["textFields", "numberFields", "dateFields", "linkFields", "locationFiels"],
+        "required": ["communityId", "postTypeId", "textFields", "numberFields", "dateFields", "linkFields", "locationFiels"],
         "properties": {
+          "communityId": {
+            "type": "string"
+          },
+          "postTypeId": {
+            "type": "string"
+          },
           "textFieldNames": {
             "type": "array",
             "items": {
