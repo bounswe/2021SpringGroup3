@@ -232,14 +232,6 @@
               "example": "Bearer ..."
             },
             "required": true
-          },
-          {
-            "in": "query",
-            "name": "communityId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
           }
         ],
         "requestBody": {
@@ -813,11 +805,23 @@
       "PostType": {
         "title": "Post type model",
         "type": "object",
-        "required": ["name", "textFieldNames", "numberFieldNames", "dateFieldNames", "linkFieldNames", "locationFieldNames"],
+        "required": [
+          "name",
+          "communityId",
+          "textFieldNames",
+          "numberFieldNames",
+          "dateFieldNames",
+          "linkFieldNames",
+          "locationFieldNames"
+        ],
         "properties": {
           "name": {
             "type": "string",
             "example": "turnuva"
+          },
+          "communityId": {
+            "type": "string",
+            "example": "618fb28cd5da23b323f29dbe"
           },
           "textFieldNames": {
             "type": "array",

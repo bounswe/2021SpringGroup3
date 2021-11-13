@@ -23,3 +23,14 @@ exports.formatPreviewCommunity = function (community) {
 exports.formatCommunities = function (communities = []) {
   return communities.map(exports.formatPreviewCommunity);
 };
+
+exports.formatPreviewPostType = function (postType) {
+  return {
+    id: postType._id.toString(),
+    name: postType.name,
+  };
+};
+
+exports.formatPostTypes = function (postTypes = []) {
+  return postTypes.map(exports.formatPreviewPostType);
+};

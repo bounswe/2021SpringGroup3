@@ -2,7 +2,7 @@ const roles = { user: 'user', admin: 'admin' };
 
 const roleRights = new Map();
 
-const userRights = ['logout', 'getCommunities', 'createCommunity'];
+const userRights = ['logout', 'getCommunities', 'createCommunity', 'getPostTypes', 'createPostType'];
 
 roleRights.set(roles.user, userRights);
 roleRights.set(roles.admin, userRights.concat([]));

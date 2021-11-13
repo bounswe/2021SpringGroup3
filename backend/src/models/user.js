@@ -4,15 +4,20 @@ const { roles } = require('../config/roles');
 
 const userSchema = mongoose.Schema(
   {
-    name: {
+    username: {
       type: String,
       trim: true,
+      index: true,
+      required: true,
+      unique: true,
     },
     email: {
       type: String,
       trim: true,
       lowercase: true,
-      sparse: true,
+      index: true,
+      required: true,
+      unique: true,
     },
     timezone: { type: String },
     lastActiveAt: { type: Date, default: Date.now },

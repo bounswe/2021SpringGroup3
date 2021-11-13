@@ -6,7 +6,7 @@ const auth = require('../middlewares/auth');
 
 const router = express.Router();
 
-router.route('/').post(auth('createCommunity'), validate(communityValidation.createCommunity), communityController.logout);
-router.route('/').get(auth('getCommunities'), validate(communityValidation.getCommunities), communityController.logout);
+router.route('/').post(validate(communityValidation.createCommunity), auth('createCommunity'), communityController.logout);
+router.route('/').get(validate(communityValidation.getCommunities), auth('getCommunities'), communityController.logout);
 
 module.exports = router;
