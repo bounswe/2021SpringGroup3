@@ -23,7 +23,7 @@ exports.register = catchAsync(async (req, res) => {
   const result = await authService.register({
     email: req.body.email,
     password: req.body.password,
-    name: req.body.name,
+    username: req.body.username,
   });
   res.status(httpStatus.CREATED).send(result);
 });

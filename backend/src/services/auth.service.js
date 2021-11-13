@@ -3,19 +3,18 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const { coreUtil, baseUtil, formatters } = require('../utils');
 const { UserToken, User } = require('../models');
-const config = require('../config/config');
 
 exports.logout = async ({ token }) => {
   await UserToken.findByIdAndDelete(token._id);
-  return {};
+  return {
+    message: 'Logout is success',
+  };
 };
 
 exports.login = async ({ email, password }) => {
   const userWithEmail = await User.findOne({ email });
-  if (coreUtil.isNull(userWithEmail)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, config.env === 'production' ? 'Password does not match' : 'User not found');
-  } else if (!(await userWithEmail.isPasswordMatch(password))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Password does not match');
+  if (coreUtil.isNull(userWithEmail) || !(await userWithEmail.isPasswordMatch(password))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Wrong email or password');
   }
   const newUserToken = (
     await UserToken.create({
@@ -30,15 +29,21 @@ exports.login = async ({ email, password }) => {
   });
 };
 
-exports.register = async ({ email, password, name }) => {
-  const userWithEmail = await User.findOne({ email }).lean();
+exports.register = async ({ email, password, username }) => {
+  const userWithEmail = await User.findOne({ $or: [{ email }, { username }] }).lean();
   if (!coreUtil.isNull(userWithEmail)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email is already taken');
+    if (userWithEmail.email === email) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Email is already taken');
+    } else if (userWithEmail.username === username) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Username is already taken');
+    }
   }
   await User.create({
     email,
     password,
-    name,
+    username,
   });
-  return {};
+  return {
+    message: 'Register is success',
+  };
 };
