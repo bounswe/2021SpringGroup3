@@ -44,6 +44,14 @@ if (config.env === 'production') {
   app.use('/auth', authLimiter);
 }
 
+app.use((req, res, next) => {
+  if (!['ANDROID', 'WEB'].includes(req.headers['x-platform'])) {
+    return next(new ApiError(httpStatus.BAD_REQUEST, 'Invalid X-Platform header'));
+  }
+  next();
+});
+
+// api routes
 app.use(routes);
 
 app.get('/', function (req, res) {
