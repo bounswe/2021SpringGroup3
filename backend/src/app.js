@@ -8,6 +8,7 @@ const cors = require('cors');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
 const { authLimiter } = require('./middlewares/rateLimiter');
+const auth = require('./middlewares/auth');
 const routes = require('./routes');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const { ApiError } = require('./utils');
@@ -50,6 +51,8 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+app.use(auth());
 
 // api routes
 app.use(routes);

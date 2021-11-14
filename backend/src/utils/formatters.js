@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 exports.formatUserToken = function ({ tokenCode, language, user }) {
   return { token: tokenCode, user: exports.formatUser(user, language) };
 };
@@ -35,24 +37,30 @@ exports.formatPostTypes = function (postTypes = []) {
   return postTypes.map(exports.formatPreviewPostType);
 };
 
-
-exports.formatPostDetail = function (post) {
+exports.formatPostDetail = function (post, user) {
   return {
     id: post._id.toString(),
     user: {
-        username: post.creator.username,
-        imageUrl: post.creator.imageUrl
+      id: post.creator._id.toString(),
+      username: post.creator.username,
+      imageUrl: post.creator.imageUrl,
     },
-    community: {
-        name: post.community.name
-    } ,
-    date: post.createdAt,
+    community: {
+      id: post.community._id.toString(),
+      name: post.community.name,
+    },
+    date: moment(post.createdAt).format('MM/DD/YYYY HH:mm'),
     textFieldNames: post.textFields,
-    numberFieldsNames: post.numberFields,
+    numberFieldNames: post.numberFields,
     dateFieldNames: post.dateFields,
-    linkFieldNames: linkFields,
-    locationFieldNames: post. locationFields
+    linkFieldNames: post.linkFields,
+    locationFieldNames: post.locationFields,
+    isLiked: post.likers.includes(user._id),
   };
+};
+
+exports.formatPosts = function (posts = [], user) {
+  return posts.map((post) => exports.formatPostDetail(post, user));
 };
 
 exports.formatPostTypeDetail = function (postType) {
@@ -62,6 +70,6 @@ exports.formatPostTypeDetail = function (postType) {
     numberFieldNames: postType.numberFieldsNames,
     dateFieldNames: postType.dateFieldNames,
     linkFieldNames: postType.linkFieldNames,
-    locationFieldNames: postType.locationFieldNames
+    locationFieldNames: postType.locationFieldNames,
   };
 };

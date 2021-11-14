@@ -6,6 +6,11 @@ const textField = Joi.object().keys({
   value: Joi.string().required(),
 });
 
+const dateField = Joi.object().keys({
+  name: Joi.string().required(),
+  value: Joi.string().isoDate().required(),
+});
+
 const numberField = Joi.object().keys({
   name: Joi.string().required(),
   value: Joi.number().required(),
@@ -20,12 +25,12 @@ exports.createPost = {
   body: Joi.object()
     .keys({
       communityId: Joi.string().custom(objectId).required(),
-      name: Joi.string().required(),
-      textFields: Joi.array().items(textField).min(0).max(10).required(),
-      numberFields: Joi.array().items(numberField).min(0).max(10).required(),
-      dateFields: Joi.array().items(textField).min(0).max(10).required(),
-      linkFields: Joi.array().items(linkField).min(0).max(10).required(),
-      locationFields: Joi.array().items(textField).min(0).max(10).required(),
+      postTypeId: Joi.string().custom(objectId).required(),
+      textFields: Joi.array().items(textField).max(10),
+      numberFields: Joi.array().items(numberField).max(10),
+      dateFields: Joi.array().items(dateField).max(10),
+      linkFields: Joi.array().items(linkField).max(10),
+      locationFields: Joi.array().items(textField).max(10),
     })
     .required(),
 };
@@ -43,7 +48,6 @@ exports.getPostDetail = {
     .keys({
       communityId: Joi.string().custom(objectId).required(),
       postId: Joi.string().custom(objectId).required(),
-
     })
     .required(),
 };

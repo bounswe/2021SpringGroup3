@@ -8,11 +8,11 @@ exports.createPostType = {
     .keys({
       communityId: Joi.string().custom(objectId).required(),
       name: Joi.string().required(),
-      textFieldNames: Joi.array().items(fieldName).min(0).max(10).required(),
-      numberFieldNames: Joi.array().items(fieldName).min(0).max(10).required(),
-      dateFieldNames: Joi.array().items(fieldName).min(0).max(10).required(),
-      linkFieldNames: Joi.array().items(fieldName).min(0).max(10).required(),
-      locationFieldNames: Joi.array().items(fieldName).min(0).max(10).required(),
+      textFieldNames: Joi.array().items(fieldName).max(10),
+      numberFieldNames: Joi.array().items(fieldName).max(10),
+      dateFieldNames: Joi.array().items(fieldName).max(10),
+      linkFieldNames: Joi.array().items(fieldName).max(10),
+      locationFieldNames: Joi.array().items(fieldName).max(10),
     })
     .required(),
 };
@@ -25,13 +25,11 @@ exports.getPostTypes = {
     .required(),
 };
 
-
 exports.getPostTypeDetail = {
   query: Joi.object()
     .keys({
       communityId: Joi.string().custom(objectId).required(),
       postTypeId: Joi.string().custom(objectId).required(),
-
     })
     .required(),
 };

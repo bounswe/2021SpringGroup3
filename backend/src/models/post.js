@@ -1,9 +1,29 @@
 const mongoose = require('mongoose');
 
-const field = new mongoose.Schema(
+const stringField = new mongoose.Schema(
   {
     name: { type: String },
     value: { type: String },
+  },
+  {
+    _id: false,
+  }
+);
+
+const numberField = new mongoose.Schema(
+  {
+    name: { type: String },
+    value: { type: Number },
+  },
+  {
+    _id: false,
+  }
+);
+
+const dateField = new mongoose.Schema(
+  {
+    name: { type: String },
+    value: { type: Date },
   },
   {
     _id: false,
@@ -18,19 +38,18 @@ const postSchema = mongoose.Schema(
       required: true,
       index: true,
     },
-    creator: { type: mongoose.SchemaTypes.ObjectId, ref: 'User', required: true, index: true },
-    name: {
-      type: String,
-      trim: true,
-      index: true,
+    community: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'Community',
       required: true,
-      unique: true,
+      index: true,
     },
-    textFields: [field],
-    numberFields: [field],
-    dateFields: [field],
-    linkFields: [field],
-    locationFields: [field],
+    creator: { type: mongoose.SchemaTypes.ObjectId, ref: 'User', required: true, index: true },
+    textFields: [stringField],
+    numberFields: [numberField],
+    dateFields: [dateField],
+    linkFields: [stringField],
+    locationFields: [stringField],
     likeCount: { type: Number, default: 0 },
     likers: [
       {

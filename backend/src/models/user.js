@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const { roles } = require('../config/roles');
 
 const userSchema = mongoose.Schema(
   {
@@ -31,15 +30,9 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    role: {
-      type: String,
-      enum: Object.values(roles),
-      default: 'user',
-      index: true,
-    },
     imageUrl: {
       type: String,
-      default: 'https://mocah.org/thumbs/108-cat__screaming_cat_image.jpg'
+      default: 'https://mocah.org/thumbs/108-cat__screaming_cat_image.jpg',
     },
   },
   {
