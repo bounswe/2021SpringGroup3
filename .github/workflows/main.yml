@@ -25,6 +25,7 @@ jobs:
           script: |
             rm -rf 2021SpringGroup3
             git clone -b backend/deploy https://github.com/bounswe/2021SpringGroup3 # clone the repo into the 'app' folder
+            cp .env 2021SpringGroup3/backend/.env
             cd 2021SpringGroup3/backend # navigate into the repo
-            yarn # install dependencies 
-            pm2 start src/index.js # start as a background service.
+            yarn # install dependencies
+            pm2 restart prod
