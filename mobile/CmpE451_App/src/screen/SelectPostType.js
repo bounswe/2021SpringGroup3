@@ -62,7 +62,7 @@ export default function SelectPostType({navigation}) {
             <View style={styles.list}>
               <Image
                 source={{
-                  uri: 'https://drive.google.com/uc?export=view&id=17UJQPtBS52HLa0GXmBWPqsSFjs9i8oM2',
+                  uri: 'https://drive.google.com/uc?export=view&id=1y1OBVIC_xvt7bTGaQ-OUIdYSnSljbM0n',
                 }}
                 style={styles.image}
               />

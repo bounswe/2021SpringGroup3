@@ -14,7 +14,7 @@ export default class Header extends Component {
     return (
       <SafeAreaView style={container}>
       <Image style={photo}
-       source={{uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png'}}/>
+       source={{uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc'}}/>
       <Text style={headerText}>{this.props.text}</Text>
       <View style={iconView}>
             <Ionicons name={'bell'} size={20} color={'#fff'} />
