@@ -1,3 +1,4 @@
+import Login from './components/Login';
 import Post from './components/Post';
 import React from "react";
 import 'antd/dist/antd.css';
@@ -103,7 +104,6 @@ function App() {
 
   return (
     <>
-       {postComponents}
     </>
   );
 }
