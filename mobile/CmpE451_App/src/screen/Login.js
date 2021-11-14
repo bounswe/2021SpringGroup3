@@ -17,7 +17,7 @@ import {AXIOS_CLIENT} from '../services/axiosCientService';
 import {TEXT, CONFIG, KEYS} from '../constants';
 
 export default function Login({navigation}) {
-  const [userName, setUserName] = useState('');
+  const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
   const passwordInputRef = createRef();
@@ -36,9 +36,9 @@ export default function Login({navigation}) {
   const handleLogin = () => {
     Keyboard.dismiss();
     if (CONFIG.skipLogin) {
-      AsyncStorage.setItem(KEYS.USER_NAME_KEY, userName);
+      AsyncStorage.setItem(KEYS.USER_NAME_KEY, username);
       navigateMain();
-    } else if (userName.length > 0 && password.length > 0) {
+    } else if (username.length > 0 && password.length > 0) {
       requestLogin();
     } else {
       ToastAndroid.show(TEXT.loginMissingInput, ToastAndroid.SHORT);
@@ -48,14 +48,14 @@ export default function Login({navigation}) {
   const requestLogin = () => {
     AXIOS_CLIENT.post('login', {
       data: {
-        userName: userName,
+        username: username,
         password: password,
       },
     })
       .then(response => {
         if (response.status === 200) {
           AsyncStorage.setItem(KEYS.TOKEN_KEY, response.data.token);
-          AsyncStorage.setItem(KEYS.USER_NAME_KEY, userName);
+          AsyncStorage.setItem(KEYS.USER_NAME_KEY, username);
           navigateMain();
         } else if (
           response.status === 400 ||

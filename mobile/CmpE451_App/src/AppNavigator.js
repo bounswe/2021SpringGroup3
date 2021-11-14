@@ -1,5 +1,11 @@
 import React from 'react';
-import {BackHandler, Image, Alert, ToastAndroid, AsyncStorage} from 'react-native';
+import {
+  BackHandler,
+  Image,
+  Alert,
+  ToastAndroid,
+  AsyncStorage,
+} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
@@ -145,116 +151,117 @@ function BottomNavigator() {
     </Tab.Navigator>
   );
 }
-const startReload = ()=> RNRestart.Restart();
+const startReload = () => RNRestart.Restart();
 
 const handleLogout = () => {
   if (CONFIG.skipLogout) {
     AsyncStorage.removeItem(KEYS.TOKEN_KEY);
-    startReload()
+    startReload();
   } else {
-    requestLogout()
+    requestLogout();
   }
 };
 
 const requestLogout = () => {
-      AXIOS_CLIENT.delete('logout')
-      .then(response => {
-        if (response.status === 200) {
-          AsyncStorage.removeItem(KEYS.TOKEN_KEY);
-          startReload()
-        } else {
-          ToastAndroid.show(TEXT.unexpectedError, ToastAndroid.SHORT);
-        }
-      })
-      .catch(error => {
-        console.info(error);
-        ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
-      });
-}
+  AXIOS_CLIENT.delete('logout')
+    .then(response => {
+      if (response.status === 200) {
+        AsyncStorage.removeItem(KEYS.TOKEN_KEY);
+        startReload();
+      } else {
+        ToastAndroid.show(TEXT.unexpectedError, ToastAndroid.SHORT);
+      }
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
 
 const showAlert = () => {
   Alert.alert(
     'Warning',
-    'Are you sure you want to logout?', [
-  {
-    text: 'Cancel'
-  },
-  {
-    text: 'Yes',
-    onPress: () => handleLogout()
-  },
+    'Are you sure you want to logout?',
+    [
+      {
+        text: 'Cancel',
+      },
+      {
+        text: 'Yes',
+        onPress: () => handleLogout(),
+      },
     ],
-  {
-    cancelable: true,
-  })
+    {
+      cancelable: true,
+    },
+  );
 };
 
 function CustomDrawerContent(props) {
-return (
-  <DrawerContentScrollView {...props}>
-    <FakeDrawerHeader>
-      <Image
-        source={{
-          uri: 'https://reactnative.dev/docs/assets/p_cat2.png',
-        }}
-        style={{width: 100, height: 100}}
-      />
-      <AppTitle> BOXY </AppTitle>
-    </FakeDrawerHeader>
-    <DrawerItemList {...props} />
-    <DrawerItem label="Logout" onPress={()=>showAlert()}/>
-  </DrawerContentScrollView>
-);
+  return (
+    <DrawerContentScrollView {...props}>
+      <FakeDrawerHeader>
+        <Image
+          source={{
+            uri: 'https://reactnative.dev/docs/assets/p_cat2.png',
+          }}
+          style={{width: 100, height: 100}}
+        />
+        <AppTitle> BOXY </AppTitle>
+      </FakeDrawerHeader>
+      <DrawerItemList {...props} />
+      <DrawerItem label="Logout" onPress={() => showAlert()} />
+    </DrawerContentScrollView>
+  );
 }
 
 const DrawerNavigator = () => {
-return (
-  <Drawer.Navigator
-    screenOptions={screenOptionStyle}
-    drawerStyle={{backgroundColor: 'transparent'}}
-    drawerType={'slide'}
-    overlayColor="transparent"
-    initialRouteName="Navigator"
-    drawerContent={props => {
-      return <CustomDrawerContent {...props} />;
-    }}>
-    <Drawer.Screen
-      name="Navigator"
-      component={Navigator}
-      options={{
-        drawerItemStyle: {height: 0},
-        headerShown: false,
-      }}
-    />
-    <Drawer.Screen
-      name="Profile"
-      component={Profile}
-      options={drawerOptions}
-    />
-    <Drawer.Screen
-      name="Create Room"
-      component={CreateCommunity}
-      options={drawerOptions}
-    />
-    <Drawer.Screen
-      name="Create Custom Box"
-      component={SelectModeratorCommunity}
-      options={drawerOptions}
-    />
-    <Drawer.Screen
-      name="Settings"
-      component={Settings}
-      options={drawerOptions}
-    />
-
-  </Drawer.Navigator>
-);
+  return (
+    <Drawer.Navigator
+      screenOptions={screenOptionStyle}
+      drawerStyle={{backgroundColor: 'transparent'}}
+      drawerType={'slide'}
+      overlayColor="transparent"
+      initialRouteName="Navigator"
+      drawerContent={props => {
+        return <CustomDrawerContent {...props} />;
+      }}>
+      <Drawer.Screen
+        name="Navigator"
+        component={Navigator}
+        options={{
+          drawerItemStyle: {height: 0},
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
+        name="Profile"
+        component={Profile}
+        options={drawerOptions}
+      />
+      <Drawer.Screen
+        name="Create Community"
+        component={CreateCommunity}
+        options={drawerOptions}
+      />
+      <Drawer.Screen
+        name="Create Post Type"
+        component={SelectModeratorCommunity}
+        options={drawerOptions}
+      />
+      <Drawer.Screen
+        name="Settings"
+        component={Settings}
+        options={drawerOptions}
+      />
+    </Drawer.Navigator>
+  );
 };
 
 const drawerOptions = {
-headerShown: false,
-drawerActiveBackgroundColor: COLORS.drawerActiveBackgroundColor,
-drawerActiveTintColor: COLORS.buttonTextColor,
+  headerShown: false,
+  drawerActiveBackgroundColor: COLORS.drawerActiveBackgroundColor,
+  drawerActiveTintColor: COLORS.buttonTextColor,
 };
 
 const FakeDrawerHeader = styled.View`
