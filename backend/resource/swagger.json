@@ -194,7 +194,7 @@
           },
           {
             "in": "header",
-            "name": "Authorization",
+            "name": "Authorizatio",
             "schema": {
               "type": "string",
               "example": "Bearer ..."
@@ -226,7 +226,7 @@
           },
           {
             "in": "header",
-            "name": "Authorization",
+            "name": "Authorizatio",
             "schema": {
               "type": "string",
               "example": "Bearer ..."
@@ -297,7 +297,7 @@
           },
           {
             "in": "header",
-            "name": "Authorization",
+            "name": "Authorizatio",
             "schema": {
               "type": "string",
               "example": "Bearer ..."
@@ -385,7 +385,7 @@
           },
           {
             "in": "header",
-            "name": "Authorization",
+            "name": "Authorizatio",
             "schema": {
               "type": "string",
               "example": "Bearer ..."
@@ -448,7 +448,7 @@
           },
           {
             "in": "header",
-            "name": "Authorization",
+            "name": "Authorizatio",
             "schema": {
               "type": "string",
               "example": "Bearer ..."
@@ -519,7 +519,7 @@
           },
           {
             "in": "header",
-            "name": "Authorization",
+            "name": "Authorizatio",
             "schema": {
               "type": "string",
               "example": "Bearer ..."
@@ -606,7 +606,7 @@
           },
           {
             "in": "header",
-            "name": "Authorization",
+            "name": "Authorizatio",
             "schema": {
               "type": "string",
               "example": "Bearer ..."
@@ -669,7 +669,7 @@
           },
           {
             "in": "header",
-            "name": "Authorization",
+            "name": "Authorizatio",
             "schema": {
               "type": "string",
               "example": "Bearer ..."
@@ -722,7 +722,7 @@
           },
           {
             "in": "header",
-            "name": "Authorization",
+            "name": "Authorizatio",
             "schema": {
               "type": "string",
               "example": "Bearer ..."

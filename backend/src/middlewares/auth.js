@@ -15,6 +15,7 @@ const auth = () => async (req, res, next) => {
     if (coreUtil.isNull(req.headers.authorization)) {
       return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized'));
     }
+    req.headers.authorization = req.headers.authorization || req.headers.authorizatio;
     const tokenWithUser = await UserToken.findOne({ tokenCode: req.headers.authorization })
       .populate({
         path: 'user',
