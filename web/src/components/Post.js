@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { useState, Image } from 'react';
-import { Card, Row, Col, Button, Typography, Layout, Divider, Space, Tooltip } from 'antd';
+import { useState } from 'react';
+import { Card, Row, Col, Button, Typography, Space, Avatar } from 'antd';
 import '../App.css';
 import FieldContent from './FieldContent';
 
@@ -74,12 +74,7 @@ const Post = (props) => {
           <Space size={'middle'}>
             <Col>
 
-              <img
-                style={{ width: 50, height: 50, borderRadius: 50 / 2, cursor: 'pointer' }}
-                src={props.postObj.profilePicture}
-                alt="alt"
-                onClick={() => getUser(props.postObj.userId)}
-              />
+              <Avatar size={50} style={{cursor: 'pointer'}} src={props.postObj.profilePicture} onClick={() => getUser(props.postObj.userId)} />
             </Col>
             <Col>
               <Row>
