@@ -4,7 +4,7 @@ import {View, Text} from 'react-native';
 export default function Logout({}) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>BURASI Logout SAYFASIDIR</Text>
+      <Text style={styles.title}>BURASI Post Detail SAYFASIDIR</Text>
     </View>
   );
 }
