@@ -1,4 +1,5 @@
 import Login from './components/Login';
+import Confirmation from './components/Confirmation';
 import Post from './components/Post';
 import React from "react";
 import 'antd/dist/antd.css';
