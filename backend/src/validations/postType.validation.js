@@ -24,3 +24,14 @@ exports.getPostTypes = {
     })
     .required(),
 };
+
+
+exports.getPostTypeDetail = {
+  query: Joi.object()
+    .keys({
+      communityId: Joi.string().custom(objectId).required(),
+      postTypeId: Joi.string().custom(objectId).required(),
+
+    })
+    .required(),
+};

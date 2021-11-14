@@ -22,3 +22,12 @@ exports.createPostType = catchAsync(async (req, res) => {
   });
   res.status(httpStatus.CREATED).send(result);
 });
+
+exports.getPostTypeDetail = catchAsync(async (req, res) => {
+  const result = await postTypeService.getPostTypeDetail({
+    communityId: req.query.communityId,
+    postTypeId: req.query.postTypeId,
+
+  });
+  res.send(result);
+});

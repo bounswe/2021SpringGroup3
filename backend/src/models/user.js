@@ -37,6 +37,10 @@ const userSchema = mongoose.Schema(
       default: 'user',
       index: true,
     },
+    imageUrl: {
+      type: String,
+      default: 'https://mocah.org/thumbs/108-cat__screaming_cat_image.jpg'
+    },
   },
   {
     timestamps: true,

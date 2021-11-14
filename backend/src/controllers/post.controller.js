@@ -22,3 +22,12 @@ exports.createPost = catchAsync(async (req, res) => {
   });
   res.status(httpStatus.CREATED).send(result);
 });
+
+exports.getPostDetail = catchAsync(async (req, res) => {
+  const result = await postService.getPostDetail({
+    communityId: req.query.communityId,
+    postId: req.query.postId,
+
+  });
+  res.send(result);
+});
