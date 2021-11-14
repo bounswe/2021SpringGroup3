@@ -131,7 +131,7 @@ export default function Login({navigation}) {
             activeOpacity={0.5}
             onPress={handleLogin}>
             <View>
-              <Text style={styles.buttonTextStyle}>Giriş Yap</Text>
+              <Text style={styles.buttonTextStyle}>Login</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -139,7 +139,7 @@ export default function Login({navigation}) {
             activeOpacity={0.5}
             onPress={navigateRegister}>
             <View>
-              <Text style={styles.buttonTextStyle}>Kayıt Ol</Text>
+              <Text style={styles.buttonTextStyle}>Register</Text>
             </View>
           </TouchableOpacity>
         </KeyboardAvoidingView>

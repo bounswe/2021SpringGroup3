@@ -157,7 +157,7 @@ export default function Registration({navigation, props}) {
             style={styles.buttonStyle}
             activeOpacity={0.5}
             onPress={handleSubmitButton}>
-            <Text style={styles.buttonTextStyle}>Kayıt Ol</Text>
+            <Text style={styles.buttonTextStyle}>Register</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
       </ScrollView>
