@@ -23,7 +23,7 @@ const Login = () => {
     }
   
     const onKeyPress = (e) => {
-      if (e.charCode == 13) {
+      if (e.charCode === 13) {
         login();
       }
     }
