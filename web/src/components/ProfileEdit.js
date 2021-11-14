@@ -4,11 +4,14 @@ import 'antd/dist/antd.css';
 
 import { TeamOutlined, LockOutlined, SaveOutlined, UserOutlined, CheckOutlined, CloseOutlined} from '@ant-design/icons';
 
+import buttonColor from '../colors'
+
 const { Text, Title } = Typography;
 const { TextArea } = Input;
 
 const ProfileEdit = (props) => {
 
+  
   console.log(props)
 
   const onFinish = (values) => {
@@ -50,7 +53,7 @@ const ProfileEdit = (props) => {
             </Col>
             <Col span={11} offset={1}>
               <Form.Item name="isProfilePicturePublic" valuePropName="checked">
-                <Switch
+                <Switch style={buttonColor}
                   checkedChildren={<TeamOutlined />}
                   unCheckedChildren={<LockOutlined />}
                 />
@@ -84,7 +87,7 @@ const ProfileEdit = (props) => {
             </Col>
             <Col span={11} offset={1}>
               <Form.Item name="isBioPublic" valuePropName="checked">
-                <Switch
+                <Switch style={buttonColor}
                   checkedChildren={<TeamOutlined />}
                   unCheckedChildren={<LockOutlined />}
                 />
@@ -102,7 +105,7 @@ const ProfileEdit = (props) => {
             </Col>
             <Col span={11} offset={1}>
               <Form.Item name="isBirthdayPublic" valuePropName="checked">
-                <Switch
+                <Switch style={buttonColor}
                   checkedChildren={<TeamOutlined />}
                   unCheckedChildren={<LockOutlined />}
                 />
@@ -119,7 +122,7 @@ const ProfileEdit = (props) => {
             </Col>
             <Col span={11} offset={1}>
               <Form.Item name="isLocationPublic" valuePropName="checked">
-                <Switch
+                <Switch style={buttonColor}
                   checkedChildren={<TeamOutlined />}
                   unCheckedChildren={<LockOutlined />}
                 />
@@ -133,7 +136,7 @@ const ProfileEdit = (props) => {
             </Col>
             <Col span={11} offset={1}>
               <Form.Item name="isProfilePublic" valuePropName="checked">
-                <Switch
+                <Switch style={buttonColor}
                   checkedChildren={<CheckOutlined  />}
                   unCheckedChildren={<CloseOutlined />}
                 />
@@ -144,7 +147,7 @@ const ProfileEdit = (props) => {
 
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" shape="round" icon={<SaveOutlined />}>
+            <Button type="primary" htmlType="submit" shape="round" icon={<SaveOutlined />} style={buttonColor}>
               Save Profile
             </Button>
           </Form.Item>
