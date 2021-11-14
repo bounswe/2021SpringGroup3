@@ -79,5 +79,5 @@ exports.getPostDetail = async ({ communityId, postId }) => {
   if (post.community._id.toString()!=communityId){
     throw new ApiError(httpStatus.NOT_FOUND, 'Community ID does not match');
   }
-  return formatters.formatPostDetail(community, post);
+  return formatters.formatPostDetail(post);
 };
