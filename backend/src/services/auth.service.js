@@ -33,9 +33,9 @@ exports.register = async ({ email, password, username }) => {
   const userWithEmail = await User.findOne({ $or: [{ email }, { username }] }).lean();
   if (!coreUtil.isNull(userWithEmail)) {
     if (userWithEmail.email === email) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Email is already taken');
+      throw new ApiError(httpStatus.CONFLICT, 'Email is already taken');
     } else if (userWithEmail.username === username) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Username is already taken');
+      throw new ApiError(httpStatus.CONFLICT, 'Username is already taken');
     }
   }
   await User.create({

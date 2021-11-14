@@ -13,16 +13,12 @@ const auth =
       if (coreUtil.isNull(req.headers.authorization)) {
         return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized'));
       }
-      req.custom = {
-        language: 'en',
-      };
       const tokenWithUser = await UserToken.findOne({ tokenCode: req.headers.authorization })
         .populate({
           path: 'user',
         })
         .lean();
       if (tokenWithUser && tokenWithUser.user) {
-        req.custom.language = tokenWithUser.language;
         let shouldUpdateUserLastActiveAt = false;
         if (coreUtil.isNull(tokenWithUser.user.lastActiveAt)) {
           shouldUpdateUserLastActiveAt = true;
@@ -48,6 +44,8 @@ const auth =
         }
         req.token = tokenWithUser;
         resolve();
+      } else {
+        return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized'));
       }
     })
       .then(() => next())

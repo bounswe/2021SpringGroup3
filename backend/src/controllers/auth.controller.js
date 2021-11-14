@@ -6,7 +6,6 @@ exports.login = catchAsync(async (req, res) => {
   const result = await authService.login({
     email: req.body.email,
     password: req.body.password,
-    uniqueId: req.body.uniqueId,
   });
   res.send(result);
 });
@@ -14,7 +13,6 @@ exports.login = catchAsync(async (req, res) => {
 exports.logout = catchAsync(async (req, res) => {
   const result = await authService.logout({
     token: req.token,
-    uniqueId: req.body.uniqueId,
   });
   res.send(result);
 });
