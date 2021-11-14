@@ -24,7 +24,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             rm -rf 2021SpringGroup3
-            git clone -b backend/deploy https://github.com/bounswe/2021SpringGroup3 # clone the repo into the 'app' folder
+            git clone -b backend/master https://github.com/bounswe/2021SpringGroup3 # clone the repo into the 'app' folder
             cp .env 2021SpringGroup3/backend/.env
             cd 2021SpringGroup3/backend # navigate into the repo
             yarn # install dependencies
