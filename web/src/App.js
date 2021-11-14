@@ -1,8 +1,11 @@
 import Post from './components/Post';
+import ProfileEdit from './components/ProfileEdit';
 import React from "react";
 import 'antd/dist/antd.css';
 import './App.css';
 import { useState, Image } from 'react';
+
+import moment from 'moment' ;
 
 
 function App() {
@@ -101,9 +104,21 @@ function App() {
     return <Post postObj={postObj} />
   })
 
+  let userObj = {
+    username: 'Ufuk',
+    profilePicture: 'https://avatars.githubusercontent.com/u/39625217?s=96&v=4',
+    bio: 'sa',
+    birthday: moment('11/11/2011'),
+    location: 'istanbul',
+    isProfilePicturePublic: true,
+    isBioPublic: true,
+    isBirthdayPublic: false,
+    isLocationPublic: false
+  }
+
   return (
     <>
-       {postComponents}
+       <ProfileEdit userObj={userObj}/>
     </>
   );
 }

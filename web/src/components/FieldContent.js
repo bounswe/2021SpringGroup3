@@ -1,12 +1,10 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Card, Row, Col, Button, Typography, Layout, Divider, Space, Tooltip, Image, DatePicker } from 'antd';
+import { Typography, Space, Image } from 'antd';
 import '../App.css';
-import moment from 'moment';
 
 import React from "react";
 
-import { LikeOutlined, LikeFilled, CommentOutlined, FlagOutlined, FlagFilled } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 
 import { Anchor } from 'antd';
