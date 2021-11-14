@@ -4,7 +4,7 @@ const { password } = require('./custom.validation');
 exports.login = {
   body: Joi.object()
     .keys({
-      email: Joi.string().email().required(),
+      username: Joi.string().required(),
       password: Joi.string().custom(password).required(),
     })
     .required(),

@@ -11,8 +11,17 @@ exports.logout = async ({ token }) => {
   };
 };
 
-exports.login = async ({ email, password }) => {
-  const userWithEmail = await User.findOne({ email });
+exports.login = async ({ username, password }) => {
+  const userWithEmail = await User.findOne({
+    $or: [
+      {
+        username,
+      },
+      {
+        email: username,
+      },
+    ],
+  });
   if (coreUtil.isNull(userWithEmail) || !(await userWithEmail.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Wrong email or password');
   }
