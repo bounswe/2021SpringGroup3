@@ -178,12 +178,12 @@ const DrawerNavigator = () => {
         options={drawerOptions}
       />
       <Drawer.Screen
-        name="Create Room"
+        name="Create Community"
         component={CreateCommunity}
         options={drawerOptions}
       />
       <Drawer.Screen
-        name="Create Custom Box"
+        name="Create Post Type"
         component={SelectModeratorCommunity}
         options={drawerOptions}
       />

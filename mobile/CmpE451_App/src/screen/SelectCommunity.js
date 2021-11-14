@@ -32,7 +32,9 @@ export default function SelectCommunity({navigation}) {
   };
 
   const getCommunities = () => {
-    AXIOS_CLIENT.get('communities')
+    AXIOS_CLIENT.get('communities', {
+      params: {isMember: true},
+    })
       .then(response => {
         if (response.status === 200) {
           setCommunityList(response.data);
@@ -58,7 +60,7 @@ export default function SelectCommunity({navigation}) {
               navigateSelectPostType(item.id);
             }}>
             <View style={styles.list}>
-              <Image source={{uri: item.icon}} style={styles.image} />
+              <Image source={{uri: item.iconUrl}} style={styles.image} />
               <Text style={styles.item}>{item.name}</Text>
             </View>
           </TouchableOpacity>
@@ -72,27 +74,27 @@ const mockCommunityList = [
   {
     name: 'Economics',
     id: 1,
-    icon: 'https://reactnative.dev/docs/assets/p_cat1.png',
+    iconUrl: 'https://reactnative.dev/docs/assets/p_cat1.png',
   },
   {
     name: 'Politics',
     id: 2,
-    icon: 'https://reactnative.dev/docs/assets/p_cat2.png',
+    iconUrl: 'https://reactnative.dev/docs/assets/p_cat2.png',
   },
   {
     name: 'CatLovers',
     id: 3,
-    icon: 'https://reactnative.dev/docs/assets/p_cat1.png',
+    iconUrl: 'https://reactnative.dev/docs/assets/p_cat1.png',
   },
   {
     name: 'CMPE451',
     id: 4,
-    icon: 'https://reactnative.dev/docs/assets/p_cat2.png',
+    iconUrl: 'https://reactnative.dev/docs/assets/p_cat2.png',
   },
   {
     name: 'PCMaster',
     id: 5,
-    icon: 'https://reactnative.dev/docs/assets/p_cat1.png',
+    iconUrl: 'https://reactnative.dev/docs/assets/p_cat1.png',
   },
 ];
 

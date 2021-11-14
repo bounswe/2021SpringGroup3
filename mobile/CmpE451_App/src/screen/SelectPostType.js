@@ -49,7 +49,7 @@ export default function SelectPostType({navigation}) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Choose your Box</Text>
+      <Text style={styles.header}>Choose Post Type</Text>
       <FlatList
         refreshing={refreshing}
         onRefresh={_onRefresh}
