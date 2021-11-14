@@ -20,7 +20,7 @@
     }
   ],
   "paths": {
-    "/login": {
+    "/auth/login": {
       "post": {
         "tags": ["Authentication Controller"],
         "description": "",
@@ -113,7 +113,7 @@
         }
       }
     },
-    "/register": {
+    "/auth/register": {
       "post": {
         "tags": ["Authentication Controller"],
         "description": "",
@@ -178,7 +178,7 @@
         }
       }
     },
-    "/logout": {
+    "/auth/logout": {
       "delete": {
         "tags": ["Authentication Controller"],
         "operationId": "logout",
@@ -209,7 +209,7 @@
         }
       }
     },
-    "/post-type/detail": {
+    "/post-types/detail": {
       "get": {
         "tags": ["PostType Controller"],
         "description": "",
@@ -431,7 +431,7 @@
         }
       }
     },
-    "/post/detail": {
+    "/posts/detail": {
       "get": {
         "tags": ["Post Controller"],
         "description": "",
