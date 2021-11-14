@@ -36,16 +36,22 @@ exports.formatPostTypes = function (postTypes = []) {
 };
 
 
-exports.formatPostDetail = function (community, post) {
+exports.formatPostDetail = function (post) {
   return {
     id: post._id.toString(),
-    userName: post.creator.username,
-    userImageUrl: post.creator.userImageUrl,
-    communityName: community.name,
+    user: {
+        username: post.creator.username,
+        imageUrl: post.creator.imageUrl
+    },
+    community: {
+        name: post.community.name
+    } ,
     date: post.createdAt,
     textFieldNames: post.textFields,
     numberFieldsNames: post.numberFields,
-    dateFieldNames: post.dateFields
+    dateFieldNames: post.dateFields,
+    linkFieldNames: linkFields,
+    locationFieldNames: post. locationFields
   };
 };
 
@@ -56,8 +62,6 @@ exports.formatPostTypeDetail = function (postType) {
     numberFieldNames: postType.numberFieldsNames,
     dateFieldNames: postType.dateFieldNames,
     linkFieldNames: postType.linkFieldNames,
-    locationFieldNames: postType.locationFieldNames,
-    numberFieldsNames: post.numberFields,
-    dateFieldNames: post.dateFields
+    locationFieldNames: postType.locationFieldNames
   };
 };
