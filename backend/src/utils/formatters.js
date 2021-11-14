@@ -34,3 +34,30 @@ exports.formatPreviewPostType = function (postType) {
 exports.formatPostTypes = function (postTypes = []) {
   return postTypes.map(exports.formatPreviewPostType);
 };
+
+
+exports.formatPostDetail = function (community, post) {
+  return {
+    id: post._id.toString(),
+    userName: post.creator.username,
+    userImageUrl: post.creator.userImageUrl,
+    communityName: community.name,
+    date: post.createdAt,
+    textFieldNames: post.textFields,
+    numberFieldsNames: post.numberFields,
+    dateFieldNames: post.dateFields
+  };
+};
+
+exports.formatPostTypeDetail = function (postType) {
+  return {
+    name: postType.name,
+    textFieldNames: postType.textFieldNames,
+    numberFieldNames: postType.numberFieldsNames,
+    dateFieldNames: postType.dateFieldNames,
+    linkFieldNames: postType.linkFieldNames,
+    locationFieldNames: postType.locationFieldNames,
+    numberFieldsNames: post.numberFields,
+    dateFieldNames: post.dateFields
+  };
+};

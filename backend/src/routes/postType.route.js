@@ -11,4 +11,6 @@ router
   .post(validate(postTypeValidation.createPostType), auth('createPostType'), postTypeController.createPostType);
 router.route('/').get(validate(postTypeValidation.getPostTypes), auth('getPostTypes'), postTypeController.getPostTypes);
 
+router.route('/detail').get(validate(postTypeValidation.getPostTypeDetail), auth('getPostTypeDetail'), postTypeController.getPostTypeDetail);
+
 module.exports = router;

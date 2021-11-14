@@ -8,5 +8,6 @@ const router = express.Router();
 
 router.route('/').post(validate(postValidation.createPost), auth('createPost'), postController.createPost);
 router.route('/').get(validate(postValidation.getPosts), auth('getPosts'), postController.getPosts);
+router.route('/detail').get(validate(postValidation.getPostDetail), auth('getPostDetail'), postController.getPostDetail);
 
 module.exports = router;

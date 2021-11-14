@@ -70,3 +70,17 @@ exports.createPost = async ({
     message: 'Post is created',
   };
 };
+
+exports.getPostDetail = async ({ communityId, postId }) => {
+  const post = await Post.findById(postId).lean();
+  await Post.findOneById(postId).populate(["creator"])
+  const community = await Community.findById(communityId).lean();
+
+  if (!post) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post does not exist');
+  }
+  if (post.communityId!=communityId){
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community ID does not match');
+  }
+  return formatters.formatPostDetail(community, post);
+};

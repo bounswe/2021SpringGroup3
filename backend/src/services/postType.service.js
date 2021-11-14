@@ -51,3 +51,12 @@ exports.createPostType = async ({
     postyType: formatters.formatPreviewPostType(postyType),
   };
 };
+
+exports.getPostTypeDetail = async ({ communityId, postTypeId }) => {
+  const postType = await PostType.findById(postTypeId).lean();
+
+  if (!postType) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post Type does not exist');
+  }
+  return formatters.formatPostTypeDetail(postType);
+};
