@@ -14,7 +14,6 @@ const postTypeSchema = mongoose.Schema(
       trim: true,
       index: true,
       required: true,
-      unique: true,
     },
     textFieldNames: [{ type: String }],
     numberFieldNames: [{ type: String }],

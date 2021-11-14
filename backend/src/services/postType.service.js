@@ -26,7 +26,7 @@ exports.createPostType = async ({
   locationFieldNames,
 }) => {
   const allFields = [textFieldNames, numberFieldNames, dateFieldNames, linkFieldNames, locationFieldNames].filter(
-    (f) => f.length > 0
+    (f) => f && f.length > 0
   );
   if (!allFields.length) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You have to enter at least one fieldName');
@@ -34,6 +34,9 @@ exports.createPostType = async ({
   const community = await Community.findById(communityId).lean();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  if ((await PostType.countDocuments({ name, community: communityId })) > 0) {
+    throw new ApiError(httpStatus.CONFLICT, 'Post type with this name exists in this community');
   }
   const postyType = await PostType.create({
     name,
@@ -49,6 +52,7 @@ exports.createPostType = async ({
   return {
     message: 'Post type  is created',
     postyType: formatters.formatPreviewPostType(postyType),
+    community: formatters.formatPreviewCommunity(community),
   };
 };
 
@@ -57,6 +61,9 @@ exports.getPostTypeDetail = async ({ communityId, postTypeId }) => {
 
   if (!postType) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post Type does not exist');
+  }
+  if (postType.community.toString() !== communityId) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community ID does not match');
   }
   return formatters.formatPostTypeDetail(postType);
 };

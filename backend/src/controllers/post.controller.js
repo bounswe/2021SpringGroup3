@@ -4,6 +4,7 @@ const { postService } = require('../services');
 
 exports.getPosts = catchAsync(async (req, res) => {
   const result = await postService.getPosts({
+    token: req.token,
     communityId: req.query.communityId,
   });
   res.send(result);
@@ -25,9 +26,9 @@ exports.createPost = catchAsync(async (req, res) => {
 
 exports.getPostDetail = catchAsync(async (req, res) => {
   const result = await postService.getPostDetail({
+    token: req.token,
     communityId: req.query.communityId,
     postId: req.query.postId,
-
   });
   res.send(result);
 });
