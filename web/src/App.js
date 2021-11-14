@@ -113,7 +113,8 @@ function App() {
     isProfilePicturePublic: true,
     isBioPublic: true,
     isBirthdayPublic: false,
-    isLocationPublic: false
+    isLocationPublic: false,
+    isProfilePublic: true
   }
 
   return (
