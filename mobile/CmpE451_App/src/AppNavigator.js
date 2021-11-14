@@ -1,5 +1,5 @@
 import React from 'react';
-import {BackHandler, Image} from 'react-native';
+import {BackHandler, Image, Alert, ToastAndroid, AsyncStorage} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
@@ -14,20 +14,25 @@ import Registration from './screen/Registration';
 import Profile from './screen/Profile';
 import Settings from './screen/Settings';
 import CreateCommunity from './screen/CreateCommunity';
-import Logout from './screen/Logout';
 import SelectCommunity from './screen/SelectCommunity';
 import SelectPostType from './screen/SelectPostType';
 import CreatePostType from './screen/CreatePostType';
 import SelectModeratorCommunity from './screen/SelectModeratorCommunity';
+import PostDetail from './screen/PostDetail';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import {screenOptionStyle} from './theme/styles';
 import {COLORS} from './theme//colors';
 import styled from 'styled-components/native';
 
+import {TEXT, CONFIG, KEYS} from './constants';
+import {AXIOS_CLIENT} from './services/axiosCientService';
+import RNRestart from 'react-native-restart';
+
 import {
   DrawerContentScrollView,
   DrawerItemList,
+  DrawerItem,
 } from '@react-navigation/drawer';
 
 const Stack = createStackNavigator();
@@ -51,6 +56,11 @@ export function Navigator() {
         options={{headerShown: false}}
         name="Home"
         component={BottomNavigator}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="PostDetail"
+        component={PostDetail}
       />
       <Stack.Screen
         options={{headerShown: false}}
@@ -135,72 +145,116 @@ function BottomNavigator() {
     </Tab.Navigator>
   );
 }
+const startReload = ()=> RNRestart.Restart();
+
+const handleLogout = () => {
+  if (CONFIG.skipLogout) {
+    AsyncStorage.removeItem(KEYS.TOKEN_KEY);
+    startReload()
+  } else {
+    requestLogout()
+  }
+};
+
+const requestLogout = () => {
+      AXIOS_CLIENT.delete('logout')
+      .then(response => {
+        if (response.status === 200) {
+          AsyncStorage.removeItem(KEYS.TOKEN_KEY);
+          startReload()
+        } else {
+          ToastAndroid.show(TEXT.unexpectedError, ToastAndroid.SHORT);
+        }
+      })
+      .catch(error => {
+        console.info(error);
+        ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+      });
+}
+
+const showAlert = () => {
+  Alert.alert(
+    'Warning',
+    'Are you sure you want to logout?', [
+  {
+    text: 'Cancel'
+  },
+  {
+    text: 'Yes',
+    onPress: () => handleLogout()
+  },
+    ],
+  {
+    cancelable: true,
+  })
+};
 
 function CustomDrawerContent(props) {
-  return (
-    <DrawerContentScrollView {...props}>
-      <FakeDrawerHeader>
-        <Image
-          source={{
-            uri: 'https://reactnative.dev/docs/assets/p_cat2.png',
-          }}
-          style={{width: 100, height: 100}}
-        />
-        <AppTitle> BOXY </AppTitle>
-      </FakeDrawerHeader>
-      <DrawerItemList {...props} />
-    </DrawerContentScrollView>
-  );
+return (
+  <DrawerContentScrollView {...props}>
+    <FakeDrawerHeader>
+      <Image
+        source={{
+          uri: 'https://reactnative.dev/docs/assets/p_cat2.png',
+        }}
+        style={{width: 100, height: 100}}
+      />
+      <AppTitle> BOXY </AppTitle>
+    </FakeDrawerHeader>
+    <DrawerItemList {...props} />
+    <DrawerItem label="Logout" onPress={()=>showAlert()}/>
+  </DrawerContentScrollView>
+);
 }
 
 const DrawerNavigator = () => {
-  return (
-    <Drawer.Navigator
-      screenOptions={screenOptionStyle}
-      drawerStyle={{backgroundColor: 'transparent'}}
-      drawerType={'slide'}
-      overlayColor="transparent"
-      initialRouteName="Navigator"
-      drawerContent={props => {
-        return <CustomDrawerContent {...props} />;
-      }}>
-      <Drawer.Screen
-        name="Navigator"
-        component={Navigator}
-        options={{
-          drawerItemStyle: {height: 0},
-          headerShown: false,
-        }}
-      />
-      <Drawer.Screen
-        name="Profile"
-        component={Profile}
-        options={drawerOptions}
-      />
-      <Drawer.Screen
-        name="Create Room"
-        component={CreateCommunity}
-        options={drawerOptions}
-      />
-      <Drawer.Screen
-        name="Create Custom Box"
-        component={SelectModeratorCommunity}
-        options={drawerOptions}
-      />
-      <Drawer.Screen
-        name="Settings"
-        component={Settings}
-        options={drawerOptions}
-      />
-      <Drawer.Screen name="Logout" component={Logout} options={drawerOptions} />
-    </Drawer.Navigator>
-  );
+return (
+  <Drawer.Navigator
+    screenOptions={screenOptionStyle}
+    drawerStyle={{backgroundColor: 'transparent'}}
+    drawerType={'slide'}
+    overlayColor="transparent"
+    initialRouteName="Navigator"
+    drawerContent={props => {
+      return <CustomDrawerContent {...props} />;
+    }}>
+    <Drawer.Screen
+      name="Navigator"
+      component={Navigator}
+      options={{
+        drawerItemStyle: {height: 0},
+        headerShown: false,
+      }}
+    />
+    <Drawer.Screen
+      name="Profile"
+      component={Profile}
+      options={drawerOptions}
+    />
+    <Drawer.Screen
+      name="Create Room"
+      component={CreateCommunity}
+      options={drawerOptions}
+    />
+    <Drawer.Screen
+      name="Create Custom Box"
+      component={SelectModeratorCommunity}
+      options={drawerOptions}
+    />
+    <Drawer.Screen
+      name="Settings"
+      component={Settings}
+      options={drawerOptions}
+    />
+
+  </Drawer.Navigator>
+);
 };
 
 const drawerOptions = {
-  headerShown: false,
-  drawerActiveBackgroundColor: COLORS.drawerActiveBackgroundColor,
-  drawerActiveTintColor: COLORS.buttonTextColor,
+headerShown: false,
+drawerActiveBackgroundColor: COLORS.drawerActiveBackgroundColor,
+drawerActiveTintColor: COLORS.buttonTextColor,
 };
 
 const FakeDrawerHeader = styled.View`

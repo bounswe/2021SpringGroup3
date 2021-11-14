@@ -1,5 +1,6 @@
 export const CONFIG = {
   skipLogin: true,
+  skipLogout: true,
 };
 
 export const KEYS = {
