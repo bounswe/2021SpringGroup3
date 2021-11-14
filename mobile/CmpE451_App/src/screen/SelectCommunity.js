@@ -27,8 +27,10 @@ export default function SelectCommunity({navigation}) {
   };
 
   const navigateSelectPostType = selectedCommunityId => {
-    PAGE_VARIABLES.communityId = selectedCommunityId;
-    navigation.navigate('SelectPostType');
+    PAGE_VARIABLES.communityId = selectedCommunityId.id;
+    navigation.navigate('SelectPostType', {
+      selectedCommunityName: selectedCommunityId.name,
+    });
   };
 
   const getCommunities = () => {
@@ -55,7 +57,7 @@ export default function SelectCommunity({navigation}) {
         renderItem={({item}) => (
           <TouchableOpacity
             onPress={() => {
-              navigateSelectPostType(item.id);
+              navigateSelectPostType(item);
             }}>
             <View style={styles.list}>
               <Image source={{uri: item.icon}} style={styles.image} />

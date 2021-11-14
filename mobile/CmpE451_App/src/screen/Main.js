@@ -1,12 +1,12 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import Header from '../component/HeaderForMainPage'
+import Header from '../component/HeaderForMainPage';
 import PostList from '../component/PostList';
 
 export default function Main({navigation, route}) {
   return (
     <View style={styles.container}>
-      <Header text={"Gönderiler"}></Header>
+      <Header text={'Gönderiler'} navigation={navigation}></Header>
       <PostList></PostList>
     </View>
   );
