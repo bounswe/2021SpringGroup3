@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button, Checkbox, Typography, Row, Col } from "antd";
+import { Form, Input, Button, DatePicker, Typography, Row, Col } from "antd";
 import "antd/dist/antd.css";
 
 const { Text } = Typography;
@@ -25,7 +25,7 @@ const CreatePostForm = () => {
           </Col>
           <Col span={8}>
             <Form.Item
-              name="username"
+              name="share"
               required
               rules={[
                 {
@@ -46,7 +46,7 @@ const CreatePostForm = () => {
           </Col>
           <Col span={8}>
             <Form.Item
-              name="username"
+              name="name"
               required
               rules={[
                 {
@@ -67,7 +67,7 @@ const CreatePostForm = () => {
           </Col>
           <Col span={8}>
             <Form.Item
-              name="username"
+              name="time"
               required
               rules={[
                 {
@@ -76,7 +76,7 @@ const CreatePostForm = () => {
                 },
               ]}
             >
-              <Input placeholder="Enter username" />
+              <DatePicker  />
             </Form.Item>
           </Col>
         </Row>
@@ -88,7 +88,7 @@ const CreatePostForm = () => {
           </Col>
           <Col span={8}>
             <Form.Item
-              name="username"
+              name="description"
               required
               rules={[
                 {
@@ -109,7 +109,7 @@ const CreatePostForm = () => {
           </Col>
           <Col span={8}>
             <Form.Item
-              name="username"
+              name="location"
               required
               rules={[
                 {
