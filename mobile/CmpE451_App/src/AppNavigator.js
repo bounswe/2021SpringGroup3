@@ -203,7 +203,7 @@ function CustomDrawerContent(props) {
       <FakeDrawerHeader>
         <Image
           source={{
-            uri: 'https://reactnative.dev/docs/assets/p_cat2.png',
+            uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
           }}
           style={{width: 100, height: 100}}
         />

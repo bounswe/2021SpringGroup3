@@ -9,7 +9,7 @@ export default function Notification({navigation}) {
   const {container, headerBuble} = styles;
   return (
     <View style={container}>
-      {/* <Image source={{uri:"https://www.astajans.com/Upload/urunler-upload/img_96.png"}} style={headerBuble} /> */}
+      {/* <Image source={{uri:"https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc"}} style={headerBuble} /> */}
       <View style={{shadowColor: 'black'}}>
         <NotificationList
           data={data}
@@ -24,62 +24,62 @@ export default function Notification({navigation}) {
 
 const data = [
   {
-    uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
+    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
     name: 'r/gaming',
     timestamp: 1636156949000,
     message: '2022 is shaping up to be good year for gaming',
   },
   {
-    uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
+    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
     name: 'Bümed',
     timestamp: 1636156949000,
     message: 'Bümed başarı bursları açıklandı',
   },
   {
-    uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
+    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
     name: 'r/gaming',
     timestamp: 1636156949000,
     message: '2022 is shaping up to be good year for gaming',
   },
   {
-    uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
+    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
     name: 'Bümed',
     timestamp: 1636156949000,
 
     message: 'Bümed başarı bursları açıklandı',
   },
   {
-    uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
+    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
     name: 'r/gaming',
     timestamp: 1636156949000,
     message: '2022 is shaping up to be good year for gaming',
   },
   {
-    uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
+    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
     name: 'Bümed',
     timestamp: 1636156949000,
     message: 'Bümed başarı bursları açıklandı',
   },
   {
-    uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
+    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
     name: 'r/gaming',
     timestamp: 1636156949000,
     message: '2022 is shaping up to be good year for gaming',
   },
   {
-    uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
+    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
     name: 'Bümed',
     timestamp: 1636156949000,
     message: 'Bümed başarı bursları açıklandı',
   },
   {
-    uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
+    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
     name: 'r/gaming',
     timestamp: 1636156949000,
     message: '2022 is shaping up to be good year for gaming',
   },
   {
-    uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
+    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
     name: 'Bümed',
     timestamp: 1636156949000,
     message: 'Bümed başarı bursları açıklandı',

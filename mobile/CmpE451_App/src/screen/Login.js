@@ -91,7 +91,7 @@ export default function Login({navigation}) {
         <View style={{alignItems: 'center'}}>
           <Image
             source={{
-              uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
+              uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
             }}
             style={styles.imageStyle}
           />
@@ -131,7 +131,7 @@ export default function Login({navigation}) {
             activeOpacity={0.5}
             onPress={handleLogin}>
             <View>
-              <Text style={styles.buttonTextStyle}>Giriş Yap</Text>
+              <Text style={styles.buttonTextStyle}>Login</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -139,7 +139,7 @@ export default function Login({navigation}) {
             activeOpacity={0.5}
             onPress={navigateRegister}>
             <View>
-              <Text style={styles.buttonTextStyle}>Kayıt Ol</Text>
+              <Text style={styles.buttonTextStyle}>Register</Text>
             </View>
           </TouchableOpacity>
         </KeyboardAvoidingView>
