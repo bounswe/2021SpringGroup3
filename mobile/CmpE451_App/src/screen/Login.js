@@ -48,7 +48,7 @@ export default function Login({navigation}) {
   const requestLogin = () => {
     AXIOS_CLIENT.post('login', {
       data: {
-        userName: username,
+        username: username,
         password: password,
       },
     })
