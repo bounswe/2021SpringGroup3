@@ -18,11 +18,17 @@ export default function PostDetail({route, navigation}) {
   const { postId, communityId } = route.params;
 
   const [postDetail, setPostDetail] = useState({});
-
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     getPostDetail();
   }, []);
+
+  const _onRefresh = () => {
+    setRefreshing(true);
+    getPostDetail();
+    setRefreshing(false);
+  };
 
   const getPostDetail = () => {
   AXIOS_CLIENT.get('post/detail', {
@@ -32,11 +38,9 @@ export default function PostDetail({route, navigation}) {
       if (response.status === 200) {
         setPostDetail(response.data);
       }else if (response.status === 404) {
-          ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
-          setPostDetail(mockpostDetail);
-        } else {
-          ToastAndroid.show(TEXT.unexpectedError, ToastAndroid.SHORT);
-          setPostDetail(mockpostDetail);
+        ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+      } else {
+        ToastAndroid.show(TEXT.unexpectedError, ToastAndroid.SHORT);
         }
       })
     .catch(error => {
@@ -49,8 +53,8 @@ export default function PostDetail({route, navigation}) {
 
   return (
     <View style={styles.feedItem}>
-      <ScrollView style={{flex: 1}}>
-            <Image source={{uri: mockpostDetail.userImageUrl}} style={styles.avatar} />
+      <ScrollView>
+            <Image source={{uri: postDetail.userImageUrl}} style={styles.avatar} />
         <View
           style={{
             flexDirection: 'row',
@@ -75,13 +79,15 @@ export default function PostDetail({route, navigation}) {
           </View>
         </View>
         
-        <View style={styles.container}>
+        <View>
         <Icon
             name="text"
             size={18}
             style={{marginRight: 16}}
           />
         <FlatList
+          refreshing={refreshing}
+          onRefresh={_onRefresh}
           data={mockpostDetail.textFieldNames}
           renderItem={({item}) => (
               <View>
@@ -94,6 +100,8 @@ export default function PostDetail({route, navigation}) {
 
         <FlatList
           data={mockpostDetail.numberFieldNames}
+          refreshing={refreshing}
+          onRefresh={_onRefresh}
           renderItem={({item}) => (
               <View>
                 <Text style={styles.fieldName}>{item.name}</Text>
@@ -109,6 +117,8 @@ export default function PostDetail({route, navigation}) {
           />
         <FlatList
           data={mockpostDetail.dateFieldNames}
+          refreshing={refreshing}
+          onRefresh={_onRefresh}
           renderItem={({item}) => (
               <View>
                 <Text style={styles.fieldName}>{item.name}</Text>
@@ -161,10 +171,8 @@ export default function PostDetail({route, navigation}) {
             size={24}
             color={mockpostDetail.isLiked ? COLORS.buttonColor : COLORS.unlikeButtonColor}
             style={{marginRight: 16}}
-            onPress={() => mockpostDetail.isLiked = !mockpostDetail.isLiked}
           />
           <Text style={styles.content}>{mockpostDetail.likeCount}</Text>
-
         </View>
       </ScrollView>
     </View>
@@ -215,9 +223,6 @@ const mockpostDetail = {
 };
 
 const styles = StyleSheet.create({
-  container: {
-
-  },
   feedItem: {
     backgroundColor: '#FFF',
     borderRadius: 5,
