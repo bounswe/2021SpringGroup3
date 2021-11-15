@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, TextInput} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+} from 'react-native';
 import {BackHandler, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../component/Header';
@@ -7,15 +13,17 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import {size} from 'lodash';
 import {bold} from 'chalk';
+import * as Requests from '../util/Reguests';
+
 export default function CreatePost({route}) {
-  const {selectedCommunityName} = route.params;
-  const [index, setIndex] = useState(false);
+  const {communityName, communityId} = route.params;
+  const [index, setIndex] = useState(true);
   const [name, setName] = useState('');
   const [numberOfParticipants, setNumberOfParticipants] = useState('');
   const [date, setDate] = useState('');
   const [link, setLink] = useState('');
   const [location, setLocation] = useState('');
-  console.log(selectedCommunityName);
+  console.log('communityName: ', communityName);
   const navigation = useNavigation();
   function handleBackButtonClick() {
     navigation.goBack();
@@ -29,6 +37,19 @@ export default function CreatePost({route}) {
       };
     }
   }, []);
+
+  async function createPostHandler() {
+    const response = await Requests.createPost({
+      communityName,
+      communityId,
+      name,
+      numberOfParticipants,
+      date,
+      link,
+      location,
+    });
+    console.log('LAST RESPONSE: ', response);
+  }
 
   function myForum() {
     return (
@@ -79,7 +100,7 @@ export default function CreatePost({route}) {
               paddingBottom: 1,
             }}
             onChangeText={text => setNumberOfParticipants(text)}
-            value={name}
+            value={numberOfParticipants}
             placeholder="......."
           />
         </View>
@@ -104,7 +125,7 @@ export default function CreatePost({route}) {
               paddingBottom: 1,
             }}
             onChangeText={text => setDate(text)}
-            value={name}
+            value={date}
             placeholder="......."
           />
         </View>
@@ -129,7 +150,7 @@ export default function CreatePost({route}) {
               paddingBottom: 1,
             }}
             onChangeText={text => setLink(text)}
-            value={name}
+            value={link}
             placeholder="......."
           />
         </View>
@@ -154,7 +175,7 @@ export default function CreatePost({route}) {
               paddingBottom: 1,
             }}
             onChangeText={text => setLocation(text)}
-            value={name}
+            value={location}
             placeholder="......."
           />
         </View>
@@ -167,7 +188,7 @@ export default function CreatePost({route}) {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="close" size={34} style={{marginLeft: 5}}></Icon>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log('@@@@@@@@@@@@@@@@@@@@')}>
+        <TouchableOpacity onPress={createPostHandler}>
           <View style={styles.nextButton}>
             <Text>Next</Text>
           </View>
@@ -181,9 +202,7 @@ export default function CreatePost({route}) {
             justifyContent: 'flex-start',
           }}>
           <Icon name="cube-sharp" size={20} style={{margin: 5}} />
-          <Text style={{color: 'black', margin: 5}}>
-            {selectedCommunityName}
-          </Text>
+          <Text style={{color: 'black', margin: 5}}>{communityName}</Text>
         </View>
         <Text>RULES</Text>
       </View>
@@ -202,7 +221,9 @@ export default function CreatePost({route}) {
             />
           </View>
         ) : (
-          myForum()
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {myForum()}
+          </ScrollView>
         )}
       </View>
       <View

@@ -29,7 +29,8 @@ export default function SelectCommunity({navigation}) {
   const navigateSelectPostType = selectedCommunityId => {
     PAGE_VARIABLES.communityId = selectedCommunityId.id;
     navigation.navigate('SelectPostType', {
-      selectedCommunityName: selectedCommunityId.name,
+      communityName: selectedCommunityId.name,
+      communityId: selectedCommunityId.id,
     });
   };
 
