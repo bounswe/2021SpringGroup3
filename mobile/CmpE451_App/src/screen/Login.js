@@ -9,12 +9,12 @@ import {
   Keyboard,
   ToastAndroid,
   TouchableOpacity,
-  AsyncStorage,
   ScrollView,
 } from 'react-native';
+
 import {COLORS} from '../theme/colors';
-import {BASER_URL} from '../services/axiosCientService';
-import {TEXT, CONFIG, KEYS} from '../constants';
+import {storeToken, getToken} from '../services/asyncStorageService';
+import {TEXT, CONFIG, BASE_URL} from '../constants';
 
 export default function Login({navigation}) {
   const [username, setUserName] = useState('');
@@ -27,7 +27,7 @@ export default function Login({navigation}) {
   }, []);
 
   const checkToken = async () => {
-    let token = await AsyncStorage.getItem(KEYS.TOKEN_KEY);
+    let token = await getToken();
     if (token) {
       navigateMain();
     }
@@ -36,7 +36,6 @@ export default function Login({navigation}) {
   const handleLogin = () => {
     Keyboard.dismiss();
     if (CONFIG.skipLogin) {
-      AsyncStorage.setItem(KEYS.USER_NAME_KEY, username);
       navigateMain();
     } else if (username.length > 0 && password.length > 0) {
       requestLogin();
@@ -46,7 +45,7 @@ export default function Login({navigation}) {
   };
 
   const requestLogin = () => {
-    fetch(BASER_URL + 'auth/login', {
+    fetch(BASE_URL + 'auth/login', {
       method: 'POST',
       body: JSON.stringify({
         username: username,
@@ -62,6 +61,7 @@ export default function Login({navigation}) {
         response = await response.json();
         if (status === 200) {
           CONFIG.token = response.token;
+          await storeToken(response.token);
           navigateMain();
         } else {
           ToastAndroid.show(response.message, ToastAndroid.SHORT);

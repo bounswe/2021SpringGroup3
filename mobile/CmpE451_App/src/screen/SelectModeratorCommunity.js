@@ -9,8 +9,8 @@ import {
   View,
 } from 'react-native';
 import {COLORS} from '../theme/colors';
-import {TEXT, PAGE_VARIABLES, CONFIG} from '../constants';
-import {BASER_URL} from '../services/axiosCientService';
+import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
+import {getToken} from '../services/asyncStorageService';
 
 export default function SelectModeratorCommunity({navigation}) {
   const [communityList, setCommunityList] = useState([]);
@@ -31,13 +31,13 @@ export default function SelectModeratorCommunity({navigation}) {
     navigation.navigate('CreatePostType');
   };
 
-  const getModeratorCommunities = () => {
-    fetch(BASER_URL + 'communities?isModerator=' + true, {
+  const getModeratorCommunities = async () => {
+    fetch(BASE_URL + 'communities?isModerator=' + true, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'X-Platform': 'ANDROID',
-        Authorization: CONFIG.token,
+        Authorization: await getToken(),
       },
     })
       .then(async response => {

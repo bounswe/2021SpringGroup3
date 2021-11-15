@@ -1,9 +1,10 @@
 import React from 'react';
+
 import {BackHandler, Image, Alert, ToastAndroid} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import {BASER_URL} from './services/axiosCientService';
+import {getToken, removeToken} from './services/asyncStorageService';
 
 import Login from './screen/Login';
 import Chat from './screen/Chat';
@@ -26,7 +27,7 @@ import {screenOptionStyle} from './theme/styles';
 import {COLORS} from './theme//colors';
 import styled from 'styled-components/native';
 
-import {TEXT, CONFIG} from './constants';
+import {TEXT, CONFIG, BASE_URL} from './constants';
 import RNRestart from 'react-native-restart';
 
 import {
@@ -150,28 +151,27 @@ const startReload = () => RNRestart.Restart();
 const handleLogout = () => {
   if (CONFIG.skipLogout) {
     CONFIG.token = '';
+    removeToken();
     startReload();
   } else {
     requestLogout();
   }
 };
 
-const requestLogout = () => {
-  fetch(BASER_URL + 'auth/logout', {
+const requestLogout = async () => {
+  const token = await getToken();
+  console.log("token", token);
+  fetch(BASE_URL + 'auth/logout', {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
       'X-Platform': 'ANDROID',
-      Authorization: CONFIG.token,
+      Authorization: token,
     },
   })
-    .then(response => {
-      if (response.status === 200) {
-        CONFIG.token = '';
-        startReload();
-      } else {
-        ToastAndroid.show(response.message, ToastAndroid.SHORT);
-      }
+    .then(async () => {
+      await removeToken();
+      startReload();
     })
     .catch(error => {
       console.info(error);

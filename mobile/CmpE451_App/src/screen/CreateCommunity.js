@@ -1,19 +1,18 @@
-import React, {useState, useEffect, createRef} from 'react';
+import React, {useState, createRef} from 'react';
 import {
   StyleSheet,
   TextInput,
   View,
   Text,
-  Image,
   KeyboardAvoidingView,
   Keyboard,
   ToastAndroid,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import {getToken} from '../services/asyncStorageService';
 import {COLORS} from '../theme/colors';
-import {BASER_URL} from '../services/axiosCientService';
-import {TEXT, CONFIG} from '../constants';
+import {TEXT, BASE_URL} from '../constants';
 
 export default function CreateCommunity({navigation}) {
   const [name, setName] = useState('');
@@ -21,9 +20,9 @@ export default function CreateCommunity({navigation}) {
 
   const iconUrlInputRef = createRef();
 
-  const handleCreateCommunity = () => {
+  const handleCreateCommunity = async () => {
     Keyboard.dismiss();
-    fetch(BASER_URL + 'communities', {
+    fetch(BASE_URL + 'communities', {
       method: 'POST',
       body: JSON.stringify({
         name: name,
@@ -32,14 +31,16 @@ export default function CreateCommunity({navigation}) {
       headers: {
         'Content-Type': 'application/json',
         'X-Platform': 'ANDROID',
-        Authorization: CONFIG.token,
+        Authorization: await getToken(),
       },
     })
-      .then(response => {
-        if (response.status === 201) {
+      .then(async response => {
+        const status = response.status;
+        response = await response.json();
+        if (status === 201) {
           navigateMain();
         } else {
-          ToastAndroid.show(TEXT.unexpectedError, ToastAndroid.SHORT);
+          ToastAndroid.show(response.message, ToastAndroid.SHORT);
         }
       })
       .catch(error => {
@@ -86,7 +87,6 @@ export default function CreateCommunity({navigation}) {
               placeholder="Icon URL"
               placeholderTextColor="#8b9cb5"
               returnKeyType="next"
-              secureTextEntry={true}
               onSubmitEditing={() => Keyboard.dismiss()}
               blurOnSubmit={false}
             />

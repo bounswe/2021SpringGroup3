@@ -1,4 +1,3 @@
-import {AXIOS_CLIENT} from '../services/axiosCientService';
 var myHeaders = new Headers();
 
 export const createPost = async ({
