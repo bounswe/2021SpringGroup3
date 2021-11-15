@@ -11,10 +11,11 @@ import {
   TouchableOpacity,
   AsyncStorage,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {COLORS} from '../theme/colors';
-import {AXIOS_CLIENT} from '../services/axiosCientService';
 import {TEXT, CONFIG, KEYS} from '../constants';
+import * as api from '../api';
 
 export default function Login({navigation}) {
   const [username, setUserName] = useState('');
@@ -34,6 +35,8 @@ export default function Login({navigation}) {
   };
 
   const handleLogin = () => {
+    requestLogin();
+    return;
     Keyboard.dismiss();
     if (CONFIG.skipLogin) {
       AsyncStorage.setItem(KEYS.USER_NAME_KEY, username);
@@ -45,32 +48,18 @@ export default function Login({navigation}) {
     }
   };
 
-  const requestLogin = () => {
-    AXIOS_CLIENT.post('login', {
-      data: {
-        username: username,
-        password: password,
-      },
-    })
-      .then(response => {
-        if (response.status === 200) {
-          AsyncStorage.setItem(KEYS.TOKEN_KEY, response.data.token);
-          AsyncStorage.setItem(KEYS.USER_NAME_KEY, username);
-          navigateMain();
-        } else if (
-          response.status === 400 ||
-          response.status === 401 ||
-          response.status === 405
-        ) {
-          ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
-        } else {
-          ToastAndroid.show(TEXT.unexpectedError, ToastAndroid.SHORT);
-        }
-      })
-      .catch(error => {
-        console.info(error);
-        ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
-      });
+  const requestLogin = async () => {
+    const response = await api.login({password, username});
+    console.log(response);
+    if (response.statusCode === 200) {
+      await AsyncStorage.multiSet(
+        [KEYS.TOKEN_KEY, response.token],
+        [KEYS.USER_NAME_KEY, username],
+      );
+      navigateMain();
+    } else {
+      Alert.alert(response.data?.message || TEXT.unexpectedError);
+    }
   };
 
   const navigateMain = async () => {
