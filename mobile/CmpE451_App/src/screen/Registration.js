@@ -41,7 +41,7 @@ export default function Registration({navigation}) {
         const status = response.status;
         response = await response.json();
         if (status === 201) {
-          navigation.navigate('Login');
+          navigation.navigate('login');
         } else {
           ToastAndroid.show(response.message, ToastAndroid.SHORT);
         }
