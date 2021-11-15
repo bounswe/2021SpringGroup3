@@ -4,7 +4,7 @@ import {View, Text} from 'react-native';
 export default function Settings({}) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>BURASI Settings SAYFASIDIR</Text>
+      <Text>Settings page is under construction</Text>
     </View>
   );
 }

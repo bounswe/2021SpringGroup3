@@ -7,7 +7,7 @@ export default function Main({navigation, route}) {
   return (
     <View style={styles.container}>
       <Header text={'Gönderiler'} navigation={navigation}></Header>
-      <PostList></PostList>
+      <Text>Home page is under construction</Text>
     </View>
   );
 }
