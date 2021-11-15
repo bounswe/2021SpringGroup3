@@ -27,7 +27,6 @@ exports.getPostTypeDetail = catchAsync(async (req, res) => {
   const result = await postTypeService.getPostTypeDetail({
     communityId: req.query.communityId,
     postTypeId: req.query.postTypeId,
-
   });
   res.send(result);
 });
