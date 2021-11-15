@@ -1,3 +1,5 @@
+
+import RouteList from './routing/RouteList';
 import Login from './components/Login';
 import Confirmation from './components/Confirmation';
 import Post from './components/Post';
@@ -9,7 +11,6 @@ import './App.css';
 import { useState, Image } from 'react';
 
 import moment from 'moment' ;
-
 
 function App() {
 
@@ -139,6 +140,7 @@ function App() {
 
   return (
     <>
+      <RouteList />
     </>
   );
 }
