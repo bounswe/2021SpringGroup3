@@ -50,6 +50,12 @@ exports.createPost = async ({
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
+  if (!community.members || !community.members.includes(token.user._id)) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'You are not a member of this community. You need to be a member to create a post'
+    );
+  }
   const postType = await PostType.findById(postTypeId).lean();
   if (!postType) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post type does not exist');
