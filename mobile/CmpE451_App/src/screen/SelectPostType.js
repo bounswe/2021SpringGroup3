@@ -12,7 +12,8 @@ import {COLORS} from '../theme/colors';
 import {TEXT, PAGE_VARIABLES, CONFIG} from '../constants';
 import {BASER_URL} from '../services/axiosCientService';
 
-export default function SelectPostType({navigation}) {
+export default function SelectPostType({navigation, route}) {
+  const {communityName, communityId} = route.params;
   const [postTypeList, setPostTypeList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -27,8 +28,11 @@ export default function SelectPostType({navigation}) {
   };
 
   const navigateCreatePost = selectedPostTypeId => {
-    PAGE_VARIABLES.postTypeId = selectedPostTypeId;
-    navigation.navigate('CreatePost');
+    PAGE_VARIABLES.postTypeId = selectedPostTypeId.id;
+    navigation.navigate('CreatePost', {
+      communityName: communityName,
+      communityId: communityId,
+    });
   };
 
   const getPostTypes = () => {
@@ -66,7 +70,7 @@ export default function SelectPostType({navigation}) {
         renderItem={({item}) => (
           <TouchableOpacity
             onPress={() => {
-              navigateCreatePost(item.id);
+              navigateCreatePost(item);
             }}>
             <View style={styles.list}>
               <Image
