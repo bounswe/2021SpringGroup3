@@ -9,8 +9,8 @@ import {
   View,
 } from 'react-native';
 import {COLORS} from '../theme/colors';
-import {TEXT, PAGE_VARIABLES} from '../constants';
-import {AXIOS_CLIENT} from '../services/axiosCientService';
+import {TEXT, PAGE_VARIABLES, CONFIG} from '../constants';
+import {BASER_URL} from '../services/axiosCientService';
 
 export default function SelectPostType({navigation}) {
   const [postTypeList, setPostTypeList] = useState([]);
@@ -32,12 +32,21 @@ export default function SelectPostType({navigation}) {
   };
 
   const getPostTypes = () => {
-    AXIOS_CLIENT.get('post-types', {
-      params: {communityId: PAGE_VARIABLES.communityId},
+    fetch(BASER_URL + 'post-types?communityId=' + PAGE_VARIABLES.communityId, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: CONFIG.token,
+      },
     })
-      .then(response => {
-        if (response.status === 200) {
-          setPostTypeList(response.data);
+      .then(async response => {
+        const status = response.status;
+        response = await response.json();
+        if (status === 200) {
+          setPostTypeList(response);
+        } else {
+          ToastAndroid.show(response.message, ToastAndroid.SHORT);
         }
       })
       .catch(error => {

@@ -1,6 +1,7 @@
 export const CONFIG = {
-  skipLogin: true,
-  skipLogout: true,
+  skipLogin: false,
+  skipLogout: false,
+  token: '',
 };
 
 export const KEYS = {
