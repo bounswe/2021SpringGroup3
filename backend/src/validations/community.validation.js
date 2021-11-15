@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { objectId } = require('./custom.validation');
 
 exports.createCommunity = {
   body: Joi.object()
@@ -14,6 +15,14 @@ exports.getCommunities = {
     .keys({
       isMember: Joi.boolean(),
       isModerator: Joi.boolean(),
+    })
+    .required(),
+};
+
+exports.getCommunityDetail = {
+  query: Joi.object()
+    .keys({
+      communityId: Joi.string().custom(objectId).required(),
     })
     .required(),
 };

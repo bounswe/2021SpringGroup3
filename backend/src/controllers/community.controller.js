@@ -19,3 +19,11 @@ exports.createCommunity = catchAsync(async (req, res) => {
   });
   res.status(httpStatus.CREATED).send(result);
 });
+
+exports.getCommunityDetail = catchAsync(async (req, res) => {
+  const result = await communityService.getCommunityDetail({
+    token: req.token,
+    communityId: req.query.communityId,
+  });
+  res.send(result);
+});

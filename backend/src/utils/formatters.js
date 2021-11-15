@@ -1,5 +1,13 @@
 const moment = require('moment');
 
+const formatCreator = function (creator) {
+  return {
+    id: creator._id.toString(),
+    username: creator.username,
+    imageUrl: creator.imageUrl,
+  };
+};
+
 exports.formatUserToken = function ({ tokenCode, language, user }) {
   return { token: tokenCode, user: exports.formatUser(user, language) };
 };
@@ -22,6 +30,15 @@ exports.formatPreviewCommunity = function (community) {
   };
 };
 
+exports.formatCommunityDetails = function (community, user) {
+  return {
+    ...exports.formatPreviewCommunity(community),
+    user: formatCreator(community.creator),
+    isMember: community.members && community.members.includes(user._id),
+    isModerator: community.moderators && community.moderators.includes(user._id),
+  };
+};
+
 exports.formatCommunities = function (communities = []) {
   return communities.map(exports.formatPreviewCommunity);
 };
@@ -40,11 +57,7 @@ exports.formatPostTypes = function (postTypes = []) {
 exports.formatPostDetail = function (post, user) {
   return {
     id: post._id.toString(),
-    user: {
-      id: post.creator._id.toString(),
-      username: post.creator.username,
-      imageUrl: post.creator.imageUrl,
-    },
+    user: formatCreator(post.creator),
     community: {
       id: post.community._id.toString(),
       name: post.community.name,
@@ -65,6 +78,7 @@ exports.formatPosts = function (posts = [], user) {
 
 exports.formatPostTypeDetail = function (postType) {
   return {
+    id: postType._id.toString(),
     name: postType.name,
     textFieldNames: postType.textFieldNames,
     numberFieldNames: postType.numberFieldsNames,

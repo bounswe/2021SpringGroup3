@@ -1,5 +1,8 @@
+const httpStatus = require('http-status');
+
 const { formatters } = require('../utils');
 const { Community } = require('../models');
+const ApiError = require('../utils/ApiError');
 
 exports.getCommunities = async ({ token, isModerator, isMember }) => {
   const query = {};
@@ -42,4 +45,12 @@ exports.createCommunity = async ({ token, name, iconUrl }) => {
     message: 'Community  is created',
     community: formatters.formatPreviewCommunity(community),
   };
+};
+
+exports.getCommunityDetail = async ({ token, communityId }) => {
+  const community = await Community.findById(communityId).populate('creator').lean();
+  if (!community) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  return formatters.formatCommunityDetails(community, token.user);
 };

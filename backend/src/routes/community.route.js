@@ -10,4 +10,6 @@ router
   .post(validate(communityValidation.createCommunity), communityController.createCommunity)
   .get(validate(communityValidation.getCommunities), communityController.getCommunities);
 
+router.route('/detail').get(validate(communityValidation.getCommunityDetail), communityController.getCommunityDetail);
+
 module.exports = router;
