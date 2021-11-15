@@ -1,15 +1,158 @@
-import React from 'react';
-import {View, Text} from 'react-native';
+import React, {useState, useEffect, createRef} from 'react';
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  Text,
+  Image,
+  KeyboardAvoidingView,
+  Keyboard,
+  ToastAndroid,
+  TouchableOpacity,
+  AsyncStorage,
+  ScrollView,
+} from 'react-native';
+import {COLORS} from '../theme/colors';
+import {AXIOS_CLIENT} from '../services/axiosCientService';
+import {TEXT, CONFIG, KEYS} from '../constants';
 
-export default function CreateCommunity({}) {
+export default function CreateCommunity({navigation}) {
+  const [name, setName] = useState('');
+  const [iconUrl, setIconUrl] = useState('');
+
+  const iconUrlInputRef = createRef();
+
+  const handleCreateCommunity = () => {
+    Keyboard.dismiss();
+    AXIOS_CLIENT.post('communities', {
+      data: {
+        name: name,
+        iconUrl: iconUrl,
+      },
+    })
+      .then(response => {
+        if (response.status === 200) {
+          navigateMain();
+        } else {
+          ToastAndroid.show(TEXT.unexpectedError, ToastAndroid.SHORT);
+        }
+      })
+      .catch(error => {
+        console.info(error);
+        ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+      });
+  };
+
+  const navigateMain = async () => {
+    navigation.navigate('Home');
+  };
+
   return (
+    // eslint-disable-next-line react-native/no-inline-styles
     <View style={styles.container}>
-      <Text style={styles.title}>BURASI CreateCommunity SAYFASIDIR</Text>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        styles={styles.contentContainerStyle}>
+        <View style={{alignItems: 'center'}}>
+          <Text style={styles.header}>Create Community</Text>
+        </View>
+        <KeyboardAvoidingView enabled>
+          <View style={styles.SectionStyle}>
+            <TextInput
+              style={styles.inputStyle}
+              onChangeText={UserName => setName(UserName)}
+              underlineColorAndroid="#f000"
+              placeholder="Community Name"
+              placeholderTextColor="#8b9cb5"
+              autoCapitalize="sentences"
+              returnKeyType="next"
+              onSubmitEditing={() =>
+                iconUrlInputRef.current && iconUrlInputRef.current.focus()
+              }
+              blurOnSubmit={false}
+            />
+          </View>
+          <View style={styles.SectionStyle}>
+            <TextInput
+              style={styles.inputStyle}
+              ref={iconUrlInputRef}
+              onChangeText={IconUrl => setIconUrl(IconUrl)}
+              underlineColorAndroid="#f000"
+              placeholder="Icon URL"
+              placeholderTextColor="#8b9cb5"
+              returnKeyType="next"
+              secureTextEntry={true}
+              onSubmitEditing={() => Keyboard.dismiss()}
+              blurOnSubmit={false}
+            />
+          </View>
+          <TouchableOpacity
+            style={styles.buttonStyle}
+            activeOpacity={0.5}
+            onPress={handleCreateCommunity}>
+            <View>
+              <Text style={styles.buttonTextStyle}>Create</Text>
+            </View>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </ScrollView>
     </View>
   );
 }
 
-const styles = {
-  container: {flex: 1},
-  title: {},
-};
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 22,
+  },
+  header: {
+    fontSize: 25,
+    alignSelf: 'center',
+    color: COLORS.textColor,
+  },
+  SectionStyle: {
+    flexDirection: 'row',
+    height: 40,
+    marginTop: 20,
+    marginLeft: 35,
+    marginRight: 35,
+    margin: 10,
+  },
+  buttonStyle: {
+    backgroundColor: COLORS.buttonColor,
+    borderWidth: 0,
+    color: COLORS.buttonColor,
+    borderColor: COLORS.buttonColor,
+    height: 40,
+    alignItems: 'center',
+    borderRadius: 30,
+    marginLeft: 35,
+    marginRight: 35,
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  buttonTextStyle: {
+    color: COLORS.buttonTextColor,
+    paddingVertical: 10,
+    fontSize: 16,
+  },
+  inputStyle: {
+    flex: 1,
+    color: COLORS.inputTextColor,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderWidth: 1,
+    borderRadius: 30,
+    borderColor: '#dadae8',
+  },
+  contentContainerStyle: {
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  imageStyle: {
+    width: '50%',
+    height: 100,
+    resizeMode: 'contain',
+    margin: 30,
+  },
+});
