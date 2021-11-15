@@ -24,11 +24,6 @@ export default function PostDetail({route, navigation}) {
     getPostDetail();
   }, []);
 
-  const _onRefresh = () => {
-    setRefreshing(true);
-    getPostDetail();
-    setRefreshing(false);
-  };
 
   const getPostDetail = () => {
   AXIOS_CLIENT.get('post/detail', {
@@ -86,8 +81,6 @@ export default function PostDetail({route, navigation}) {
             style={{marginRight: 16}}
           />
         <FlatList
-          refreshing={refreshing}
-          onRefresh={_onRefresh}
           data={mockpostDetail.textFieldNames}
           renderItem={({item}) => (
               <View>
@@ -100,8 +93,6 @@ export default function PostDetail({route, navigation}) {
 
         <FlatList
           data={mockpostDetail.numberFieldNames}
-          refreshing={refreshing}
-          onRefresh={_onRefresh}
           renderItem={({item}) => (
               <View>
                 <Text style={styles.fieldName}>{item.name}</Text>
@@ -117,8 +108,6 @@ export default function PostDetail({route, navigation}) {
           />
         <FlatList
           data={mockpostDetail.dateFieldNames}
-          refreshing={refreshing}
-          onRefresh={_onRefresh}
           renderItem={({item}) => (
               <View>
                 <Text style={styles.fieldName}>{item.name}</Text>
