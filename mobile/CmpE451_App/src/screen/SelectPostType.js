@@ -11,6 +11,8 @@ import {
 import {COLORS} from '../theme/colors';
 import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
 import {getToken} from '../services/asyncStorageService';
+import {IconButton} from 'react-native-paper';
+
 
 export default function SelectPostType({navigation, route}) {
   const {communityName, communityId} = route.params;
@@ -62,6 +64,12 @@ export default function SelectPostType({navigation, route}) {
 
   return (
     <View style={styles.container}>
+      <IconButton
+        icon="close"
+        color="grey"
+        size={20}
+        onPress={() => navigation.navigate('Main')}
+      />
       <Text style={styles.header}>Choose Post Type</Text>
       <FlatList
         refreshing={refreshing}
@@ -110,7 +118,13 @@ const mockPostTypeList = [
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 22,
+    paddingTop: 2,
+  },
+  fieldHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 20,
   },
   item: {
     padding: 10,

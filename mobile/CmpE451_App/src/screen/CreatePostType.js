@@ -186,6 +186,12 @@ export default function CreatePostType({navigation}) {
       <ScrollView
         style={styles.inputsContainer}
         keyboardShouldPersistTaps="handled">
+        <IconButton
+          icon="close"
+          color="grey"
+          size={20}
+          onPress={() => navigation.navigate('Create Post Type')}
+        />
         <View style={styles.inputContainer}>
           <View style={styles.fieldHeader}>
             <TextInput
@@ -327,7 +333,7 @@ export default function CreatePostType({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 2,
     backgroundColor: 'white',
   },
   fieldHeaderText: {

@@ -13,6 +13,7 @@ import {
 import {getToken} from '../services/asyncStorageService';
 import {COLORS} from '../theme/colors';
 import {TEXT, BASE_URL} from '../constants';
+import {IconButton} from 'react-native-paper';
 
 export default function CreateCommunity({navigation}) {
   const [name, setName] = useState('');
@@ -59,6 +60,12 @@ export default function CreateCommunity({navigation}) {
       <ScrollView
         keyboardShouldPersistTaps="handled"
         styles={styles.contentContainerStyle}>
+        <IconButton
+          icon="close"
+          color="grey"
+          size={20}
+          onPress={() => navigation.navigate('Home')}
+        />
         <View style={{alignItems: 'center'}}>
           <Text style={styles.header}>Create Community</Text>
         </View>
@@ -108,7 +115,7 @@ export default function CreateCommunity({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 22,
+    paddingTop: 2,
   },
   header: {
     fontSize: 25,
