@@ -7,66 +7,52 @@ import {
   Image,
   KeyboardAvoidingView,
   Keyboard,
+  ToastAndroid,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
 
-import Loader from '../component/Loader';
 import {COLORS} from '../theme/colors';
+import {TEXT, BASE_URL} from '../constants';
 
-export default function Registration({navigation, props}) {
+export default function Registration({navigation}) {
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
-  const [userAge, setUserAge] = useState('');
   const [userPassword, setUserPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [errortext, setErrortext] = useState('');
-  const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
 
   const emailInputRef = createRef();
-  const ageInputRef = createRef();
-  const addressInputRef = createRef();
   const passwordInputRef = createRef();
 
   const handleSubmitButton = () => {
-    setErrortext('');
-
-    //Show Loader
-    setLoading(true);
-    navigation.navigate('Home');
-    setLoading(false);
+    Keyboard.dismiss();
+    fetch(BASE_URL + 'auth/register', {
+      method: 'POST',
+      body: JSON.stringify({
+        username: userName,
+        email: userEmail,
+        password: userPassword,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+      },
+    })
+      .then(async response => {
+        const status = response.status;
+        response = await response.json();
+        if (status === 201) {
+          navigation.navigate('Login');
+        } else {
+          ToastAndroid.show(response.message, ToastAndroid.SHORT);
+        }
+      })
+      .catch(error => {
+        console.info(error.message);
+        ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+      });
   };
-  if (isRegistraionSuccess) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: '#F0FFFF',
-          justifyContent: 'center',
-        }}>
-        <Image
-          source={{
-            uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
-          }}
-          style={{
-            height: 150,
-            resizeMode: 'contain',
-            alignSelf: 'center',
-          }}
-        />
-        <Text style={styles.successTextStyle}>Registration Successful</Text>
-        <TouchableOpacity
-          style={styles.buttonStyle}
-          activeOpacity={0.5}
-          onPress={() => props.navigation.navigate('LoginScreen')}>
-          <Text style={styles.buttonTextStyle}>Login Now</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
   return (
     <View style={{flex: 1}}>
-      <Loader loading={loading} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
@@ -128,31 +114,10 @@ export default function Registration({navigation, props}) {
               ref={passwordInputRef}
               returnKeyType="next"
               secureTextEntry={true}
-              onSubmitEditing={() =>
-                ageInputRef.current && ageInputRef.current.focus()
-              }
+              onSubmitEditing={() => Keyboard.dismiss()}
               blurOnSubmit={false}
             />
           </View>
-          <View style={styles.SectionStyle}>
-            <TextInput
-              style={styles.inputStyle}
-              onChangeText={UserAge => setUserAge(UserAge)}
-              underlineColorAndroid="#f000"
-              placeholder="Yaş"
-              placeholderTextColor="#8b9cb5"
-              keyboardType="numeric"
-              ref={ageInputRef}
-              returnKeyType="next"
-              onSubmitEditing={() =>
-                addressInputRef.current && addressInputRef.current.focus()
-              }
-              blurOnSubmit={false}
-            />
-          </View>
-          {errortext != '' ? (
-            <Text style={styles.errorTextStyle}>{errortext}</Text>
-          ) : null}
           <TouchableOpacity
             style={styles.buttonStyle}
             activeOpacity={0.5}

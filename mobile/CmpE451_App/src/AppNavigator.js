@@ -1,14 +1,10 @@
 import React from 'react';
-import {
-  BackHandler,
-  Image,
-  Alert,
-  ToastAndroid,
-  AsyncStorage,
-} from 'react-native';
+
+import {BackHandler, Image, Alert, ToastAndroid} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import {getToken, removeToken} from './services/asyncStorageService';
 
 import Login from './screen/Login';
 import Chat from './screen/Chat';
@@ -31,8 +27,7 @@ import {screenOptionStyle} from './theme/styles';
 import {COLORS} from './theme//colors';
 import styled from 'styled-components/native';
 
-import {TEXT, CONFIG, KEYS} from './constants';
-import {AXIOS_CLIENT} from './services/axiosCientService';
+import {TEXT, CONFIG, BASE_URL} from './constants';
 import RNRestart from 'react-native-restart';
 
 import {
@@ -155,22 +150,28 @@ const startReload = () => RNRestart.Restart();
 
 const handleLogout = () => {
   if (CONFIG.skipLogout) {
-    AsyncStorage.removeItem(KEYS.TOKEN_KEY);
+    CONFIG.token = '';
+    removeToken();
     startReload();
   } else {
     requestLogout();
   }
 };
 
-const requestLogout = () => {
-  AXIOS_CLIENT.delete('logout')
-    .then(response => {
-      if (response.status === 200) {
-        AsyncStorage.removeItem(KEYS.TOKEN_KEY);
-        startReload();
-      } else {
-        ToastAndroid.show(TEXT.unexpectedError, ToastAndroid.SHORT);
-      }
+const requestLogout = async () => {
+  const token = await getToken();
+  console.log("token", token);
+  fetch(BASE_URL + 'auth/logout', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: token,
+    },
+  })
+    .then(async () => {
+      await removeToken();
+      startReload();
     })
     .catch(error => {
       console.info(error);

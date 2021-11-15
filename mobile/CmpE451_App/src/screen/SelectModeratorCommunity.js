@@ -9,8 +9,9 @@ import {
   View,
 } from 'react-native';
 import {COLORS} from '../theme/colors';
-import {TEXT, PAGE_VARIABLES} from '../constants';
-import {AXIOS_CLIENT} from '../services/axiosCientService';
+import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
+import {getToken} from '../services/asyncStorageService';
+import {IconButton} from 'react-native-paper';
 
 export default function SelectModeratorCommunity({navigation}) {
   const [communityList, setCommunityList] = useState([]);
@@ -31,14 +32,22 @@ export default function SelectModeratorCommunity({navigation}) {
     navigation.navigate('CreatePostType');
   };
 
-  const getModeratorCommunities = () => {
-    AXIOS_CLIENT.get('communities', {
-      params: {isModerator: true},
+  const getModeratorCommunities = async () => {
+    fetch(BASE_URL + 'communities?isModerator=' + true, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
     })
-      .then(response => response.json())
-      .then(responseData => {
-        if (responseData.status === 200) {
-          setCommunityList(responseData.data);
+      .then(async response => {
+        const status = response.status;
+        response = await response.json();
+        if (status === 200) {
+          setCommunityList(response);
+        } else {
+          ToastAndroid.show(response.message, ToastAndroid.SHORT);
         }
       })
       .catch(error => {
@@ -50,6 +59,12 @@ export default function SelectModeratorCommunity({navigation}) {
 
   return (
     <View style={styles.container}>
+      <IconButton
+        icon="close"
+        color="grey"
+        size={20}
+        onPress={() => navigation.navigate('Home')}
+      />
       <Text style={styles.header}>Choose Community</Text>
       <FlatList
         refreshing={refreshing}
@@ -102,7 +117,7 @@ const mockCommunityList = [
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 22,
+    paddingTop: 2,
   },
   item: {
     padding: 10,

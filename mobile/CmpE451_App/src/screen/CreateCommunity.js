@@ -1,20 +1,19 @@
-import React, {useState, useEffect, createRef} from 'react';
+import React, {useState, createRef} from 'react';
 import {
   StyleSheet,
   TextInput,
   View,
   Text,
-  Image,
   KeyboardAvoidingView,
   Keyboard,
   ToastAndroid,
   TouchableOpacity,
-  AsyncStorage,
   ScrollView,
 } from 'react-native';
+import {getToken} from '../services/asyncStorageService';
 import {COLORS} from '../theme/colors';
-import {AXIOS_CLIENT} from '../services/axiosCientService';
-import {TEXT, CONFIG, KEYS} from '../constants';
+import {TEXT, BASE_URL} from '../constants';
+import {IconButton} from 'react-native-paper';
 
 export default function CreateCommunity({navigation}) {
   const [name, setName] = useState('');
@@ -22,19 +21,27 @@ export default function CreateCommunity({navigation}) {
 
   const iconUrlInputRef = createRef();
 
-  const handleCreateCommunity = () => {
+  const handleCreateCommunity = async () => {
     Keyboard.dismiss();
-    AXIOS_CLIENT.post('communities', {
-      data: {
+    fetch(BASE_URL + 'communities', {
+      method: 'POST',
+      body: JSON.stringify({
         name: name,
         iconUrl: iconUrl,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
       },
     })
-      .then(response => {
-        if (response.status === 200) {
+      .then(async response => {
+        const status = response.status;
+        response = await response.json();
+        if (status === 201) {
           navigateMain();
         } else {
-          ToastAndroid.show(TEXT.unexpectedError, ToastAndroid.SHORT);
+          ToastAndroid.show(response.message, ToastAndroid.SHORT);
         }
       })
       .catch(error => {
@@ -53,6 +60,12 @@ export default function CreateCommunity({navigation}) {
       <ScrollView
         keyboardShouldPersistTaps="handled"
         styles={styles.contentContainerStyle}>
+        <IconButton
+          icon="close"
+          color="grey"
+          size={20}
+          onPress={() => navigation.navigate('Home')}
+        />
         <View style={{alignItems: 'center'}}>
           <Text style={styles.header}>Create Community</Text>
         </View>
@@ -81,7 +94,6 @@ export default function CreateCommunity({navigation}) {
               placeholder="Icon URL"
               placeholderTextColor="#8b9cb5"
               returnKeyType="next"
-              secureTextEntry={true}
               onSubmitEditing={() => Keyboard.dismiss()}
               blurOnSubmit={false}
             />
@@ -103,7 +115,7 @@ export default function CreateCommunity({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 22,
+    paddingTop: 2,
   },
   header: {
     fontSize: 25,
