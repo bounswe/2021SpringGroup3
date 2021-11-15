@@ -8,5 +8,5 @@ import { useSelector } from 'react-redux';
 
 export default function AuthRoute({ children }) {
   const {  isAuthenticated } = useSelector((state) => state.login);
-  return !isAuthenticated ? children : <Navigate to="/login" />;
+  return isAuthenticated ? children : <Navigate to="/login" />;
 }

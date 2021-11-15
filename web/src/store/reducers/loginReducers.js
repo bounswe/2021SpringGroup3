@@ -20,24 +20,19 @@ const  LoginReducer = (state = initialState, action) => {
       case LOGIN:
       return {
           ...state,
-          email:action.payload.email,
+          username:action.payload.username,
           password:action.payload.password,
           loading:true
       }
       case LOGIN_SUCCESS:
       return {
           ...state,
-          email:action.payload.user.email,
-          password:action.payload.user.password,
-          token:action.payload.token,
           loading:false,
           isAuthenticated:true
       }
       case LOGIN_FAILURE:
       return {
           ...state,
-          email:action.payload.email,
-          password:action.payload.password,
           loading:false,
           isAuthenticated:false
       }

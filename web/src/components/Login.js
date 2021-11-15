@@ -3,6 +3,8 @@ import { useState } from 'react';
 
 import { Form, Input, Row, Col, Button, Typography, Layout, Space } from 'antd';
 
+import { useNavigate } from 'react-router-dom'
+
 import React from "react";
 import { useDispatch } from 'react-redux';
 
@@ -21,8 +23,13 @@ const subButtonStyle = {
 
 const Login = () => {
 
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
   const onFinish = (values) => {
     console.log('Success:', values);
+    LoginHelper({username: values.username, password: values.password}, dispatch)
+    navigate('/home')
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -49,7 +56,7 @@ const Login = () => {
         >
           <Text strong>Username or Email</Text>
           <Form.Item
-            name="usernameOrEmail"
+            name="username"
             rules={[
               {
                 required: true,
@@ -74,9 +81,9 @@ const Login = () => {
           </Form.Item>
 
           <Col span={24} align="middle">
-            <Button type="primary" htmlType="submit" shape="round" icon={<LoginOutlined />}>
-                Login
-            </Button>
+              <Button type="primary" htmlType="submit" shape="round" icon={<LoginOutlined />}>
+                  Login
+              </Button>
           </Col>
         </Form>
         <Col span={24} align="middle">
