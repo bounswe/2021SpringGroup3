@@ -1,51 +1,28 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import * as loginAction from "../store/actions/loginActions";
 import { login, logout, register } from '../store/axios';
 
+export const Login = async (info, dispatch) => {
 
-export const Login = (email, password) => {
-  const dispatch = useDispatch();
-  
-  const fetchData = async () => {
-    dispatch(loginAction.login({email: email, password: password}));
-    const response = await login(email, password);
+    dispatch(loginAction.login(info));
+    const response = await login(info);
     if(response.status === 200){
-      dispatch(loginAction.loginSuccess({email: email, password: password}));
+      dispatch(loginAction.loginSuccess(response));
     }else{
       dispatch(loginAction.loginFailure({email: '', password: ''}));
     }
-    
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
-  
 }
 
-export const Logout = (info) => {
-  const dispatch = useDispatch();
-  
-  const fetchData = async () => {
-    dispatch(loginAction.logout());
-    const response = await logout(info);
-    if(response.status === 200){
-      dispatch(loginAction.logoutSuccess());
-    }else{
-      dispatch(loginAction.logoutFailure());
-    }
-    
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
-  
+export const Logout = async (info, dispatch) => {
+  dispatch(loginAction.logout());
+  const response = await logout(info);
+  if(response.status === 200){
+    dispatch(loginAction.logoutSuccess());
+  }else{
+    dispatch(loginAction.logoutFailure());
+  }
 }
 
-export const Register = (info) => {
-  const dispatch = useDispatch();
-  
-  const fetchData = async () => {
+export const Register = async (info, dispatch) => {
     dispatch(loginAction.register(info));
     const response = await register(info);
     if(response.status === 200){
@@ -53,10 +30,4 @@ export const Register = (info) => {
     }else{
       dispatch(loginAction.registerFailure());
     }
-    
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
-  
 }

@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Checkbox, Typography, Row, Col } from 'antd';
 import 'antd/dist/antd.css';
+
+import { useDispatch } from 'react-redux';
+import {  Register } from '../utils/helper';
 
 const {Text} = Typography;
 
 const Registration = () => {
+  const dispatch = useDispatch();
   const onFinish = (values) => {
     console.log('Success:', values);
+    Register(values, dispatch)
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -76,7 +81,7 @@ const Registration = () => {
           </Form.Item>
 
           <Form.Item
-            name="remember"
+            name="terms"
             valuePropName="checked"
             required
           >

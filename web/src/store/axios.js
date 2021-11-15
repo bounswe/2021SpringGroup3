@@ -5,24 +5,12 @@ import {
   REGISTER_ENDPOINT,
 } from './urls';
 
-const defaultUser = {
-  username: 'Guest',
-  email: '',
-  password: '',
-  isAuthenticated: false,
-};
-
-export async function login(
-  email,
-  password,
-) {
+export async function login(info) {
   const header = {headers: {
     'X-Platform': 'WEB',
-    'Content-Type': 'application/json',
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+    'accept': '*/*',
   }}
-  const body = {body: { username: email, password: password }}
+  const body= { username: info.username, password: info.password }
   try {
     const response = await axios.post(
       LOGIN_ENDPOINT,
@@ -33,32 +21,43 @@ export async function login(
     return response;
   } catch (error) {
     console.log(error);
-    const response = {status: 201};
-    return response
+    
+    return error
   }
 }
 
 export async function register(info) {
   try {
+    const header = {headers: {
+      'X-Platform': 'WEB',
+      'accept': '*/*',
+    }}
+    const body= { username: info.username, email:info.email, password: info.password }
     const response = await axios.post(
       REGISTER_ENDPOINT,
-      info,
+      { ...body },
+      {...header}
     );
+    console.log(response);
     return response;
   } catch (error) {
     console.log(error);
-    const response = {status: 201};
-    return response
+    
+    return error
   }
 }
 
-export async function logout(info) {
+export async function logout() {
   try {
-    const response = await axios.delete(LOGOUT_ENDPOINT, info);
+    const header = {headers: {
+      'X-Platform': 'WEB',
+      'accept': '*/*',
+    }}
+    const response = await axios.delete(LOGOUT_ENDPOINT, {...header});
     return response;
   } catch (error) {
     console.log(error);
-    const response = {status: 201};
-    return response
+    
+    return error
   }
 }

@@ -6,10 +6,13 @@ import {
 
 const initialState = {
   username: 'Guest',
+  id: "",
   email: '',
   password: '',
   isAuthenticated: false,
-  loading:false
+  loading:false,
+  token: "",
+  isActivated: false
 }
 const  LoginReducer = (state = initialState, action) => {
   switch(action.type){
@@ -24,8 +27,9 @@ const  LoginReducer = (state = initialState, action) => {
       case LOGIN_SUCCESS:
       return {
           ...state,
-          email:action.payload.email,
-          password:action.payload.password,
+          email:action.payload.user.email,
+          password:action.payload.user.password,
+          token:action.payload.token,
           loading:false,
           isAuthenticated:true
       }
@@ -47,9 +51,9 @@ const  LoginReducer = (state = initialState, action) => {
           ...state,
           loading:false,
           isAuthenticated:true,
-          username: action.payload.info.username,
-          email: action.payload.info.email,
-          password: action.payload.info.password,
+          username: action.payload.username,
+          email: action.payload.email,
+          password: action.payload.password,
       }
       case REGISTER_FAILURE:
       return {

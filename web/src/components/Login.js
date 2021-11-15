@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { Input, Row, Col, Button, Typography, Layout } from 'antd';
 
 import React from "react";
+import { useDispatch } from 'react-redux';
+
+import {  Login as LoginHelper } from '../utils/helper';
 
 import { LoginOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import 'antd/dist/antd.css';
@@ -17,9 +20,11 @@ const { Text } = Typography;
 const Login = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-  
+    
+    const dispatch = useDispatch();
     const login = () => {
       console.log('Trying to log in with', username, password);
+      LoginHelper({username: username, password: password}, dispatch)
     }
   
     const onKeyPress = (e) => {
