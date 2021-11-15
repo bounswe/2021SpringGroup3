@@ -9,8 +9,8 @@ import {
   View,
 } from 'react-native';
 import {COLORS} from '../theme/colors';
-import {TEXT, PAGE_VARIABLES} from '../constants';
-import {AXIOS_CLIENT} from '../services/axiosCientService';
+import {TEXT, PAGE_VARIABLES, CONFIG} from '../constants';
+import {BASER_URL} from '../services/axiosCientService';
 
 export default function SelectModeratorCommunity({navigation}) {
   const [communityList, setCommunityList] = useState([]);
@@ -32,13 +32,21 @@ export default function SelectModeratorCommunity({navigation}) {
   };
 
   const getModeratorCommunities = () => {
-    AXIOS_CLIENT.get('communities', {
-      params: {isModerator: true},
+    fetch(BASER_URL + 'communities?isModerator=' + true, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: CONFIG.token,
+      },
     })
-      .then(response => response.json())
-      .then(responseData => {
-        if (responseData.status === 200) {
-          setCommunityList(responseData.data);
+      .then(async response => {
+        const status = response.status;
+        response = await response.json();
+        if (status === 200) {
+          setCommunityList(response);
+        } else {
+          ToastAndroid.show(response.message, ToastAndroid.SHORT);
         }
       })
       .catch(error => {

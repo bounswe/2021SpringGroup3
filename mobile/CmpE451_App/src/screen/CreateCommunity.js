@@ -9,12 +9,11 @@ import {
   Keyboard,
   ToastAndroid,
   TouchableOpacity,
-  AsyncStorage,
   ScrollView,
 } from 'react-native';
 import {COLORS} from '../theme/colors';
-import {AXIOS_CLIENT} from '../services/axiosCientService';
-import {TEXT, CONFIG, KEYS} from '../constants';
+import {BASER_URL} from '../services/axiosCientService';
+import {TEXT, CONFIG} from '../constants';
 
 export default function CreateCommunity({navigation}) {
   const [name, setName] = useState('');
@@ -24,14 +23,20 @@ export default function CreateCommunity({navigation}) {
 
   const handleCreateCommunity = () => {
     Keyboard.dismiss();
-    AXIOS_CLIENT.post('communities', {
-      data: {
+    fetch(BASER_URL + 'communities', {
+      method: 'POST',
+      body: JSON.stringify({
         name: name,
         iconUrl: iconUrl,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: CONFIG.token,
       },
     })
       .then(response => {
-        if (response.status === 200) {
+        if (response.status === 201) {
           navigateMain();
         } else {
           ToastAndroid.show(TEXT.unexpectedError, ToastAndroid.SHORT);

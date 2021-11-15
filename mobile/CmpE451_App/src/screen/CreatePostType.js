@@ -10,8 +10,8 @@ import {
   ScrollView,
 } from 'react-native';
 import {COLORS} from '../theme/colors';
-import {AXIOS_CLIENT} from '../services/axiosCientService';
-import {TEXT, PAGE_VARIABLES} from '../constants';
+import {BASER_URL} from '../services/axiosCientService';
+import {TEXT, PAGE_VARIABLES, CONFIG} from '../constants';
 
 import {IconButton} from 'react-native-paper';
 
@@ -158,20 +158,22 @@ export default function CreatePostType({navigation}) {
   };
 
   const createPostTypeHandler = () => {
-    AXIOS_CLIENT.post('post-types', {
-      data: formatData(),
+    fetch(BASER_URL + 'post-types', {
+      method: 'POST',
+      body: JSON.stringify(formatData()),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: CONFIG.token,
+      },
     })
-      .then(response => {
-        if (response.status === 200) {
+      .then(async response => {
+        const status = response.status;
+        response = await response.json();
+        if (status === 201) {
           navigation.navigate('Home');
-        } else if (
-          response.status === 400 ||
-          response.status === 404 ||
-          response.status === 409
-        ) {
-          ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
         } else {
-          ToastAndroid.show(TEXT.unexpectedError, ToastAndroid.SHORT);
+          ToastAndroid.show(response.message, ToastAndroid.SHORT);
         }
       })
       .catch(error => {
@@ -189,7 +191,7 @@ export default function CreatePostType({navigation}) {
           <View style={styles.fieldHeader}>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={name => setName(name)}
+              onChangeText={Name => setName(Name)}
               underlineColorAndroid="#f000"
               placeholder="Post Type Name"
               placeholderTextColor="#8b9cb5"
