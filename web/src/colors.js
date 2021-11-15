@@ -13,4 +13,4 @@ const buttonColor = {
   borderColor: COLORS.buttonColor
 }
 
-export default buttonColor 
+export default { buttonColor, COLORS } 

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Card, Row, Col, Button, Typography, Space, Avatar } from 'antd';
 import '../App.css';
@@ -6,16 +7,18 @@ import FieldContent from './FieldContent';
 
 import React from "react";
 
-import { LikeOutlined, LikeFilled, CommentOutlined, FlagOutlined } from '@ant-design/icons';
+import { LikeOutlined, LikeFilled, CommentOutlined, FlagOutlined, FlagFilled } from '@ant-design/icons';
 import 'antd/dist/antd.css';
+
+const { Text } = Typography;
 
 const Post = (props) => {
 
   console.log(props)
 
-  // let contentFields = props.postObj.fieldContents.map((fieldContent) => {
-  //   return <FieldContent fieldContent={fieldContent} />
-  // })
+  let contentFields = props.postObj.fieldContents.map((fieldContent) => {
+    return <FieldContent fieldContent={fieldContent} />
+  })
 
   let dataTypeStyle = {
     backgroundColor: props.postObj.dataType.color,
@@ -120,7 +123,7 @@ const Post = (props) => {
         <Row>
           <Card size="small" style={{ width: '100%', borderRadius: '10px', borderColor: '#ffffff', marginTop: "10px", marginBottom: "10px"}}>
             <Space direction="vertical">
-              {}
+              {contentFields}
             </Space>
           </Card>
         </Row>

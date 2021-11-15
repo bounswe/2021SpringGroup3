@@ -8,7 +8,7 @@ import ProfileView from './components/ProfileView';
 import React from "react";
 import 'antd/dist/antd.css';
 import './App.css';
-import { useState, Image } from 'react';
+
 
 import moment from 'moment' ;
 

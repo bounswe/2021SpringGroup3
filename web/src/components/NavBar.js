@@ -2,51 +2,61 @@ import React from 'react';
 import { Row, Col, Input, Image, Button, Dropdown, Menu } from 'antd';
 import { HomeTwoTone, MessageTwoTone, BellTwoTone, UserOutlined, DownOutlined, SettingTwoTone, LogoutOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
+import { Logout } from '../utils/helper';
+import { logout } from '../store/actions/loginActions';
+import logo from '../utils/logo.png'
 
 const { Search } = Input;
-
-const onSearch = value => {
-    console.log("Searching value: ", value);
-}
-
-const onCreateCommunity = () => {
-    console.log("Request for creating a new community");
-}
-const onCreatePost = () => {
-    console.log("Request for creating a new post");
-}
-const profileMenu = (
-    <Menu>
-        <Menu.Item>
-            <Button target="_blank" rel="noopener noreferrer">
-                <SettingTwoTone style={{fontSize: '16px', marginRight:'4px'}}/>
-                Settings
-            </Button>
-        </Menu.Item>
-        <Menu.Item>
-            <Button target="_blank" rel="noopener noreferrer">
-                <LogoutOutlined style={{fontSize: '16px', marginRight:'4px'}}/>
-                Logout
-            </Button>
-        </Menu.Item>
-    </Menu>
-  );
 
 const NavBar = () => {
 
     const loginState = useSelector((state) => state.login);
-    console.log(loginState);
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const onSearch = value => {
+        console.log("Searching value: ", value);
+    }
+    
+    const handleLogout = () => {
+        console.log("Trying to log out");
+        Logout(loginState.token, dispatch)
+        navigate('/login')
+    }
+    
+    const onCreateCommunity = () => {
+        console.log("Request for creating a new community");
+        navigate('/createCommunity')
+    }
+    
+    const onCreatePost = () => {
+        console.log("Request for creating a new post");
+    }
+    
+    const profileMenu = (
+        <Menu>
+            <Menu.Item key="settings">
+                <Button type="text">
+                    <SettingTwoTone style={{fontSize: '16px', marginRight:'4px'}}/>
+                    Settings
+                </Button>
+            </Menu.Item>
+            <Menu.Item key="logout">
+                <Button type="text" onClick={handleLogout}>
+                    <LogoutOutlined style={{fontSize: '16px', marginRight:'4px'}}/>
+                    Logout
+                </Button>
+            </Menu.Item>
+        </Menu>
+    );
 
     return ( 
         <div>
             <Row align="middle" style={{padding:'8px 16px 4px 16px'}}>
-                <Col span={1}>
-                    LOGO
-                </Col>
-                <Col span={1}>
-                    <a target="_blank" rel="noopener noreferrer">
-                        <HomeTwoTone style={{ fontSize: '32px'}}/>
-                    </a>
+                <Col span={2}>
+                    <Image src={logo} style={{cursor: 'pointer'}} width={40} preview={false} onClick={() => {navigate('/home')}}/>
                 </Col>
                 <Col span={3}>
                     <Button shape="round" onClick={onCreateCommunity}>

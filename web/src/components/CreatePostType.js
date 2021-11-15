@@ -16,8 +16,7 @@ const CreateCommunity = (props) => {
 
     const onFinish = async (values) => {
         console.log("Success: ", values);
-        
-        const id = await CreateCommunityRequest({name: values.communityName, token: loginState.token}, dispatch);
+        const id = await CreatePostTypeRequest({name: values.communityName, token: loginState.token}, dispatch);
         navigate(`/communities/${id}`)
     }
     const onFinishFailed = (error) => {
