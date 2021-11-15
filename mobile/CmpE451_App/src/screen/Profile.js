@@ -16,6 +16,10 @@ export default function Profile() {
   const navigation = useNavigation();
 
   return (
+    <View style={styles.container}>
+    <Text>Profile page is under construction</Text>
+  </View>);
+  /*
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.titleBar}>
@@ -117,6 +121,7 @@ export default function Profile() {
       </ScrollView>
     </SafeAreaView>
   );
+  */
 }
 
 const styles = StyleSheet.create({
