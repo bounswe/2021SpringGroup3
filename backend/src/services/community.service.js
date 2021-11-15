@@ -36,6 +36,7 @@ exports.createCommunity = async ({ token, name, iconUrl }) => {
     iconUrl,
     creator: token.user._id,
     moderators: [token.user._id],
+    members: [token.user._id],
   });
   return {
     message: 'Community  is created',
