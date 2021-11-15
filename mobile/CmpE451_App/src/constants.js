@@ -1,12 +1,13 @@
+export const BASE_URL = 'https://api.cmpegroupthree.store/';
+
 export const CONFIG = {
   skipLogin: false,
   skipLogout: false,
-  token: '',
 };
 
 export const KEYS = {
   USER_ROLE_KEY: 'userRole',
-  TOKEN_KEY: 'token',
+  TOKEN_KEY: '@token_Key',
   USER_NAME_KEY: 'username',
 };
 

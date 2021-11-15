@@ -10,9 +10,8 @@ import {
   ScrollView,
 } from 'react-native';
 import {COLORS} from '../theme/colors';
-import {BASER_URL} from '../services/axiosCientService';
-import {TEXT, PAGE_VARIABLES, CONFIG} from '../constants';
-
+import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
+import {getToken} from '../services/asyncStorageService';
 import {IconButton} from 'react-native-paper';
 
 export default function CreatePostType({navigation}) {
@@ -157,14 +156,14 @@ export default function CreatePostType({navigation}) {
     };
   };
 
-  const createPostTypeHandler = () => {
-    fetch(BASER_URL + 'post-types', {
+  const createPostTypeHandler = async () => {
+    fetch(BASE_URL + 'post-types', {
       method: 'POST',
       body: JSON.stringify(formatData()),
       headers: {
         'Content-Type': 'application/json',
         'X-Platform': 'ANDROID',
-        Authorization: CONFIG.token,
+        Authorization: await getToken(),
       },
     })
       .then(async response => {

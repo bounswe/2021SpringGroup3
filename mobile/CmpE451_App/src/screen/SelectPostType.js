@@ -9,8 +9,8 @@ import {
   View,
 } from 'react-native';
 import {COLORS} from '../theme/colors';
-import {TEXT, PAGE_VARIABLES, CONFIG} from '../constants';
-import {BASER_URL} from '../services/axiosCientService';
+import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
+import {getToken} from '../services/asyncStorageService';
 
 export default function SelectPostType({navigation, route}) {
   const {communityName, communityId} = route.params;
@@ -35,13 +35,13 @@ export default function SelectPostType({navigation, route}) {
     });
   };
 
-  const getPostTypes = () => {
-    fetch(BASER_URL + 'post-types?communityId=' + PAGE_VARIABLES.communityId, {
+  const getPostTypes = async () => {
+    fetch(BASE_URL + 'post-types?communityId=' + PAGE_VARIABLES.communityId, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'X-Platform': 'ANDROID',
-        Authorization: CONFIG.token,
+        Authorization: await getToken(),
       },
     })
       .then(async response => {

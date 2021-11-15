@@ -13,8 +13,7 @@ import {
 } from 'react-native';
 
 import {COLORS} from '../theme/colors';
-import {BASER_URL} from '../services/axiosCientService';
-import {TEXT} from '../constants';
+import {TEXT, BASE_URL} from '../constants';
 
 export default function Registration({navigation}) {
   const [userName, setUserName] = useState('');
@@ -26,7 +25,7 @@ export default function Registration({navigation}) {
 
   const handleSubmitButton = () => {
     Keyboard.dismiss();
-    fetch(BASER_URL + 'auth/register', {
+    fetch(BASE_URL + 'auth/register', {
       method: 'POST',
       body: JSON.stringify({
         username: userName,
