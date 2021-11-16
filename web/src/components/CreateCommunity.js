@@ -1,17 +1,29 @@
 import React from 'react';
 import { Row, Col, Form, Input, Typography, Button, Radio, Select } from 'antd';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
+import { CreateCommunity as CreateCommunityRequest } from '../utils/helper';
 
 const { Text, Title } = Typography;
 const { Option } = Select;
 
-const onFinish = (values) => {
-    console.log("Success: ", values);
-}
-const onFinishFailed = (error) => {
-    console.log("Failed: ",error);
-}
 
 const CreateCommunity = (props) => {
+    const loginState = useSelector((state) => state.login);
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const onFinish = async (values) => {
+        console.log("Success: ", values);
+        
+        const id = await CreateCommunityRequest({name: values.communityName, token: loginState.token}, dispatch);
+        navigate(`/communities/${id}`)
+    }
+    const onFinishFailed = (error) => {
+        console.log("Failed: ",error);
+    }
+
     return ( 
         <div>
             <Row>

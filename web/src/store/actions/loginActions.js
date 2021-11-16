@@ -57,7 +57,7 @@ export function logoutSuccess() {
   };
 }
 
-export function logoutFailure(ifo) {
+export function logoutFailure(info) {
   return {
     type: LOGOUT_FAILURE,
   };
