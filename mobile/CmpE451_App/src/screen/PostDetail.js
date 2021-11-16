@@ -19,27 +19,28 @@ export default function PostDetail({route, navigation}) {
   const communityId = PAGE_VARIABLES.communityId;
 
   const [postDetail, setPostDetail] = useState({});
-  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     getPostDetail();
   }, []);
 
-  const _onRefresh = () => {
-    setRefreshing(true);
-    getPostDetail();
-    setRefreshing(false);
-  };
-
-  const getPostDetail = () => {
-    AXIOS_CLIENT.get('post/detail', {
-      params: {communityId: communityId, postId: postId},
+  const getPostDetail = async () => {
+    fetch(BASE_URL + 'post/detail', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
     })
-      .then(response => {
-        if (response.status === 200) {
+      .then(async response => {
+        const status = response.status;
+        response = await response.json();
+        if (status === 200) {
           setPostDetail(response.data);
         } else {
-          ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+          ToastAndroid.show(response.message, ToastAndroid.SHORT);
+          setPostDetail(mockpostDetail);
         }
       })
       .catch(error => {
@@ -67,14 +68,14 @@ export default function PostDetail({route, navigation}) {
                 alignItems: 'baseline',
               }}>
               <Text style={{fontSize: 18, color: COLORS.textColor}}>
-                {mockpostDetail.username}
+                {postDetail.username}
               </Text>
               <Text style={{fontSize: 12, color: COLORS.textColor}}>
-                {mockpostDetail.communityName}
+                {postDetail.communityName}
               </Text>
             </View>
             <Text style={styles.timestamp}>
-              {moment(mockpostDetail.date).fromNow()}
+              {moment(postDetail.date).fromNow()}
             </Text>
             <Text> </Text>
             <Text> </Text>
@@ -84,9 +85,7 @@ export default function PostDetail({route, navigation}) {
         <View>
           <Icon name="text" size={18} style={{marginRight: 16}} />
           <FlatList
-            refreshing={refreshing}
-            onRefresh={_onRefresh}
-            data={mockpostDetail.textFieldNames}
+            data={postDetail.textFieldNames}
             renderItem={({item}) => (
               <View>
                 <Text style={styles.fieldName}>{item.name}</Text>
@@ -97,7 +96,7 @@ export default function PostDetail({route, navigation}) {
           />
 
           <FlatList
-            data={mockpostDetail.numberFieldNames}
+            data={postDetail.numberFieldNames}
             renderItem={({item}) => (
               <View>
                 <Text style={styles.fieldName}>{item.name}</Text>
@@ -108,7 +107,7 @@ export default function PostDetail({route, navigation}) {
           />
           <Icon name="calendar" size={18} style={{marginRight: 16}} />
           <FlatList
-            data={mockpostDetail.dateFieldNames}
+            data={postDetail.dateFieldNames}
             renderItem={({item}) => (
               <View>
                 <Text style={styles.fieldName}>{item.name}</Text>
@@ -120,7 +119,7 @@ export default function PostDetail({route, navigation}) {
 
           <Icon name="link" size={18} style={{marginRight: 16}} />
           <FlatList
-            data={mockpostDetail.linkFieldNames}
+            data={postDetail.linkFieldNames}
             renderItem={({item}) => (
               <View>
                 <Text style={styles.fieldName}>{item.name}</Text>
@@ -134,7 +133,7 @@ export default function PostDetail({route, navigation}) {
 
           <Icon name="location" size={18} style={{marginRight: 16}} />
           <FlatList
-            data={mockpostDetail.locationFieldNames}
+            data={postDetail.locationFieldNames}
             renderItem={({item}) => (
               <View>
                 <Text style={styles.fieldName}>{item.name}</Text>
@@ -149,13 +148,13 @@ export default function PostDetail({route, navigation}) {
             name="heart"
             size={24}
             color={
-              mockpostDetail.isLiked
+              postDetail.isLiked
                 ? COLORS.buttonColor
                 : COLORS.unlikeButtonColor
             }
             style={{marginRight: 16}}
           />
-          <Text style={styles.content}>{mockpostDetail.likeCount}</Text>
+          <Text style={styles.content}>{postDetail.likeCount}</Text>
         </View>
       </ScrollView>
     </View>
