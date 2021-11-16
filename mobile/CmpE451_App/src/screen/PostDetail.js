@@ -25,7 +25,7 @@ export default function PostDetail({route, navigation}) {
   }, []);
 
   const getPostDetail = async () => {
-    fetch(BASE_URL + 'post/detail', {
+    fetch(BASE_URL + 'post/detail?communityId=' + PAGE_VARIABLES.communityId + '&postId='+PAGE_VARIABLES.postId, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -37,10 +37,9 @@ export default function PostDetail({route, navigation}) {
         const status = response.status;
         response = await response.json();
         if (status === 200) {
-          setPostDetail(response.data);
+          setPostDetail(response);
         } else {
           ToastAndroid.show(response.message, ToastAndroid.SHORT);
-          setPostDetail(mockpostDetail);
         }
       })
       .catch(error => {
