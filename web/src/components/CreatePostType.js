@@ -1,103 +1,106 @@
 import React from 'react';
-import { Row, Col, Form, Input, Typography, Button, Radio, Select } from 'antd';
+import { Row, Col, Form, Input, Typography, Button, Radio, Select, Space } from 'antd';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { CreateCommunity as CreateCommunityRequest } from '../utils/helper';
+import { CreatePostType as CreatePostTypeRequest } from '../utils/helper';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
-const { Text, Title } = Typography;
-const { Option } = Select;
+const types = [
+  { label: 'text', value: 'text' },
+  { label: 'number', value: 'number' },
+  { label: 'link', value: 'link' },
+  { label: 'date', value: 'date' },
+  { label: 'lacation', value: 'location' },
+];
+
+const CreatePostType = (props) => {
+  const loginState = useSelector((state) => state.login);
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [form] = Form.useForm();
+
+  const onFinish = async (values) => {
+
+    values.communityId = props.id;
+
+    console.log('Received values of form:', values);
+    values.textFieldNames = values.fields.filter(field => field.type == 'text').map(item => { return item.name })
+    values.numberFieldNames = values.fields.filter(field => field.type == 'number').map(item => { return item.name })
+    values.linkFieldNames = values.fields.filter(field => field.type == 'link').map(item => { return item.name })
+    values.locationFieldNames = values.fields.filter(field => field.type == 'date').map(item => { return item.name })
+    values.dateFieldNames = values.fields.filter(field => field.type == 'location').map(item => { return item.name })
+
+    delete values.fields;
+
+    await CreatePostTypeRequest(values, loginState.token, dispatch);
+    navigate(`/communities/`)
+  }
 
 
-const CreateCommunity = (props) => {
-    const loginState = useSelector((state) => state.login);
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
+  return (
+    <Row>
+      <Col offset={6} span={12} style={{marginTop: "20px"}}>
+        <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
+          <label>Post Type Name</label>
+          <Form.Item
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "Post type name cannot be empty!"
+              }
+            ]}
+          >
+            <Input placeholder="Post type name" size='middle' />
+          </Form.Item>
+          <Form.List name="fields">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name, fieldKey, ...restField }) => (
+                  <Col span={24} align="middle">
+                    <Space key={key}>
+                      <Form.Item
+                        {...restField}
+                        name={[name, 'type']}
+                        fieldKey={[fieldKey, 'type']}
+                        rules={[{ required: true, message: 'Missing type' }]}
+                      >
+                        <Select options={types} style={{ width: 120 }}></Select>
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, 'name']}
+                        fieldKey={[fieldKey, 'name']}
+                        rules={[{ required: true, message: 'Missing field name' }]}
+                      >
+                        <Input placeholder="Field name"/>
+                      </Form.Item>
+                      <MinusCircleOutlined onClick={() => remove(name)} />
+                    </Space>
+                  </Col>
+                ))}
+                <Form.Item>
+                  <Col span={24} align="middle">
+                    <Button type="dashed" shape="round" onClick={() => add()} icon={<PlusOutlined />}>
+                      Add field
+                    </Button>
+                  </Col>
+                </Form.Item>
+              </>
+            )}
+          </Form.List>
+          <Form.Item >
+            <Col span={24} align="middle">
+              <Button type="primary" shape="round" htmlType="submit">
+                Create Post Type
+              </Button>
+            </Col>
+          </Form.Item>
+        </Form>
+      </Col>
+    </Row>
+  );
+};
 
-    const onFinish = async (values) => {
-        console.log("Success: ", values);
-        const id = await CreatePostTypeRequest({name: values.communityName, token: loginState.token}, dispatch);
-        navigate(`/communities/${id}`)
-    }
-    const onFinishFailed = (error) => {
-        console.log("Failed: ",error);
-    }
-
-    return ( 
-        <div>
-            <Row>
-                <Col span={24} align="middle">
-                    <Title level={2} strong="true">Create a new community</Title>
-                </Col>
-                <Col span={10} offset={7} align="middle">
-                    <Form
-                        name="basic"
-                        onFinish={onFinish}
-                        onFinishFailed={onFinishFailed}
-                    >
-                        <Text strong="true">Name</Text>
-                        <Form.Item
-                            name="communityName"
-                            rules={[
-                                {
-                                    required:true,
-                                    message: "Community name cannot be empty!"
-                                }
-                            ]}
-                        > 
-                            <Input placeholder="Community Name"/>
-                        </Form.Item>
-                        
-                        <Text strong="true">Topics</Text>
-                        <Form.Item
-                            name="topics"
-                            rules={[
-                                { 
-                                    required: true, message: 'Please choose at least one topic!', type: 'array' 
-                                }
-                            ]}
-                        >
-                            <Select mode="multiple">
-                                <Option value="1">Topic 1</Option>
-                                <Option value="2">Topic 2</Option>
-                                <Option value="3">Topic 3</Option>
-                            </Select>
-                        </Form.Item>
-                        
-                        <Text strong="true">Description</Text>
-                        <Form.Item
-                            name="description"
-                        >
-                            <Input.TextArea/>
-                        </Form.Item>
-
-                        <Text strong="true">Community Type</Text>
-                        <Form.Item 
-                            name="communityType"
-                            rules={[
-                                {
-                                    required:true,
-                                    message: "Please choose the community type!"
-                                }
-                            ]}
-                        >
-                            <Radio.Group>
-                            <Radio value="public">Public</Radio>
-                            <Radio value="private">Private</Radio>
-                            </Radio.Group>
-                        </Form.Item>
-
-                        <Form.Item>
-                            <Button type="primary" shape="round" htmlType="submit">
-                                Submit
-                            </Button>
-                        </Form.Item>
-                    
-                    </Form>
-                </Col>
-            </Row>         
-        </div>
-     );
-}
- 
-export default CreateCommunity;
+export default CreatePostType;

@@ -13,6 +13,8 @@ import history from '../history';
 import PublicRoute from './PublicRoute';
 import AuthRoute from "./AuthRoute";
 import CreateCommunityPage from '../pages/CreateCommunityPage';
+import CreatePostTypePage from '../pages/CreatePostTypePage';
+import GetCommunityPage from '../pages/GetCommunityPage';
 
 
 export default function RouteList() {
@@ -24,7 +26,8 @@ export default function RouteList() {
         <Route path="/confirmation" exact element={<PublicRoute><ConfirmationPage/></PublicRoute>} />
         <Route path="/home" exact element={<AuthRoute><HomePage/></AuthRoute>} />
         <Route path="/createCommunity" exact element={<AuthRoute><CreateCommunityPage /></AuthRoute>} />
-        <Route path="/communities/:id" element={<AuthRoute><CreateCommunityPage /></AuthRoute>} />
+        <Route path="/createPostType" exact element={<AuthRoute><CreatePostTypePage /></AuthRoute>} />
+        <Route path="/communities/:id" element={<AuthRoute><GetCommunityPage /></AuthRoute>} />
         <Route path="*" element={<Navigate replace to="/login" />} />
       </Routes>
     </Router>

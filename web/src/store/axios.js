@@ -4,7 +4,9 @@ import {
   LOGOUT_ENDPOINT,
   REGISTER_ENDPOINT,
   CREATE_COMMUNITY_ENDPOINT,
-  GET_COMMUNITIES_ENDPOINT
+  GET_COMMUNITIES_ENDPOINT,
+  GET_COMMUNITY_PAGE_ENDPOINT,
+  CREATE_POSTTYPE_ENDPOINT
 } from './urls';
 
 export async function login(info) {
@@ -85,6 +87,26 @@ export async function createCommunity(info) {
   }
 }
 
+export async function createPostType(info, token) {
+  try {
+    const header = {headers: {
+      'X-Platform': 'WEB',
+      'accept': '*/*',
+      'authorization': `${token}`
+      },
+    }
+    console.log(header);
+    const body = { ... info }
+    const response = await axios.post(CREATE_POSTTYPE_ENDPOINT, { ...body }, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+    
+    return error
+  }
+}
+
+
 export async function getCommunities(info) {
   try {
     const header = {headers: {
@@ -94,8 +116,25 @@ export async function getCommunities(info) {
       },
     }
     console.log(header);
-    const body= { isMember: true }
-    const response = await axios.get(GET_COMMUNITIES_ENDPOINT, { ...body }, { ...header });
+    const response = await axios.get(GET_COMMUNITIES_ENDPOINT, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+    
+    return error
+  }
+}
+
+export async function getCommunityPage(info) {
+  try {
+    const header = {headers: {
+      'x-platform': 'WEB',
+      'accept': '*/*',
+      'authorization': `${info.token}`
+      },
+    }
+    const response = await axios.get(GET_COMMUNITY_PAGE_ENDPOINT+"?communityId="+info.id, { ...header });
+    console.log(response)
     return response;
   } catch (error) {
     console.log(error);
