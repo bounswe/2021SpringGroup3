@@ -25,7 +25,7 @@ export default function PostDetail({route, navigation}) {
   }, []);
 
   const getPostDetail = async () => {
-    fetch(BASE_URL + 'post/detail?communityId=' + PAGE_VARIABLES.communityId + '&postId=' + PAGE_VARIABLES.postId, {
+    fetch(BASE_URL + 'post/detail?communityId=' + PAGE_VARIABLES.communityId + '&postId='+PAGE_VARIABLES.postId, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
