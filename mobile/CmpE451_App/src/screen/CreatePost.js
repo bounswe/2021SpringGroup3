@@ -14,17 +14,25 @@ import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import {size} from 'lodash';
 import {bold} from 'chalk';
 import * as Requests from '../util/Reguests';
+import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
 
 export default function CreatePost({route}) {
-  const {communityName, communityId} = route.params;
+  const navigation = useNavigation();
+
   const [index, setIndex] = useState(true);
   const [name, setName] = useState('');
   const [numberOfParticipants, setNumberOfParticipants] = useState('');
   const [date, setDate] = useState('');
   const [link, setLink] = useState('');
   const [location, setLocation] = useState('');
-  console.log('communityName: ', communityName);
-  const navigation = useNavigation();
+  const [textInputs, setTextInputs] = useState([{key: '', value: ''}]);
+  const [linkedFieldNames, setLinkedFieldNames] = useState([
+    {key: '', value: ''},
+  ]);
+  const [locationFieldNames, setLocationFieldNames] = useState([
+    {key: '', value: ''},
+  ]);
+
   function handleBackButtonClick() {
     navigation.goBack();
     return true;
@@ -38,149 +46,37 @@ export default function CreatePost({route}) {
     }
   }, []);
 
-  async function createPostHandler() {
-    const response = await Requests.createPost({
-      communityName,
-      communityId,
-      name,
-      numberOfParticipants,
-      date,
-      link,
-      location,
+  useEffect(async () => {
+    const response = await Requests.getPostTypesDetail({
+      communityId: PAGE_VARIABLES.communityId,
+      postTypeId: PAGE_VARIABLES.postTypeId,
     });
-    console.log('LAST RESPONSE: ', response);
-  }
+    const parsedResponse = JSON.parse(response);
+    setTextInputs([{key: parsedResponse.textFieldNames[0], value: ''}]);
+    setLinkedFieldNames([{key: parsedResponse.linkFieldNames[0], value: ''}]);
+    setLocationFieldNames([
+      {key: parsedResponse.locationFieldNames[0], value: ''},
+    ]);
+    console.log(' JSON.parse(response).linkedFieldNames[0]', parsedResponse);
+  }, []);
 
-  function myForum() {
-    return (
-      <View>
-        <View
-          style={{
-            justifyContent: 'flex-end',
-            margin: 5,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
-            Tournament Name:
-          </Text>
-          <TextInput
-            style={{
-              height: 40,
-              borderColor: 'gray',
-              placeholder: 'Match Name',
-              placeholderTextColor: 'gray',
-              color: 'black',
-              margin: 5,
-              paddingBottom: 1,
-            }}
-            onChangeText={text => setName(text)}
-            value={name}
-            placeholder="......."
-          />
-        </View>
-        <View
-          style={{
-            justifyContent: 'flex-end',
-            margin: 5,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
-            #Participants:
-          </Text>
-          <TextInput
-            style={{
-              height: 40,
-              borderColor: 'gray',
-              placeholder: 'Match Name',
-              placeholderTextColor: 'gray',
-              color: 'black',
-              margin: 5,
-              paddingBottom: 1,
-            }}
-            onChangeText={text => setNumberOfParticipants(text)}
-            value={numberOfParticipants}
-            placeholder="......."
-          />
-        </View>
-        <View
-          style={{
-            justifyContent: 'flex-end',
-            margin: 5,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
-            Date:
-          </Text>
-          <TextInput
-            style={{
-              height: 40,
-              borderColor: 'gray',
-              placeholder: 'Match Name',
-              placeholderTextColor: 'gray',
-              color: 'black',
-              margin: 5,
-              paddingBottom: 1,
-            }}
-            onChangeText={text => setDate(text)}
-            value={date}
-            placeholder="......."
-          />
-        </View>
-        <View
-          style={{
-            justifyContent: 'flex-end',
-            margin: 5,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
-            Tournament Url:
-          </Text>
-          <TextInput
-            style={{
-              height: 40,
-              borderColor: 'gray',
-              placeholder: 'Match Name',
-              placeholderTextColor: 'gray',
-              color: 'black',
-              margin: 5,
-              paddingBottom: 1,
-            }}
-            onChangeText={text => setLink(text)}
-            value={link}
-            placeholder="......."
-          />
-        </View>
-        <View
-          style={{
-            justifyContent: 'flex-end',
-            margin: 5,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
-            Location:
-          </Text>
-          <TextInput
-            style={{
-              height: 40,
-              borderColor: 'gray',
-              placeholder: 'Match Name',
-              placeholderTextColor: 'gray',
-              color: 'black',
-              margin: 5,
-              paddingBottom: 1,
-            }}
-            onChangeText={text => setLocation(text)}
-            value={location}
-            placeholder="......."
-          />
-        </View>
-      </View>
-    );
+  const inputHandler = (text, index, key) => {
+    console.log('text:', text);
+    const _textInputs = [...textInputs];
+    _textInputs[index].value = text;
+    _textInputs[index].key = key;
+    setTextInputs(_textInputs);
+  };
+  async function createPostHandler() {
+    const response = await Requests.createPostHandler({
+      communityId: PAGE_VARIABLES.communityId,
+      postTypeId: PAGE_VARIABLES.postTypeId,
+      textFieldNames: textInputs,
+      numberFieldNames: [],
+      dateFieldNames: [],
+      linkFieldNames: [],
+      locationFieldNames: [],
+    });
   }
   return (
     <View style={styles.container}>
@@ -202,7 +98,7 @@ export default function CreatePost({route}) {
             justifyContent: 'flex-start',
           }}>
           <Icon name="cube-sharp" size={20} style={{margin: 5}} />
-          <Text style={{color: 'black', margin: 5}}>{communityName}</Text>
+          <Text style={{color: 'black', margin: 5}}>Community Name</Text>
         </View>
         <Text>RULES</Text>
       </View>
@@ -212,118 +108,43 @@ export default function CreatePost({route}) {
           maxHeight: '50%',
           alignItems: 'flex-start',
         }}>
-        {index ? (
-          <View>
+        {textInputs.map((input, key) => (
+          <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Add a title"
-              placeholderTextColor="black"
-              style={{alignSelf: 'flex-start', marginLeft: 10, fontSize: 20}}
+              placeholder={input.key}
+              value={input.value}
+              onChangeText={text => {
+                inputHandler(text, key, input.key);
+              }}
             />
           </View>
-        ) : (
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {myForum()}
-          </ScrollView>
-        )}
-      </View>
-      <View
-        style={{
-          marginTop: 20,
-          borderTopLeftRadius: 8,
-          borderTopRightRadius: 8,
-          borderTopColor: 'grey',
-          borderTopWidth: 0.3,
-          height: '40%',
-          elevation: 6,
-          backgroundColor: 'white',
-          alignContent: 'center',
-        }}>
-        <View style={{alignContent: 'center'}}>
-          <Text style={{alignSelf: 'center'}}>What Do You Want To Post?</Text>
-          <View
-            style={{
-              width: '100%',
-              justifyContent: 'space-evenly',
-              padding: 5,
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-                padding: 5,
-              }}>
-              <View style={{}}>
-                <TouchableOpacity onPress={() => setIndex(index + 1)}>
-                  <Icon name="ios-text" style={{}} size={30}></Icon>
-                  <Text style={{size: '3'}}>Text</Text>
-                </TouchableOpacity>
+        ))}
+        {linkedFieldNames[0].value != ''
+          ? linkedFieldNames.map((input, key) => (
+              <View style={styles.inputContainer}>
+                <TextInput
+                  placeholder={input.key}
+                  value={input.value}
+                  onChangeText={text => {
+                    inputHandler(text, key, input.key);
+                  }}
+                />
               </View>
-              <View style={{}}>
-                <Icon name="image-outline" style={{}} size={30}></Icon>
-                <Text style={{size: '3'}}>Audio</Text>
+            ))
+          : null}
+        {locationFieldNames[0].value != ''
+          ? locationFieldNames.map((input, key) => (
+              <View style={styles.inputContainer}>
+                <TextInput
+                  placeholder={input.key}
+                  value={input.value}
+                  onChangeText={text => {
+                    inputHandler(text, key, input.key);
+                  }}
+                />
               </View>
-              <View style={{}}>
-                <Icon name="link" style={{}} size={30}></Icon>
-                <Text style={{size: '3'}}>Link</Text>
-              </View>
-              <View style={{}}>
-                <Icon name="videocam-outline" style={{}} size={30}></Icon>
-                <Text style={{size: '3'}}>Video</Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-                padding: 5,
-              }}>
-              <View style={{}}>
-                <Icon2 name="poll" style={{}} size={30}></Icon2>
-                <Text style={{size: '3'}}>Poll</Text>
-              </View>
-              <View style={{}}>
-                <TouchableOpacity onPress={() => setIndex(!index)}>
-                  <Icon2 name="forum" style={{}} size={30}></Icon2>
-                  <Text style={{size: '3'}}>Forum</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{size: 3}}>
-                <TouchableOpacity>
-                  <Text style={{size: '3', color: 'white'}}>Forum</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{size: 3}}>
-                <TouchableOpacity>
-                  <Text style={{size: '3', color: 'white'}}>Forum</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={{alignContent: 'center', padding: 4}}>
-              <View style={{alignItems: 'center'}}>
-                <Text style={{}}>Not Allowed In This Community</Text>
-                <Text>Pick another community to post this type of content</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                  padding: 5,
-                }}>
-                <View style={{}}>
-                  <Icon name="md-mic" style={{}} size={30}></Icon>
-                  <Text style={{size: '3'}}>Audio</Text>
-                </View>
-                <View
-                  style={{
-                    minWidth: 1,
-                    minHeight: 1,
-                  }}></View>
-                <View style={{}}></View>
-                <View style={{}}></View>
-              </View>
-            </View>
-          </View>
-        </View>
+            ))
+          : null}
       </View>
     </View>
   );
@@ -331,6 +152,10 @@ export default function CreatePost({route}) {
 const styles = {
   container: {flex: 1, height: '100%'},
   title: {},
+  deleteText: {
+    color: '#9b0000',
+    fontSize: 13,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -351,5 +176,13 @@ const styles = {
     borderBottomColor: 'grey',
     borderBottomWidth: 0.3,
     flexDirection: 'row',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgray',
   },
 };
