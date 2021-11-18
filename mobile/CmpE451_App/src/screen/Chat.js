@@ -10,7 +10,7 @@ export default function Message({navigation}) {
   const {container, headerBuble} = styles;
   return (
     <View style={container}>
-      {/* <Image source={{uri:"https://www.astajans.com/Upload/urunler-upload/img_96.png"}} style={headerBuble} /> */}
+      {/* <Image source={{uri:"https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc"}} style={headerBuble} /> */}
       <View style={{shadowColor: 'black'}}>
         <MessageList
           data={data}

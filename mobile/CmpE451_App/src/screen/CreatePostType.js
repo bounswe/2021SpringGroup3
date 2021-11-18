@@ -148,6 +148,7 @@ export default function CreatePostType({navigation}) {
 
     return {
       name: name,
+      communityId: PAGE_VARIABLES.communityId,
       textFieldNames: textFieldNames,
       numberFieldNames: numberFieldNames,
       dateFieldNames: dateFieldNames,
@@ -157,13 +158,11 @@ export default function CreatePostType({navigation}) {
   };
 
   const createPostTypeHandler = () => {
-    AXIOS_CLIENT.post('post-type', {
-      params: {communityId: PAGE_VARIABLES.communityId},
+    AXIOS_CLIENT.post('post-types', {
       data: formatData(),
     })
       .then(response => {
         if (response.status === 200) {
-          ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
           navigation.navigate('Home');
         } else if (
           response.status === 400 ||
@@ -192,7 +191,7 @@ export default function CreatePostType({navigation}) {
               style={styles.inputStyle}
               onChangeText={name => setName(name)}
               underlineColorAndroid="#f000"
-              placeholder="Name your BOX"
+              placeholder="Post Type Name"
               placeholderTextColor="#8b9cb5"
               autoCapitalize="sentences"
               returnKeyType="done"
@@ -205,7 +204,7 @@ export default function CreatePostType({navigation}) {
             activeOpacity={0.5}
             onPress={createPostTypeHandler}>
             <View>
-              <Text style={styles.buttonTextStyle}>Create BOX</Text>
+              <Text style={styles.buttonTextStyle}>Create Post Type</Text>
             </View>
           </TouchableOpacity>
         </View>

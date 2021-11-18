@@ -53,7 +53,7 @@ export default function SelectPostType({navigation, route}) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Choose your Box</Text>
+      <Text style={styles.header}>Choose Post Type</Text>
       <FlatList
         refreshing={refreshing}
         onRefresh={_onRefresh}
@@ -66,7 +66,7 @@ export default function SelectPostType({navigation, route}) {
             <View style={styles.list}>
               <Image
                 source={{
-                  uri: 'https://drive.google.com/uc?export=view&id=17UJQPtBS52HLa0GXmBWPqsSFjs9i8oM2',
+                  uri: 'https://drive.google.com/uc?export=view&id=1y1OBVIC_xvt7bTGaQ-OUIdYSnSljbM0n',
                 }}
                 style={styles.image}
               />
