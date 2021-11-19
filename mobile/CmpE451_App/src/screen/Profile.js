@@ -11,14 +11,16 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
+import UnderConstruction from '../component/UnderConstruction';
 
 export default function Profile() {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
-    <Text>Profile page is under construction</Text>
-  </View>);
+      <UnderConstruction pageName="PROFILE" />
+    </View>
+  );
   /*
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
