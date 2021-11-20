@@ -12,7 +12,7 @@ import {COLORS} from '../theme/colors';
 import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
 import {getToken} from '../services/asyncStorageService';
 import {IconButton} from 'react-native-paper';
-
+import {postTypeIcon} from '../image/index';
 
 export default function SelectPostType({navigation, route}) {
   const {communityName, communityId} = route.params;
@@ -81,12 +81,7 @@ export default function SelectPostType({navigation, route}) {
               navigateCreatePost(item);
             }}>
             <View style={styles.list}>
-              <Image
-                source={{
-                  uri: 'https://drive.google.com/uc?export=view&id=1y1OBVIC_xvt7bTGaQ-OUIdYSnSljbM0n',
-                }}
-                style={styles.image}
-              />
+              <Image source={postTypeIcon} style={styles.image} />
               <Text style={styles.item}>{item.name}</Text>
             </View>
           </TouchableOpacity>

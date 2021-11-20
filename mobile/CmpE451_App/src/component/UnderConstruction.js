@@ -1,14 +1,15 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
-import Header from '../component/HeaderForMainPage';
-import UnderConstruction from '../component/UnderConstruction';
+import {underConstructionImg} from '../image/index';
 import {COLORS} from '../theme/colors';
 
-export default function Main({navigation, route}) {
+export default function underConstruction({navigation, pageName}) {
   return (
     <View style={styles.container}>
-      <Header text={'Gönderiler'} navigation={navigation} />
-      <UnderConstruction pageName="HOME" />
+      <Text style={styles.headerTitle}>
+        THE {pageName} PAGE IS UNDER CONSTRUCTION !
+      </Text>
+      <Image source={underConstructionImg} style={styles.imageStyle} />
     </View>
   );
 }
@@ -34,8 +35,13 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     paddingTop: 10,
-    color: COLORS.textColor,
-    fontSize: 20,
+    color: COLORS.underConstructionTextColor,
+    fontSize: 16,
     fontFamily: 'Cochin',
+  },
+  imageStyle: {
+    marginTop: 0,
+    resizeMode: 'contain',
+    margin: 30,
   },
 });

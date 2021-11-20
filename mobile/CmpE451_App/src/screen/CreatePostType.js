@@ -192,7 +192,7 @@ export default function CreatePostType({navigation}) {
           size={20}
           onPress={() => navigation.navigate('Create Post Type')}
         />
-        <View style={styles.inputContainer}>
+        <View style={styles.inputNameContainer}>
           <View style={styles.fieldHeader}>
             <TextInput
               style={styles.inputStyle}
@@ -216,7 +216,7 @@ export default function CreatePostType({navigation}) {
           </TouchableOpacity>
         </View>
         <View style={styles.fieldHeader}>
-          <Text style={styles.fieldHeaderText}> Text Fields </Text>
+          <Text style={styles.fieldHeaderText}> Add Text Field </Text>
           <IconButton
             icon="plus"
             color="grey"
@@ -227,7 +227,7 @@ export default function CreatePostType({navigation}) {
         {textInputs.map((input, key) => (
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder={'Field Name'}
+              placeholder={'Enter field name'}
               value={input.value}
               onChangeText={text => inputHandler(textFieldKey, text, key)}
             />
@@ -238,7 +238,7 @@ export default function CreatePostType({navigation}) {
           </View>
         ))}
         <View style={styles.fieldHeader}>
-          <Text style={styles.fieldHeaderText}> Number Fields </Text>
+          <Text style={styles.fieldHeaderText}>Add Number Fields</Text>
           <IconButton
             icon="plus"
             color="grey"
@@ -249,7 +249,7 @@ export default function CreatePostType({navigation}) {
         {numberInputs.map((input, key) => (
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder={'Field Name'}
+              placeholder={'Enter field name'}
               value={input.value}
               onChangeText={text => inputHandler(numberFieldKey, text, key)}
             />
@@ -260,7 +260,7 @@ export default function CreatePostType({navigation}) {
           </View>
         ))}
         <View style={styles.fieldHeader}>
-          <Text style={styles.fieldHeaderText}> Date Fields </Text>
+          <Text style={styles.fieldHeaderText}> Add Date Field </Text>
           <IconButton
             icon="plus"
             color="grey"
@@ -271,7 +271,7 @@ export default function CreatePostType({navigation}) {
         {dateInputs.map((input, key) => (
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder={'Field Name'}
+              placeholder={'Enter field name'}
               value={input.value}
               onChangeText={text => inputHandler(dateFieldKey, text, key)}
             />
@@ -282,7 +282,7 @@ export default function CreatePostType({navigation}) {
           </View>
         ))}
         <View style={styles.fieldHeader}>
-          <Text style={styles.fieldHeaderText}> Link Fields </Text>
+          <Text style={styles.fieldHeaderText}>Add Link Field</Text>
           <IconButton
             icon="plus"
             color="grey"
@@ -293,7 +293,7 @@ export default function CreatePostType({navigation}) {
         {linkInputs.map((input, key) => (
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder={'Field Name'}
+              placeholder={'Enter field name'}
               value={input.value}
               onChangeText={text => inputHandler(linkFieldKey, text, key)}
             />
@@ -304,7 +304,7 @@ export default function CreatePostType({navigation}) {
           </View>
         ))}
         <View style={styles.fieldHeader}>
-          <Text style={styles.fieldHeaderText}> Location Fields </Text>
+          <Text style={styles.fieldHeaderText}>Add Location Field</Text>
           <IconButton
             icon="plus"
             color="grey"
@@ -315,7 +315,7 @@ export default function CreatePostType({navigation}) {
         {locationInputs.map((input, key) => (
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder={'Field Name'}
+              placeholder={'Enter field name'}
               value={input.value}
               onChangeText={text => inputHandler(locationFieldKey, text, key)}
             />
@@ -352,6 +352,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: 'lightgray',
+    marginLeft: 25,
+    marginRight: 20,
+  },
+  inputNameContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgray',
+    marginLeft: 10,
+    marginRight: 20,
   },
   deleteText: {
     color: '#9b0000',
@@ -365,6 +376,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: 20,
+    marginLeft: 8,
   },
   buttonStyle: {
     backgroundColor: COLORS.buttonColor,
@@ -380,5 +392,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     fontSize: 16,
+  },
+  iconView: {
+    flex: 3,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginRight: 24,
   },
 });

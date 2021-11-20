@@ -15,6 +15,7 @@ import {
 import {COLORS} from '../theme/colors';
 import {storeToken, getToken} from '../services/asyncStorageService';
 import {TEXT, CONFIG, BASE_URL} from '../constants';
+import {appLogo} from '../image/index';
 
 export default function Login({navigation}) {
   const [username, setUserName] = useState('');
@@ -85,18 +86,15 @@ export default function Login({navigation}) {
   return (
     // eslint-disable-next-line react-native/no-inline-styles
     <View style={{flex: 1}}>
-      <ScrollView
+      <View
         keyboardShouldPersistTaps="handled"
-        styles={styles.contentContainerStyle}>
-        <View style={{alignItems: 'center'}}>
-          <Image
-            source={{
-              uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
-            }}
-            style={styles.imageStyle}
-          />
-        </View>
-        <KeyboardAvoidingView enabled>
+        style={styles.contentContainerStyle}>
+        <KeyboardAvoidingView
+          enabled
+          style={{flex: 1, justifyContent: 'center'}}>
+          <View style={{alignItems: 'center'}}>
+            <Image source={appLogo} style={styles.imageStyle} />
+          </View>
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
@@ -143,7 +141,8 @@ export default function Login({navigation}) {
             </View>
           </TouchableOpacity>
         </KeyboardAvoidingView>
-      </ScrollView>
+      </View>
+      <View style={{flex: 1}} />
     </View>
   );
 }
@@ -185,6 +184,7 @@ const styles = StyleSheet.create({
     borderColor: '#dadae8',
   },
   contentContainerStyle: {
+    flex: 6,
     justifyContent: 'center',
     alignContent: 'center',
   },

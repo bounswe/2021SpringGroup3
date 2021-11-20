@@ -1,10 +1,11 @@
 import React from 'react';
 import {View, Text} from 'react-native';
+import UnderConstruction from '../component/UnderConstruction';
 
 export default function Search({}) {
   return (
     <View style={styles.container}>
-      <Text>Search page is under construction</Text>
+      <UnderConstruction pageName="SEARCH" />
     </View>
   );
 }

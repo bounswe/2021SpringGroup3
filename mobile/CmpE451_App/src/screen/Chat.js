@@ -6,14 +6,14 @@ import {
 } from 'react-native-responsive-screen';
 import Header from '../component/Header';
 import MessageList from '../component/MessageList';
+import UnderConstruction from '../component/UnderConstruction';
+
 export default function Message({navigation}) {
   const {container, headerBuble} = styles;
   return (
     <View style={container}>
       {/* <Image source={{uri:"https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc"}} style={headerBuble} /> */}
-      <View style={{shadowColor: 'black'}}>
-        <Text>Chat page is under construction</Text>
-      </View>
+      <UnderConstruction pageName="CHAT" />
     </View>
   );
 }
