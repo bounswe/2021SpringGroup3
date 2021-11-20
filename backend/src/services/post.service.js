@@ -50,7 +50,7 @@ exports.createPost = async ({
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
-  if (!community.members || !community.members.includes(token.user._id)) {
+  if (!community.members || !community.members.map((m) => m.toString()).includes(token.user._id.toString())) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
       'You are not a member of this community. You need to be a member to create a post'
