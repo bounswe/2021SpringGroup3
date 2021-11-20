@@ -81,7 +81,7 @@ exports.formatPostTypeDetail = function (postType) {
     id: postType._id.toString(),
     name: postType.name,
     textFieldNames: postType.textFieldNames,
-    numberFieldNames: postType.numberFieldsNames,
+    numberFieldNames: postType.numberFieldNames,
     dateFieldNames: postType.dateFieldNames,
     linkFieldNames: postType.linkFieldNames,
     locationFieldNames: postType.locationFieldNames,
