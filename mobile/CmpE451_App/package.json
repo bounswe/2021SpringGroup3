@@ -25,6 +25,8 @@
     "native-base": "^3.2.1",
     "react": "17.0.2",
     "react-native": "0.66.1",
+    "react-native-calendar-picker": "^7.1.2",
+    "react-native-calendars": "^1.1269.0",
     "react-native-element": "^1.2.1",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "^1.10.3",
