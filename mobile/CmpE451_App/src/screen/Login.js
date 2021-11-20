@@ -9,12 +9,12 @@ import {
   Keyboard,
   ToastAndroid,
   TouchableOpacity,
-  AsyncStorage,
   ScrollView,
 } from 'react-native';
+
 import {COLORS} from '../theme/colors';
-import {AXIOS_CLIENT} from '../services/axiosCientService';
-import {TEXT, CONFIG, KEYS} from '../constants';
+import {storeToken, getToken} from '../services/asyncStorageService';
+import {TEXT, CONFIG, BASE_URL} from '../constants';
 
 export default function Login({navigation}) {
   const [username, setUserName] = useState('');
@@ -27,7 +27,7 @@ export default function Login({navigation}) {
   }, []);
 
   const checkToken = async () => {
-    let token = await AsyncStorage.getItem(KEYS.TOKEN_KEY);
+    let token = await getToken();
     if (token) {
       navigateMain();
     }
@@ -36,7 +36,6 @@ export default function Login({navigation}) {
   const handleLogin = () => {
     Keyboard.dismiss();
     if (CONFIG.skipLogin) {
-      AsyncStorage.setItem(KEYS.USER_NAME_KEY, username);
       navigateMain();
     } else if (username.length > 0 && password.length > 0) {
       requestLogin();
@@ -46,29 +45,30 @@ export default function Login({navigation}) {
   };
 
   const requestLogin = () => {
-    AXIOS_CLIENT.post('login', {
-      data: {
+    fetch(BASE_URL + 'auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
         username: username,
         password: password,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
       },
     })
-      .then(response => {
-        if (response.status === 200) {
-          AsyncStorage.setItem(KEYS.TOKEN_KEY, response.data.token);
-          AsyncStorage.setItem(KEYS.USER_NAME_KEY, username);
+      .then(async response => {
+        const status = response.status;
+        response = await response.json();
+        if (status === 200) {
+          CONFIG.token = response.token;
+          await storeToken(response.token);
           navigateMain();
-        } else if (
-          response.status === 400 ||
-          response.status === 401 ||
-          response.status === 405
-        ) {
-          ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
         } else {
-          ToastAndroid.show(TEXT.unexpectedError, ToastAndroid.SHORT);
+          ToastAndroid.show(response.message, ToastAndroid.SHORT);
         }
       })
       .catch(error => {
-        console.info(error);
+        console.info(error.message);
         ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
       });
   };

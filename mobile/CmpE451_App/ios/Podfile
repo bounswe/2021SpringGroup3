@@ -14,6 +14,8 @@ target 'CmpE451_App' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
+
   target 'CmpE451_AppTests' do
     inherit! :complete
     # Pods for testing

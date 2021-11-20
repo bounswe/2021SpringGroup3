@@ -10,9 +10,8 @@ import {
   ScrollView,
 } from 'react-native';
 import {COLORS} from '../theme/colors';
-import {AXIOS_CLIENT} from '../services/axiosCientService';
-import {TEXT, PAGE_VARIABLES} from '../constants';
-
+import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
+import {getToken} from '../services/asyncStorageService';
 import {IconButton} from 'react-native-paper';
 
 export default function CreatePostType({navigation}) {
@@ -157,21 +156,23 @@ export default function CreatePostType({navigation}) {
     };
   };
 
-  const createPostTypeHandler = () => {
-    AXIOS_CLIENT.post('post-types', {
-      data: formatData(),
+  const createPostTypeHandler = async () => {
+    fetch(BASE_URL + 'post-types', {
+      method: 'POST',
+      body: JSON.stringify(formatData()),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
     })
-      .then(response => {
-        if (response.status === 200) {
+      .then(async response => {
+        const status = response.status;
+        response = await response.json();
+        if (status === 201) {
           navigation.navigate('Home');
-        } else if (
-          response.status === 400 ||
-          response.status === 404 ||
-          response.status === 409
-        ) {
-          ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
         } else {
-          ToastAndroid.show(TEXT.unexpectedError, ToastAndroid.SHORT);
+          ToastAndroid.show(response.message, ToastAndroid.SHORT);
         }
       })
       .catch(error => {
@@ -185,11 +186,17 @@ export default function CreatePostType({navigation}) {
       <ScrollView
         style={styles.inputsContainer}
         keyboardShouldPersistTaps="handled">
+        <IconButton
+          icon="close"
+          color="grey"
+          size={20}
+          onPress={() => navigation.navigate('Create Post Type')}
+        />
         <View style={styles.inputContainer}>
           <View style={styles.fieldHeader}>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={name => setName(name)}
+              onChangeText={Name => setName(Name)}
               underlineColorAndroid="#f000"
               placeholder="Post Type Name"
               placeholderTextColor="#8b9cb5"
@@ -326,7 +333,7 @@ export default function CreatePostType({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 2,
     backgroundColor: 'white',
   },
   fieldHeaderText: {

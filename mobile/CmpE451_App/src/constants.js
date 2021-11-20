@@ -1,11 +1,13 @@
+export const BASE_URL = 'https://api.cmpegroupthree.store/';
+
 export const CONFIG = {
-  skipLogin: true,
-  skipLogout: true,
+  skipLogin: false,
+  skipLogout: false,
 };
 
 export const KEYS = {
   USER_ROLE_KEY: 'userRole',
-  TOKEN_KEY: 'token',
+  TOKEN_KEY: '@token_Key',
   USER_NAME_KEY: 'username',
 };
 
@@ -19,4 +21,5 @@ export const TEXT = {
 export const PAGE_VARIABLES = {
   communityId: 0,
   postTypeId: 0,
+  postId: 0,
 };

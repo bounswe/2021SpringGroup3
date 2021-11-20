@@ -4,14 +4,12 @@ import {View, Text} from 'react-native';
 export default function Search({}) {
   return (
     <View style={styles.container}>
-    <Text style={styles.title}>BURASI Search SAYFASIDIR</Text>
-  </View>
-);
+      <Text>Search page is under construction</Text>
+    </View>
+  );
 }
 
 const styles = {
-container: {flex: 1},
-title: {
-  
-},
+  container: {flex: 1},
+  title: {},
 };

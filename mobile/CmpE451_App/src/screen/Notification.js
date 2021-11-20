@@ -11,12 +11,7 @@ export default function Notification({navigation}) {
     <View style={container}>
       {/* <Image source={{uri:"https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc"}} style={headerBuble} /> */}
       <View style={{shadowColor: 'black'}}>
-        <NotificationList
-          data={data}
-          navigation={navigation}
-          user={'userData'}
-          id={'id'}
-        />
+        <Text>Notification page is under construction</Text>
       </View>
     </View>
   );

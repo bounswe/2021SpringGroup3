@@ -2,11 +2,12 @@ import {AsyncStorage} from 'react-native';
 import {KEYS} from '../constants';
 import axios from 'axios';
 
-const BASER_URL = 'https://api.boxy.com/';
+export const BASE_URL = 'https://api.cmpegroupthree.store/';
 
 export const AXIOS_CLIENT = axios.create({
-  baseURL: BASER_URL,
+  baseURL: BASE_URL,
   timeout: 30000,
+  headers: {'X-Platform': 'ANDROID'},
 });
 
 AXIOS_CLIENT.interceptors.request.use(async config => {

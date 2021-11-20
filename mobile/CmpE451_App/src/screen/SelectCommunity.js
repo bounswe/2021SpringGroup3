@@ -9,8 +9,9 @@ import {
   View,
 } from 'react-native';
 import {COLORS} from '../theme/colors';
-import {TEXT, PAGE_VARIABLES} from '../constants';
-import {AXIOS_CLIENT} from '../services/axiosCientService';
+import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
+import {getToken} from '../services/asyncStorageService';
+import {IconButton} from 'react-native-paper';
 
 export default function SelectCommunity({navigation}) {
   const [communityList, setCommunityList] = useState([]);
@@ -34,13 +35,22 @@ export default function SelectCommunity({navigation}) {
     });
   };
 
-  const getCommunities = () => {
-    AXIOS_CLIENT.get('communities', {
-      params: {isMember: true},
+  const getCommunities = async () => {
+    fetch(BASE_URL + 'communities?isMember=' + true, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
     })
-      .then(response => {
-        if (response.status === 200) {
-          setCommunityList(response.data);
+      .then(async response => {
+        const status = response.status;
+        response = await response.json();
+        if (status === 200) {
+          setCommunityList(response);
+        } else {
+          ToastAndroid.show(response.message, ToastAndroid.SHORT);
         }
       })
       .catch(error => {
@@ -52,6 +62,12 @@ export default function SelectCommunity({navigation}) {
 
   return (
     <View style={styles.container}>
+      <IconButton
+        icon="close"
+        color="grey"
+        size={20}
+        onPress={() => navigation.navigate('Main')}
+      />
       <Text style={styles.header}>Post to</Text>
       <FlatList
         refreshing={refreshing}
@@ -104,7 +120,7 @@ const mockCommunityList = [
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 22,
+    paddingTop: 2,
   },
   item: {
     padding: 10,
