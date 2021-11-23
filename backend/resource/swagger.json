@@ -27,7 +27,9 @@
   "paths": {
     "/auth/login": {
       "post": {
-        "tags": ["Authentication Controller"],
+        "tags": [
+          "Authentication Controller"
+        ],
         "description": "",
         "operationId": "login",
         "parameters": [
@@ -36,7 +38,10 @@
             "name": "X-Platform",
             "schema": {
               "type": "string",
-              "enum": ["ANDROID", "WEB"]
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
             },
             "required": true
           }
@@ -120,7 +125,9 @@
     },
     "/auth/register": {
       "post": {
-        "tags": ["Authentication Controller"],
+        "tags": [
+          "Authentication Controller"
+        ],
         "description": "",
         "operationId": "register",
         "parameters": [
@@ -129,7 +136,10 @@
             "name": "X-Platform",
             "schema": {
               "type": "string",
-              "enum": ["ANDROID", "WEB"]
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
             },
             "required": true
           }
@@ -185,7 +195,9 @@
     },
     "/auth/logout": {
       "delete": {
-        "tags": ["Authentication Controller"],
+        "tags": [
+          "Authentication Controller"
+        ],
         "operationId": "logout",
         "security": [
           {
@@ -198,7 +210,10 @@
             "name": "X-Platform",
             "schema": {
               "type": "string",
-              "enum": ["ANDROID", "WEB"]
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
             },
             "required": true
           }
@@ -212,7 +227,9 @@
     },
     "/post-types/detail": {
       "get": {
-        "tags": ["PostType Controller"],
+        "tags": [
+          "PostType Controller"
+        ],
         "description": "",
         "operationId": "get postTypeDetail",
         "security": [
@@ -226,7 +243,10 @@
             "name": "X-Platform",
             "schema": {
               "type": "string",
-              "enum": ["ANDROID", "WEB"]
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
             },
             "required": true
           },
@@ -279,7 +299,9 @@
     },
     "/post-types": {
       "post": {
-        "tags": ["PostType Controller"],
+        "tags": [
+          "PostType Controller"
+        ],
         "description": "",
         "operationId": "create postType",
         "security": [
@@ -293,7 +315,10 @@
             "name": "X-Platform",
             "schema": {
               "type": "string",
-              "enum": ["ANDROID", "WEB"]
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
             },
             "required": true
           }
@@ -363,7 +388,9 @@
         }
       },
       "get": {
-        "tags": ["PostType Controller"],
+        "tags": [
+          "PostType Controller"
+        ],
         "description": "",
         "operationId": "get postTypes",
         "security": [
@@ -377,7 +404,10 @@
             "name": "X-Platform",
             "schema": {
               "type": "string",
-              "enum": ["ANDROID", "WEB"]
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
             },
             "required": true
           },
@@ -422,7 +452,9 @@
     },
     "/posts/detail": {
       "get": {
-        "tags": ["Post Controller"],
+        "tags": [
+          "Post Controller"
+        ],
         "description": "",
         "operationId": "get postDetail",
         "security": [
@@ -436,7 +468,10 @@
             "name": "X-Platform",
             "schema": {
               "type": "string",
-              "enum": ["ANDROID", "WEB"]
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
             },
             "required": true
           },
@@ -489,7 +524,9 @@
     },
     "/posts": {
       "post": {
-        "tags": ["Post Controller"],
+        "tags": [
+          "Post Controller"
+        ],
         "description": "",
         "operationId": "create post",
         "security": [
@@ -503,7 +540,10 @@
             "name": "X-Platform",
             "schema": {
               "type": "string",
-              "enum": ["ANDROID", "WEB"]
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
             },
             "required": true
           }
@@ -572,7 +612,9 @@
         }
       },
       "get": {
-        "tags": ["Post Controller"],
+        "tags": [
+          "Post Controller"
+        ],
         "description": "",
         "operationId": "get posts",
         "security": [
@@ -586,7 +628,10 @@
             "name": "X-Platform",
             "schema": {
               "type": "string",
-              "enum": ["ANDROID", "WEB"]
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
             },
             "required": true
           },
@@ -631,7 +676,9 @@
     },
     "/communities": {
       "get": {
-        "tags": ["Community Controller"],
+        "tags": [
+          "Community Controller"
+        ],
         "description": "",
         "operationId": "get communities",
         "security": [
@@ -645,7 +692,10 @@
             "name": "X-Platform",
             "schema": {
               "type": "string",
-              "enum": ["ANDROID", "WEB"]
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
             },
             "required": true
           },
@@ -680,7 +730,9 @@
         }
       },
       "post": {
-        "tags": ["Community Controller"],
+        "tags": [
+          "Community Controller"
+        ],
         "description": "",
         "operationId": "create community",
         "security": [
@@ -694,7 +746,10 @@
             "name": "X-Platform",
             "schema": {
               "type": "string",
-              "enum": ["ANDROID", "WEB"]
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
             },
             "required": true
           },
@@ -713,6 +768,22 @@
               "type": "string"
             },
             "required": false
+          },
+          {
+            "in": "body",
+            "name": "description",
+            "schema": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "in": "body",
+            "name": "isPrivate",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false
           }
         ],
         "responses": {
@@ -729,9 +800,59 @@
         }
       }
     },
+    "/communities/join": {
+      "post": {
+        "tags": [
+          "Community Controller"
+        ],
+        "description": "",
+        "operationId": "join community",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Joined to the community",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunitiesPreviews"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/communities/detail": {
       "get": {
-        "tags": ["Community Controller"],
+        "tags": [
+          "Community Controller"
+        ],
         "description": "",
         "operationId": "get communityDetail",
         "security": [
@@ -745,7 +866,10 @@
             "name": "X-Platform",
             "schema": {
               "type": "string",
-              "enum": ["ANDROID", "WEB"]
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
             },
             "required": true
           },
@@ -801,7 +925,10 @@
       "Login": {
         "title": "Login model",
         "type": "object",
-        "required": ["username", "password"],
+        "required": [
+          "username",
+          "password"
+        ],
         "properties": {
           "username": {
             "type": "string",
@@ -816,7 +943,11 @@
       "Register": {
         "title": "Register model",
         "type": "object",
-        "required": ["username", "email", "password"],
+        "required": [
+          "username",
+          "email",
+          "password"
+        ],
         "properties": {
           "username": {
             "type": "string",
@@ -835,7 +966,10 @@
       "PostType": {
         "title": "Post type model",
         "type": "object",
-        "required": ["name", "communityId"],
+        "required": [
+          "name",
+          "communityId"
+        ],
         "properties": {
           "name": {
             "type": "string",
@@ -896,7 +1030,10 @@
       "PostTypePreview": {
         "title": "Post Type Preview model",
         "type": "object",
-        "required": ["name", "id"],
+        "required": [
+          "name",
+          "id"
+        ],
         "properties": {
           "name": {
             "type": "string",
@@ -911,7 +1048,10 @@
       "Post": {
         "title": "Post Request model",
         "type": "object",
-        "required": ["communityId", "postTypeId"],
+        "required": [
+          "communityId",
+          "postTypeId"
+        ],
         "properties": {
           "communityId": {
             "type": "string"
@@ -985,7 +1125,16 @@
       "PostView": {
         "title": "Post View model",
         "type": "object",
-        "required": ["id", "username", "date", "textFields", "numberFields", "dateFields", "linkFields", "locationFiels"],
+        "required": [
+          "id",
+          "username",
+          "date",
+          "textFields",
+          "numberFields",
+          "dateFields",
+          "linkFields",
+          "locationFiels"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -1069,7 +1218,10 @@
       "PostFieldInput": {
         "title": "Post field model",
         "type": "object",
-        "required": ["name", "value"],
+        "required": [
+          "name",
+          "value"
+        ],
         "properties": {
           "name": {
             "type": "string",
@@ -1095,7 +1247,11 @@
       "CommunityPreview": {
         "title": "Community Preview model",
         "type": "object",
-        "required": ["name", "id"],
+        "required": [
+          "name",
+          "id",
+          "isPrivate"
+        ],
         "properties": {
           "name": {
             "type": "string",
@@ -1108,6 +1264,32 @@
           "id": {
             "type": "string",
             "example": "text"
+          },
+          "description": {
+            "type": "string",
+            "example": "text"
+          },
+          "isPrivate": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "JoinCommunity": {
+        "title": "JoinCommunity",
+        "type": "object",
+        "required": [
+          "buttonText",
+          "communityMemberCount"
+        ],
+        "properties": {
+          "buttonText": {
+            "type": "string",
+            "example": "Joined or Request Sent"
+          },
+          "communityMemberCount": {
+            "type": "integer",
+            "example": 100
           }
         }
       }
