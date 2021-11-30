@@ -22,6 +22,9 @@
     },
     {
       "name": "Community Controller"
+    },
+    {
+      "name": "Profile Controller"
     }
   ],
   "paths": {
@@ -911,6 +914,127 @@
           }
         }
       }
+    },
+    "/profile": {
+      "get": {
+        "tags": [
+          "Profile Controller"
+        ],
+        "description": "",
+        "operationId": "get profile",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get profile page successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyProfile"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/settings": {
+      "get": {
+        "tags": [
+          "Profile Controller"
+        ],
+        "description": "",
+        "operationId": "get profile settings",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get profile preview successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileSettings"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Profile Controller"
+        ],
+        "description": "",
+        "operationId": "update profile settings",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileSettings"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Communities array is returned"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1290,6 +1414,103 @@
           "communityMemberCount": {
             "type": "integer",
             "example": 100
+          }
+        }
+      },
+      "MyProfile": {
+        "title": "Profile Page Model",
+        "type": "object",
+        "required": [
+          "username",
+          "profilePhotoUrl",
+          "bio",
+          "birthday",
+          "location"
+        ],
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "text"
+          },
+          "profilePhotoUrl": {
+            "type": "string",
+            "example": "text"
+          },
+          "bio": {
+            "type": "string",
+            "example": "text"
+          },
+          "birthday": {
+            "type": "string",
+            "example": "text"
+          },
+          "location": {
+            "type": "boolean",
+            "example": "string"
+          }
+        }
+      },
+      "ProfileSettings": {
+        "title": "Profile Settings Model",
+        "type": "object",
+        "required": [
+          "profilePhotoUrl",
+          "bio",
+          "birthday",
+          "location"
+        ],
+        "properties": {
+          "profilePhotoUrl": {
+            "type": "object",
+            "$ref": "#/components/schemas/ProfileSettingsItems"
+          },
+          "bio": {
+            "type": "object",
+            "$ref": "#/components/schemas/ProfileSettingsItems"
+          },
+          "birthday": {
+            "type": "object",
+            "$ref": "#/components/schemas/ProfileSettingsItems"
+          },
+          "location": {
+            "type": "object",
+            "$ref": "#/components/schemas/ProfileSettingsItems"
+          }
+        }
+      },
+      "ProfileSettingsItems": {
+        "title": "Profile Settings Item Model",
+        "type": "object",
+        "required": [
+          "value",
+          "isPublic"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "example": "text"
+          },
+          "isPublic": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "Location": {
+        "title": "Location Model",
+        "type": "object",
+        "required": [
+          "latitude",
+          "longitude"
+        ],
+        "properties": {
+          "latitude": {
+            "type": "string",
+            "example": "text"
+          },
+          "longitude": {
+            "type": "boolean",
+            "example": true
           }
         }
       }
