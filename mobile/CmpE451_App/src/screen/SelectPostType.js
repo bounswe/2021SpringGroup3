@@ -11,8 +11,10 @@ import {
 import {COLORS} from '../theme/colors';
 import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
 import {getToken} from '../services/asyncStorageService';
-import {IconButton} from 'react-native-paper';
 import {postTypeIcon} from '../image/index';
+import {headerStyle} from '../theme/styles';
+import {headerContainerStyle} from '../theme/styles';
+import CloseButton from '../component/CloseButton';
 
 export default function SelectPostType({navigation, route}) {
   const {communityName, communityId} = route.params;
@@ -64,13 +66,12 @@ export default function SelectPostType({navigation, route}) {
 
   return (
     <View style={styles.container}>
-      <IconButton
-        icon="close"
-        color="grey"
-        size={20}
-        onPress={() => navigation.navigate('Main')}
-      />
-      <Text style={styles.header}>Choose Post Type</Text>
+      <View style={headerContainerStyle}>
+        <View style={headerStyle}>
+          <Text style={{color: 'white', fontSize: 20}}>Choose Post Type</Text>
+        </View>
+        <CloseButton onPress={navigation.goBack} />
+      </View>
       <FlatList
         refreshing={refreshing}
         onRefresh={_onRefresh}
@@ -113,13 +114,11 @@ const mockPostTypeList = [
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 2,
   },
   fieldHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 20,
+    fontSize: 25,
+    alignSelf: 'center',
+    color: COLORS.textColor,
   },
   item: {
     padding: 10,
@@ -128,10 +127,17 @@ const styles = StyleSheet.create({
     color: COLORS.textColor,
     textAlignVertical: 'center',
   },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
   header: {
-    fontSize: 25,
-    alignSelf: 'center',
-    color: COLORS.textColor,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: COLORS.screenHeaderBackground,
+    height: 50,
   },
   image: {
     width: 20,

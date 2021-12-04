@@ -1,34 +1,66 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  Alert,
-} from 'react-native';
+import {View, Text, TextInput, ScrollView, Alert} from 'react-native';
 import {BackHandler, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import Header from '../component/Header';
-import Icon from 'react-native-vector-icons/Ionicons';
-import Icon2 from 'react-native-vector-icons/MaterialIcons';
-import {size} from 'lodash';
-import {bold} from 'chalk';
-import * as Requests from '../util/Reguests';
-import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
+import {IconButton} from 'react-native-paper';
+import Geocoder from 'react-native-geocoding';
+import MapView, {Marker} from 'react-native-maps';
+import DatePicker from 'react-native-date-picker';
+
+import DynamicFormField from '../component/DynamicFormField';
+import FieldHeader from '../component/FieldHeader';
+import CommonButton from '../component/CommonButton';
+import CloseButton from '../component/CloseButton';
+import ConfirmButton from '../component/ConfirmButton';
+import {PAGE_VARIABLES} from '../constants';
+import {COLORS} from '../theme/colors';
+import {textInputArea} from '../theme/styles';
+import {textInputContainer} from '../theme/styles';
+import {headerStyle} from '../theme/styles';
+import {headerContainerStyle} from '../theme/styles';
+import * as Requests from '../util/Requests';
 
 export default function CreatePost({route}) {
-  const {communityName, communityId} = route.params;
-  const [dateFieldNames, setDateFieldNames] = useState({name: '', value: ''});
-  const [linkFieldNames, setLinkFieldNames] = useState({name: '', value: ''});
-  const [locationFieldNames, setLocationFieldNames] = useState({
-    name: '',
-    value: '',
+  const {communityName} = route.params;
+  const [dateFields, setDateFields] = useState([]);
+  const [linkFields, setLinkFields] = useState([]);
+  const [textFields, setTextFields] = useState([]);
+  const [numberFields, setNumberFields] = useState([]);
+  const [locationFields, setLocationFields] = useState([]);
+  const [geoLocationFields, setGeoLocationFields] = useState([
+    {
+      name: '',
+      value: {
+        latitude: 0,
+        longitude: 0,
+      },
+    },
+  ]);
+  const [showMap, setShowMap] = useState(false);
+  const [address, setAddress] = useState('');
+  const [locationIndex, setLocationIndex] = useState(-1);
+  const textFieldKey = 'text';
+  const numberFieldKey = 'number';
+  const dateFieldKey = 'date';
+  const linkFieldKey = 'link';
+  const geoLocationFieldKey = 'geoLocation';
+  const locationFieldKey = 'location';
+  const [markerState, setMarker] = useState({
+    target: 347,
+    coordinate: {
+      latitude: 37.76135920121826,
+      longitude: -122.4682573019337,
+    },
+    position: {
+      x: 150,
+      y: 269,
+    },
   });
-  const [textFieldNames, setTextFieldNames] = useState({name: '', value: ''});
-  const [numberFieldNames, setNumberFieldNames] = useState({
-    name: '',
-    value: '',
+  const [regionState, setRegion] = useState({
+    latitude: 37.78825,
+    longitude: -122.4324,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
   });
   const navigation = useNavigation();
   function handleBackButtonClick() {
@@ -44,341 +76,324 @@ export default function CreatePost({route}) {
     }
   }, []);
 
-  const cleanEmptyValuesObject = obj => {
-    for (var propName in obj) {
-      if (
-        obj[propName] === '' ||
-        obj[propName] === undefined ||
-        obj[propName] === null
-      ) {
-        delete obj[propName];
+  useEffect(() => {
+    async function init() {
+      const postTypeDetail = await Requests.getPostTypeDetail({
+        communityId: PAGE_VARIABLES.communityId,
+        postTypeId: PAGE_VARIABLES.postTypeId,
+      });
+      const {
+        dateFieldNames,
+        linkFieldNames,
+        numberFieldNames,
+        locationFieldNames,
+        textFieldNames,
+      } = JSON.parse(postTypeDetail);
+      if (dateFieldNames != null && dateFieldNames.length > 0) {
+        const dataFieldsTemp = [];
+        for (let i = 0; i < dateFieldNames.length; i++) {
+          dataFieldsTemp.push({name: dateFieldNames[i], value: new Date()});
+        }
+        setDateFields(dataFieldsTemp);
+      }
+      if (linkFieldNames != null && linkFieldNames.length > 0) {
+        const linkFieldsTemp = [];
+        for (let i = 0; i < linkFieldNames.length; i++) {
+          linkFieldsTemp.push({name: linkFieldNames[i], value: ''});
+        }
+        setLinkFields(linkFieldsTemp);
+      }
+      if (locationFieldNames != null && locationFieldNames.length > 0) {
+        const locationFieldsTemp = [];
+        for (let i = 0; i < locationFieldNames.length; i++) {
+          locationFieldsTemp.push({name: locationFieldNames[i], value: ''});
+        }
+        setLocationFields(locationFieldsTemp);
+      }
+      if (textFieldNames != null && textFieldNames.length > 0) {
+        const textFieldsTemp = [];
+        for (let i = 0; i < textFieldNames.length; i++) {
+          textFieldsTemp.push({name: textFieldNames[i], value: ''});
+        }
+        setTextFields(textFieldsTemp);
+      }
+      if (numberFieldNames != null && numberFieldNames.length > 0) {
+        const numberFielsTemp = [];
+        for (let i = 0; i < numberFieldNames.length; i++) {
+          numberFielsTemp.push({name: numberFieldNames[i], value: ''});
+        }
+        setNumberFields(numberFielsTemp);
       }
     }
-    return obj;
-  };
-
-  useEffect(async () => {
-    const postTypeDetail = await Requests.getPostTypeDetail({
-      communityId: PAGE_VARIABLES.communityId,
-      postTypeId: PAGE_VARIABLES.postTypeId,
-    });
-    const {
-      dateFieldNames,
-      id,
-      linkFieldNames,
-      numberFieldNames,
-      locationFieldNames,
-      name,
-      textFieldNames,
-    } = JSON.parse(postTypeDetail);
-
-    console.log('JSON.parse(postTypeDetail);: ', JSON.parse(postTypeDetail));
-    if (dateFieldNames != null && dateFieldNames.length > 0) {
-      setDateFieldNames({name: dateFieldNames[0], value: ''});
-    }
-    if (linkFieldNames != null && linkFieldNames.length > 0) {
-      setLinkFieldNames({name: linkFieldNames[0], value: ''});
-    }
-
-    if (locationFieldNames != null && locationFieldNames.length > 0) {
-      setLocationFieldNames({name: locationFieldNames[0], value: ''});
-    }
-
-    if (textFieldNames != null && textFieldNames.length > 0) {
-      setTextFieldNames({name: textFieldNames[0], value: ''});
-    }
-    if (numberFieldNames != null && numberFieldNames.length > 0) {
-      setNumberFieldNames({name: numberFieldNames[0], value: ''});
-    }
+    init();
   }, []);
 
   async function createPostHandler() {
-    let response = await Requests.createPost(
-      cleanEmptyValuesObject({
-        postTypeId: PAGE_VARIABLES.postTypeId,
-        communityId: PAGE_VARIABLES.communityId,
-        textFields: textFieldNames.value === '' ? null : [textFieldNames],
-        dateFields: [
-          {
-            name: 'Date',
-            value: '2021-11-16T13:48:40.868+03:00',
-          },
-        ],
-        numberFields: numberFieldNames.value === '' ? null : [numberFieldNames],
-        locationFields:
-          locationFieldNames.value === '' ? null : [locationFieldNames],
-        linkFields: linkFieldNames.value === '' ? null : [linkFieldNames],
-      }),
-    );
+    let response = await Requests.createPost({
+      postTypeId: PAGE_VARIABLES.postTypeId,
+      communityId: PAGE_VARIABLES.communityId,
+      textFields: textFields,
+      dateFields: dateFields,
+      numberFields: numberFields,
+      locationFields: locationFields,
+      linkFields: linkFields,
+    });
     response = await JSON.parse(response);
-    if (response.code === 400)
+    if (response.code === 400) {
       Alert.alert('Something Went Wrong', response.message);
-    else {
+    } else {
       PAGE_VARIABLES.postId = response.post.id;
       navigation.navigate('PostDetail');
     }
   }
 
-  function getNameOfPost() {
-    if (textFieldNames.name === '') return null;
+  const inputHandler = (fieldType, input, index) => {
+    switch (fieldType) {
+      case 'text':
+        const _textInputs = [...textFields];
+        _textInputs[index] = input;
+        setTextFields(_textInputs);
+        break;
+      case 'number':
+        const _numberInputs = [...numberFields];
+        _numberInputs[index] = input;
+        setNumberFields(_numberInputs);
+        break;
+      case 'date':
+        const _dateInputs = [...dateFields];
+        _dateInputs[index] = input;
+        setDateFields(_dateInputs);
+        break;
+      case 'link':
+        const _linkInputs = [...linkFields];
+        _linkInputs[index] = input;
+        setLinkFields(_linkInputs);
+        break;
+      case 'geoLocation':
+        const _geoLocationInputs = [...geoLocationFields];
+        _geoLocationInputs[index] = {
+          name: locationFields[index].name,
+          value: input,
+        };
+        setGeoLocationFields(_geoLocationInputs);
+        break;
+      case 'location':
+        const _locationInputs = [...locationFields];
+        _locationInputs[index] = {
+          name: locationFields[index].name,
+          value: input,
+        };
+        setLocationFields(_locationInputs);
+        break;
+      default:
+        console.info('field type not found');
+    }
+  };
+
+  function chooseLocation() {
+    inputHandler(geoLocationFieldKey, markerState.coordinate, locationIndex);
+    setShowMap(false);
+  }
+
+  function getDateFields() {
     return (
-      <View
-        style={{
-          margin: 5,
-          flexDirection: 'row',
-          alignItems: 'center',
-          alignSelf: 'flex-start',
-          width: '100%',
-          borderColor: 'red',
-        }}>
-        {getName(textFieldNames.name)}
-        <TextInput
-          style={{
-            height: 40,
-            borderColor: 'gray',
-            placeholder: 'Match Name',
-            placeholderTextColor: 'gray',
-            color: 'black',
-            margin: 5,
-            paddingBottom: 1,
-          }}
-          onChangeText={text =>
-            setTextFieldNames({name: textFieldNames.name, value: text})
-          }
-          value={textFieldNames.value}
-          placeholder="......."
-        />
+      <View>
+        {dateFields.map((input, index) => (
+          <View style={textInputContainer}>
+            <FieldHeader name={input.name} />
+            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+              <DatePicker
+                date={input.value}
+                style={{height: 100}}
+                onDateChange={date =>
+                  inputHandler(
+                    dateFieldKey,
+                    {name: input.name, value: date},
+                    index,
+                  )
+                }
+              />
+            </View>
+          </View>
+        ))}
       </View>
     );
   }
 
-  function getName(key) {
+  function getLocationFields() {
     return (
-      <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
-        {key}
-      </Text>
-    );
-  }
-
-  function getTextFieldNames() {
-    if (textFieldNames.name === '') return null;
-    return (
-      <View
-        style={{
-          margin: 5,
-          flexDirection: 'row',
-          alignItems: 'center',
-          alignSelf: 'flex-start',
-        }}>
-        {getName(textFieldNames.name)}
-        <TextInput
-          style={{
-            height: 40,
-            borderColor: 'gray',
-            placeholder: 'Match Name',
-            placeholderTextColor: 'gray',
-            color: 'black',
-            margin: 5,
-            paddingBottom: 1,
-          }}
-          onChangeText={text =>
-            setTextFieldNames({name: textFieldNames.name, value: text})
-          }
-          value={textFieldNames.value}
-          placeholder="......."
-        />
-      </View>
-    );
-  }
-  function getDate() {
-    if (dateFieldNames.name === '') return null;
-    return (
-      <View
-        style={{
-          margin: 5,
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
-        <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
-          Date:
-        </Text>
-        <TextInput
-          style={{
-            height: 40,
-            borderColor: 'gray',
-            placeholder: 'Match Name',
-            placeholderTextColor: 'gray',
-            color: 'black',
-            margin: 5,
-            paddingBottom: 1,
-          }}
-          onChangeText={text =>
-            setDateFieldNames({name: dateFieldNames.name, value: text})
-          }
-          value={dateFieldNames.value}
-          placeholder="......."
-        />
+      <View>
+        {locationFields.map((input, index) => (
+          <View style={textInputContainer}>
+            <FieldHeader name={input.name} />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <View>
+                <IconButton
+                  icon="map-marker"
+                  color={COLORS.buttonColor}
+                  size={30}
+                  onPress={() => {
+                    setShowMap(true);
+                    setLocationIndex(index);
+                  }}
+                />
+              </View>
+              <TextInput
+                multiline
+                style={styles.locationTextInput}
+                onChangeText={text =>
+                  inputHandler(locationFieldKey, text, index)
+                }
+                value={input.value}
+                placeholder=" address definition"
+              />
+            </View>
+          </View>
+        ))}
       </View>
     );
   }
 
-  function getLink() {
-    if (linkFieldNames.name === '') return null;
+  function getMapView() {
     return (
-      <View
-        style={{
-          margin: 5,
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
-        {getName(linkFieldNames.name)}
-        <TextInput
-          style={{
-            height: 40,
-            borderColor: 'gray',
-            placeholder: 'Match Name',
-            placeholderTextColor: 'gray',
-            color: 'black',
-            margin: 5,
-            paddingBottom: 1,
-          }}
-          onChangeText={text =>
-            setLinkFieldNames({name: linkFieldNames.name, value: text})
-          }
-          value={linkFieldNames.value}
-          placeholder="......."
-        />
+      <View style={styles.container}>
+        <View style={headerContainerStyle}>
+          <View style={headerStyle}>
+            <Text style={{color: 'white', fontSize: 20}}>Choose Location</Text>
+          </View>
+          <ConfirmButton onPress={chooseLocation} />
+        </View>
+        <View style={{flexDirection: 'row'}}>
+          <IconButton
+            icon="magnify"
+            color={COLORS.buttonColor}
+            size={20}
+            onPress={() => {
+              Geocoder.from(address)
+                .then(res => {
+                  var location = res.results[0].geometry.location;
+                  console.log(location);
+                  setRegion({
+                    latitude: location.lat,
+                    longitude: location.lng,
+                    latitudeDelta: regionState.latitudeDelta,
+                    longitudeDelta: regionState.longitudeDelta,
+                  });
+                })
+                .catch(error => console.warn(error));
+            }}
+          />
+          <TextInput
+            style={styles.textInput}
+            onChangeText={setAddress}
+            placeholder="search an address"
+          />
+        </View>
+        <MapView
+          style={styles.map}
+          region={regionState}
+          onLongPress={e => setMarker(e.nativeEvent)}
+          onRegionChangeComplete={setRegion}>
+          <Marker coordinate={markerState.coordinate} />
+        </MapView>
       </View>
     );
   }
-  function getNumbers() {
-    if (numberFieldNames.name === '') return null;
+
+  function postForm() {
     return (
-      <View
-        style={{
-          margin: 5,
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
-        {getName(numberFieldNames.name)}
-        <TextInput
-          style={{
-            height: 40,
-            borderColor: 'gray',
-            placeholder: 'Match Name',
-            placeholderTextColor: 'gray',
-            color: 'black',
-            margin: 5,
-            paddingBottom: 1,
-          }}
-          onChangeText={text =>
-            setNumberFieldNames({name: numberFieldNames.name, value: text})
-          }
-          value={numberFieldNames.value}
-          placeholder="......."
+      <View style={{width: '100%'}}>
+        <DynamicFormField
+          fields={textFields}
+          fieldKey={textFieldKey}
+          onChangeText={inputHandler}
         />
-      </View>
-    );
-  }
-  function getLocation() {
-    if (locationFieldNames.name === '') return null;
-    return (
-      <View
-        style={{
-          margin: 5,
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
-        {getName(locationFieldNames.name)}
-        <TextInput
-          style={{
-            height: 40,
-            borderColor: 'gray',
-            placeholder: 'Match Name',
-            placeholderTextColor: 'gray',
-            color: 'black',
-            margin: 5,
-            paddingBottom: 1,
-          }}
-          onChangeText={text =>
-            setLocationFieldNames({name: locationFieldNames.name, value: text})
-          }
-          value={locationFieldNames.value}
-          placeholder="......."
+        <DynamicFormField
+          fields={linkFields}
+          fieldKey={linkFieldKey}
+          onChangeText={inputHandler}
         />
-      </View>
-    );
-  }
-  function myForum() {
-    return (
-      <View style={{alignContent: 'center'}}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {getTextFieldNames()}
-          {getDate()}
-          {getLink()}
-          {getLocation()}
-          {getNumbers()}
-        </ScrollView>
+        <DynamicFormField
+          fields={numberFields}
+          fieldKey={numberFieldKey}
+          onChangeText={inputHandler}
+        />
+        {getLocationFields()}
+        {getDateFields()}
       </View>
     );
   }
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="close" size={34} style={{marginLeft: 5}}></Icon>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={createPostHandler}>
-          <View style={styles.nextButton}>
-            <Text>Next</Text>
+      {showMap ? (
+        getMapView()
+      ) : (
+        <>
+          <View style={headerContainerStyle}>
+            <View style={headerStyle}>
+              <Text style={{color: 'white', fontSize: 20}}>
+                Post to {communityName}
+              </Text>
+            </View>
+            <CloseButton onPress={navigation.goBack} />
           </View>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.postTitleArea}>
-        <View
-          style={{
-            width: 200,
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-          }}>
-          <Icon name="cube-sharp" size={20} style={{margin: 5}} />
-          <Text style={{color: 'black', margin: 5}}>{communityName}</Text>
-        </View>
-        <Text>RULES</Text>
-      </View>
-      <View
-        style={{
-          minHeight: '50%',
-          maxHeight: '50%',
-          alignItems: 'flex-start',
-        }}>
-        {myForum()}
-      </View>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={{alignItems: 'center'}}>
+              <View
+                style={{
+                  width: '100%',
+                  alignItems: 'center',
+                }}>
+                {postForm()}
+              </View>
+              <CommonButton
+                text="POST"
+                onPress={createPostHandler}
+                buttonWidth={'80%'}
+              />
+            </View>
+          </ScrollView>
+        </>
+      )}
     </View>
   );
 }
 const styles = {
-  container: {flex: 1, height: '100%'},
-  title: {},
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  container: {
+    flex: 1,
+    height: '100%',
+    backgroundColor: COLORS.formBackgroundColor,
   },
-  nextButton: {
-    margin: 5,
-    width: 70,
-    height: 30,
-    borderRadius: 8,
-    backgroundColor: '#C5C6C6',
-    alignItems: 'center',
-    justifyContent: 'center',
+  textInput: {
+    textInputArea,
+    width: '85%',
   },
-  postTitleArea: {
-    justifyContent: 'space-between',
-    marginHorizontal: 10,
-    height: 30,
-    borderBottomColor: 'grey',
-    borderBottomWidth: 0.3,
-    flexDirection: 'row',
+  locationTextInput: {
+    color: 'black',
+    paddingBottom: 1,
+    borderWidth: 1,
+    borderColor: 'lightgray',
+    flex: 9,
+    backgroundColor: COLORS.formInputAreaColor,
+  },
+  map: {
+    position: 'absolute',
+    top: 110,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  marker: {
+    height: 48,
+    width: 48,
+  },
+  region: {
+    color: '#fff',
+    lineHeight: 20,
+    margin: 20,
   },
 };
