@@ -1,34 +1,23 @@
-const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { postService } = require('../services');
+const { profileService } = require('../services');
 
-exports.getPosts = catchAsync(async (req, res) => {
-  const result = await postService.getPosts({
+exports.getProfile = catchAsync(async (req, res) => {
+  const result = await profileService.getProfile({
     token: req.token,
-    communityId: req.query.communityId,
   });
   res.send(result);
 });
 
-exports.createPost = catchAsync(async (req, res) => {
-  const result = await postService.createPost({
+exports.getProfileSettings = catchAsync(async (req, res) => {
+  const result = await profileService.getProfileSettings({
     token: req.token,
-    communityId: req.body.communityId,
-    postTypeId: req.body.postTypeId,
-    textFields: req.body.textFields,
-    numberFields: req.body.numberFields,
-    dateFields: req.body.dateFields,
-    linkFields: req.body.linkFields,
-    locationFields: req.body.locationFields,
   });
-  res.status(httpStatus.CREATED).send(result);
+  res.send(result);
 });
 
-exports.getPostDetail = catchAsync(async (req, res) => {
-  const result = await postService.getPostDetail({
+exports.setProfile = catchAsync(async (req, res) => {
+  const result = await profileService.setProfile({
     token: req.token,
-    communityId: req.query.communityId,
-    postId: req.query.postId,
   });
   res.send(result);
 });

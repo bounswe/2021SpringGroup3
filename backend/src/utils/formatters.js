@@ -89,11 +89,20 @@ exports.formatPostTypeDetail = function (postType) {
 
 exports.formatProfile = function (user) {
   return {
-    id: user._id.toString(),
     username: user.username,
     profilePhotoUrl: user.profilePhotoUrl?.value,
     bio: user.bio?.value,
     birthday: user.birthday?.value,
     location: user.location?.value,
+  };
+};
+
+exports.formatProfileSettings = function (user) {
+  return {
+    username: user.username,
+    profilePhotoUrl: user.profilePhotoUrl,
+    bio: user.bio,
+    birthday: user.birthday
+    location: user.location,
   };
 };
