@@ -1,6 +1,7 @@
 var myHeaders = new Headers();
 import {getToken} from '../services/asyncStorageService';
 import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
+
 export const createPost = async body => {
   var myHeaders = new Headers();
   myHeaders.append('Authorization', await getToken());
@@ -18,8 +19,7 @@ export const createPost = async body => {
   };
 
   return fetch(
-    'https://api.cmpegroupthree.store/posts?communityId=' +
-      PAGE_VARIABLES.communityId,
+    BASE_URL + 'posts?communityId=' + PAGE_VARIABLES.communityId,
     requestOptions,
   )
     .then(response => response.text())

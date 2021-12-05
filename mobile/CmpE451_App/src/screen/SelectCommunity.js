@@ -11,7 +11,9 @@ import {
 import {COLORS} from '../theme/colors';
 import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
 import {getToken} from '../services/asyncStorageService';
-import {IconButton} from 'react-native-paper';
+import {headerStyle} from '../theme/styles';
+import {headerContainerStyle} from '../theme/styles';
+import CloseButton from '../component/CloseButton';
 
 export default function SelectCommunity({navigation}) {
   const [communityList, setCommunityList] = useState([]);
@@ -62,13 +64,12 @@ export default function SelectCommunity({navigation}) {
 
   return (
     <View style={styles.container}>
-      <IconButton
-        icon="close"
-        color="grey"
-        size={20}
-        onPress={() => navigation.navigate('Main')}
-      />
-      <Text style={styles.header}>Post to</Text>
+      <View style={headerContainerStyle}>
+        <View style={headerStyle}>
+          <Text style={{color: 'white', fontSize: 20}}>Post to</Text>
+        </View>
+        <CloseButton onPress={navigation.goBack} />
+      </View>
       <FlatList
         refreshing={refreshing}
         onRefresh={_onRefresh}
@@ -120,7 +121,6 @@ const mockCommunityList = [
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 2,
   },
   item: {
     padding: 10,
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     color: COLORS.textColor,
     textAlignVertical: 'center',
   },
-  header: {
+  fieldHeader: {
     fontSize: 25,
     alignSelf: 'center',
     color: COLORS.textColor,
