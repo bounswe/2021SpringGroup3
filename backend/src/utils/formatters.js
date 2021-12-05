@@ -90,19 +90,24 @@ exports.formatPostTypeDetail = function (postType) {
 exports.formatProfile = function (user) {
   return {
     username: user.username,
-    profilePhotoUrl: user.profilePhotoUrl?.value,
-    bio: user.bio?.value,
-    birthday: user.birthday?.value,
-    location: user.location?.value,
+    profilePhotoUrl: user.profilePhotoUrl?.value || '',
+    bio: user.bio?.value || '',
+    birthday: user.birthday?.value || '',
+    location: user.location?.value || '',
   };
+};
+
+const defaultProfileField = {
+  value: '',
+  isPublic: true,
 };
 
 exports.formatProfileSettings = function (user) {
   return {
     username: user.username,
-    profilePhotoUrl: user.profilePhotoUrl,
-    bio: user.bio,
-    birthday: user.birthday,
-    location: user.location,
+    profilePhotoUrl: user.profilePhotoUrl || defaultProfileField,
+    bio: user.bio || defaultProfileField,
+    birthday: user.birthday || defaultProfileField,
+    location: user.location || defaultProfileField,
   };
 };

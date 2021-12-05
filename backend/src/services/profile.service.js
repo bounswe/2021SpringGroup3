@@ -6,12 +6,16 @@ exports.getProfile = async ({ token }) => {
 };
 
 exports.getProfileSettings = async ({ token }) => {
-  return formatters.getProfileSettings(token.user);
+  return formatters.formatProfileSettings(token.user);
 };
 
 exports.setProfile = async ({ token, body }) => {
-  const user = await User.findByIdAndUpdate(token.user._id, {
-    $set: body,
-  });
-  return formatters.getProfileSettings(user);
+  const user = await User.findByIdAndUpdate(
+    token.user._id,
+    {
+      $set: body,
+    },
+    { new: true }
+  );
+  return formatters.formatProfileSettings(user);
 };

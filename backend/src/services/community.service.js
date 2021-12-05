@@ -60,10 +60,14 @@ exports.joinCommunity = async ({ token, communityId }) => {
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
-  community = await Community.findByIdAndUpdate(community._id, {
-    $addToSet: {
-      members: token.user._id,
+  community = await Community.findByIdAndUpdate(
+    community._id,
+    {
+      $addToSet: {
+        members: token.user._id,
+      },
     },
-  });
+    { new: true }
+  );
   return formatters.formatCommunityDetails(community, token.user);
 };
