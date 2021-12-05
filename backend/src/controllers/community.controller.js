@@ -27,3 +27,11 @@ exports.getCommunityDetail = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.joinCommunity = catchAsync(async (req, res) => {
+  const result = await communityService.joinCommunity({
+    token: req.token,
+    communityId: req.query.communityId,
+  });
+  res.send(result);
+});
