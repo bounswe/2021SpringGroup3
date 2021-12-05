@@ -16,6 +16,8 @@ exports.createCommunity = catchAsync(async (req, res) => {
     token: req.token,
     name: req.body.name,
     iconUrl: req.body.iconUrl,
+    description: req.body.description,
+    isPrivate: req.body.isPrivate,
   });
   res.status(httpStatus.CREATED).send(result);
 });

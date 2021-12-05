@@ -10,6 +10,12 @@ const communitySchema = mongoose.Schema(
     iconUrl: {
       type: String,
     },
+    description: {
+      type: String,
+    },
+    isPrivate: {
+      type: Boolean,
+    },
     creator: { type: mongoose.SchemaTypes.ObjectId, ref: 'User', required: true, index: true },
     moderators: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
     members: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
