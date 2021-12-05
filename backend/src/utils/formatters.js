@@ -17,7 +17,6 @@ exports.formatUser = function (user) {
     id: user._id.toString(),
     email: user.email,
     username: user.username,
-    role: user.role,
     isActivated: user.isActivated,
   };
 };
@@ -85,5 +84,30 @@ exports.formatPostTypeDetail = function (postType) {
     dateFieldNames: postType.dateFieldNames,
     linkFieldNames: postType.linkFieldNames,
     locationFieldNames: postType.locationFieldNames,
+  };
+};
+
+exports.formatProfile = function (user) {
+  return {
+    username: user.username,
+    profilePhotoUrl: user.profilePhotoUrl?.value || '',
+    bio: user.bio?.value || '',
+    birthday: user.birthday?.value || '',
+    location: user.location?.value || '',
+  };
+};
+
+const defaultProfileField = {
+  value: '',
+  isPublic: true,
+};
+
+exports.formatProfileSettings = function (user) {
+  return {
+    username: user.username,
+    profilePhotoUrl: user.profilePhotoUrl || defaultProfileField,
+    bio: user.bio || defaultProfileField,
+    birthday: user.birthday || defaultProfileField,
+    location: user.location || defaultProfileField,
   };
 };

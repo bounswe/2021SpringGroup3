@@ -26,3 +26,11 @@ exports.getCommunityDetail = {
     })
     .required(),
 };
+
+exports.joinCommunity = {
+  query: Joi.object()
+    .keys({
+      communityId: Joi.string().custom(objectId).required(),
+    })
+    .required(),
+};

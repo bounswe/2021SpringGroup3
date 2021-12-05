@@ -3,6 +3,7 @@ const authRoute = require('./auth.route');
 const docsRoute = require('./docs.route');
 const postTypeRoute = require('./postType.route');
 const postRoute = require('./post.route');
+const profileRoute = require('./profile.route');
 const communityRoute = require('./community.route');
 const config = require('../config/config');
 
@@ -24,6 +25,10 @@ const defaultRoutes = [
   {
     path: '/posts',
     route: postRoute,
+  },
+  {
+    path: '/profile',
+    route: profileRoute,
   },
 ];
 

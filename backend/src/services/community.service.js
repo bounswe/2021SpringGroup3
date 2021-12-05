@@ -54,3 +54,20 @@ exports.getCommunityDetail = async ({ token, communityId }) => {
   }
   return formatters.formatCommunityDetails(community, token.user);
 };
+
+exports.joinCommunity = async ({ token, communityId }) => {
+  let community = await Community.findById(communityId).lean();
+  if (!community) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  community = await Community.findByIdAndUpdate(
+    community._id,
+    {
+      $addToSet: {
+        members: token.user._id,
+      },
+    },
+    { new: true }
+  );
+  return formatters.formatCommunityDetails(community, token.user);
+};

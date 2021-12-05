@@ -30,9 +30,42 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    imageUrl: {
-      type: String,
-      default: 'https://mocah.org/thumbs/108-cat__screaming_cat_image.jpg',
+    profilePhotoUrl: {
+      value: {
+        type: String,
+        default: 'https://mocah.org/thumbs/108-cat__screaming_cat_image.jpg',
+      },
+      isPublic: {
+        type: Boolean,
+        default: true,
+      },
+    },
+    bio: {
+      value: {
+        type: String,
+      },
+      isPublic: {
+        type: Boolean,
+        default: true,
+      },
+    },
+    birthday: {
+      value: {
+        type: String,
+      },
+      isPublic: {
+        type: Boolean,
+        default: true,
+      },
+    },
+    location: {
+      value: {
+        type: String,
+      },
+      isPublic: {
+        type: Boolean,
+        default: true,
+      },
     },
   },
   {
