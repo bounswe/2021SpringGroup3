@@ -102,7 +102,7 @@ exports.formatProfileSettings = function (user) {
     username: user.username,
     profilePhotoUrl: user.profilePhotoUrl,
     bio: user.bio,
-    birthday: user.birthday
+    birthday: user.birthday,
     location: user.location,
   };
 };

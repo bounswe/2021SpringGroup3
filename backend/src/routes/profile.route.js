@@ -5,10 +5,10 @@ const profileController = require('../controllers/profile.controller');
 
 const router = express.Router();
 
-router.route('/').get(validate(postValidation.getPosts), postController.getPosts);
+router.route('/').get(profileController.getProfile);
 router
   .route('/settings')
-  .get(validate(postValidation.getPostDetail), postController.getPostDetail)
-  .post(validate(postValidation.getPostDetail), postController.getPostDetail);
+  .get(profileController.getProfileSettings)
+  .post(validate(profileValidation.setProfile), profileController.setProfile);
 
 module.exports = router;

@@ -18,6 +18,7 @@ exports.getProfileSettings = catchAsync(async (req, res) => {
 exports.setProfile = catchAsync(async (req, res) => {
   const result = await profileService.setProfile({
     token: req.token,
+    body: req.body,
   });
   res.send(result);
 });
