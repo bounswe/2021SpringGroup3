@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {COLORS} from '../theme/colors';
 import {TEXT, PAGE_VARIABLES} from '../constants';
 import {AXIOS_CLIENT} from '../services/axiosCientService';
+import * as Requests from '../util/Requests';
 import {
   FlatList,
   Image,
@@ -15,49 +16,58 @@ import {
 } from 'react-native';
 
 export default function PostDetail({route, navigation}) {
-  const postId = PAGE_VARIABLES.postId;
-  const communityId = PAGE_VARIABLES.communityId;
 
-  const [postDetail, setPostDetail] = useState({});
+  const [user, setUser] = useState([]);
+  const [community, setCommunity] = useState([]);
+  const [date, setDate] = useState([]);
+  const [dateFieldNames, setDateFieldNames] = useState([]);
+  const [linkFieldNames, setLinkFieldNames] = useState([]);
+  const [textFieldNames, setTextFieldNames] = useState([]);
+  const [numberFieldNames, setNumberFieldNames] = useState([]);
+  const [locationFieldNames, setLocationFieldNames] = useState([]);
+  const [isLiked, setIsLiked] = useState([]);
 
   useEffect(() => {
-    getPostDetail();
-  }, []);
-
-  const getPostDetail = async () => {
-    fetch(BASE_URL + 'post/detail?communityId=' + PAGE_VARIABLES.communityId + '&postId='+PAGE_VARIABLES.postId, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Platform': 'ANDROID',
-        Authorization: await getToken(),
-      },
-    })
-      .then(async response => {
-        const status = response.status;
-        response = await response.json();
-        if (status === 200) {
-          setPostDetail(response);
-        } else {
-          ToastAndroid.show(response.message, ToastAndroid.SHORT);
-        }
-      })
-      .catch(error => {
-        console.info(error);
-        ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
-        setPostDetail(mockpostDetail);
+    async function init() {
+      const postDetailResponse = await Requests.getPostDetail({
+        communityId: PAGE_VARIABLES.communityId,
+        postId: PAGE_VARIABLES.postId,
       });
-  };
+        const {
+        id,
+        user,
+        community,
+        date,
+        textFieldNames,
+        numberFieldNames,
+        dateFieldNames,
+        linkFieldNames,
+        locationFieldNames,
+        isLiked,
+      } = JSON.parse(postDetailResponse);
+      
+      setUser(user);
+      setDate(date);
+      setCommunity(community)
+      setTextFieldNames(textFieldNames);
+      setNumberFieldNames(numberFieldNames);
+      setDateFieldNames(dateFieldNames);
+      setLocationFieldNames(locationFieldNames);
+      setLinkFieldNames(linkFieldNames);
+      setIsLiked(isLiked);
+    }
+    init();
+  }, []);
+  
 
   return (
     <View style={styles.feedItem}>
-      <ScrollView>
-        <Image source={{uri: postDetail.userImageUrl}} style={styles.avatar} />
+        <Image source={{uri: user.imageUrl}} style={styles.avatar} />
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            alignItems: 'center',
+            
           }}>
           <View>
             <View
@@ -67,14 +77,14 @@ export default function PostDetail({route, navigation}) {
                 alignItems: 'baseline',
               }}>
               <Text style={{fontSize: 18, color: COLORS.textColor}}>
-                {postDetail.username}
+                {user.username}
               </Text>
               <Text style={{fontSize: 12, color: COLORS.textColor}}>
-                {postDetail.communityName}
+                {community.name}
               </Text>
             </View>
             <Text style={styles.timestamp}>
-              {moment(postDetail.date).fromNow()}
+              {moment(date).fromNow()}
             </Text>
             <Text> </Text>
             <Text> </Text>
@@ -82,9 +92,8 @@ export default function PostDetail({route, navigation}) {
         </View>
 
         <View>
-          <Icon name="text" size={18} style={{marginRight: 16}} />
           <FlatList
-            data={postDetail.textFieldNames}
+            data={textFieldNames}
             renderItem={({item}) => (
               <View>
                 <Text style={styles.fieldName}>{item.name}</Text>
@@ -95,18 +104,7 @@ export default function PostDetail({route, navigation}) {
           />
 
           <FlatList
-            data={postDetail.numberFieldNames}
-            renderItem={({item}) => (
-              <View>
-                <Text style={styles.fieldName}>{item.name}</Text>
-                <Text style={styles.content}>{item.value}</Text>
-                <Text></Text>
-              </View>
-            )}
-          />
-          <Icon name="calendar" size={18} style={{marginRight: 16}} />
-          <FlatList
-            data={postDetail.dateFieldNames}
+            data={numberFieldNames}
             renderItem={({item}) => (
               <View>
                 <Text style={styles.fieldName}>{item.name}</Text>
@@ -116,9 +114,19 @@ export default function PostDetail({route, navigation}) {
             )}
           />
 
-          <Icon name="link" size={18} style={{marginRight: 16}} />
           <FlatList
-            data={postDetail.linkFieldNames}
+            data={dateFieldNames}
+            renderItem={({item}) => (
+              <View>
+                <Text style={styles.fieldName}>{item.name}</Text>
+                <Text style={styles.content}>{item.value}</Text>
+                <Text></Text>
+              </View>
+            )}
+          />
+
+          <FlatList
+            data={linkFieldNames}
             renderItem={({item}) => (
               <View>
                 <Text style={styles.fieldName}>{item.name}</Text>
@@ -130,9 +138,8 @@ export default function PostDetail({route, navigation}) {
             )}
           />
 
-          <Icon name="location" size={18} style={{marginRight: 16}} />
           <FlatList
-            data={postDetail.locationFieldNames}
+            data={locationFieldNames}
             renderItem={({item}) => (
               <View>
                 <Text style={styles.fieldName}>{item.name}</Text>
@@ -147,71 +154,25 @@ export default function PostDetail({route, navigation}) {
             name="heart"
             size={24}
             color={
-              postDetail.isLiked
+              isLiked
                 ? COLORS.buttonColor
                 : COLORS.unlikeButtonColor
             }
             style={{marginRight: 16}}
           />
-          <Text style={styles.content}>{postDetail.likeCount}</Text>
         </View>
-      </ScrollView>
     </View>
+    
   );
 }
-const mockpostDetail = {
-  id: '',
-  username: 'zeynep',
-  userImageUrl:
-    'https://drive.google.com/uc?export=view&id=1gWuxzaJRQvaEmllvUXAlEf_ClgbD6YRD',
-  communityName: 'chess',
-  date: 1636156949000,
-  textFieldNames: [
-    {
-      name: 'Tournament Name',
-      value:
-        'İstanbul Satranç Turnuvası \n*\n*\n*\n*\n*\nWe are excited to announce that we will have our first chess tournament on this Tuesday. You can see the details below. Do not forget to fill the registraion form!',
-    },
-  ],
-  numberFieldNames: [
-    {
-      name: 'Max Capacity',
-      value: 50,
-    },
-  ],
-  dateFieldNames: [
-    {
-      name: 'Date',
-      value: '16.11.2021',
-    },
-    {
-      name: 'Hour',
-      value: '18.00',
-    },
-  ],
-  linkFieldNames: [
-    {
-      name: 'Link to registration form',
-      value:
-        'https://docs.google.com/forms/d/1snqCHFsaiRU1SkLfBImvuJICXH37OcwUMYta_zzDSzI/edit',
-    },
-  ],
-  locationFieldNames: [
-    {
-      name: 'Location',
-      value: 'Beşiktaş, İstanbul',
-    },
-  ],
-  likeCount: 67,
-  isLiked: true,
-};
+
 
 const styles = StyleSheet.create({
   feedItem: {
     backgroundColor: '#FFF',
     borderRadius: 5,
     padding: 18,
-    flexDirection: 'row',
+    flexDirection: 'column',
     marginVertical: 8,
   },
   avatar: {
