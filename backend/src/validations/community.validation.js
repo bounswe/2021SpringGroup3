@@ -6,6 +6,8 @@ exports.createCommunity = {
     .keys({
       name: Joi.string().min(2).max(30).required(),
       iconUrl: Joi.string().uri(),
+        description: Joi.string().required(),
+        isPrivate: Joi.boolean().required()
     })
     .required(),
 };
