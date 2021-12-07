@@ -1,6 +1,6 @@
-var myHeaders = new Headers();
-import {getToken} from '../services/asyncStorageService';
+import {getToken} from './asyncStorageService';
 import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
+import ToastAndroid from 'react-native';
 
 export const createPost = async body => {
   var myHeaders = new Headers();
@@ -52,4 +52,36 @@ export const getPostTypeDetail = async ({communityId, postTypeId}) => {
       return result;
     })
     .catch(error => console.log('error', error));
+};
+
+export const getCommunities = async ({
+  isMember = false,
+  isModerator = false,
+}) => {
+  return fetch(
+    BASE_URL +
+      'communities' +
+      (isMember ? '?isMember=' + isMember : '?isModerator=' + isModerator),
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(async response => {
+      const status = response.status;
+      response = await response.json();
+      if (status === 200) {
+        return response;
+      } else {
+        ToastAndroid.show(response.message, ToastAndroid.SHORT);
+      }
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
 };

@@ -8,11 +8,12 @@ import {
   ToastAndroid,
   View,
 } from 'react-native';
-import {COLORS} from '../theme/colors';
 import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
 import {getToken} from '../services/asyncStorageService';
 import {headerStyle} from '../theme/styles';
 import {headerContainerStyle} from '../theme/styles';
+import {list} from '../theme/styles';
+import {listItem} from '../theme/styles';
 import CloseButton from '../component/CloseButton';
 
 export default function SelectCommunity({navigation}) {
@@ -79,9 +80,9 @@ export default function SelectCommunity({navigation}) {
             onPress={() => {
               navigateSelectPostType(item);
             }}>
-            <View style={styles.list}>
+            <View style={list}>
               <Image source={{uri: item.iconUrl}} style={styles.image} />
-              <Text style={styles.item}>{item.name}</Text>
+              <Text style={listItem}>{item.name}</Text>
             </View>
           </TouchableOpacity>
         )}
@@ -122,25 +123,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  item: {
-    padding: 10,
-    fontSize: 18,
-    height: 60,
-    color: COLORS.textColor,
-    textAlignVertical: 'center',
-  },
-  fieldHeader: {
-    fontSize: 25,
-    alignSelf: 'center',
-    color: COLORS.textColor,
-  },
   image: {
     width: 30,
     height: 30,
-  },
-  list: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 16,
   },
 });
