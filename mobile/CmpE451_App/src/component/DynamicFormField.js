@@ -17,7 +17,7 @@ const DynamicFormField = ({fields, fieldKey, onChangeText}) => {
               onChangeText(fieldKey, {name: input.name, value: text}, index)
             }
             value={input.value}
-            placeholder="text"
+            placeholder={fieldKey}
           />
         </View>
       ))}

@@ -6,6 +6,7 @@ import {IconButton} from 'react-native-paper';
 import Geocoder from 'react-native-geocoding';
 import MapView, {Marker} from 'react-native-maps';
 import DatePicker from 'react-native-date-picker';
+
 import DynamicFormField from '../component/DynamicFormField';
 import FieldHeader from '../component/FieldHeader';
 import CommonButton from '../component/CommonButton';
@@ -26,15 +27,6 @@ export default function CreatePost({route}) {
   const [textFields, setTextFields] = useState([]);
   const [numberFields, setNumberFields] = useState([]);
   const [locationFields, setLocationFields] = useState([]);
-  const [geoLocationFields, setGeoLocationFields] = useState([
-    {
-      name: '',
-      value: {
-        latitude: 0,
-        longitude: 0,
-      },
-    },
-  ]);
   const [showMap, setShowMap] = useState(false);
   const [address, setAddress] = useState('');
   const [locationIndex, setLocationIndex] = useState(-1);
@@ -105,7 +97,16 @@ export default function CreatePost({route}) {
       if (locationFieldNames != null && locationFieldNames.length > 0) {
         const locationFieldsTemp = [];
         for (let i = 0; i < locationFieldNames.length; i++) {
-          locationFieldsTemp.push({name: locationFieldNames[i], value: ''});
+          locationFieldsTemp.push({
+            name: locationFieldNames[i],
+            value: {
+              geo: {
+                latitude: 0,
+                longitude: 0,
+              },
+              description: '',
+            },
+          });
         }
         setLocationFields(locationFieldsTemp);
       }
@@ -169,18 +170,24 @@ export default function CreatePost({route}) {
         setLinkFields(_linkInputs);
         break;
       case 'geoLocation':
-        const _geoLocationInputs = [...geoLocationFields];
+        const _geoLocationInputs = [...locationFields];
         _geoLocationInputs[index] = {
           name: locationFields[index].name,
-          value: input,
+          value: {
+            geo: input,
+            description: locationFields[index].value.description,
+          },
         };
-        setGeoLocationFields(_geoLocationInputs);
+        setLocationFields(_geoLocationInputs);
         break;
       case 'location':
         const _locationInputs = [...locationFields];
         _locationInputs[index] = {
           name: locationFields[index].name,
-          value: input,
+          value: {
+            geo: _locationInputs[index].value.geo,
+            description: input,
+          },
         };
         setLocationFields(_locationInputs);
         break;
@@ -244,11 +251,11 @@ export default function CreatePost({route}) {
               <TextInput
                 multiline
                 style={styles.locationTextInput}
-                onChangeText={text =>
-                  inputHandler(locationFieldKey, text, index)
-                }
-                value={input.value}
                 placeholder=" address definition"
+                onChangeText={text => {
+                  inputHandler(locationFieldKey, text, index);
+                }}
+                value={locationFields[index].value.description}
               />
             </View>
           </View>
@@ -275,7 +282,6 @@ export default function CreatePost({route}) {
               Geocoder.from(address)
                 .then(res => {
                   var location = res.results[0].geometry.location;
-                  console.log(location);
                   setRegion({
                     latitude: location.lat,
                     longitude: location.lng,
