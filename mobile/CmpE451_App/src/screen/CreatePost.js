@@ -6,7 +6,6 @@ import {IconButton} from 'react-native-paper';
 import Geocoder from 'react-native-geocoding';
 import MapView, {Marker} from 'react-native-maps';
 import DatePicker from 'react-native-date-picker';
-
 import DynamicFormField from '../component/DynamicFormField';
 import FieldHeader from '../component/FieldHeader';
 import CommonButton from '../component/CommonButton';
@@ -18,7 +17,7 @@ import {textInputArea} from '../theme/styles';
 import {textInputContainer} from '../theme/styles';
 import {headerStyle} from '../theme/styles';
 import {headerContainerStyle} from '../theme/styles';
-import * as Requests from '../util/Requests';
+import * as Requests from '../services/BoxyClient';
 
 export default function CreatePost({route}) {
   const {communityName} = route.params;
