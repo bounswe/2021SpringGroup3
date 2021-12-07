@@ -30,6 +30,16 @@ const dateField = new mongoose.Schema(
   }
 );
 
+const locationField = new mongoose.Schema(
+    {
+        name: { type: String },
+        value: { type: Object },
+    },
+    {
+        _id: false,
+    }
+);
+
 const postSchema = mongoose.Schema(
   {
     postType: {
@@ -49,7 +59,7 @@ const postSchema = mongoose.Schema(
     numberFields: [numberField],
     dateFields: [dateField],
     linkFields: [stringField],
-    locationFields: [stringField],
+    locationFields: [locationField],
     likeCount: { type: Number, default: 0 },
     likers: [
       {
