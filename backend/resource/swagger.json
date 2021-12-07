@@ -891,7 +891,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CommunitiesPreviews"
+                  "$ref": "#/components/schemas/CommunityDetail"
                 }
               }
             }
@@ -1228,7 +1228,7 @@
             "items": {
               "oneOf": [
                 {
-                  "$ref": "#/components/schemas/PostFieldInput"
+                  "$ref": "#/components/schemas/PostLocation"
                 }
               ]
             }
@@ -1324,7 +1324,7 @@
             "items": {
               "oneOf": [
                 {
-                  "$ref": "#/components/schemas/PostFieldInput"
+                  "$ref": "#/components/schemas/PostLocation"
                 }
               ]
             }
@@ -1357,6 +1357,24 @@
           }
         }
       },
+      "LocationField": {
+        "title": "Location field model",
+        "type": "object",
+        "required": [
+          "name",
+          "value"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "turnuva yeri"
+          },
+          "value": {
+            "type": "object",
+            "$ref": "#/components/schemas/Location"
+          }
+        }
+      },
       "CommunitiesPreviews": {
         "title": "Post Types Previews model",
         "type": "array",
@@ -1375,6 +1393,7 @@
           "name",
           "id",
           "isPrivate"
+
         ],
         "properties": {
           "name": {
@@ -1397,6 +1416,51 @@
             "type": "boolean",
             "example": false
           }
+        }
+      },
+      "CommunityDetail": {
+        "title": "Community Detail model",
+        "type": "object",
+        "required": [
+          "name",
+          "id",
+          "isPrivate"
+
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "text"
+          },
+          "iconUrl": {
+            "type": "string",
+            "example": "text"
+          },
+          "id": {
+            "type": "string",
+            "example": "text"
+          },
+          "user": {
+            "type": "object",
+            "$ref": "#/components/schemas/User"
+          },
+          "description": {
+            "type": "string",
+            "example": "text"
+          },
+          "isPrivate": {
+            "type": "boolean",
+            "example": false
+          },
+          "isMember": {
+            "type": "boolean",
+            "example": false
+          },
+          "isModerator": {
+            "type": "boolean",
+            "example": false
+          }
+
         }
       },
       "JoinCommunity": {
@@ -1445,8 +1509,8 @@
             "example": "text"
           },
           "location": {
-            "type": "boolean",
-            "example": "string"
+            "type": "object",
+            "$ref": "#/components/schemas/Location"
           }
         }
       },
@@ -1474,7 +1538,7 @@
           },
           "location": {
             "type": "object",
-            "$ref": "#/components/schemas/ProfileSettingsItems"
+            "$ref": "#/components/schemas/Location"
           }
         }
       },
@@ -1496,8 +1560,32 @@
           }
         }
       },
-      "Location": {
-        "title": "Location Model",
+
+      "User": {
+        "title": "User model",
+        "type": "object",
+        "required": [
+          "username",
+          "id",
+          "imageUrl"
+        ],
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "text"
+          },
+          "id": {
+            "type": "string",
+            "example": "text"
+          },
+          "imageUrl": {
+            "type": "string",
+            "example": "https://cat_image.jpg"
+          }
+        }
+      },
+      "LocationValueModel":{
+        "title": "Location Value Model",
         "type": "object",
         "required": [
           "latitude",
@@ -1505,13 +1593,61 @@
         ],
         "properties": {
           "latitude": {
-            "type": "string",
-            "example": "text"
+            "type": "integer",
+            "example": 3.435345
           },
           "longitude": {
+            "type": "integer",
+            "example": 3.435345
+          }
+        }
+      },
+      "Location": {
+        "title": "Location Model",
+        "type": "object",
+        "required": [
+          "value",
+          "isPublic",
+          "description"
+        ],
+        "properties": {
+          "value": {
+
+            "type": "object",
+            "$ref": "#/components/schemas/LocationValueModel"
+
+          },
+          "isPublic": {
             "type": "boolean",
             "example": true
+          },
+          "description": {
+            "type": "string",
+            "example": "text"
           }
+
+        }
+      },
+      "PostLocation": {
+        "title": "Post Location Model",
+        "type": "object",
+        "required": [
+          "geo",
+          "description"
+        ],
+        "properties": {
+          "geo": {
+
+            "type": "object",
+            "$ref": "#/components/schemas/LocationValueModel"
+
+          },
+
+          "description": {
+            "type": "string",
+            "example": "text"
+          }
+
         }
       }
     }
