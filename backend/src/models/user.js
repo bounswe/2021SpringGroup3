@@ -60,7 +60,7 @@ const userSchema = mongoose.Schema(
     },
     location: {
       value: {
-        type: String,
+        type: Object,
       },
       isPublic: {
         type: Boolean,
