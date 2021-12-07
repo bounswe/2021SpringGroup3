@@ -33,10 +33,12 @@ exports.getCommunities = async ({ token, isModerator, isMember }) => {
   return formatters.formatCommunities(communities);
 };
 
-exports.createCommunity = async ({ token, name, iconUrl }) => {
+exports.createCommunity = async ({ token, name, iconUrl, description, isPrivate }) => {
   const community = await Community.create({
     name,
     iconUrl,
+    description,
+    isPrivate,
     creator: token.user._id,
     moderators: [token.user._id],
     members: [token.user._id],

@@ -26,6 +26,8 @@ exports.formatPreviewCommunity = function (community) {
     id: community._id.toString(),
     name: community.name,
     iconUrl: community.iconUrl,
+    description: community.description,
+    isPrivate: community.isPrivate,
   };
 };
 
