@@ -13,7 +13,6 @@ export const headerContainerStyle = {
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: 10,
-  marginBottom: 10,
   backgroundColor: COLORS.screenHeaderBackground,
   height: 50,
 };
@@ -36,5 +35,20 @@ export const textInputContainer = {
   justifyContent: 'space-between',
   marginLeft: 25,
   marginRight: 20,
-  paddingBottom: 30,
+  paddingBottom: 20,
+  paddingTop: 10,
+};
+
+export const list = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginLeft: 16,
+};
+
+export const listItem = {
+  padding: 10,
+  fontSize: 18,
+  height: 60,
+  color: COLORS.textColor,
+  textAlignVertical: 'center',
 };
