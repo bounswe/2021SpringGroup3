@@ -95,7 +95,7 @@ exports.formatProfile = function (user) {
     profilePhotoUrl: user.profilePhotoUrl?.value || '',
     bio: user.bio?.value || '',
     birthday: user.birthday?.value || '',
-    location: user.location?.value || '',
+    location: user.location || '',
   };
 };
 
