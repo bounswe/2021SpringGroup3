@@ -121,7 +121,7 @@ export default function CreateCommunity({navigation}) {
           </View>
           <View style={{alignItems: 'center'}}>
             <CommonButton
-              text="POST"
+              text="CREATE"
               onPress={handleCreateCommunity}
               buttonWidth={'80%'}
             />
