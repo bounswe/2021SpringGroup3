@@ -240,7 +240,7 @@ export default function CreatePost({route}) {
               <View>
                 <IconButton
                   icon="map-marker"
-                  color={COLORS.buttonColor}
+                  color={COLORS.fieldHeaderColor}
                   size={30}
                   onPress={() => {
                     setShowMap(true);

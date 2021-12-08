@@ -24,7 +24,10 @@ export default function TabScreen({
         onRefresh={onRefresh}
         data={communityList}
         renderItem={({item}) => (
-          <TouchableOpacity onPress={onPress}>
+          <TouchableOpacity
+            onPress={() => {
+              onPress(item);
+            }}>
             <View style={list}>
               <Image source={{uri: item.iconUrl}} style={styles.image} />
               <Text style={listItem}>{item.name}</Text>

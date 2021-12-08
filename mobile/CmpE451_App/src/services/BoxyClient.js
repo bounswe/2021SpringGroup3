@@ -9,8 +9,6 @@ export const createPost = async body => {
   myHeaders.append('Content-Type', 'application/json');
 
   var raw = JSON.stringify(body);
-  console.log(body);
-
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
@@ -61,7 +59,11 @@ export const getCommunities = async ({
   return fetch(
     BASE_URL +
       'communities' +
-      (isMember ? '?isMember=' + isMember : '?isModerator=' + isModerator),
+      (isMember
+        ? '?isMember=' + isMember
+        : isModerator
+        ? '?isModerator=' + isModerator
+        : ''),
     {
       method: 'GET',
       headers: {
@@ -100,6 +102,24 @@ export const createCommunity = async ({
       description: description,
       isPrivate: isPrivate,
     }),
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const getCommunityDetail = async ({communityId}) => {
+  return fetch(BASE_URL + 'communities/detail?communityId=' + communityId, {
+    method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       'X-Platform': 'ANDROID',

@@ -37,7 +37,12 @@ export default function Communities({navigation}) {
   useEffect(() => {
     applyQuery(searchText);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allCommunityList, searchText]);
+  }, [
+    allCommunityList,
+    memberCommunityList,
+    moderatorCommunityList,
+    searchText,
+  ]);
 
   useEffect(() => {
     async function init() {
@@ -104,15 +109,18 @@ export default function Communities({navigation}) {
       isMember: false,
       isModerator: false,
     });
+    console.log(_allCommunityList);
+
     setAllCommunityList(_allCommunityList);
     setRefreshingAllCommunities(false);
   };
 
-  const navigateCommunityPage = selectedCommunityId => {
-    PAGE_VARIABLES.communityId = selectedCommunityId.id;
+  const navigateCommunityPage = selectedCommunity => {
+    PAGE_VARIABLES.communityId = selectedCommunity.id;
+
     navigation.navigate('Community', {
-      communityName: selectedCommunityId.name,
-      communityId: selectedCommunityId.id,
+      communityName: selectedCommunity.name,
+      communityId: selectedCommunity.id,
     });
   };
 
@@ -149,13 +157,17 @@ export default function Communities({navigation}) {
     );
   }
 
+  const navigate = async () => {
+    navigation.navigate('Home');
+  };
+
   return (
     <View style={styles.container}>
       <View style={headerContainerStyle}>
         <View style={headerStyle}>
           <Text style={{color: 'white', fontSize: 20}}>Communities</Text>
         </View>
-        <CloseButton onPress={navigation.goBack} />
+        <CloseButton onPress={navigate} />
       </View>
       <View>
         <View style={{flexDirection: 'row', backgroundColor: 'white'}}>
