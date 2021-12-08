@@ -85,3 +85,41 @@ export const getCommunities = async ({
       ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
     });
 };
+
+export const createCommunity = async ({
+  name,
+  iconUrl,
+  description,
+  isPrivate,
+}) => {
+  return fetch(BASE_URL + 'communities', {
+    method: 'POST',
+    body: JSON.stringify({
+      name: name,
+      iconUrl: iconUrl,
+      description: description,
+      isPrivate: isPrivate,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+const returnResponse = async response => {
+  const statusCode = response.status;
+  response = await response.json();
+  return {
+    status: statusCode,
+    data: response,
+  };
+};
