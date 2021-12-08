@@ -2,7 +2,7 @@ import React from 'react';
 import {TouchableOpacity} from 'react-native';
 import {IconButton} from 'react-native-paper';
 
-const CloseButton = ({onPress}) => {
+const DeleteButton = ({onPress}) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <IconButton
@@ -15,4 +15,4 @@ const CloseButton = ({onPress}) => {
   );
 };
 
-export default CloseButton;
+export default DeleteButton;
