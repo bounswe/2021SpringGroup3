@@ -70,6 +70,7 @@ exports.formatPostDetail = function (post, user) {
     linkFieldNames: post.linkFields,
     locationFieldNames: post.locationFields,
     isLiked: post.likers.includes(user._id),
+    likeCount: post.likers.length
   };
 };
 
