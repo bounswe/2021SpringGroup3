@@ -32,3 +32,12 @@ exports.getPostDetail = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.likePost = catchAsync(async (req, res) => {
+  const result = await postService.likePost({
+    token: req.token,
+    communityId: req.query.communityId,
+    postId: req.query.postId,
+  });
+  res.send(result);
+});

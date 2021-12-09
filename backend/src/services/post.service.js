@@ -100,3 +100,23 @@ exports.getPostDetail = async ({ token, communityId, postId }) => {
   }
   return formatters.formatPostDetail(post, token.user);
 };
+
+exports.likePost = async ({ token, communityId, postId }) => {
+  let post = await Post.findById(postId).populate(['creator', 'community']).lean();
+  if (!post) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post does not exist');
+  }
+  if (post.community._id.toString() !== communityId) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community ID does not match');
+  }
+  post = await Post.findByIdAndUpdate(
+    post._id,
+    {
+      $addToSet: {
+        likers: token.user._id,
+      },
+    },
+    { new: true }
+  );
+  return formatters.formatPostDetail(post, token.user);
+};
