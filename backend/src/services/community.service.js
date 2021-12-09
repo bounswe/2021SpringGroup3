@@ -50,7 +50,11 @@ exports.createCommunity = async ({ token, name, iconUrl, description, isPrivate 
 };
 
 exports.getCommunityDetail = async ({ token, communityId }) => {
-  const community = await Community.findById(communityId).populate('creator').lean();
+  const community = await Community.findById(communityId)
+    .populate('creator')
+    .populate({ path: 'members', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
+    .populate({ path: 'moderators', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
+    .exec();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
