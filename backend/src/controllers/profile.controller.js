@@ -22,3 +22,10 @@ exports.setProfile = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.getOtherProfile = catchAsync(async (req, res) => {
+  const result = await profileService.getOtherProfile({
+    userId: req.query.userId,
+  });
+  res.send(result);
+});

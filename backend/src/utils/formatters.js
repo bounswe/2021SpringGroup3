@@ -100,6 +100,15 @@ exports.formatProfile = function (user) {
   };
 };
 
+exports.formatOtherProfile = function (user) {
+  return {
+    username: user.username,
+    profilePhotoUrl: user.profilePhotoUrl && user.profilePhotoUrl.isPublic? user.profilePhotoUrl.value : '',
+    bio: user.bio && user.bio.isPublic ? user.bio.value : '',
+    birthday: user.birthday && user.birthday.isPublic ? user.birthday.value : '',
+    location: user.location && user.location.isPublic ? user.location : '',
+  };
+};
 const defaultProfileField = {
   value: '',
   isPublic: true,
