@@ -1,7 +1,8 @@
 import * as loginAction from "../store/actions/loginActions";
 import { login, logout, register,
   createCommunity, getCommunities, getCommunityPage,
-  createPostType } from '../store/axios';
+  createPostType, 
+  getProfile} from '../store/axios';
 
 export const Login = async (info, dispatch) => {
 
@@ -82,6 +83,15 @@ export const GetCommunityPage = async (info, dispatch) => {
     //  dispatch(loginAction.logoutSuccess());
   }else{
     // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const GetProfilePage = async (info, dispatch) => {
+  const response = await getProfile(info);
+  if(response.status === 200 || response.status === 201) {
+    return response;
+  } else {
     return {}
   }
 }

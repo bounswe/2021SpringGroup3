@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
+import { useSelector, useDispatch } from 'react-redux';
 import { Layout, Col  } from 'antd';
 import NavBar from '../components/NavBar';
 import AboutCommunity from '../components/AboutCommunity';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router';
 import { GetCommunityPage as GetCommunityPageRequest } from "../utils/helper";
 
 const { Header, Footer, Sider, Content } = Layout;

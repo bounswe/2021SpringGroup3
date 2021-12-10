@@ -6,7 +6,8 @@ import {
   CREATE_COMMUNITY_ENDPOINT,
   GET_COMMUNITIES_ENDPOINT,
   GET_COMMUNITY_PAGE_ENDPOINT,
-  CREATE_POSTTYPE_ENDPOINT
+  CREATE_POSTTYPE_ENDPOINT,
+  GET_PROFILE_ENDPOINT
 } from './urls';
 
 export async function login(info) {
@@ -134,6 +135,24 @@ export async function getCommunityPage(info) {
       },
     }
     const response = await axios.get(GET_COMMUNITY_PAGE_ENDPOINT+"?communityId="+info.id, { ...header });
+    console.log(response)
+    return response;
+  } catch (error) {
+    console.log(error);
+    
+    return error
+  }
+}
+
+export async function getProfile(info) {
+  try {
+    const header = {headers: {
+      'x-platform': 'WEB',
+      'accept': '*/*',
+      'authorization': `${info.token}`
+      },
+    }
+    const response = await axios.get(GET_PROFILE_ENDPOINT+"?communityId="+info.id, { ...header });
     console.log(response)
     return response;
   } catch (error) {

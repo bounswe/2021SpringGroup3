@@ -1,23 +1,13 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Card, Row, Col, Button, Typography, Space, Avatar, Tooltip, notification } from 'antd';
-import '../App.css';
-import FieldContent from './FieldContent';
 import buttonColor from '../colors'
-
-
-import React from "react";
 
 import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 
 const { Text, Title } = Typography;
 
-
-
 const ProfileView = (props) => {
-
-    console.log(props)
 
     let profileCardStyle = {
         width: '100%',
@@ -52,7 +42,7 @@ const ProfileView = (props) => {
             <Card size="small" style={profileCardStyle}>
                 <Row>
                     <Space size={'large'}>
-                        <Avatar size={100} src={props.userObj.profilePicture} />
+                        <Avatar size={100} src={props.userObj.profilePhotoUrl} />
                         <Title>{props.userObj.username}</Title>
                         <Tooltip title={isFollowing ? 'unfollow' : 'follow'}>
                             {isFollowing ?
@@ -63,34 +53,26 @@ const ProfileView = (props) => {
                     </Space>
                 </Row>
                 <Card size="small" style={{ width: '100%', borderRadius: '10px', borderColor: '#ffffff', marginTop: "10px", marginBottom: "10px" }}>
-                    {props.userObj.bio && (props.userObj.isBioPublic || isFollowing) ?
-                        <>
-                            <Col span={24}>
-                                <Space size={'middle'}>
-                                    <strong>Bio</strong>
-                                    <Text>{props.userObj.bio}</Text>
-                                </Space>
+                    <Col span={24}>
+                        <Space size={'middle'}>
+                            <strong>Bio</strong>
+                            <Text>{props.userObj.bio}</Text>
+                        </Space>
+                    </Col>
 
-                            </Col>
-                        </> : <></>}
-                    {props.userObj.birthday && (props.userObj.isBirthdayPublic || isFollowing) ?
-                        <>
-                            <Col span={24}>
-                                <Space size={'middle'}>
-                                    <strong>Birthday</strong>
-                                    <Text>{props.userObj.birthday}</Text>
-                                </Space>
-                            </Col>
-                        </> : <></>}
-                    {props.userObj.location && (props.userObj.isLocationPublic || isFollowing) ?
-                        <>
-                            <Col span={24}>
-                                <Space size={'middle'}>
-                                    <strong>Location</strong>
-                                    <Text>{props.userObj.location}</Text>
-                                </Space>
-                            </Col>
-                        </> : <></>}
+                    <Col span={24}>
+                        <Space size={'middle'}>
+                            <strong>Birthday</strong>
+                            <Text>{props.userObj.birthday}</Text>
+                        </Space>
+                    </Col>
+
+                    <Col span={24}>
+                        <Space size={'middle'}>
+                            <strong>Location</strong>
+                            <Text>{props.userObj.location}</Text>
+                        </Space>
+                    </Col>
                 </Card>
 
 

@@ -36,8 +36,19 @@ const NavBar = (props) => {
         console.log("Request for creating a new post");
     }
 
+    const handleProfileNavigate = () => {
+        console.log("Navigating to profile page");
+        navigate('/profiles/123')
+    }
+
     const profileMenu = (
         <Menu>
+            <Menu.Item key="profile">
+                <Button type="text" onClick={handleProfileNavigate}>
+                    <UserOutlined style={{ fontSize: '16px', marginRight: '4px' }} />
+                    Profile
+                </Button>
+            </Menu.Item>
             <Menu.Item key="settings">
                 <Button type="text">
                     <SettingTwoTone style={{ fontSize: '16px', marginRight: '4px' }} />
