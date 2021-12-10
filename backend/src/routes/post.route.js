@@ -10,6 +10,6 @@ router
   .post(validate(postValidation.createPost), postController.createPost)
   .get(validate(postValidation.getPosts), postController.getPosts);
 router.route('/detail').get(validate(postValidation.getPostDetail), postController.getPostDetail);
-router.route('/like').post(postController.likePost);
+router.route('/like').post(validate(postValidation.likePost), postController.likePost);
 
 module.exports = router;

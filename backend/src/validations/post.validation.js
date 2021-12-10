@@ -22,8 +22,8 @@ const linkField = Joi.object().keys({
 });
 
 const locationField = Joi.object().keys({
-    name: Joi.string().required(),
-    value: Joi.object().required(),
+  name: Joi.string().required(),
+  value: Joi.object().required(),
 });
 
 exports.createPost = {
@@ -49,6 +49,15 @@ exports.getPosts = {
 };
 
 exports.getPostDetail = {
+  query: Joi.object()
+    .keys({
+      communityId: Joi.string().custom(objectId).required(),
+      postId: Joi.string().custom(objectId).required(),
+    })
+    .required(),
+};
+
+exports.likePost = {
   query: Joi.object()
     .keys({
       communityId: Joi.string().custom(objectId).required(),

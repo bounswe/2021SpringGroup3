@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-non-literal-regexp */
 const httpStatus = require('http-status');
 
 const { formatters } = require('../utils');
@@ -34,6 +35,9 @@ exports.getCommunities = async ({ token, isModerator, isMember }) => {
 };
 
 exports.createCommunity = async ({ token, name, iconUrl, description, isPrivate }) => {
+  if ((await Community.countDocuments({ name: new RegExp(`^${name}$`, 'i') })) > 0) {
+    throw new ApiError(httpStatus.CONFLICT, 'Community name should be unique. This is case insensitive');
+  }
   const community = await Community.create({
     name,
     iconUrl,
@@ -54,6 +58,7 @@ exports.getCommunityDetail = async ({ token, communityId }) => {
     .populate('creator')
     .populate({ path: 'members', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
     .populate({ path: 'moderators', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
+    .populate({ path: 'pendingMembers', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
     .exec();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
@@ -65,6 +70,27 @@ exports.joinCommunity = async ({ token, communityId }) => {
   let community = await Community.findById(communityId).lean();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  if (community.members && new Set(community.members.map((m) => m.toString())).has(token.user._id.toString())) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You are already a member of this community');
+  }
+  if (!community.isPrivate) {
+    if (
+      community.pendingMembers &&
+      new Set(community.pendingMembers.map((m) => m.toString())).has(token.user._id.toString())
+    ) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'You already requested to join this community');
+    }
+    community = await Community.findByIdAndUpdate(
+      community._id,
+      {
+        $addToSet: {
+          pendingMembers: token.user._id,
+        },
+      },
+      { new: true }
+    );
+    return formatters.formatCommunityDetails(community, token.user);
   }
   community = await Community.findByIdAndUpdate(
     community._id,
@@ -93,8 +119,8 @@ exports.leaveCommunity = async ({ token, communityId }) => {
     },
     { new: true }
   );
-  if (community.moderators.length == 0) {
-    if (community.members.length != 0) {
+  if (community.moderators.length === 0) {
+    if (community.members.length !== 0) {
       community = await Community.findByIdAndUpdate(
         community._id,
         {

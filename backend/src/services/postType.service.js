@@ -35,7 +35,7 @@ exports.createPostType = async ({
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
-  if ((await PostType.countDocuments({ name, community: communityId })) > 0) {
+  if ((await PostType.countDocuments({ name: new RegExp(`^${name}$`), community: communityId })) > 0) {
     throw new ApiError(httpStatus.CONFLICT, 'Post type with this name exists in this community');
   }
   const postyType = await PostType.create({

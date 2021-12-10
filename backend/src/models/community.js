@@ -6,6 +6,8 @@ const communitySchema = mongoose.Schema(
       type: String,
       trim: true,
       required: true,
+      unique: true,
+      index: true,
     },
     iconUrl: {
       type: String,
@@ -19,6 +21,7 @@ const communitySchema = mongoose.Schema(
     creator: { type: mongoose.SchemaTypes.ObjectId, ref: 'User', required: true, index: true },
     moderators: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
     members: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
+    pendingMembers: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
   },
   {
     timestamps: true,
