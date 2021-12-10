@@ -135,6 +135,24 @@ export const getCommunityDetail = async ({communityId}) => {
     });
 };
 
+export const joinCommunity = async ({communityId}) => {
+  return fetch(BASE_URL + 'communities/join?communityId=' + communityId, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 const returnResponse = async response => {
   const statusCode = response.status;
   response = await response.json();
@@ -142,4 +160,29 @@ const returnResponse = async response => {
     status: statusCode,
     data: response,
   };
+};
+
+export const getPostDetail = async ({communityId, postId}) => {
+  var myHeaders = new Headers();
+  myHeaders.append('X-Platform', 'ANDROID');
+  myHeaders.append('Authorization', await getToken());
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow',
+  };
+
+  return fetch(
+    'https://api.cmpegroupthree.store/posts/detail?communityId=' +
+      communityId +
+      '&postId=' +
+      postId,
+    requestOptions,
+  )
+    .then(response => response.text())
+    .then(result => {
+      return result;
+    })
+    .catch(error => console.log('error', error));
 };

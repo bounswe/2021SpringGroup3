@@ -5,7 +5,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {COLORS} from '../theme/colors';
 import {TEXT, PAGE_VARIABLES} from '../constants';
 import {AXIOS_CLIENT} from '../services/axiosCientService';
-import * as Requests from '../util/Requests';
+import * as Requests from '../services/BoxyClient';
+import {IconButton} from 'react-native-paper';
+import Geocoder from 'react-native-geocoding';
+import MapView, {Marker} from 'react-native-maps';
+
+
 import {
   FlatList,
   Image,
@@ -26,6 +31,31 @@ export default function PostDetail({route, navigation}) {
   const [numberFieldNames, setNumberFieldNames] = useState([]);
   const [locationFieldNames, setLocationFieldNames] = useState([]);
   const [isLiked, setIsLiked] = useState([]);
+  const [likeCount, setLikeCount] = useState([]);
+  const [postDetail, setPostDetail] = useState([]);
+
+  const [locationName, setLocationName] = useState([]);
+  const [locationDescription, setLocationDescription] = useState([]);
+  const [latitude, setLatitude] = useState([]);
+  const [longitude, setLongitude] = useState([]);
+
+  const [markerState, setMarker] = useState({
+    target: 347,
+    coordinate: {
+      latitude: 37.76135920121826,
+      longitude: -122.4682573019337,
+    },
+    position: {
+      x: 150,
+      y: 269,
+    },
+  });
+  const [regionState, setRegion] = useState({
+    latitude: 37.78825,
+    longitude: -122.4324,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
 
   useEffect(() => {
     async function init() {
@@ -44,6 +74,7 @@ export default function PostDetail({route, navigation}) {
         linkFieldNames,
         locationFieldNames,
         isLiked,
+        likeCount,
       } = JSON.parse(postDetailResponse);
       
       setUser(user);
@@ -52,16 +83,18 @@ export default function PostDetail({route, navigation}) {
       setTextFieldNames(textFieldNames);
       setNumberFieldNames(numberFieldNames);
       setDateFieldNames(dateFieldNames);
-      setLocationFieldNames(locationFieldNames);
       setLinkFieldNames(linkFieldNames);
+      setLocationFieldNames(locationFieldNames);
       setIsLiked(isLiked);
+      setLikeCount(likeCount);
+      setPostDetail(postDetailResponse);
     }
     init();
   }, []);
-  
 
   return (
-    <View style={styles.feedItem}>
+    <View style={[styles.container, styles.feedItem]}>
+      <View>
         <Image source={{uri: user.imageUrl}} style={styles.avatar} />
         <View
           style={{
@@ -69,41 +102,43 @@ export default function PostDetail({route, navigation}) {
             justifyContent: 'space-between',
             
           }}>
-          <View>
-            <View
-              style={{
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                alignItems: 'baseline',
-              }}>
-              <Text style={{fontSize: 18, color: COLORS.textColor}}>
-                {user.username}
-              </Text>
-              <Text style={{fontSize: 12, color: COLORS.textColor}}>
-                {community.name}
-              </Text>
-            </View>
+          <View
+            style={{
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              alignItems: 'baseline',
+            }}>
+            <Text style={{fontSize: 18, color: COLORS.textColor}}>
+              {user.username}
+            </Text>
+            <Text style={{fontSize: 12, color: COLORS.textColor}}>
+              {community.name}
+            </Text>
             <Text style={styles.timestamp}>
               {moment(date).fromNow()}
             </Text>
             <Text> </Text>
             <Text> </Text>
+            
           </View>
         </View>
+      </View>
 
-        <View>
+          <View>
           <FlatList
-            data={textFieldNames}
-            renderItem={({item}) => (
-              <View>
-                <Text style={styles.fieldName}>{item.name}</Text>
-                <Text style={styles.content}>{item.value}</Text>
-                <Text></Text>
-              </View>
-            )}
-          />
-
+              data={textFieldNames}
+              renderItem={({item}) => (
+                <View>
+                  <Text style={styles.fieldName}>{item.name}</Text>
+                  <Text style={styles.content}>{item.value}</Text>
+                  <Text></Text>
+                </View>
+              )}
+            />
+          </View>
+          <View>
           <FlatList
+            showsHorizontalScrollIndicator={false}
             data={numberFieldNames}
             renderItem={({item}) => (
               <View>
@@ -113,8 +148,10 @@ export default function PostDetail({route, navigation}) {
               </View>
             )}
           />
-
+          </View>
+          <View>
           <FlatList
+            showsHorizontalScrollIndicator={false}
             data={dateFieldNames}
             renderItem={({item}) => (
               <View>
@@ -124,8 +161,10 @@ export default function PostDetail({route, navigation}) {
               </View>
             )}
           />
-
+          </View>
+          <View>
           <FlatList
+            showsHorizontalScrollIndicator={false}
             data={linkFieldNames}
             renderItem={({item}) => (
               <View>
@@ -137,19 +176,40 @@ export default function PostDetail({route, navigation}) {
               </View>
             )}
           />
+          </View>
 
+          <View>
           <FlatList
+            showsHorizontalScrollIndicator={false}
             data={locationFieldNames}
-            renderItem={({item}) => (
+            renderItem={({item,index}) => (
               <View>
-                <Text style={styles.fieldName}>{item.name}</Text>
-                <Text style={styles.content}>{item.value}</Text>
+                  <MapView
+                    style={styles.map}
+                    initialRegion={{
+                        latitude: locationFieldNames[index]['value']['geo']['latitude'],
+                        longitude: locationFieldNames[index]['value']['geo']['longitude'],
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                      }}
+                    >
+                  </MapView>
+                <View style={{top:0}}>
+                  <Text></Text>
+                  <Text></Text>
+                  <Text></Text>
+                  <Text></Text>
+                  <Text></Text>
+                  <Text></Text>
+                  <Text></Text>
+                </View>
               </View>
             )}
           />
-        </View>
 
-        <View style={{flexDirection: 'row'}}>
+      </View>
+
+        <View style={{flexDirection: 'row', top:15, flex:1}}>
           <Icon
             name="heart"
             size={24}
@@ -158,8 +218,9 @@ export default function PostDetail({route, navigation}) {
                 ? COLORS.buttonColor
                 : COLORS.unlikeButtonColor
             }
-            style={{marginRight: 16}}
+            style={{marginRight: 8}}
           />
+          <Text> {likeCount} likes </Text>
         </View>
     </View>
     
@@ -174,6 +235,7 @@ const styles = StyleSheet.create({
     padding: 18,
     flexDirection: 'column',
     marginVertical: 8,
+    minHeight: '100%',
   },
   avatar: {
     width: 36,
@@ -197,4 +259,21 @@ const styles = StyleSheet.create({
     color: '#C4C6CE',
     marginTop: 4,
   },
+  map: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+
+},
+marker: {
+  height: 48,
+  width: 48,
+},
+region: {
+  color: '#fff',
+  lineHeight: 20,
+  margin: 20,
+},
 });

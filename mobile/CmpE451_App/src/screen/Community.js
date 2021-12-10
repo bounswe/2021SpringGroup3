@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Image,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ToastAndroid,
-} from 'react-native';
+import {View, Image, Text, StyleSheet, ToastAndroid} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useIsFocused} from '@react-navigation/native';
 
@@ -70,7 +63,16 @@ export default function Community({navigation}) {
 
   async function fetchPosts() {}
 
-  async function handleJoinCommunity() {}
+  async function handleJoinCommunity() {
+    let response = await Client.joinCommunity({
+      communityId: PAGE_VARIABLES.communityId,
+    });
+    if (response.status === 200) {
+      setIsMember(response.data.isMember);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  }
 
   const navigate = async () => {
     navigation.navigate('Home');
@@ -111,6 +113,7 @@ export default function Community({navigation}) {
             title="Join"
             buttonStyle={styles.joinButton}
             titleStyle={styles.joinText}
+            onPress={handleJoinCommunity}
             icon={
               <IconButton
                 icon="plus"
