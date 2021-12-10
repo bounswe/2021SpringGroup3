@@ -9,6 +9,7 @@ router.route('/').get(profileController.getProfile);
 router
   .route('/settings')
   .get(profileController.getProfileSettings)
+  .delete(profileController.deleteProfile)
   .post(validate(profileValidation.setProfile), profileController.setProfile);
 
 router.route('/other').get(profileController.getOtherProfile);

@@ -1,10 +1,15 @@
 const moment = require('moment');
 
 const formatCreator = function (creator) {
+  if (creator) {
+    return {
+      id: creator._id.toString(),
+      username: creator.username,
+      imageUrl: creator.imageUrl,
+    };
+  }
   return {
-    id: creator._id.toString(),
-    username: creator.username,
-    imageUrl: creator.imageUrl,
+    isDeleted: true,
   };
 };
 
@@ -36,7 +41,7 @@ exports.formatCommunityDetails = function (community, user) {
     ...exports.formatPreviewCommunity(community),
     user: formatCreator(community.creator),
     members: community.members,
-    moderators: community.moderators
+    moderators: community.moderators,
   };
 };
 
@@ -70,7 +75,7 @@ exports.formatPostDetail = function (post, user) {
     linkFieldNames: post.linkFields,
     locationFieldNames: post.locationFields,
     isLiked: post.likers.includes(user._id),
-    likeCount: post.likers.length
+    likeCount: post.likers.length,
   };
 };
 
@@ -103,7 +108,7 @@ exports.formatProfile = function (user) {
 exports.formatOtherProfile = function (user) {
   return {
     username: user.username,
-    profilePhotoUrl: user.profilePhotoUrl && user.profilePhotoUrl.isPublic? user.profilePhotoUrl.value : '',
+    profilePhotoUrl: user.profilePhotoUrl && user.profilePhotoUrl.isPublic ? user.profilePhotoUrl.value : '',
     bio: user.bio && user.bio.isPublic ? user.bio.value : '',
     birthday: user.birthday && user.birthday.isPublic ? user.birthday.value : '',
     location: user.location && user.location.isPublic ? user.location : '',
