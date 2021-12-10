@@ -50,7 +50,11 @@ exports.createCommunity = async ({ token, name, iconUrl, description, isPrivate 
 };
 
 exports.getCommunityDetail = async ({ token, communityId }) => {
-  const community = await Community.findById(communityId).populate('creator').lean();
+  const community = await Community.findById(communityId)
+    .populate('creator')
+    .populate({ path: 'members', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
+    .populate({ path: 'moderators', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
+    .exec();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
@@ -72,4 +76,39 @@ exports.joinCommunity = async ({ token, communityId }) => {
     { new: true }
   );
   return formatters.formatCommunityDetails(community, token.user);
+};
+
+exports.leaveCommunity = async ({ token, communityId }) => {
+  let community = await Community.findById(communityId).lean();
+  if (!community) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  community = await Community.findByIdAndUpdate(
+    community._id,
+    {
+      $pull: {
+        members: token.user._id,
+        moderators: token.user._id,
+      },
+    },
+    { new: true }
+  );
+  if (community.moderators.length == 0) {
+    if (community.members.length != 0) {
+      community = await Community.findByIdAndUpdate(
+        community._id,
+        {
+          $addToSet: {
+            moderators: community.members[0],
+          },
+        },
+        { new: true }
+      );
+    } else {
+      Community.deleteOne(community._id);
+    }
+  }
+  return {
+    message: 'You left the community!',
+  };
 };

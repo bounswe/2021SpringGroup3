@@ -13,5 +13,6 @@ router
 router.route('/detail').get(validate(communityValidation.getCommunityDetail), communityController.getCommunityDetail);
 
 router.route('/join').post(validate(communityValidation.joinCommunity), communityController.joinCommunity);
+router.route('/leave').post(validate(communityValidation.leaveCommunity), communityController.leaveCommunity);
 
 module.exports = router;

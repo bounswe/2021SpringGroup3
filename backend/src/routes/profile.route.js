@@ -11,4 +11,6 @@ router
   .get(profileController.getProfileSettings)
   .post(validate(profileValidation.setProfile), profileController.setProfile);
 
+router.route('/other').get(profileController.getOtherProfile);
+
 module.exports = router;

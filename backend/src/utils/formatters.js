@@ -35,8 +35,8 @@ exports.formatCommunityDetails = function (community, user) {
   return {
     ...exports.formatPreviewCommunity(community),
     user: formatCreator(community.creator),
-    isMember: community.members && community.members.includes(user._id),
-    isModerator: community.moderators && community.moderators.includes(user._id),
+    members: community.members,
+    moderators: community.moderators
   };
 };
 
@@ -70,6 +70,7 @@ exports.formatPostDetail = function (post, user) {
     linkFieldNames: post.linkFields,
     locationFieldNames: post.locationFields,
     isLiked: post.likers.includes(user._id),
+    likeCount: post.likers.length
   };
 };
 
@@ -99,6 +100,15 @@ exports.formatProfile = function (user) {
   };
 };
 
+exports.formatOtherProfile = function (user) {
+  return {
+    username: user.username,
+    profilePhotoUrl: user.profilePhotoUrl && user.profilePhotoUrl.isPublic? user.profilePhotoUrl.value : '',
+    bio: user.bio && user.bio.isPublic ? user.bio.value : '',
+    birthday: user.birthday && user.birthday.isPublic ? user.birthday.value : '',
+    location: user.location && user.location.isPublic ? user.location : '',
+  };
+};
 const defaultProfileField = {
   value: '',
   isPublic: true,

@@ -31,13 +31,13 @@ const dateField = new mongoose.Schema(
 );
 
 const locationField = new mongoose.Schema(
-    {
-        name: { type: String },
-        value: { type: Object },
-    },
-    {
-        _id: false,
-    }
+  {
+    name: { type: String },
+    value: { type: Object },
+  },
+  {
+    _id: false,
+  }
 );
 
 const postSchema = mongoose.Schema(
@@ -61,12 +61,7 @@ const postSchema = mongoose.Schema(
     linkFields: [stringField],
     locationFields: [locationField],
     likeCount: { type: Number, default: 0 },
-    likers: [
-      {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: 'Community',
-      },
-    ],
+    likers: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
   },
   {
     timestamps: true,
