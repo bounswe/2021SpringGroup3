@@ -152,7 +152,7 @@ export async function getProfile(info) {
       'authorization': `${info.token}`
       },
     }
-    const response = await axios.get(GET_PROFILE_ENDPOINT+"?communityId="+info.id, { ...header });
+    const response = await axios.get(GET_PROFILE_ENDPOINT, { ...header });
     console.log(response)
     return response;
   } catch (error) {

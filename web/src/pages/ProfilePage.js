@@ -10,29 +10,10 @@ import { Layout, Col  } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 
 function ProfilePage(props) {
-    
-    // Mock data
-    const tempUserObj = {
-        "username": "Temporary User",
-        "profilePhotoUrl": "https://picsum.photos/200",
-        "bio": "Temporary bio found here.",
-        "birthday": "01.02.2003",
-        "location": {
-          "value": {
-            "latitude": 3.435345,
-            "longitude": 3.435345
-          },
-          "isPublic": true,
-          "description": "text"
-        }
-      }
 
-      
     const loginState = useSelector((state) => state.login);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    const { id } = useParams();
 
     const [result, setResult] = useState('');
 
