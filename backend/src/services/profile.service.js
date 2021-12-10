@@ -22,7 +22,7 @@ exports.setProfile = async ({ token, body }) => {
     {
       $set: {
         ...body,
-        profilePhoto: {
+        profilePhotoUrl: {
           value: `${config.serverUrl}${path}`,
           isPublic: body.profilePhoto.isPublic,
         },
