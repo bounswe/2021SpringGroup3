@@ -62,6 +62,7 @@ const postSchema = mongoose.Schema(
     locationFields: [locationField],
     likeCount: { type: Number, default: 0 },
     likers: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
+    tags: [{ type: String }],
   },
   {
     timestamps: true,
