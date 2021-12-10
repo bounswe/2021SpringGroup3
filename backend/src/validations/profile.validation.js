@@ -8,9 +8,9 @@ const profileField = Joi.object()
   .required();
 
 const locationField = Joi.object().keys({
-    value: Joi.object().required(),
-    isPublic: Joi.boolean().required(),
-    description: Joi.string().required()
+  value: Joi.object().required(),
+  isPublic: Joi.boolean().required(),
+  description: Joi.string().required(),
 });
 
 exports.setProfile = {

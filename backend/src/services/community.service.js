@@ -78,7 +78,7 @@ exports.joinCommunity = async ({ token, communityId }) => {
   return formatters.formatCommunityDetails(community, token.user);
 };
 
-exports.leaveCommunity = async ({ token, communityId }) => {
+exports.leaveCommunity = async ({ userId, communityId }) => {
   let community = await Community.findById(communityId).lean();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
@@ -87,14 +87,14 @@ exports.leaveCommunity = async ({ token, communityId }) => {
     community._id,
     {
       $pull: {
-        members: token.user._id,
-        moderators: token.user._id,
+        members: userId,
+        moderators: userId,
       },
     },
     { new: true }
   );
-  if (community.moderators.length == 0) {
-    if (community.members.length != 0) {
+  if (community.moderators.length === 0) {
+    if (community.members.length !== 0) {
       community = await Community.findByIdAndUpdate(
         community._id,
         {
@@ -111,4 +111,16 @@ exports.leaveCommunity = async ({ token, communityId }) => {
   return {
     message: 'You left the community!',
   };
+};
+
+exports.kickFromCommunity = async ({ token, userId, communityId }) => {
+  const community = await Community.findById(communityId).lean();
+  if (!community) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  if (community.moderators && new Set(community.moderators.map((m) => m.toString())).has(token.user._id)) {
+    await exports.leaveCommunity({ userId, communityId });
+  } else {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to kick someone from community');
+  }
 };
