@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router';
 import { Form, Input, Button, Checkbox, Typography, Row, Col, Switch, DatePicker, Upload, Avatar, Divider } from 'antd';
 import 'antd/dist/antd.css';
 
@@ -11,11 +12,30 @@ const { TextArea } = Input;
 
 const ProfileEdit = (props) => {
 
-  
-  console.log(props)
+  const navigate = useNavigate();
 
   const onFinish = (values) => {
-    console.log('Success:', values);
+    const profileBody = {
+      "profilePhotoUrl": {
+        "value": values.profilePicture,
+        "isPublic": values.isProfilePicturePublic
+      },
+      "bio": {
+        "value": values.bio,
+        "isPublic": values.isBioPublic
+      },
+      "birthday": {
+        "value": values.birthday,
+        "isPublic": values.isBirthdayPublic
+      },
+      "location": {
+        "value": values.location,
+        "isPublic": values.isLocationPublic,
+        "description": "text"
+      }
+    }
+    console.log('Success:', profileBody);
+    navigate('/profile');
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -66,6 +86,7 @@ const ProfileEdit = (props) => {
             <Text strong>Username</Text>
             <Form.Item
               name="username"
+              initialValue={props.profileValues.username}
               required
               rules={[
                 {
@@ -81,7 +102,10 @@ const ProfileEdit = (props) => {
           <Text strong>Bio</Text>
           <Row>
             <Col span={12}>
-              <Form.Item name="bio">
+              <Form.Item 
+                name="bio"
+                initialValue={props.profileValues.bio}
+              >
                 <TextArea rows={4} placeholder="Enter bio" />
               </Form.Item>
             </Col>
@@ -99,7 +123,10 @@ const ProfileEdit = (props) => {
           <Text strong>Birthday</Text>
           <Row>
             <Col span={12}>
-              <Form.Item name="birthday">
+              <Form.Item 
+                name="birthday"
+                initialValue={props.profileValues.birthday}
+              >
                 <DatePicker />
               </Form.Item>
             </Col>
@@ -116,7 +143,10 @@ const ProfileEdit = (props) => {
           <Text strong>Location</Text>
           <Row>
             <Col span={12}>
-              <Form.Item name="location">
+              <Form.Item 
+                name="location"
+                initialValue={props.profileValues.location}  
+              >
                 <Input placeholder="Enter location" />
               </Form.Item>
             </Col>

@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useSelector, useDispatch } from 'react-redux';
-import { Layout, Col  } from 'antd';
+
 import NavBar from '../components/NavBar';
 import AboutCommunity from '../components/AboutCommunity';
 import { GetCommunityPage as GetCommunityPageRequest } from "../utils/helper";
 
+import { Layout, Col  } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 
 function GetCommunityPage(props) {
 
   const loginState = useSelector((state) => state.login);
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { id } = useParams();
   
@@ -22,8 +23,6 @@ function GetCommunityPage(props) {
     GetCommunityPageRequest({id: id, token: loginState.token}, dispatch)
       .then( result => setResult(result.data.name));
   }, [])
-
-  console.log(result);
 
   return (
     <> 
