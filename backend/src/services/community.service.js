@@ -121,6 +121,8 @@ exports.deleteCommunity = async ({ token, communityId }) => {
   if (community.moderators && new Set(community.moderators.map((m) => m.toString())).has(token.user._id.toString())) {
     await Post.deleteMany({ community: community._id });
     await Community.deleteOne({ _id: community._id });
+  } else {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to delete a community');
   }
   return {};
 };
