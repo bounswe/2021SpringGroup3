@@ -37,10 +37,18 @@ exports.joinCommunity = {
     .required(),
 };
 
-exports.deleteCommunity = {
+exports.leaveCommunity = {
   query: Joi.object()
     .keys({
       communityId: Joi.string().custom(objectId).required(),
+    })
+    .required(),
+};
+exports.kickFromCommunity = {
+  query: Joi.object()
+    .keys({
+      communityId: Joi.string().custom(objectId).required(),
+      userId: Joi.string().custom(objectId).required(),
     })
     .required(),
 };
