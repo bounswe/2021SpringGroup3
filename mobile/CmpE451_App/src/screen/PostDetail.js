@@ -9,6 +9,7 @@ import * as Requests from '../services/BoxyClient';
 import {IconButton} from 'react-native-paper';
 import Geocoder from 'react-native-geocoding';
 import MapView, {Marker} from 'react-native-maps';
+import Moment from 'moment';
 
 
 import {
@@ -93,7 +94,7 @@ export default function PostDetail({route, navigation}) {
   }, []);
 
   return (
-    <View style={[styles.container, styles.feedItem]}>
+    <View style={styles.feedItem}>
       <View>
         <Image source={{uri: user.imageUrl}} style={styles.avatar} />
         <View
@@ -119,13 +120,13 @@ export default function PostDetail({route, navigation}) {
             </Text>
             <Text> </Text>
             <Text> </Text>
-            
           </View>
         </View>
       </View>
 
           <View>
           <FlatList
+              showsHorizontalScrollIndicator={false}
               data={textFieldNames}
               renderItem={({item}) => (
                 <View>
@@ -156,7 +157,7 @@ export default function PostDetail({route, navigation}) {
             renderItem={({item}) => (
               <View>
                 <Text style={styles.fieldName}>{item.name}</Text>
-                <Text style={styles.content}>{item.value}</Text>
+                <Text style={styles.content}>{moment(item.value).format('MMMM Do YYYY, h:mm:ss a')}</Text>
                 <Text></Text>
               </View>
             )}
@@ -184,17 +185,21 @@ export default function PostDetail({route, navigation}) {
             data={locationFieldNames}
             renderItem={({item,index}) => (
               <View>
+                <View>
+                  <Text style={styles.fieldName}>{locationFieldNames[index].name}</Text>
+                  <Text style={styles.content}>{locationFieldNames[index].value.description}</Text>
+                </View>
+                <View>
                   <MapView
                     style={styles.map}
                     initialRegion={{
                         latitude: locationFieldNames[index]['value']['geo']['latitude'],
                         longitude: locationFieldNames[index]['value']['geo']['longitude'],
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
+                        latitudeDelta: 0.004757,
+                        longitudeDelta: 0.006866,
                       }}
                     >
                   </MapView>
-                <View style={{top:0}}>
                   <Text></Text>
                   <Text></Text>
                   <Text></Text>
@@ -209,7 +214,7 @@ export default function PostDetail({route, navigation}) {
 
       </View>
 
-        <View style={{flexDirection: 'row', top:15, flex:1}}>
+        <View style={{flexDirection: 'row', top:18}}>
           <Icon
             name="heart"
             size={24}
@@ -232,10 +237,11 @@ const styles = StyleSheet.create({
   feedItem: {
     backgroundColor: '#FFF',
     borderRadius: 5,
-    padding: 18,
+    padding: 20,
     flexDirection: 'column',
     marginVertical: 8,
     minHeight: '100%',
+    removeClippedSubviews: true,
   },
   avatar: {
     width: 36,
@@ -252,7 +258,6 @@ const styles = StyleSheet.create({
   content: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#454D65',
   },
   timestamp: {
     fontSize: 11,
@@ -261,10 +266,11 @@ const styles = StyleSheet.create({
   },
   map: {
   position: 'absolute',
-  top: 0,
+  top: 10,
   left: 0,
   right: 0,
   bottom: 0,
+  width: 250,
 
 },
 marker: {
