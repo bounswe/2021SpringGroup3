@@ -62,3 +62,15 @@ exports.deleteCommunity = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.updateCommunity = catchAsync(async (req, res) => {
+  const result = await communityService.updateCommunity({
+    token: req.token,
+    name: req.body.name,
+    iconUrl: req.body.iconUrl,
+    description: req.body.description,
+    isPrivate: req.body.isPrivate,
+    communityId: req.body.communityId,
+  });
+  res.send(result);
+});
