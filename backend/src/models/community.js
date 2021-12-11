@@ -19,6 +19,7 @@ const communitySchema = mongoose.Schema(
     creator: { type: mongoose.SchemaTypes.ObjectId, ref: 'User', required: true, index: true },
     moderators: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
     members: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
+    isCreatorDeleted: { type: Boolean, default: false },
   },
   {
     timestamps: true,

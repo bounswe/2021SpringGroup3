@@ -10,7 +10,11 @@ const auth = () => async (req, res, next) => {
   return new Promise(async (resolve, reject) => {
     const path = req.baseUrl + req.path;
     // no need to check token
-    if (['/auth/login', '/auth/register'].includes(path) || (path.includes('docs') && config.env !== 'production'))
+    if (
+      ['/auth/login', '/auth/register'].includes(path) ||
+      (path.includes('docs') && config.env !== 'production') ||
+      path.includes('images')
+    )
       return next();
     if (coreUtil.isNull(req.headers.authorization)) {
       return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized'));

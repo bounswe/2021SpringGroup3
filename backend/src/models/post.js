@@ -63,6 +63,7 @@ const postSchema = mongoose.Schema(
     likeCount: { type: Number, default: 0 },
     likers: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
     tags: [{ type: String }],
+    isCreatorDeleted: { type: Boolean, default: false },
   },
   {
     timestamps: true,

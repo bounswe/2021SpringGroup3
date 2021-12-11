@@ -57,3 +57,11 @@ exports.getPostDetail = {
     })
     .required(),
 };
+
+exports.deletePost = {
+  query: Joi.object()
+    .keys({
+      postId: Joi.string().custom(objectId).required(),
+    })
+    .required(),
+};
