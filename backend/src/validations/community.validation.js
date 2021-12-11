@@ -44,6 +44,7 @@ exports.leaveCommunity = {
     })
     .required(),
 };
+
 exports.kickFromCommunity = {
   query: Joi.object()
     .keys({

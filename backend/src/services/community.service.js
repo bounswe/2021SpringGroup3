@@ -1,7 +1,7 @@
 /* eslint-disable security/detect-non-literal-regexp */
 const httpStatus = require('http-status');
 
-const { formatters } = require('../utils');
+const { formatters, baseUtil } = require('../utils');
 const { Community, Post } = require('../models');
 const ApiError = require('../utils/ApiError');
 
@@ -101,7 +101,10 @@ exports.joinCommunity = async ({ token, communityId }) => {
     },
     { new: true }
   );
-  return formatters.formatCommunityDetails(community, token.user);
+  return {
+    ...formatters.formatCommunityDetails(community, token.user),
+    joinStatus: community.isPrivate ? 'waiting' : 'joined',
+  };
 };
 
 exports.leaveCommunity = async ({ userId, communityId }) => {
@@ -145,9 +148,83 @@ exports.kickFromCommunity = async ({ token, userId, communityId }) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
   if (community.moderators && new Set(community.moderators.map((m) => m.toString())).has(token.user._id)) {
+    if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, userId)) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'User is not a member of this community');
+    }
     await exports.leaveCommunity({ userId, communityId });
   } else {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to kick someone from community');
   }
-  return {};
+  return {
+    message: 'User has been kicked from the community',
+  };
+};
+
+exports.approveJoinRequest = async ({ token, userId, communityId }) => {
+  const community = await Community.findById(communityId).lean();
+  if (!community) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  if (community.moderators && new Set(community.moderators.map((m) => m.toString())).has(token.user._id)) {
+    if (baseUtil.checkIfObjectIdArrayIncludesId(community.pendingMembers, userId)) {
+      if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, userId)) {
+        await Community.findByIdAndUpdate(community._id, {
+          $addToSet: {
+            members: userId,
+          },
+          $pull: {
+            pendingMembers: userId,
+          },
+        });
+      } else {
+        // to be sure
+        await Community.findByIdAndUpdate(community._id, {
+          $pull: {
+            pendingMembers: userId,
+          },
+        });
+        throw new ApiError(httpStatus.BAD_REQUEST, 'This user is already a member of this community');
+      }
+    } else {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'This user has not requested to join this community');
+    }
+  } else {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to approve a join request');
+  }
+  return {
+    message: 'Join request is approved',
+  };
+};
+
+exports.rejectJoinRequest = async ({ token, userId, communityId }) => {
+  const community = await Community.findById(communityId).lean();
+  if (!community) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  if (community.moderators && new Set(community.moderators.map((m) => m.toString())).has(token.user._id)) {
+    if (baseUtil.checkIfObjectIdArrayIncludesId(community.pendingMembers, userId)) {
+      if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, userId)) {
+        await Community.findByIdAndUpdate(community._id, {
+          $pull: {
+            pendingMembers: userId,
+          },
+        });
+      } else {
+        // to be sure
+        await Community.findByIdAndUpdate(community._id, {
+          $pull: {
+            pendingMembers: userId,
+          },
+        });
+        throw new ApiError(httpStatus.BAD_REQUEST, 'This user is already a member of this community');
+      }
+    } else {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'This user has not requested to join this community');
+    }
+  } else {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to reject a join request');
+  }
+  return {
+    message: 'Join request is rejected',
+  };
 };

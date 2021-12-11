@@ -62,3 +62,21 @@ exports.deleteCommunity = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.acceptJoinRequest = catchAsync(async (req, res) => {
+  const result = await communityService.approveJoinRequest({
+    token: req.token,
+    communityId: req.query.communityId,
+    userId: req.query.userId,
+  });
+  res.send(result);
+});
+
+exports.rejectJoinRequest = catchAsync(async (req, res) => {
+  const result = await communityService.rejectJoinRequest({
+    token: req.token,
+    communityId: req.query.communityId,
+    userId: req.query.userId,
+  });
+  res.send(result);
+});
