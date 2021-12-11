@@ -45,6 +45,7 @@ exports.createPost = async ({
   dateFields = [],
   linkFields = [],
   locationFields = [],
+  tags = [],
 }) => {
   const community = await Community.findById(communityId).lean();
   if (!community) {
@@ -80,6 +81,7 @@ exports.createPost = async ({
     dateFields,
     linkFields,
     locationFields,
+    tags,
   });
   return {
     message: 'Post is created',

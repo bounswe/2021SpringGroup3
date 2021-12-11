@@ -36,6 +36,7 @@ exports.createPost = {
       dateFields: Joi.array().items(dateField).max(10),
       linkFields: Joi.array().items(linkField).max(10),
       locationFields: Joi.array().items(locationField).max(10),
+      tags: Joi.array().items(Joi.string()),
     })
     .required(),
 };
