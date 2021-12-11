@@ -1,11 +1,17 @@
 const moment = require('moment');
 
+const DEFAULT_PROFILE_PHOTO_URL = 'https://exoffender.org/wp-content/uploads/2016/09/empty-profile.png';
+
 const formatCreator = function (creator) {
   if (creator) {
+    let profilePhotoUrl = DEFAULT_PROFILE_PHOTO_URL;
+    if (creator.profilePhotoUrl && creator.profilePhotoUrl.isPublic && creator.profilePhotoUrl.length > 0) {
+      profilePhotoUrl = creator.profilePhotoUrl.value;
+    }
     return {
       id: creator._id.toString(),
       username: creator.username,
-      profilePhotoUrl: creator.profilePhotoUrl,
+      profilePhotoUrl,
     };
   }
   return {
