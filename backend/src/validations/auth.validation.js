@@ -19,3 +19,11 @@ exports.register = {
     })
     .required(),
 };
+
+exports.changePassword = {
+  body: Joi.object()
+    .keys({
+      password: Joi.string().custom(password).required(),
+    })
+    .required(),
+};

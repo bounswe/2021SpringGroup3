@@ -56,3 +56,20 @@ exports.register = async ({ email, password, username }) => {
     message: 'Register is success',
   };
 };
+
+exports.changePassword = async ({ token, password }) => {
+  await UserToken.deleteMany({
+    _id: {
+      $nin: [token._id],
+    },
+    user: token.user._id,
+  });
+  await User.findByIdAndUpdate(token.user._id, {
+    $set: {
+      password,
+    },
+  });
+  return {
+    message: 'Your password has changed successfully',
+  };
+};
