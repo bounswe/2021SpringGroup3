@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 
 const { formatters } = require('../utils');
-const { Community } = require('../models');
+const { Community, Post } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 exports.getCommunities = async ({ token, isModerator, isMember }) => {
@@ -123,4 +123,5 @@ exports.kickFromCommunity = async ({ token, userId, communityId }) => {
   } else {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to kick someone from community');
   }
+  return {};
 };

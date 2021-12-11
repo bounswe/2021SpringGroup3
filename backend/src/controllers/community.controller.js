@@ -54,3 +54,11 @@ exports.kickFromCommunity = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.deleteCommunity = catchAsync(async (req, res) => {
+  const result = await communityService.deleteCommunity({
+    token: req.token,
+    communityId: req.query.communityId,
+  });
+  res.send(result);
+});

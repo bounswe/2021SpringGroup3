@@ -8,6 +8,7 @@ const router = express.Router();
 router
   .route('/')
   .post(validate(communityValidation.createCommunity), communityController.createCommunity)
+  .delete(validate(communityValidation.deleteCommunity), communityController.deleteCommunity)
   .get(validate(communityValidation.getCommunities), communityController.getCommunities);
 
 router.route('/detail').get(validate(communityValidation.getCommunityDetail), communityController.getCommunityDetail);

@@ -20,6 +20,7 @@ exports.createPost = catchAsync(async (req, res) => {
     dateFields: req.body.dateFields,
     linkFields: req.body.linkFields,
     locationFields: req.body.locationFields,
+    tags: req.body.tags,
   });
   res.status(httpStatus.CREATED).send(result);
 });

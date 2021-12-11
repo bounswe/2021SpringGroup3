@@ -45,6 +45,7 @@ exports.createPost = async ({
   dateFields = [],
   linkFields = [],
   locationFields = [],
+  tags = [],
 }) => {
   const community = await Community.findById(communityId).lean();
   if (!community) {
@@ -80,6 +81,7 @@ exports.createPost = async ({
     dateFields,
     linkFields,
     locationFields,
+    tags,
   });
   return {
     message: 'Post is created',
@@ -119,4 +121,24 @@ exports.likePost = async ({ token, communityId, postId }) => {
     { new: true }
   );
   return formatters.formatPostDetail(post, token.user);
+};
+
+exports.deletePost = async ({ token, postId }) => {
+  const post = await Post.findById(postId).populate(['community']).lean();
+  if (!post) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post does not exist');
+  }
+  if (
+    (post.community.moderators &&
+      new Set(post.community.moderators.map((m) => m.toString())).has(token.user._id.toString())) ||
+    (post.creator && post.creator.toString() === token.user._id)
+  ) {
+    await Post.deleteOne({ _id: post._id });
+  } else {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'You need to be the creator of the post or moderator of the community it belongs to delete it'
+    );
+  }
+  return {};
 };

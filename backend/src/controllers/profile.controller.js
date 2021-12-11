@@ -8,6 +8,13 @@ exports.getProfile = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+exports.deleteProfile = catchAsync(async (req, res) => {
+  const result = await profileService.deleteProfile({
+    token: req.token,
+  });
+  res.send(result);
+});
+
 exports.getProfileSettings = catchAsync(async (req, res) => {
   const result = await profileService.getProfileSettings({
     token: req.token,
