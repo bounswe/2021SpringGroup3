@@ -36,6 +36,7 @@ exports.createPost = {
       dateFields: Joi.array().items(dateField).max(10),
       linkFields: Joi.array().items(linkField).max(10),
       locationFields: Joi.array().items(locationField).max(10),
+      tags: Joi.array().items(Joi.string()),
     })
     .required(),
 };
@@ -61,6 +62,13 @@ exports.likePost = {
   query: Joi.object()
     .keys({
       communityId: Joi.string().custom(objectId).required(),
+    })
+    .required(),
+};
+
+exports.deletePost = {
+  query: Joi.object()
+    .keys({
       postId: Joi.string().custom(objectId).required(),
     })
     .required(),

@@ -1,6 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const xss = require('xss-clean');
+const path = require('path');
 const httpStatus = require('http-status');
 const mongoSanitize = require('express-mongo-sanitize');
 const compression = require('compression');
@@ -46,7 +47,11 @@ if (config.env === 'production') {
 }
 
 app.use((req, res, next) => {
-  if (!['ANDROID', 'WEB'].includes(req.headers['x-platform']) && !req.path.includes('/docs')) {
+  console.log(req.path);
+  if (
+    !['ANDROID', 'WEB'].includes(req.headers['x-platform']) &&
+    !(req.path.includes('/docs') || req.path.includes('/images'))
+  ) {
     return next(new ApiError(httpStatus.BAD_REQUEST, 'Invalid X-Platform header'));
   }
   next();
@@ -56,6 +61,8 @@ app.use(auth());
 
 // api routes
 app.use(routes);
+
+app.use('/images', express.static(`${path.join(__dirname, '..')}/images`));
 
 app.get('/', function (req, res) {
   res.send('Hello');

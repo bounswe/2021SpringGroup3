@@ -40,6 +40,23 @@ exports.joinCommunity = catchAsync(async (req, res) => {
 
 exports.leaveCommunity = catchAsync(async (req, res) => {
   const result = await communityService.leaveCommunity({
+    userId: req.token.user._id,
+    communityId: req.query.communityId,
+  });
+  res.send(result);
+});
+
+exports.kickFromCommunity = catchAsync(async (req, res) => {
+  const result = await communityService.kickFromCommunity({
+    token: req.token,
+    communityId: req.query.communityId,
+    userId: req.query.userId,
+  });
+  res.send(result);
+});
+
+exports.deleteCommunity = catchAsync(async (req, res) => {
+  const result = await communityService.deleteCommunity({
     token: req.token,
     communityId: req.query.communityId,
   });

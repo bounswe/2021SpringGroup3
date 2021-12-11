@@ -1,10 +1,15 @@
 const moment = require('moment');
 
 const formatCreator = function (creator) {
+  if (creator) {
+    return {
+      id: creator._id.toString(),
+      username: creator.username,
+      imageUrl: creator.imageUrl,
+    };
+  }
   return {
-    id: creator._id.toString(),
-    username: creator.username,
-    imageUrl: creator.imageUrl,
+    isDeleted: true,
   };
 };
 

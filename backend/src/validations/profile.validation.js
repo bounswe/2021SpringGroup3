@@ -17,7 +17,12 @@ const locationField = Joi.object().keys({
 exports.setProfile = {
   body: Joi.object()
     .keys({
-      profilePhotoUrl: profileField,
+      profilePhoto: Joi.object()
+        .keys({
+          value: Joi.string().base64().required(),
+          isPublic: Joi.boolean().required(),
+        })
+        .required(),
       bio: profileField,
       birthday: profileField,
       location: locationField,

@@ -8,6 +8,7 @@ const envVarsSchema = Joi.object()
   .keys({
     NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
     PORT: Joi.number().default(3000),
+    SERVER_URL: Joi.string().uri().default('https://api.cmpegroupthree.store/'),
     MONGODB_URL: Joi.string().required().description('Mongo DB url'),
   })
   .unknown();
@@ -30,4 +31,5 @@ module.exports = {
       useFindAndModify: false,
     },
   },
+  serverUrl: envVars.SERVER_URL,
 };

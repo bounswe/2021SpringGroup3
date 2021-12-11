@@ -6,8 +6,8 @@ exports.createCommunity = {
     .keys({
       name: Joi.string().min(2).max(30).required(),
       iconUrl: Joi.string().uri(),
-        description: Joi.string().required(),
-        isPrivate: Joi.boolean().required()
+      description: Joi.string().required(),
+      isPrivate: Joi.boolean().required(),
     })
     .required(),
 };
@@ -33,6 +33,22 @@ exports.joinCommunity = {
   query: Joi.object()
     .keys({
       communityId: Joi.string().custom(objectId).required(),
+    })
+    .required(),
+};
+
+exports.leaveCommunity = {
+  query: Joi.object()
+    .keys({
+      communityId: Joi.string().custom(objectId).required(),
+    })
+    .required(),
+};
+exports.kickFromCommunity = {
+  query: Joi.object()
+    .keys({
+      communityId: Joi.string().custom(objectId).required(),
+      userId: Joi.string().custom(objectId).required(),
     })
     .required(),
 };
