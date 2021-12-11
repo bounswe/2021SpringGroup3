@@ -231,3 +231,30 @@ exports.rejectJoinRequest = async ({ token, userId, communityId }) => {
     message: 'Join request is rejected',
   };
 };
+
+exports.updateCommunity = async ({ name, iconUrl, description, isPrivate, communityId }) => {
+  let community = await Community.findById(communityId).lean();
+  if (!community) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  if (
+    (await Community.countDocuments({
+      name: new RegExp(`^${name}$`, 'i'),
+      _id: {
+        $nin: [communityId],
+      },
+    })) > 0
+  ) {
+    throw new ApiError(httpStatus.CONFLICT, 'Community name should be unique. This is case insensitive');
+  }
+  community = await Community.findByIdAndUpdate(community._id, {
+    name,
+    iconUrl,
+    description,
+    isPrivate,
+  });
+  return {
+    message: 'Community  is updated',
+    community: formatters.formatPreviewCommunity(community),
+  };
+};

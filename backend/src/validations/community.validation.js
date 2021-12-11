@@ -53,3 +53,15 @@ exports.kickFromCommunity = {
     })
     .required(),
 };
+
+exports.updateCommunity = {
+  body: Joi.object()
+    .keys({
+      communityId: Joi.string().custom(objectId).required(),
+      name: Joi.string().min(2).max(30).required(),
+      iconUrl: Joi.string().uri(),
+      description: Joi.string().required(),
+      isPrivate: Joi.boolean().required(),
+    })
+    .required(),
+};

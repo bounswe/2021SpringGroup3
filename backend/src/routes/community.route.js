@@ -19,5 +19,6 @@ router.route('/join').post(validate(communityValidation.joinCommunity), communit
 
 router.route('/leave').post(validate(communityValidation.leaveCommunity), communityController.leaveCommunity);
 router.route('/kick').post(validate(communityValidation.kickFromCommunity), communityController.kickFromCommunity);
+router.route('/update').post(validate(communityValidation.updateCommunity), communityController.updateCommunity);
 
 module.exports = router;

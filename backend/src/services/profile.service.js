@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const short = require('short-uuid');
 const fs = require('fs-extra');
 const { formatters } = require('../utils');
-const { User, Community, Post } = require('../models');
+const { User, Community, Post, Comment } = require('../models');
 const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
 
@@ -52,6 +52,7 @@ exports.deleteProfile = async ({ token }) => {
       },
     }
   );
+  await Comment.deleteMany({ user: token.user._id });
   await User.deleteOne({ _id: token.user._id });
 };
 

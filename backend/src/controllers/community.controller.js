@@ -77,6 +77,15 @@ exports.rejectJoinRequest = catchAsync(async (req, res) => {
     token: req.token,
     communityId: req.query.communityId,
     userId: req.query.userId,
+
+    exports.updateCommunity = catchAsync(async (req, res) => {
+  const result = await communityService.updateCommunity({
+    token: req.token,
+    name: req.body.name,
+    iconUrl: req.body.iconUrl,
+    description: req.body.description,
+    isPrivate: req.body.isPrivate,
+    communityId: req.body.communityId,
   });
   res.send(result);
 });
