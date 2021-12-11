@@ -16,7 +16,7 @@ const formatCreator = function (creator) {
     return {
       id: creator._id.toString(),
       username: creator.username,
-      profilePhotoUr: formatProfilePhotoUrl(creator),
+      profilePhotoUrl: formatProfilePhotoUrl(creator),
     };
   }
   return {
@@ -42,7 +42,7 @@ exports.formatUser = function (user) {
     email: user.email,
     username: user.username,
     isActivated: user.isActivated,
-    profilePhotoUrl,
+    profilePhotoUrl: formatProfilePhotoUrl(user),
   };
 };
 
