@@ -165,7 +165,7 @@ exports.approveJoinRequest = async ({ token, userId, communityId }) => {
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
-  if (community.moderators && new Set(community.moderators.map((m) => m.toString())).has(token.user._id)) {
+  if (baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, token.user._id.toString())) {
     if (baseUtil.checkIfObjectIdArrayIncludesId(community.pendingMembers, userId)) {
       if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, userId)) {
         await Community.findByIdAndUpdate(community._id, {
@@ -201,7 +201,7 @@ exports.rejectJoinRequest = async ({ token, userId, communityId }) => {
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
-  if (community.moderators && new Set(community.moderators.map((m) => m.toString())).has(token.user._id)) {
+  if (baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, token.user._id.toString())) {
     if (baseUtil.checkIfObjectIdArrayIncludesId(community.pendingMembers, userId)) {
       if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, userId)) {
         await Community.findByIdAndUpdate(community._id, {
