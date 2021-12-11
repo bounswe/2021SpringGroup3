@@ -151,6 +151,9 @@ exports.kickFromCommunity = async ({ token, userId, communityId }) => {
     if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, userId)) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'User is not a member of this community');
     }
+    if (!baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, userId)) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'You can not kick another moderator from a community');
+    }
     await exports.leaveCommunity({ userId, communityId });
   } else {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to kick someone from community');
