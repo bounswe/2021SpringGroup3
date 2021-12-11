@@ -2,11 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {View, Image, Text, StyleSheet, ToastAndroid} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useIsFocused} from '@react-navigation/native';
-
-import {headerStyle} from '../theme/styles';
-import {headerContainerStyle} from '../theme/styles';
 import {COLORS} from '../theme/colors';
-import CloseButton from '../component/CloseButton';
+import ScreenHeader from '../component/ScreenHeader';
 import {IconButton} from 'react-native-paper';
 import {Button} from 'react-native-elements';
 import {PAGE_VARIABLES} from '../constants';
@@ -83,12 +80,7 @@ export default function Community({navigation}) {
   }
   return (
     <View style={styles.container}>
-      <View style={headerContainerStyle}>
-        <View style={headerStyle}>
-          <Text style={{color: 'white', fontSize: 20}}>Communities</Text>
-        </View>
-        <CloseButton onPress={navigate} />
-      </View>
+      <ScreenHeader title="Communities" navigate={navigate} />
       {isModerator && (
         <View style={styles.settingsContainer}>
           <IconButton icon="cog" size={25} color="white" />

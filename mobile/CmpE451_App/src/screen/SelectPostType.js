@@ -11,11 +11,10 @@ import {
 import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
 import {getToken} from '../services/asyncStorageService';
 import {postTypeIcon} from '../image/index';
-import {headerStyle} from '../theme/styles';
-import {headerContainerStyle} from '../theme/styles';
 import {list} from '../theme/styles';
 import {listItem} from '../theme/styles';
-import CloseButton from '../component/CloseButton';
+import {headerTextStyle} from '../theme/styles';
+import ScreenHeader from '../component/ScreenHeader';
 
 export default function SelectPostType({navigation, route}) {
   const {communityName, communityId} = route.params;
@@ -67,12 +66,11 @@ export default function SelectPostType({navigation, route}) {
 
   return (
     <View style={styles.container}>
-      <View style={headerContainerStyle}>
-        <View style={headerStyle}>
-          <Text style={{color: 'white', fontSize: 20}}>Choose Post Type</Text>
-        </View>
-        <CloseButton onPress={navigation.goBack} />
-      </View>
+      <ScreenHeader
+        titleComponent={<Text style={headerTextStyle}>Choose Post Type</Text>}
+        navigate={navigation.goBack}
+        iconName="arrow-left-circle"
+      />
       <FlatList
         refreshing={refreshing}
         onRefresh={_onRefresh}

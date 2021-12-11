@@ -10,14 +10,13 @@ import DatePicker from 'react-native-date-picker';
 import DynamicFormField from '../component/DynamicFormField';
 import FieldHeader from '../component/FieldHeader';
 import CommonButton from '../component/CommonButton';
-import CloseButton from '../component/CloseButton';
 import ConfirmButton from '../component/ConfirmButton';
+import ScreenHeader from '../component/ScreenHeader';
 import {PAGE_VARIABLES} from '../constants';
 import {COLORS} from '../theme/colors';
 import {textInputArea} from '../theme/styles';
 import {textInputContainer} from '../theme/styles';
-import {headerStyle} from '../theme/styles';
-import {headerContainerStyle} from '../theme/styles';
+import {headerTextStyle} from '../theme/styles';
 import * as Requests from '../services/BoxyClient';
 
 export default function CreatePost({route}) {
@@ -268,7 +267,7 @@ export default function CreatePost({route}) {
     return (
       <View style={styles.container}>
         <View style={headerContainerStyle}>
-          <View style={headerStyle}>
+          <View style={{flexDirection: 'row'}}>
             <Text style={{color: 'white', fontSize: 20}}>Choose Location</Text>
           </View>
           <ConfirmButton onPress={chooseLocation} />
@@ -338,14 +337,13 @@ export default function CreatePost({route}) {
         getMapView()
       ) : (
         <>
-          <View style={headerContainerStyle}>
-            <View style={headerStyle}>
-              <Text style={{color: 'white', fontSize: 20}}>
-                Post to {communityName}
-              </Text>
-            </View>
-            <CloseButton onPress={navigation.goBack} />
-          </View>
+          <ScreenHeader
+            titleComponent={
+              <Text style={headerTextStyle}>Post to {communityName}</Text>
+            }
+            navigate={navigation.goBack}
+            iconName="arrow-left-circle"
+          />
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{alignItems: 'center'}}>
               <View
@@ -387,7 +385,7 @@ const styles = {
   },
   map: {
     position: 'absolute',
-    top: 110,
+    top: 100,
     left: 0,
     right: 0,
     bottom: 0,

@@ -1,4 +1,4 @@
-import React, {useState, createRef} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -10,14 +10,13 @@ import {
   ScrollView,
   Switch,
 } from 'react-native';
-import CloseButton from '../component/CloseButton';
 import FieldHeader from '../component/FieldHeader';
 import CommonButton from '../component/CommonButton';
+import ScreenHeader from '../component/ScreenHeader';
 import {COLORS} from '../theme/colors';
 import {textInputArea} from '../theme/styles';
 import {textInputContainer} from '../theme/styles';
-import {headerStyle} from '../theme/styles';
-import {headerContainerStyle} from '../theme/styles';
+import {headerTextStyle} from '../theme/styles';
 import * as Client from '../services/BoxyClient';
 
 export default function CreateCommunity({navigation}) {
@@ -50,12 +49,10 @@ export default function CreateCommunity({navigation}) {
   return (
     // eslint-disable-next-line react-native/no-inline-styles
     <View style={styles.container}>
-      <View style={headerContainerStyle}>
-        <View style={headerStyle}>
-          <Text style={{color: 'white', fontSize: 16}}>Create Community</Text>
-        </View>
-        <CloseButton onPress={navigation.goBack} />
-      </View>
+      <ScreenHeader
+        titleComponent={<Text style={headerTextStyle}>Create Community</Text>}
+        navigate={navigate}
+      />
       <ScrollView
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled">

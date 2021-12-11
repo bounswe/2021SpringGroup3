@@ -1,16 +1,15 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet, TextInput} from 'react-native';
+import {View, StyleSheet, Text, TextInput} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
 import {PAGE_VARIABLES} from '../constants';
 import TabScreen from '../component/TabScreen';
-import CloseButton from '../component/CloseButton';
+import ScreenHeader from '../component/ScreenHeader';
 import * as client from '../services/BoxyClient';
-import {headerStyle} from '../theme/styles';
-import {headerContainerStyle} from '../theme/styles';
 import {IconButton} from 'react-native-paper';
 import {COLORS} from '../theme/colors';
 import {textInputArea} from '../theme/styles';
+import {headerTextStyle} from '../theme/styles';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -163,14 +162,17 @@ export default function Communities({navigation}) {
 
   return (
     <View style={styles.container}>
-      <View style={headerContainerStyle}>
-        <View style={headerStyle}>
-          <Text style={{color: 'white', fontSize: 20}}>Communities</Text>
-        </View>
-        <CloseButton onPress={navigate} />
-      </View>
+      <ScreenHeader
+        titleComponent={<Text style={headerTextStyle}>Communities</Text>}
+        navigate={navigate}
+      />
       <View>
-        <View style={{flexDirection: 'row', backgroundColor: 'white'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            backgroundColor: 'white',
+            paddingHorizontal: 7,
+          }}>
           <IconButton icon="text-search" color={COLORS.buttonColor} size={20} />
           <TextInput
             style={styles.textInput}

@@ -10,11 +10,10 @@ import {
 } from 'react-native';
 import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
 import {getToken} from '../services/asyncStorageService';
-import {headerStyle} from '../theme/styles';
-import {headerContainerStyle} from '../theme/styles';
 import {list} from '../theme/styles';
 import {listItem} from '../theme/styles';
-import CloseButton from '../component/CloseButton';
+import {headerTextStyle} from '../theme/styles';
+import ScreenHeader from '../component/ScreenHeader';
 
 export default function SelectCommunity({navigation}) {
   const [communityList, setCommunityList] = useState([]);
@@ -59,18 +58,15 @@ export default function SelectCommunity({navigation}) {
       .catch(error => {
         console.info(error);
         ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
-        setCommunityList(mockCommunityList);
       });
   };
 
   return (
     <View style={styles.container}>
-      <View style={headerContainerStyle}>
-        <View style={headerStyle}>
-          <Text style={{color: 'white', fontSize: 20}}>Post to</Text>
-        </View>
-        <CloseButton onPress={navigation.goBack} />
-      </View>
+      <ScreenHeader
+        titleComponent={<Text style={headerTextStyle}>Post to</Text>}
+        navigate={navigation.goBack}
+      />
       <FlatList
         refreshing={refreshing}
         onRefresh={_onRefresh}
@@ -90,34 +86,6 @@ export default function SelectCommunity({navigation}) {
     </View>
   );
 }
-
-const mockCommunityList = [
-  {
-    name: 'Economics',
-    id: 1,
-    iconUrl: 'https://reactnative.dev/docs/assets/p_cat1.png',
-  },
-  {
-    name: 'Politics',
-    id: 2,
-    iconUrl: 'https://reactnative.dev/docs/assets/p_cat2.png',
-  },
-  {
-    name: 'CatLovers',
-    id: 3,
-    iconUrl: 'https://reactnative.dev/docs/assets/p_cat1.png',
-  },
-  {
-    name: 'CMPE451',
-    id: 4,
-    iconUrl: 'https://reactnative.dev/docs/assets/p_cat2.png',
-  },
-  {
-    name: 'PCMaster',
-    id: 5,
-    iconUrl: 'https://reactnative.dev/docs/assets/p_cat1.png',
-  },
-];
 
 const styles = StyleSheet.create({
   container: {

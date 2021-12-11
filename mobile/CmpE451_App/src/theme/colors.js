@@ -4,6 +4,7 @@ export const COLORS = {
   unlikeButtonColor: '#808080',
   buttonTextColor: '#ffffff',
   buttonColor: '#3849aa',
+  lightButtonColor: '#6e74dc',
   screenHeaderBackground: '#00227b',
   fieldHeaderColor: '#3949ab',
   drawerActiveBackgroundColor: '#6e74dc',

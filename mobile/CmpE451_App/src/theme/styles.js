@@ -12,14 +12,20 @@ export const headerContainerStyle = {
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  padding: 10,
+  padding: 7,
   backgroundColor: COLORS.screenHeaderBackground,
   height: 50,
 };
 
 export const headerStyle = {
   flexDirection: 'row',
-  justifyContent: 'flex-start',
+  flex: 4,
+  justifyContent: 'center',
+};
+
+export const headerTextStyle = {
+  color: 'white',
+  fontSize: 20,
 };
 
 export const textInputArea = {

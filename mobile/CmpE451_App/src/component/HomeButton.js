@@ -2,9 +2,11 @@ import React from 'react';
 import {TouchableOpacity} from 'react-native';
 import {IconButton} from 'react-native-paper';
 
-const DeleteButton = ({onPress}) => {
+const HomeButton = ({navigation}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={{margin: 0, flex: 1}}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('Home')}
+      style={{margin: 0, flex: 1}}>
       <IconButton
         icon="home-circle-outline"
         color="white"
@@ -15,4 +17,4 @@ const DeleteButton = ({onPress}) => {
   );
 };
 
-export default DeleteButton;
+export default HomeButton;
