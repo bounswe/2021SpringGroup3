@@ -25,3 +25,11 @@ exports.register = catchAsync(async (req, res) => {
   });
   res.status(httpStatus.CREATED).send(result);
 });
+
+exports.changePassword = catchAsync(async (req, res) => {
+  const result = await authService.changePassword({
+    token: req.token,
+    password: req.body.password,
+  });
+  res.send(result);
+});
