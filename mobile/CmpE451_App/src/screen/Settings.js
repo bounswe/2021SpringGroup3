@@ -2,20 +2,21 @@ import React from 'react';
 import {Text, Linking, View, ToastAndroid} from 'react-native';
 import {SettingsPage, NavigateRow, BaseRow} from 'react-native-settings-view';
 
-import CloseButton from '../component/CloseButton';
 import {COLORS} from '../theme/colors';
-import {headerStyle} from '../theme/styles';
-import {headerContainerStyle} from '../theme/styles';
+import {headerTextStyle} from '../theme/styles';
+import ScreenHeader from '../component/ScreenHeader';
 
 export default function Settings({navigation, route}) {
+  const navigate = async () => {
+    navigation.navigate('Home');
+  };
+
   return (
     <View style={styles.container}>
-      <View style={headerContainerStyle}>
-        <View style={headerStyle}>
-          <Text style={{color: 'white', fontSize: 20}}>Settings</Text>
-        </View>
-        <CloseButton onPress={navigation.goBack} />
-      </View>
+      <ScreenHeader
+        titleComponent={<Text style={headerTextStyle}>Settings</Text>}
+        navigate={navigate}
+      />
       <SettingsPage>
         <View style={styles.sectionHeaderContainer}>
           <Text style={styles.sectionText}>ACCOUNT</Text>

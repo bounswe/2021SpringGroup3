@@ -11,9 +11,8 @@ import {
 import {COLORS} from '../theme/colors';
 import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
 import {getToken} from '../services/asyncStorageService';
-import CloseButton from '../component/CloseButton';
-import {headerStyle} from '../theme/styles';
-import {headerContainerStyle} from '../theme/styles';
+import {headerTextStyle} from '../theme/styles';
+import ScreenHeader from '../component/ScreenHeader';
 
 export default function SelectModeratorCommunity({navigation}) {
   const [communityList, setCommunityList] = useState([]);
@@ -64,12 +63,10 @@ export default function SelectModeratorCommunity({navigation}) {
 
   return (
     <View style={styles.container}>
-      <View style={headerContainerStyle}>
-        <View style={headerStyle}>
-          <Text style={{color: 'white', fontSize: 20}}>Choose Community</Text>
-        </View>
-        <CloseButton onPress={navigate} />
-      </View>
+      <ScreenHeader
+        titleComponent={<Text style={headerTextStyle}>Choose Community</Text>}
+        navigate={navigate}
+      />
       <FlatList
         refreshing={refreshing}
         onRefresh={_onRefresh}

@@ -18,6 +18,7 @@ import {headerContainerStyle} from '../theme/styles';
 import CloseButton from '../component/CloseButton';
 import DeleteButton from '../component/DeleteButton';
 import CommonButton from '../component/CommonButton';
+import ScreenHeader from '../component/ScreenHeader';
 
 export default function CreatePostType({navigation}) {
   const [name, setName] = useState('');
@@ -192,8 +193,8 @@ export default function CreatePostType({navigation}) {
 
   return (
     <View style={styles.container}>
-      <View style={headerContainerStyle}>
-        <View style={headerStyle}>
+      <ScreenHeader
+        titleComponent={
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <IconButton
               icon="package-variant-closed"
@@ -203,9 +204,10 @@ export default function CreatePostType({navigation}) {
             />
             <Text style={{color: 'white', fontSize: 20}}>Create Post Type</Text>
           </View>
-        </View>
-        <CloseButton onPress={navigate} />
-      </View>
+        }
+        navigate={navigate}
+        iconName="arrow-left-circle"
+      />
       <ScrollView
         style={styles.inputsContainer}
         keyboardShouldPersistTaps="handled">
