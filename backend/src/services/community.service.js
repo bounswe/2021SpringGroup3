@@ -2,7 +2,7 @@
 const httpStatus = require('http-status');
 
 const { formatters, baseUtil } = require('../utils');
-const { Community, Post } = require('../models');
+const { Community } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 exports.getCommunities = async ({ token, isModerator, isMember }) => {

@@ -1,21 +1,34 @@
 const moment = require('moment');
+const { baseUtil } = require('../utils');
 
 const DEFAULT_PROFILE_PHOTO_URL = 'https://exoffender.org/wp-content/uploads/2016/09/empty-profile.png';
 
+const formatProfilePhotoUrl = (user) => {
+  let profilePhotoUrl = DEFAULT_PROFILE_PHOTO_URL;
+  if (user.profilePhotoUrl && user.profilePhotoUrl.isPublic && user.profilePhotoUrl.length > 0) {
+    profilePhotoUrl = user.profilePhotoUrl.value;
+  }
+  return profilePhotoUrl;
+};
+
 const formatCreator = function (creator) {
   if (creator) {
-    let profilePhotoUrl = DEFAULT_PROFILE_PHOTO_URL;
-    if (creator.profilePhotoUrl && creator.profilePhotoUrl.isPublic && creator.profilePhotoUrl.length > 0) {
-      profilePhotoUrl = creator.profilePhotoUrl.value;
-    }
     return {
       id: creator._id.toString(),
       username: creator.username,
-      profilePhotoUrl,
+      profilePhotoUr: formatProfilePhotoUrl(creator),
     };
   }
   return {
     isDeleted: true,
+  };
+};
+
+const formatUserPreview = (user) => {
+  return {
+    id: user._id.toString(),
+    username: user.username,
+    profilePhotoUrl: formatProfilePhotoUrl(user),
   };
 };
 
@@ -29,6 +42,7 @@ exports.formatUser = function (user) {
     email: user.email,
     username: user.username,
     isActivated: user.isActivated,
+    profilePhotoUrl,
   };
 };
 
@@ -46,17 +60,14 @@ exports.formatCommunityDetails = function (community, user) {
   const com = {
     ...exports.formatPreviewCommunity(community),
     user: formatCreator(community.creator),
-    members: community.members,
-    moderators: community.moderators,
-    isModerator:
-      community.moderators && new Set(community.moderators.map((m) => (m._id || m).toString())).has(user._id.toString()),
-    isMember: community.members && new Set(community.members.map((m) => (m._id || m).toString())).has(user._id.toString()),
-    isPendingMember:
-      community.pendingMmbers &&
-      new Set(community.pendingMmbers.map((m) => (m._id || m).toString())).has(user._id.toString()),
+    members: (community.members || []).map(formatUserPreview),
+    moderators: (community.moderators || []).map(formatUserPreview),
+    isModerator: baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, user._id.toString()),
+    isMember: baseUtil.checkIfObjectIdArrayIncludesId(community.members, user._id.toString()),
+    isPendingMember: baseUtil.checkIfObjectIdArrayIncludesId(community.pendingMembers, user._id.toString()),
   };
   if (com.isModerator) {
-    com.pendingMmbers = community.pendingMmbers;
+    com.pendingMembers = (community.pendingMembers || []).map(formatUserPreview);
   }
   return com;
 };
