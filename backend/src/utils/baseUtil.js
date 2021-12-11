@@ -9,3 +9,7 @@ exports.asyncForEach = async function (array, callback) {
     await callback(array[index], index, array);
   }
 };
+
+exports.checkIfObjectIdArrayIncludesId = function (array = [], _id) {
+  return new Set(array.map((a) => (a._id || a).toString())).has(_id);
+};
