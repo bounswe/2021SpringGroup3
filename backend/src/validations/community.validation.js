@@ -15,8 +15,8 @@ exports.createCommunity = {
 exports.getCommunities = {
   query: Joi.object()
     .keys({
-      isMember: Joi.boolean().default(false),
-      isModerator: Joi.boolean().default(false),
+      isMember: Joi.boolean(),
+      isModerator: Joi.boolean(),
     })
     .required(),
 };
