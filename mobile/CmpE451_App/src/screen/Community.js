@@ -1,13 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {View, Image, Text, StyleSheet, ToastAndroid} from 'react-native';
+import {
+  ScrollView,
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  ToastAndroid,
+} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useIsFocused} from '@react-navigation/native';
 import {COLORS} from '../theme/colors';
+import {listItem} from '../theme/styles';
 import ScreenHeader from '../component/ScreenHeader';
 import {IconButton} from 'react-native-paper';
 import {Button} from 'react-native-elements';
 import {PAGE_VARIABLES} from '../constants';
 import * as Client from '../services/BoxyClient';
+import UserList from '../component/UserList';
 
 export default function Community({navigation}) {
   const Tab = createMaterialTopTabNavigator();
@@ -16,10 +25,17 @@ export default function Community({navigation}) {
   const [name, setName] = useState('');
   const [memberCount, setMemberCount] = useState(20);
   const [description, setDescription] = useState('');
+
+  const [members, setMembers] = useState([]);
+  const [moderators, setModerators] = useState([]);
+  const [pendingMembers, setPendingMembers] = useState([]);
+
   const [isPrivate, setIsPrivate] = useState(false);
   const [isMember, setIsMember] = useState(false);
-  const [isModerator, setIsModerator] = useState(true);
+  const [isModerator, setIsModerator] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const isFocused = useIsFocused();
+
   useEffect(() => {
     async function fetchCommunityDetails() {
       let response = await Client.getCommunityDetail({
@@ -29,11 +45,15 @@ export default function Community({navigation}) {
       if (response.status === 200) {
         setIconUrl(response.data.iconUrl);
         setName(response.data.name);
+        setMemberCount(response.data.memberCount);
         setDescription(response.data.description);
+        setMembers(response.data.members);
+        setModerators(response.data.moderators);
+        setPendingMembers(response.data.pendingMembers);
         setIsPrivate(response.data.isPrivate);
         setIsMember(response.data.isMember);
         setIsModerator(response.data.isModerator);
-        setMemberCount(response.data.memberCount);
+        setIsPending(response.data.isPending);
       } else {
         ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
       }
@@ -47,11 +67,15 @@ export default function Community({navigation}) {
     async function resetStates() {
       setIconUrl('url');
       setName('');
+      setMemberCount(0);
       setDescription('');
+      setMembers([]);
+      setModerators([]);
+      setPendingMembers([]);
       setIsPrivate(false);
       setIsMember(false);
       setIsModerator(false);
-      setMemberCount(0);
+      setIsPending(false);
     }
     if (!isFocused) {
       resetStates();
@@ -72,11 +96,44 @@ export default function Community({navigation}) {
   }
 
   const navigate = async () => {
-    navigation.navigate('Home');
+    navigation.navigate('Main');
   };
 
   function allCommunitesTab() {
     return <View />;
+  }
+
+  function aboutTab() {
+    return (
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.sectionHeaderContainer}>
+            <Text style={styles.sectionText}>About us</Text>
+          </View>
+          <Text style={listItem}>
+            We are a {isPrivate ? 'private' : 'public'} community!
+          </Text>
+          <View style={styles.sectionHeaderContainer}>
+            <Text style={styles.sectionText}>Moderators</Text>
+          </View>
+          <UserList users={moderators} />
+          <View style={styles.sectionHeaderContainer}>
+            <Text style={styles.sectionText}>Need help?</Text>
+          </View>
+          <Text style={listItem}>Message the moderators</Text>
+        </View>
+      </ScrollView>
+    );
+  }
+  function membersTab() {
+    return (
+      <View style={styles.container}>
+        <View style={styles.sectionHeaderContainer}>
+          <Text style={styles.sectionText}>Members</Text>
+        </View>
+        <UserList users={members} />
+      </View>
+    );
   }
   return (
     <View style={styles.container}>
@@ -123,6 +180,8 @@ export default function Community({navigation}) {
       <Text style={styles.text}>{description}</Text>
       <Tab.Navigator>
         <Tab.Screen key={'tab-1'} name={'Posts'} component={allCommunitesTab} />
+        <Tab.Screen key={'tab-2'} name={'About'} component={aboutTab} />
+        <Tab.Screen key={'tab-2'} name={'Members'} component={membersTab} />
       </Tab.Navigator>
     </View>
   );
@@ -219,5 +278,14 @@ const styles = StyleSheet.create({
     fontSize: 10,
     margin: 0,
     paddingVertical: 0,
+  },
+  sectionHeaderContainer: {
+    backgroundColor: '#dddddd',
+    padding: 10,
+  },
+  sectionText: {
+    color: '#555555',
+    fontSize: 13,
+    fontWeight: '500',
   },
 });

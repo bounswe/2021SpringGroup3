@@ -157,7 +157,7 @@ export default function Communities({navigation}) {
   }
 
   const navigate = async () => {
-    navigation.navigate('Home');
+    navigation.navigate('Main');
   };
 
   return (

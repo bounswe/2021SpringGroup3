@@ -5,7 +5,7 @@ import {IconButton} from 'react-native-paper';
 const HomeButton = ({navigation}) => {
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('Home')}
+      onPress={() => navigation.navigate('Main')}
       style={{margin: 0, flex: 1}}>
       <IconButton
         icon="home-circle-outline"
