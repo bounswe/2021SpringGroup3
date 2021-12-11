@@ -74,11 +74,8 @@ exports.joinCommunity = async ({ token, communityId }) => {
   if (community.members && new Set(community.members.map((m) => m.toString())).has(token.user._id.toString())) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You are already a member of this community');
   }
-  if (!community.isPrivate) {
-    if (
-      community.pendingMembers &&
-      new Set(community.pendingMembers.map((m) => m.toString())).has(token.user._id.toString())
-    ) {
+  if (community.isPrivate) {
+    if (baseUtil.checkIfObjectIdArrayIncludesId(community.pendingMembers, token.user._id.toString())) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'You already requested to join this community');
     }
     community = await Community.findByIdAndUpdate(
@@ -90,17 +87,17 @@ exports.joinCommunity = async ({ token, communityId }) => {
       },
       { new: true }
     );
-    return formatters.formatCommunityDetails(community, token.user);
-  }
-  community = await Community.findByIdAndUpdate(
-    community._id,
-    {
-      $addToSet: {
-        members: token.user._id,
+  } else {
+    community = await Community.findByIdAndUpdate(
+      community._id,
+      {
+        $addToSet: {
+          members: token.user._id,
+        },
       },
-    },
-    { new: true }
-  );
+      { new: true }
+    );
+  }
   return {
     ...formatters.formatCommunityDetails(community, token.user),
     joinStatus: community.isPrivate ? 'waiting' : 'joined',
