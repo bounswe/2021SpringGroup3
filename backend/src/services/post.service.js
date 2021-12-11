@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 
 const ApiError = require('../utils/ApiError');
 const { formatters } = require('../utils');
-const { PostType, Community, Post } = require('../models');
+const { PostType, Community, Post, Comment } = require('../models');
 
 exports.getPosts = async ({ token, communityId }) => {
   const community = await Community.findById(communityId).lean();
@@ -100,7 +100,15 @@ exports.getPostDetail = async ({ token, communityId, postId }) => {
   if (post.community._id.toString() !== communityId) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community ID does not match');
   }
-  return formatters.formatPostDetail(post, token.user);
+  const comments = await Comment.find({ post: post._id }).populate({
+    path: 'user',
+    model: 'User',
+    select: ['_id', 'username', 'profilePhotoUrl'],
+  });
+  return {
+    ...formatters.formatPostDetail(post, token.user),
+    comments: formatters.formatComments(comments),
+  };
 };
 
 exports.likePost = async ({ token, communityId, postId }) => {
@@ -134,11 +142,36 @@ exports.deletePost = async ({ token, postId }) => {
     (post.creator && post.creator.toString() === token.user._id)
   ) {
     await Post.deleteOne({ _id: post._id });
+    await Comment.deleteMany({ post: post._id });
   } else {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
       'You need to be the creator of the post or moderator of the community it belongs to delete it'
     );
   }
-  return {};
+  return {
+    message: 'Post has been deleted',
+  };
+};
+
+exports.createComment = async ({ token, postId, text }) => {
+  const post = await Post.findById(postId).populate(['community']).lean();
+  if (!post) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post does not exist');
+  }
+  if (
+    (post.community.members && new Set(post.community.members.map((m) => m.toString())).has(token.user._id.toString())) ||
+    (post.creator && post.creator.toString() === token.user._id)
+  ) {
+    const comment = await Comment.create({ text, user: token.user._id, post: post._id });
+    return {
+      message: 'Comment is created',
+      id: comment._id.toString(),
+      text,
+    };
+  }
+  throw new ApiError(
+    httpStatus.BAD_REQUEST,
+    'You need to be the creator of the post or moderator of the community it belongs to post a comment for it'
+  );
 };
