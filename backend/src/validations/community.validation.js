@@ -6,8 +6,8 @@ exports.createCommunity = {
     .keys({
       name: Joi.string().min(2).max(30).required(),
       iconUrl: Joi.string().uri(),
-        description: Joi.string().required(),
-        isPrivate: Joi.boolean().required()
+      description: Joi.string().required(),
+      isPrivate: Joi.boolean().required(),
     })
     .required(),
 };
@@ -30,6 +30,14 @@ exports.getCommunityDetail = {
 };
 
 exports.joinCommunity = {
+  query: Joi.object()
+    .keys({
+      communityId: Joi.string().custom(objectId).required(),
+    })
+    .required(),
+};
+
+exports.deleteCommunity = {
   query: Joi.object()
     .keys({
       communityId: Joi.string().custom(objectId).required(),

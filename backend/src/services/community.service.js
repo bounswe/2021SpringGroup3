@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 
 const { formatters } = require('../utils');
-const { Community } = require('../models');
+const { Community, Post } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 exports.getCommunities = async ({ token, isModerator, isMember }) => {
@@ -93,8 +93,8 @@ exports.leaveCommunity = async ({ token, communityId }) => {
     },
     { new: true }
   );
-  if (community.moderators.length == 0) {
-    if (community.members.length != 0) {
+  if (community.moderators.length === 0) {
+    if (community.members.length !== 0) {
       community = await Community.findByIdAndUpdate(
         community._id,
         {
@@ -111,4 +111,18 @@ exports.leaveCommunity = async ({ token, communityId }) => {
   return {
     message: 'You left the community!',
   };
+};
+
+exports.deleteCommunity = async ({ token, communityId }) => {
+  const community = await Community.findById(communityId).lean();
+  if (!community) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  if (community.moderators && new Set(community.moderators.map((m) => m.toString())).has(token.user._id.toString())) {
+    await Post.deleteMany({ community: community._id });
+    await Community.deleteOne({ _id: community._id });
+  } else {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to delete a community');
+  }
+  return {};
 };
