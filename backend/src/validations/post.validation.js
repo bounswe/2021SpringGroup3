@@ -58,6 +58,14 @@ exports.getPostDetail = {
     .required(),
 };
 
+exports.likePost = {
+  query: Joi.object()
+    .keys({
+      communityId: Joi.string().custom(objectId).required(),
+    })
+    .required(),
+};
+
 exports.deletePost = {
   query: Joi.object()
     .keys({

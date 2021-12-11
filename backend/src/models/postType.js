@@ -26,6 +26,8 @@ const postTypeSchema = mongoose.Schema(
   }
 );
 
+postTypeSchema.index({ name: 1, community: 1 }, { unique: true });
+
 const PostType = mongoose.model('Post_Type', postTypeSchema);
 
 module.exports = PostType;

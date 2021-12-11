@@ -37,12 +37,22 @@ exports.formatPreviewCommunity = function (community) {
 };
 
 exports.formatCommunityDetails = function (community, user) {
-  return {
+  const com = {
     ...exports.formatPreviewCommunity(community),
     user: formatCreator(community.creator),
     members: community.members,
     moderators: community.moderators,
+    isModerator:
+      community.moderators && new Set(community.moderators.map((m) => (m._id || m).toString())).has(user._id.toString()),
+    isMember: community.members && new Set(community.members.map((m) => (m._id || m).toString())).has(user._id.toString()),
+    isPendingMember:
+      community.pendingMmbers &&
+      new Set(community.pendingMmbers.map((m) => (m._id || m).toString())).has(user._id.toString()),
   };
+  if (com.isModerator) {
+    com.pendingMmbers = community.pendingMmbers;
+  }
+  return com;
 };
 
 exports.formatCommunities = function (communities = []) {

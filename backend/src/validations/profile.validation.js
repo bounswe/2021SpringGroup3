@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { objectId } = require('./custom.validation');
 
 const profileField = Joi.object()
   .keys({
@@ -25,6 +26,14 @@ exports.setProfile = {
       bio: profileField,
       birthday: profileField,
       location: locationField,
+    })
+    .required(),
+};
+
+exports.getOtherProfile = {
+  query: Joi.object()
+    .keys({
+      userId: Joi.string().custom(objectId).required(),
     })
     .required(),
 };
