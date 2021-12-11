@@ -92,3 +92,11 @@ exports.updateCommunity = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.joinModerators = catchAsync(async (req, res) => {
+  const result = await communityService.joinModerators({
+    token: req.token,
+    communityId: req.query.communityId,
+  });
+  res.send(result);
+});

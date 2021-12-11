@@ -65,9 +65,11 @@ exports.formatCommunityDetails = function (community, user) {
     isModerator: baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, user._id.toString()),
     isMember: baseUtil.checkIfObjectIdArrayIncludesId(community.members, user._id.toString()),
     isPendingMember: baseUtil.checkIfObjectIdArrayIncludesId(community.pendingMembers, user._id.toString()),
+    isPendingModerator: baseUtil.checkIfObjectIdArrayIncludesId(community.pendingModerators, user._id.toString()),
   };
   if (com.isModerator) {
     com.pendingMembers = (community.pendingMembers || []).map(formatUserPreview);
+    com.pendingModerators = (community.pendingModerators || []).map(formatUserPreview);
   }
   return com;
 };

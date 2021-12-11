@@ -15,6 +15,7 @@ router.route('/detail').get(validate(communityValidation.getCommunityDetail), co
 
 router.route('/join/approve').post(validate(communityValidation.kickFromCommunity), communityController.acceptJoinRequest);
 router.route('/join/reject').post(validate(communityValidation.kickFromCommunity), communityController.rejectJoinRequest);
+router.route('/join/moderators').post(validate(communityValidation.joinCommunity), communityController.joinModerators);
 router.route('/join').post(validate(communityValidation.joinCommunity), communityController.joinCommunity);
 
 router.route('/leave').post(validate(communityValidation.leaveCommunity), communityController.leaveCommunity);
