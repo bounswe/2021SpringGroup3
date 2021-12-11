@@ -5,7 +5,7 @@ const formatCreator = function (creator) {
     return {
       id: creator._id.toString(),
       username: creator.username,
-      imageUrl: creator.imageUrl,
+      profilePhotoUrl: creator.profilePhotoUrl,
     };
   }
   return {
@@ -137,4 +137,12 @@ exports.formatProfileSettings = function (user) {
     birthday: user.birthday || defaultProfileField,
     location: user.location || defaultProfileField,
   };
+};
+
+exports.formatComments = function (comments = []) {
+  return comments.map((comment) => ({
+    id: comment._id.toString(),
+    text: comment.text,
+    user: exports.formatCreator(comment.user),
+  }));
 };
