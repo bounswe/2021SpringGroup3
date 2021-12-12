@@ -110,6 +110,9 @@ exports.leaveCommunity = async ({ token, userId, communityId }) => {
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
+  if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, token.user._id.toString())) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You are not a member of this community');
+  }
   community = await Community.findByIdAndUpdate(
     community._id,
     {
@@ -147,7 +150,7 @@ exports.kickFromCommunity = async ({ token, userId, communityId }) => {
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
-  if (community.moderators && new Set(community.moderators.map((m) => m.toString())).has(token.user._id)) {
+  if (baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, token.user._id.toString())) {
     if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, userId)) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'User is not a member of this community');
     }
