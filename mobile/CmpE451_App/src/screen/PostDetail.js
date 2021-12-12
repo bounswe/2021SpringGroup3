@@ -79,7 +79,7 @@ export default function PostDetail({route, navigation}) {
   return(
     <View>
       <ScreenHeader
-          titleComponent={<Text style={headerTextStyle}>Post</Text>}
+          titleComponent={<Text style={headerTextStyle}></Text>}
           navigate={navigate}
         />
       <PostDetailComponent user={user} date={date} community={community} textFieldNames={textFieldNames} numberFieldNames={numberFieldNames}

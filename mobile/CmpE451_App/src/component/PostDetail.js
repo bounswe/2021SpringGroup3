@@ -26,7 +26,7 @@ export default function PostDetail({user, date, community, textFieldNames, numbe
     return (
     <View style={styles.feedItem}>
       <View>
-        <Image source={{uri: user.imageUrl}} style={styles.avatar} />
+        <Image source={{uri: user.profilePhotoUrl}} style={styles.avatar} />
         <View
           style={{
             flexDirection: 'row',
