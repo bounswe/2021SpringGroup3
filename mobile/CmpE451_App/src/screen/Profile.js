@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,118 +12,132 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 import UnderConstruction from '../component/UnderConstruction';
+import * as Request from '../util/Requests';
+import {
+  TEXT,
+  PAGE_VARIABLES,
+  BASE_URL,
+  DEFAULT_PROFILE_IMAGE,
+} from '../constants';
+import Loader from '../component/Loader';
 
 export default function Profile() {
   const navigation = useNavigation();
+  const [bio, setBio] = useState();
+  const [birthday, setBirthday] = useState();
+  const [location, setLocation] = useState();
+  const [profileImageUrl, setProfileImageUrl] = useState();
+  const [username, setUsername] = useState();
+  const [isLoading, setIsLoading] = useState(true);
 
-  return (
+  useEffect(async () => {
+    const profile = await Request.getMyProfile();
+    setLocation(profile.location.description);
+    setBio(profile.bio);
+    setBirthday(profile.birthday);
+    setProfileImageUrl(profile.profilePhotoUrl);
+    setUsername(profile.username);
+    setIsLoading(false);
+  }, [navigation]);
+
+  function isEmpty(key) {
+    return key == null || key == '' || key == undefined;
+  }
+  function navigateSettings() {
+    navigation.navigate('ProfileSettings', {
+      username,
+      location,
+      birthday,
+      bio,
+      profileImageUrl,
+    });
+  }
+  return isLoading ? (
+    <Loader loading={'loading'}></Loader>
+  ) : (
     <View style={styles.container}>
-      <UnderConstruction pageName="PROFILE" />
+      <SafeAreaView style={styles.container}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.titleBar}>
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+              <Ionicons
+                name="ios-arrow-back"
+                size={24}
+                color="#52575D"></Ionicons>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={navigateSettings}>
+              <Ionicons name="settings" size={24} color="#52575D"></Ionicons>
+            </TouchableOpacity>
+          </View>
+          <View style={{alignSelf: 'center'}}>
+            <View style={styles.profileImage}>
+              <Image
+                source={{
+                  uri: profileImageUrl,
+                }}
+                style={styles.image}
+                resizeMode="center"></Image>
+            </View>
+          </View>
+
+          <View style={styles.infoContainer}>
+            <View
+              style={{
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
+                User name:
+              </Text>
+              <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
+                {username}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
+                Bio:
+              </Text>
+              <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
+                {bio}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
+                Location:
+              </Text>
+              <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
+                {location}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
+                Birthday:
+              </Text>
+              <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
+                {birthday.substring(0, birthday.lastIndexOf('T'))}
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </View>
   );
-  /*
-    <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.titleBar}>
-          <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <Ionicons
-              name="ios-arrow-back"
-              size={24}
-              color="#52575D"></Ionicons>
-          </TouchableOpacity>
-        </View>
-        <View style={{alignSelf: 'center'}}>
-          <View style={styles.profileImage}>
-            <Image
-              source={{
-                uri: 'https://www.astajans.com/Upload/urunler-upload/img_96.png',
-              }}
-              style={styles.image}
-              resizeMode="center"></Image>
-          </View>
-          <Text
-            style={[
-              styles.text,
-              {color: '#AEB5BC', fontSize: 14, fontWeight: 'bold'},
-            ]}>
-            İstanbul
-          </Text>
-          <Text
-            style={[
-              styles.text,
-              {color: '#AEB5BC', fontSize: 14, fontWeight: 'bold'},
-            ]}>
-            11/11/1111
-          </Text>
-          <View style={styles.add}>
-            <Ionicons
-              name="ios-add"
-              size={48}
-              color="#DFD8C8"
-              style={{marginTop: 6, marginLeft: 2}}></Ionicons>
-          </View>
-        </View>
-
-        <View style={styles.infoContainer}>
-          <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
-            CmpE451
-          </Text>
-          <Text style={[styles.text, {color: '#AEB5BC', fontSize: 14}]}>
-            Boxer
-          </Text>
-        </View>
-
-        <View style={styles.statsContainer}>
-          <View style={styles.statsBox}>
-            <Text style={[styles.text, {fontSize: 24}]}>14</Text>
-            <Text style={[styles.text, styles.subText]}>Posts</Text>
-          </View>
-          <View
-            style={[
-              styles.statsBox,
-              {borderColor: '#DFD8C8', borderLeftWidth: 1, borderRightWidth: 1},
-            ]}>
-            <Text style={[styles.text, {fontSize: 24}]}>10</Text>
-            <Text style={[styles.text, styles.subText]}>Communities</Text>
-          </View>
-          <View style={styles.statsBox}>
-            <Text style={[styles.text, {fontSize: 24}]}>302</Text>
-            <Text style={[styles.text, styles.subText]}>Following</Text>
-          </View>
-        </View>
-
-        <View style={{marginTop: 32}}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <View style={styles.mediaImageContainer}>
-              <Image
-                source={{
-                  uri: 'https://github.com/DesignIntoCode/ReactProfile02/blob/master/assets/media1.jpg',
-                }}
-                style={styles.image}
-                resizeMode="cover"></Image>
-            </View>
-            <View style={styles.mediaImageContainer}>
-              <Image
-                source={{
-                  uri: 'https://github.com/DesignIntoCode/ReactProfile02/blob/master/assets/media1.jpg',
-                }}
-                style={styles.image}
-                resizeMode="cover"></Image>
-            </View>
-            <View style={styles.mediaImageContainer}>
-              <Image
-                source={{
-                  uri: 'https://github.com/DesignIntoCode/ReactProfile02/blob/master/assets/media1.jpg',
-                }}
-                style={styles.image}
-                resizeMode="cover"></Image>
-            </View>
-          </ScrollView>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-  */
 }
 
 const styles = StyleSheet.create({
@@ -131,7 +145,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF',
   },
+  key: {
+    fontWeight: 'bold',
+    fontFamily: 'HelveticaNeue',
+    color: '#52575D',
+  },
   text: {
+    padding: 10,
+    fontWeight: 'bold',
     fontFamily: 'HelveticaNeue',
     color: '#52575D',
   },
@@ -153,8 +174,8 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   profileImage: {
-    width: 300,
-    height: 300,
+    width: 100,
+    height: 100,
     borderRadius: 100,
     overflow: 'hidden',
   },
