@@ -59,6 +59,7 @@ exports.getCommunityDetail = async ({ token, communityId }) => {
     .populate({ path: 'members', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
     .populate({ path: 'moderators', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
     .populate({ path: 'pendingMembers', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
+    .populate({ path: 'pendingModerators', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
     .exec();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
@@ -254,4 +255,27 @@ exports.updateCommunity = async ({ name, iconUrl, description, isPrivate, commun
     message: 'Community  is updated',
     community: formatters.formatPreviewCommunity(community),
   };
+};
+
+exports.joinModerators = async ({ token, communityId }) => {
+  let community = await Community.findById(communityId).lean();
+  if (!community) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  if (baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, token.user._id.toString())) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You are already a moderator of this community');
+  }
+  if (baseUtil.checkIfObjectIdArrayIncludesId(community.pendingModerators, token.user._id.toString())) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You already requested to become a moderator of this community');
+  }
+  community = await Community.findByIdAndUpdate(
+    community._id,
+    {
+      $addToSet: {
+        pendingModerators: token.user._id,
+      },
+    },
+    { new: true }
+  );
+  return formatters.formatCommunityDetails(community, token.user);
 };
