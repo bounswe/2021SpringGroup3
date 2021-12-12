@@ -58,7 +58,7 @@ export default function SelectModeratorCommunity({navigation}) {
   };
 
   const navigate = async () => {
-    navigation.navigate('Home');
+    navigation.navigate('Main');
   };
 
   return (

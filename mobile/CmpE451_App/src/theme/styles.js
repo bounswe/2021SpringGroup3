@@ -53,8 +53,8 @@ export const list = {
 
 export const listItem = {
   padding: 10,
-  fontSize: 18,
-  height: 60,
+  fontSize: 16,
+  height: 50,
   color: COLORS.textColor,
   textAlignVertical: 'center',
 };

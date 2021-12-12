@@ -176,7 +176,7 @@ export default function CreatePostType({navigation}) {
         const status = response.status;
         response = await response.json();
         if (status === 201) {
-          navigation.navigate('Home');
+          navigation.navigate('Main');
         } else {
           ToastAndroid.show(response.message, ToastAndroid.SHORT);
         }

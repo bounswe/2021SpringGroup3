@@ -43,7 +43,7 @@ export default function CreateCommunity({navigation}) {
   };
 
   const navigate = async () => {
-    navigation.navigate('Home');
+    navigation.navigate('Main');
   };
 
   return (

@@ -8,7 +8,7 @@ import ScreenHeader from '../component/ScreenHeader';
 
 export default function Settings({navigation, route}) {
   const navigate = async () => {
-    navigation.navigate('Home');
+    navigation.navigate('Main');
   };
 
   return (
