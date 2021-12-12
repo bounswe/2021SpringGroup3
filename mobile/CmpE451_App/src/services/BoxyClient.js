@@ -153,6 +153,24 @@ export const joinCommunity = async ({communityId}) => {
     });
 };
 
+export const leaveCommunity = async ({communityId}) => {
+  return fetch(BASE_URL + 'communities/leave?communityId=' + communityId, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 export const acceptJoinRequest = async ({communityId, userId}) => {
   return fetch(
     BASE_URL +
@@ -203,15 +221,6 @@ export const rejectJoinRequest = async ({communityId, userId}) => {
     });
 };
 
-const returnResponse = async response => {
-  const statusCode = response.status;
-  response = await response.json();
-  return {
-    status: statusCode,
-    data: response,
-  };
-};
-
 export const getPostDetail = async ({communityId, postId}) => {
   var myHeaders = new Headers();
   myHeaders.append('X-Platform', 'ANDROID');
@@ -235,4 +244,13 @@ export const getPostDetail = async ({communityId, postId}) => {
       return result;
     })
     .catch(error => console.log('error', error));
+};
+
+const returnResponse = async response => {
+  const statusCode = response.status;
+  response = await response.json();
+  return {
+    status: statusCode,
+    data: response,
+  };
 };

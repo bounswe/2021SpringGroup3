@@ -6,6 +6,7 @@ import {
   Text,
   StyleSheet,
   ToastAndroid,
+  Alert,
 } from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useIsFocused} from '@react-navigation/native';
@@ -65,7 +66,6 @@ export default function Community({navigation}) {
     async function resetStates() {
       setIconUrl('url');
       setName('');
-      setMemberCount(0);
       setDescription('');
       setMembers([]);
       setModerators([]);
@@ -89,10 +89,47 @@ export default function Community({navigation}) {
     if (response.status === 200) {
       setIsMember(response.data.isMember);
       setIsPendingMember(response.data.isPendingMember);
+      setIsModerator(response.data.isModerator);
+      setMembers(response.data.members);
+      setModerators(response.date.moderators);
     } else {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
   }
+
+  async function handleLeaveCommunity() {
+    let response = await Client.leaveCommunity({
+      communityId: PAGE_VARIABLES.communityId,
+    });
+    if (response.status === 200) {
+      setIsMember(response.data.isMember);
+      setIsPendingMember(response.data.isPendingMember);
+      setIsModerator(response.data.isModerator);
+      setMembers(response.data.members);
+      setModerators(response.data.moderators);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  }
+
+  const showLeaveCommunityAlert = () => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to leave the community?',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => handleLeaveCommunity(),
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+  };
 
   const navigate = async () => {
     navigation.navigate('Main');
@@ -117,7 +154,7 @@ export default function Community({navigation}) {
             <Text style={styles.sectionText}>About us</Text>
           </View>
           <Text style={listItem}>
-            We are a {isPrivate ? 'private' : 'public'} community!
+            This is a {isPrivate ? 'private' : 'public'} community!
           </Text>
           <View style={styles.sectionHeaderContainer}>
             <Text style={styles.sectionText}>Moderators</Text>
@@ -176,6 +213,11 @@ export default function Community({navigation}) {
             type="outline"
             buttonStyle={styles.joinedButton}
             titleStyle={styles.joinedText}
+            onPress={() => {
+              if (isMember) {
+                showLeaveCommunityAlert();
+              }
+            }}
           />
         ) : (
           <Button
