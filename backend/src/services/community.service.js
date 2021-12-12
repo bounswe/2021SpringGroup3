@@ -162,21 +162,25 @@ exports.kickFromCommunity = async ({ token, userId, communityId }) => {
 };
 
 exports.approveJoinRequest = async ({ token, userId, communityId }) => {
-  const community = await Community.findById(communityId).lean();
+  let community = await Community.findById(communityId).lean();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
   if (baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, token.user._id.toString())) {
     if (baseUtil.checkIfObjectIdArrayIncludesId(community.pendingMembers, userId)) {
       if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, userId)) {
-        await Community.findByIdAndUpdate(community._id, {
-          $addToSet: {
-            members: userId,
+        community = await Community.findByIdAndUpdate(
+          community._id,
+          {
+            $addToSet: {
+              members: userId,
+            },
+            $pull: {
+              pendingMembers: userId,
+            },
           },
-          $pull: {
-            pendingMembers: userId,
-          },
-        });
+          { new: true }
+        );
       } else {
         // to be sure
         await Community.findByIdAndUpdate(community._id, {
@@ -193,23 +197,28 @@ exports.approveJoinRequest = async ({ token, userId, communityId }) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to approve a join request');
   }
   return {
+    ...formatters.formatCommunityDetails(community, token.user),
     message: 'Join request is approved',
   };
 };
 
 exports.rejectJoinRequest = async ({ token, userId, communityId }) => {
-  const community = await Community.findById(communityId).lean();
+  let community = await Community.findById(communityId).lean();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
   if (baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, token.user._id.toString())) {
     if (baseUtil.checkIfObjectIdArrayIncludesId(community.pendingMembers, userId)) {
       if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, userId)) {
-        await Community.findByIdAndUpdate(community._id, {
-          $pull: {
-            pendingMembers: userId,
+        community = await Community.findByIdAndUpdate(
+          community._id,
+          {
+            $pull: {
+              pendingMembers: userId,
+            },
           },
-        });
+          { new: true }
+        );
       } else {
         // to be sure
         await Community.findByIdAndUpdate(community._id, {
@@ -226,6 +235,7 @@ exports.rejectJoinRequest = async ({ token, userId, communityId }) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to reject a join request');
   }
   return {
+    ...formatters.formatCommunityDetails(community, token.user),
     message: 'Join request is rejected',
   };
 };
