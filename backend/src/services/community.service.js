@@ -59,6 +59,7 @@ exports.getCommunityDetail = async ({ token, communityId }) => {
     .populate({ path: 'members', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
     .populate({ path: 'moderators', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
     .populate({ path: 'pendingMembers', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
+    .populate({ path: 'pendingModerators', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
     .exec();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
@@ -161,21 +162,25 @@ exports.kickFromCommunity = async ({ token, userId, communityId }) => {
 };
 
 exports.approveJoinRequest = async ({ token, userId, communityId }) => {
-  const community = await Community.findById(communityId).lean();
+  let community = await Community.findById(communityId).lean();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
   if (baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, token.user._id.toString())) {
     if (baseUtil.checkIfObjectIdArrayIncludesId(community.pendingMembers, userId)) {
       if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, userId)) {
-        await Community.findByIdAndUpdate(community._id, {
-          $addToSet: {
-            members: userId,
+        community = await Community.findByIdAndUpdate(
+          community._id,
+          {
+            $addToSet: {
+              members: userId,
+            },
+            $pull: {
+              pendingMembers: userId,
+            },
           },
-          $pull: {
-            pendingMembers: userId,
-          },
-        });
+          { new: true }
+        );
       } else {
         // to be sure
         await Community.findByIdAndUpdate(community._id, {
@@ -192,23 +197,28 @@ exports.approveJoinRequest = async ({ token, userId, communityId }) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to approve a join request');
   }
   return {
+    ...formatters.formatCommunityDetails(community, token.user),
     message: 'Join request is approved',
   };
 };
 
 exports.rejectJoinRequest = async ({ token, userId, communityId }) => {
-  const community = await Community.findById(communityId).lean();
+  let community = await Community.findById(communityId).lean();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
   if (baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, token.user._id.toString())) {
     if (baseUtil.checkIfObjectIdArrayIncludesId(community.pendingMembers, userId)) {
       if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, userId)) {
-        await Community.findByIdAndUpdate(community._id, {
-          $pull: {
-            pendingMembers: userId,
+        community = await Community.findByIdAndUpdate(
+          community._id,
+          {
+            $pull: {
+              pendingMembers: userId,
+            },
           },
-        });
+          { new: true }
+        );
       } else {
         // to be sure
         await Community.findByIdAndUpdate(community._id, {
@@ -225,6 +235,7 @@ exports.rejectJoinRequest = async ({ token, userId, communityId }) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to reject a join request');
   }
   return {
+    ...formatters.formatCommunityDetails(community, token.user),
     message: 'Join request is rejected',
   };
 };
@@ -258,10 +269,10 @@ exports.updateCommunity = async ({ name, iconUrl, description, isPrivate, commun
 
 exports.rejectModeratorRequest = async ({ token, userId, communityId }) => {
   const community = await Community.findById(communityId).lean();
-  if (!community) {
+ if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
-  if (baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, token.user._id.toString())) {
+    if (baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, token.user._id.toString())) {
     if (baseUtil.checkIfObjectIdArrayIncludesId(community.pendingModerators, userId)) {
       if (!baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, userId)) {
         await Community.findByIdAndUpdate(community._id, {
@@ -287,6 +298,27 @@ exports.rejectModeratorRequest = async ({ token, userId, communityId }) => {
   return {
     message: 'Moderator request is rejected',
   };
+};
+
+
+exports.joinModerators = async ({ token, communityId }) => {
+  let community = await Community.findById(communityId).lean();
+  if (!community){
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You are already a moderator of this community');
+  }
+  if (baseUtil.checkIfObjectIdArrayIncludesId(community.pendingModerators, token.user._id.toString())) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You already requested to become a moderator of this community');
+  }
+  community = await Community.findByIdAndUpdate(
+    community._id,
+    {
+      $addToSet: {
+        pendingModerators: token.user._id,
+      },
+    },
+    { new: true }
+  );
+  return formatters.formatCommunityDetails(community, token.user);
 };
 
 exports.approveModeratorRequest = async ({ token, userId, communityId }) => {
@@ -323,4 +355,4 @@ exports.approveModeratorRequest = async ({ token, userId, communityId }) => {
   return {
     message: 'Moderator request is approved',
   };
-};
+ };

@@ -107,6 +107,14 @@ exports.approveModeratorRequest = catchAsync(async (req, res) => {
     token: req.token,
     communityId: req.query.communityId,
     userId: req.query.userId,
+   });
+  res.send(result);
+});
+
+exports.joinModerators = catchAsync(async (req, res) => {
+  const result = await communityService.joinModerators({
+    token: req.token,
+    communityId: req.query.communityId,
   });
   res.send(result);
 });
