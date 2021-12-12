@@ -23,7 +23,6 @@ export default function Community({navigation}) {
 
   const [iconUrl, setIconUrl] = useState('g');
   const [name, setName] = useState('');
-  const [memberCount, setMemberCount] = useState(20);
   const [description, setDescription] = useState('');
 
   const [members, setMembers] = useState([]);
@@ -33,7 +32,7 @@ export default function Community({navigation}) {
   const [isPrivate, setIsPrivate] = useState(false);
   const [isMember, setIsMember] = useState(false);
   const [isModerator, setIsModerator] = useState(false);
-  const [isPending, setIsPending] = useState(false);
+  const [isPendingMember, setIsPendingMember] = useState(false);
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -45,7 +44,6 @@ export default function Community({navigation}) {
       if (response.status === 200) {
         setIconUrl(response.data.iconUrl);
         setName(response.data.name);
-        setMemberCount(response.data.memberCount);
         setDescription(response.data.description);
         setMembers(response.data.members);
         setModerators(response.data.moderators);
@@ -53,7 +51,7 @@ export default function Community({navigation}) {
         setIsPrivate(response.data.isPrivate);
         setIsMember(response.data.isMember);
         setIsModerator(response.data.isModerator);
-        setIsPending(response.data.isPending);
+        setIsPendingMember(response.data.isPending);
       } else {
         ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
       }
@@ -75,7 +73,7 @@ export default function Community({navigation}) {
       setIsPrivate(false);
       setIsMember(false);
       setIsModerator(false);
-      setIsPending(false);
+      setIsPendingMember(false);
     }
     if (!isFocused) {
       resetStates();
@@ -90,6 +88,7 @@ export default function Community({navigation}) {
     });
     if (response.status === 200) {
       setIsMember(response.data.isMember);
+      setIsPendingMember(response.data.isPendingMember);
     } else {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
@@ -97,6 +96,13 @@ export default function Community({navigation}) {
 
   const navigate = async () => {
     navigation.navigate('Main');
+  };
+
+  const navigatePendingMembers = () => {
+    navigation.navigate('PendingRequests', {
+      pendingMembers: pendingMembers,
+      communityId: PAGE_VARIABLES.communityId,
+    });
   };
 
   function allCommunitesTab() {
@@ -139,8 +145,22 @@ export default function Community({navigation}) {
     <View style={styles.container}>
       <ScreenHeader title="Communities" navigate={navigate} />
       {isModerator && (
-        <View style={styles.settingsContainer}>
-          <IconButton icon="cog" size={25} color="white" />
+        <View style={styles.rightIconContainer}>
+          <View style={{flexDirection: 'row'}}>
+            <IconButton
+              icon="bell"
+              onPress={() => navigatePendingMembers()}
+              size={22}
+              color="white"
+              style={{marginHorizontal: 0}}
+            />
+            <IconButton
+              icon="cog"
+              size={22}
+              color="white"
+              style={{marginHorizontal: 3}}
+            />
+          </View>
         </View>
       )}
       <View style={styles.communityInfoHeader}>
@@ -150,9 +170,9 @@ export default function Community({navigation}) {
       </View>
       <View style={styles.section1}>
         <Text style={styles.communityName}>{name}</Text>
-        {isMember ? (
+        {isMember || isPendingMember ? (
           <Button
-            title="Joined"
+            title={isMember ? 'Joined' : 'Pending'}
             type="outline"
             buttonStyle={styles.joinedButton}
             titleStyle={styles.joinedText}
@@ -175,7 +195,7 @@ export default function Community({navigation}) {
         )}
       </View>
       <View style={styles.section2}>
-        <Text style={styles.text}>{memberCount} Members</Text>
+        <Text style={styles.text}>{members.length} Members</Text>
       </View>
       <Text style={styles.text}>{description}</Text>
       <Tab.Navigator>
@@ -221,7 +241,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.fieldHeaderColor,
     paddingTop: 40,
   },
-  settingsContainer: {
+  rightIconContainer: {
     width: '100%',
     backgroundColor: COLORS.fieldHeaderColor,
     justifyContent: 'flex-end',

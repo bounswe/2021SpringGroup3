@@ -153,6 +153,56 @@ export const joinCommunity = async ({communityId}) => {
     });
 };
 
+export const acceptJoinRequest = async ({communityId, userId}) => {
+  return fetch(
+    BASE_URL +
+      'communities/join/approve?communityId=' +
+      communityId +
+      '&userId=' +
+      userId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const rejectJoinRequest = async ({communityId, userId}) => {
+  return fetch(
+    BASE_URL +
+      'communities/join/reject?communityId=' +
+      communityId +
+      '&userId=' +
+      userId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 const returnResponse = async response => {
   const statusCode = response.status;
   response = await response.json();
