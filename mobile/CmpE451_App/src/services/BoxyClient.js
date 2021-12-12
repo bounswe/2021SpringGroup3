@@ -186,3 +186,21 @@ export const getPostDetail = async ({communityId, postId}) => {
     })
     .catch(error => console.log('error', error));
 };
+
+export const getPosts = async ({communityId}) => {
+  return fetch(BASE_URL + 'posts?communityId=' + communityId, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
