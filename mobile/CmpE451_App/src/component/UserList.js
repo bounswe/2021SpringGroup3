@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Text, Image, StyleSheet, View} from 'react-native';
 
 import {list} from '../theme/styles';
 import {listItem} from '../theme/styles';
@@ -12,8 +12,12 @@ export default function UserList({users, onPress, icons = []}) {
         <View style={list}>
           {icons.map(icon => (
             <CommonIcon
-              icon={icon.name}
-              onPress={() => icon.onPress(user.id)}
+              icon={user.isMod ? 'crown' : icon.name}
+              onPress={() => {
+                if (!user.isMod) {
+                  icon.onPress(user.id);
+                }
+              }}
               IconColor={icon.iconColor}
             />
           ))}
