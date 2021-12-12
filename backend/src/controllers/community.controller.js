@@ -40,6 +40,7 @@ exports.joinCommunity = catchAsync(async (req, res) => {
 
 exports.leaveCommunity = catchAsync(async (req, res) => {
   const result = await communityService.leaveCommunity({
+    token: req.token,
     userId: req.token.user._id,
     communityId: req.query.communityId,
   });
