@@ -67,6 +67,12 @@ exports.formatCommunityDetails = function (community, user) {
     isPendingMember: baseUtil.checkIfObjectIdArrayIncludesId(community.pendingMembers, user._id.toString()),
     isPendingModerator: baseUtil.checkIfObjectIdArrayIncludesId(community.pendingModerators, user._id.toString()),
   };
+  const modSet = new Set(com.moderators.map((m) => m.id));
+  com.members = com.members.map((m) => ({
+    ...m,
+    isMod: modSet.has(m.id),
+  }));
+  com.members.sort((x, y) => (x.isMod == y.isMod ? 0 : x.isMod ? -1 : 1));
   if (com.isModerator) {
     com.pendingMembers = (community.pendingMembers || []).map(formatUserPreview);
     com.pendingModerators = (community.pendingModerators || []).map(formatUserPreview);
