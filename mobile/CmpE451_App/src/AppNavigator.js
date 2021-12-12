@@ -14,7 +14,7 @@ import Main from './screen/Main.js';
 import Notification from './screen/Notification';
 import Registration from './screen/Registration';
 import Profile from './screen/Profile';
-import Settings from './screen/Settings';
+import ProfileSettings from './screen/ProfileSettings';
 import CreateCommunity from './screen/CreateCommunity';
 import SelectCommunity from './screen/SelectCommunity';
 import SelectPostType from './screen/SelectPostType';
@@ -160,7 +160,7 @@ const handleLogout = () => {
 
 const requestLogout = async () => {
   const token = await getToken();
-  console.log("token", token);
+  console.log('token', token);
   fetch(BASE_URL + 'auth/logout', {
     method: 'DELETE',
     headers: {
@@ -251,8 +251,8 @@ const DrawerNavigator = () => {
         options={drawerOptions}
       />
       <Drawer.Screen
-        name="Settings"
-        component={Settings}
+        name="ProfileSettings"
+        component={ProfileSettings}
         options={drawerOptions}
       />
     </Drawer.Navigator>

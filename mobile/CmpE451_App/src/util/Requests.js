@@ -1,6 +1,11 @@
 var myHeaders = new Headers();
 import {getToken} from '../services/asyncStorageService';
-import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
+import {
+  TEXT,
+  PAGE_VARIABLES,
+  BASE_URL,
+  DEFAULT_PROFILE_IMAGE,
+} from '../constants';
 
 export const createPost = async body => {
   var myHeaders = new Headers();
@@ -28,6 +33,42 @@ export const createPost = async body => {
     })
     .catch(error => console.log('error', error));
 };
+export const getMyProfile = async () => {
+  var myHeaders = new Headers();
+  const token = await getToken();
+  myHeaders.append('X-Platform', 'ANDROID');
+  myHeaders.append('Authorization', token);
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow',
+  };
+  return fetch(BASE_URL + 'profile', requestOptions)
+    .then(response => response.text())
+    .then(result => {
+      return JSON.parse(result);
+    })
+    .catch(error => {
+      console.info(error.message);
+    });
+};
+export const getCommunities = async isMember => {
+  return fetch(BASE_URL + 'communities?isMember=' + isMember, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => response.text())
+    .then(result => {
+      return result;
+    })
+    .catch(error => {
+      console.info(error.message);
+    });
+};
 
 export const getPostTypeDetail = async ({communityId, postTypeId}) => {
   var myHeaders = new Headers();
@@ -41,7 +82,8 @@ export const getPostTypeDetail = async ({communityId, postTypeId}) => {
   };
 
   return fetch(
-    'https://api.cmpegroupthree.store/post-types/detail?communityId=' +
+    BASE_URL +
+      '/post-types/detail?communityId=' +
       communityId +
       '&postTypeId=' +
       postTypeId,
@@ -50,6 +92,47 @@ export const getPostTypeDetail = async ({communityId, postTypeId}) => {
     .then(response => response.text())
     .then(result => {
       return result;
+    })
+    .catch(error => console.log('error', error));
+};
+
+export const updateUserSettings = async body => {
+  var myHeaders = new Headers();
+  myHeaders.append('X-Platform', 'ANDROID');
+  myHeaders.append('Authorization', await getToken());
+  myHeaders.append('Content-Type', 'application/json');
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    redirect: 'follow',
+    body: JSON.stringify(body),
+  };
+  return fetch(
+    'https://api.cmpegroupthree.store/profile/settings',
+    requestOptions,
+  )
+    .then(response => response.text())
+    .then(result => {
+      return JSON.parse(result);
+    })
+    .catch(error => console.log('error', error));
+};
+
+export const getUserSettings = async () => {
+  var myHeaders = new Headers();
+  myHeaders.append('Authorization', await getToken());
+  myHeaders.append('X-Platform', 'ANDROID');
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow',
+  };
+
+  return fetch(BASE_URL + 'profile/settings', requestOptions)
+    .then(response => response.text())
+    .then(result => {
+      return JSON.parse(result);
     })
     .catch(error => console.log('error', error));
 };
