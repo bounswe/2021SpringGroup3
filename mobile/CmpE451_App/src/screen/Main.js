@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet, TextInput, FlatList, TouchableOpacity} from 'react-native';
+import {Text, View, StyleSheet, TextInput, FlatList, TouchableOpacity, RefreshControl} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
 import {PAGE_VARIABLES} from '../constants';
@@ -17,6 +17,9 @@ import {headerTextStyle} from '../theme/styles';
 export default function Main({navigation}) {
     const [memberCommunityList, setMemberCommunityList] = useState([]);
     const [postList, setPostList] = useState([]);
+    const [refreshing, setRefreshing] = React.useState(false);
+    const [refreshingCommunities, setRefreshingCommunities] = useState(false);
+    const [refreshingPosts, setRefreshingPosts] = useState(false);
 
     useEffect(() => {
         async function init() {
@@ -36,6 +39,33 @@ export default function Main({navigation}) {
         }
         init();
     }, []);
+    
+    const _onRefreshCommunities = async () => {
+      const _memberCommunityList = await client.getCommunities({isMember: true});
+      setMemberCommunityList(_memberCommunityList);
+    };
+
+    const _onRefreshPosts = async () => {
+      const tempPostList = []
+        for(let i = 0; i<memberCommunityList.length; i++){
+            const communityPostList = await client.getPosts({communityId: memberCommunityList[i].id});
+            for(let j=0; j<communityPostList.length; j++){
+              tempPostList.push(communityPostList[j])
+            }
+        };
+      setPostList(tempPostList);
+    };
+
+    const onRefresh = React.useCallback(() => {
+      setRefreshing(true);
+      _onRefreshCommunities();
+      _onRefreshPosts();
+      wait(2000).then(() => setRefreshing(false));
+    }, []);
+
+    const wait = (timeout) => {
+      return new Promise(resolve => setTimeout(resolve, timeout));
+    }
 
     function navigateToPost(postId, communityId){
       PAGE_VARIABLES.postId = postId;
@@ -52,6 +82,11 @@ export default function Main({navigation}) {
             <View style={{flex: 1}} />
           </View>
           <FlatList
+              refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                />}
               style={styles.feed}
               data={postList}
               renderItem={({item}) => 
