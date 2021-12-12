@@ -161,3 +161,28 @@ const returnResponse = async response => {
     data: response,
   };
 };
+
+export const getPostDetail = async ({communityId, postId}) => {
+  var myHeaders = new Headers();
+  myHeaders.append('X-Platform', 'ANDROID');
+  myHeaders.append('Authorization', await getToken());
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow',
+  };
+
+  return fetch(
+    'https://api.cmpegroupthree.store/posts/detail?communityId=' +
+      communityId +
+      '&postId=' +
+      postId,
+    requestOptions,
+  )
+    .then(response => response.text())
+    .then(result => {
+      return result;
+    })
+    .catch(error => console.log('error', error));
+};
