@@ -11,13 +11,6 @@ export default function PendingRequests({navigation, route}) {
   let {pendingMembers, communityId} = route.params;
   const [pendingMemberList, setPendingMemberList] = useState(pendingMembers);
 
-  function applyQuery(id) {
-    pendingMembers = pendingMembers.filter(function (member) {
-      return member.id !== id;
-    });
-    setPendingMemberList(pendingMembers);
-  }
-
   async function acceptPendingMember(userId) {
     let response = await client.acceptJoinRequest({
       communityId: communityId,
@@ -25,7 +18,7 @@ export default function PendingRequests({navigation, route}) {
     });
     if (response.status === 200) {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
-      applyQuery(userId);
+      setPendingMemberList(response.data.pendingMembers);
     } else {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
@@ -38,7 +31,7 @@ export default function PendingRequests({navigation, route}) {
     });
     if (response.status === 200) {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
-      applyQuery(userId);
+      setPendingMemberList(response.data.pendingMembers);
     } else {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
