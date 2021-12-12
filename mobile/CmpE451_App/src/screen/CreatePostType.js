@@ -13,6 +13,12 @@ import {COLORS} from '../theme/colors';
 import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
 import {getToken} from '../services/asyncStorageService';
 import {IconButton} from 'react-native-paper';
+import {headerStyle} from '../theme/styles';
+import {headerContainerStyle} from '../theme/styles';
+import CloseButton from '../component/CloseButton';
+import DeleteButton from '../component/DeleteButton';
+import CommonButton from '../component/CommonButton';
+import ScreenHeader from '../component/ScreenHeader';
 
 export default function CreatePostType({navigation}) {
   const [name, setName] = useState('');
@@ -170,7 +176,7 @@ export default function CreatePostType({navigation}) {
         const status = response.status;
         response = await response.json();
         if (status === 201) {
-          navigation.navigate('Home');
+          navigation.navigate('Main');
         } else {
           ToastAndroid.show(response.message, ToastAndroid.SHORT);
         }
@@ -181,17 +187,30 @@ export default function CreatePostType({navigation}) {
       });
   };
 
+  const navigate = async () => {
+    navigation.navigate('Create Post Type');
+  };
+
   return (
     <View style={styles.container}>
+      <ScreenHeader
+        titleComponent={
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <IconButton
+              icon="package-variant-closed"
+              color="white"
+              size={30}
+              style={{margin: 0}}
+            />
+            <Text style={{color: 'white', fontSize: 20}}>Create Post Type</Text>
+          </View>
+        }
+        navigate={navigate}
+        iconName="arrow-left-circle"
+      />
       <ScrollView
         style={styles.inputsContainer}
         keyboardShouldPersistTaps="handled">
-        <IconButton
-          icon="close"
-          color="grey"
-          size={20}
-          onPress={() => navigation.navigate('Create Post Type')}
-        />
         <View style={styles.inputNameContainer}>
           <View style={styles.fieldHeader}>
             <TextInput
@@ -206,123 +225,126 @@ export default function CreatePostType({navigation}) {
               onSubmitEditing={() => Keyboard.dismiss()}
             />
           </View>
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            activeOpacity={0.5}
-            onPress={createPostTypeHandler}>
-            <View>
-              <Text style={styles.buttonTextStyle}>Create Post Type</Text>
-            </View>
-          </TouchableOpacity>
+          <CommonButton
+            text="Create"
+            onPress={createPostTypeHandler}
+            buttonHeight={40}
+            buttonWidth={'20%'}
+          />
         </View>
         <View style={styles.fieldHeader}>
           <Text style={styles.fieldHeaderText}> Add Text Field </Text>
           <IconButton
             icon="plus"
-            color="grey"
+            color={COLORS.buttonColor}
             size={30}
             onPress={() => addFieldHandler(textFieldKey)}
           />
         </View>
         {textInputs.map((input, key) => (
-          <View style={styles.inputContainer}>
-            <TextInput
-              placeholder={'Enter field name'}
-              value={input.value}
-              onChangeText={text => inputHandler(textFieldKey, text, key)}
+          <View style={{flexDirection: 'row', width: '100%'}}>
+            <View style={styles.inputContainer}>
+              <TextInput
+                placeholder={'Enter field name'}
+                value={input.value}
+                onChangeText={text => inputHandler(textFieldKey, text, key)}
+              />
+            </View>
+            <DeleteButton
+              onPress={() => deleteFieldHandler(textFieldKey, key)}
             />
-            <TouchableOpacity
-              onPress={() => deleteFieldHandler(textFieldKey, key)}>
-              <Text style={styles.deleteText}>Delete</Text>
-            </TouchableOpacity>
           </View>
         ))}
         <View style={styles.fieldHeader}>
-          <Text style={styles.fieldHeaderText}>Add Number Fields</Text>
+          <Text style={styles.fieldHeaderText}>Add Number Field</Text>
           <IconButton
             icon="plus"
-            color="grey"
+            color={COLORS.buttonColor}
             size={30}
             onPress={() => addFieldHandler(numberFieldKey)}
           />
         </View>
         {numberInputs.map((input, key) => (
-          <View style={styles.inputContainer}>
-            <TextInput
-              placeholder={'Enter field name'}
-              value={input.value}
-              onChangeText={text => inputHandler(numberFieldKey, text, key)}
+          <View style={{flexDirection: 'row', width: '100%'}}>
+            <View style={styles.inputContainer}>
+              <TextInput
+                placeholder={'Enter field name'}
+                value={input.value}
+                onChangeText={text => inputHandler(numberFieldKey, text, key)}
+              />
+            </View>
+            <DeleteButton
+              onPress={() => deleteFieldHandler(numberFieldKey, key)}
             />
-            <TouchableOpacity
-              onPress={() => deleteFieldHandler(numberFieldKey, key)}>
-              <Text style={styles.deleteText}>Delete</Text>
-            </TouchableOpacity>
           </View>
         ))}
         <View style={styles.fieldHeader}>
           <Text style={styles.fieldHeaderText}> Add Date Field </Text>
           <IconButton
             icon="plus"
-            color="grey"
+            color={COLORS.buttonColor}
             size={30}
             onPress={() => addFieldHandler(dateFieldKey)}
           />
         </View>
         {dateInputs.map((input, key) => (
-          <View style={styles.inputContainer}>
-            <TextInput
-              placeholder={'Enter field name'}
-              value={input.value}
-              onChangeText={text => inputHandler(dateFieldKey, text, key)}
+          <View style={{flexDirection: 'row', width: '100%'}}>
+            <View style={styles.inputContainer}>
+              <TextInput
+                placeholder={'Enter field name'}
+                value={input.value}
+                onChangeText={text => inputHandler(dateFieldKey, text, key)}
+              />
+            </View>
+            <DeleteButton
+              onPress={() => deleteFieldHandler(dateFieldKey, key)}
             />
-            <TouchableOpacity
-              onPress={() => deleteFieldHandler(dateFieldKey, key)}>
-              <Text style={styles.deleteText}>Delete</Text>
-            </TouchableOpacity>
           </View>
         ))}
         <View style={styles.fieldHeader}>
           <Text style={styles.fieldHeaderText}>Add Link Field</Text>
           <IconButton
             icon="plus"
-            color="grey"
+            color={COLORS.buttonColor}
             size={30}
             onPress={() => addFieldHandler(linkFieldKey)}
           />
         </View>
         {linkInputs.map((input, key) => (
-          <View style={styles.inputContainer}>
-            <TextInput
-              placeholder={'Enter field name'}
-              value={input.value}
-              onChangeText={text => inputHandler(linkFieldKey, text, key)}
+          <View style={{flexDirection: 'row', width: '100%'}}>
+            <View style={styles.inputContainer}>
+              <TextInput
+                placeholder={'Enter field name'}
+                value={input.value}
+                onChangeText={text => inputHandler(linkFieldKey, text, key)}
+              />
+            </View>
+            <DeleteButton
+              onPress={() => deleteFieldHandler(linkFieldKey, key)}
             />
-            <TouchableOpacity
-              onPress={() => deleteFieldHandler(linkFieldKey, key)}>
-              <Text style={styles.deleteText}>Delete</Text>
-            </TouchableOpacity>
           </View>
         ))}
         <View style={styles.fieldHeader}>
           <Text style={styles.fieldHeaderText}>Add Location Field</Text>
           <IconButton
             icon="plus"
-            color="grey"
+            color={COLORS.buttonColor}
             size={30}
             onPress={() => addFieldHandler(locationFieldKey)}
           />
         </View>
         {locationInputs.map((input, key) => (
-          <View style={styles.inputContainer}>
-            <TextInput
-              placeholder={'Enter field name'}
-              value={input.value}
-              onChangeText={text => inputHandler(locationFieldKey, text, key)}
+          <View style={{flexDirection: 'row', width: '100%'}}>
+            <View style={styles.inputContainer}>
+              <TextInput
+                placeholder={'Enter field name'}
+                value={input.value}
+                onChangeText={text => inputHandler(locationFieldKey, text, key)}
+              />
+            </View>
+            <DeleteButton
+              onPress={() => deleteFieldHandler(locationFieldKey, key)}
             />
-            <TouchableOpacity
-              onPress={() => deleteFieldHandler(locationFieldKey, key)}>
-              <Text style={styles.deleteText}>Delete</Text>
-            </TouchableOpacity>
           </View>
         ))}
       </ScrollView>
@@ -333,8 +355,6 @@ export default function CreatePostType({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 2,
-    backgroundColor: 'white',
   },
   fieldHeaderText: {
     fontSize: 16,
@@ -352,7 +372,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: 'lightgray',
-    marginLeft: 25,
+    flex: 9,
+    marginLeft: 20,
     marginRight: 20,
   },
   inputNameContainer: {
@@ -377,21 +398,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingTop: 20,
     marginLeft: 8,
-  },
-  buttonStyle: {
-    backgroundColor: COLORS.buttonColor,
-    borderWidth: 0,
-    height: 40,
-    alignItems: 'center',
-    borderRadius: 10,
-    marginTop: 20,
-    marginBottom: 20,
-  },
-  buttonTextStyle: {
-    color: COLORS.buttonTextColor,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    fontSize: 16,
   },
   iconView: {
     flex: 3,

@@ -11,7 +11,8 @@ import {
 import {COLORS} from '../theme/colors';
 import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
 import {getToken} from '../services/asyncStorageService';
-import {IconButton} from 'react-native-paper';
+import {headerTextStyle} from '../theme/styles';
+import ScreenHeader from '../component/ScreenHeader';
 
 export default function SelectModeratorCommunity({navigation}) {
   const [communityList, setCommunityList] = useState([]);
@@ -53,19 +54,19 @@ export default function SelectModeratorCommunity({navigation}) {
       .catch(error => {
         console.info(error);
         ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
-        setCommunityList(mockCommunityList);
       });
+  };
+
+  const navigate = async () => {
+    navigation.navigate('Main');
   };
 
   return (
     <View style={styles.container}>
-      <IconButton
-        icon="close"
-        color="grey"
-        size={20}
-        onPress={() => navigation.navigate('Home')}
+      <ScreenHeader
+        titleComponent={<Text style={headerTextStyle}>Choose Community</Text>}
+        navigate={navigate}
       />
-      <Text style={styles.header}>Choose Community</Text>
       <FlatList
         refreshing={refreshing}
         onRefresh={_onRefresh}
@@ -86,38 +87,9 @@ export default function SelectModeratorCommunity({navigation}) {
   );
 }
 
-const mockCommunityList = [
-  {
-    name: 'Economics',
-    id: 1,
-    iconUrl: 'https://reactnative.dev/docs/assets/p_cat1.png',
-  },
-  {
-    name: 'Politics',
-    id: 2,
-    iconUrl: 'https://reactnative.dev/docs/assets/p_cat2.png',
-  },
-  {
-    name: 'CatLovers',
-    id: 3,
-    iconUrl: 'https://reactnative.dev/docs/assets/p_cat1.png',
-  },
-  {
-    name: 'CMPE451',
-    id: 4,
-    iconUrl: 'https://reactnative.dev/docs/assets/p_cat2.png',
-  },
-  {
-    name: 'PCMaster',
-    id: 5,
-    iconUrl: 'https://reactnative.dev/docs/assets/p_cat1.png',
-  },
-];
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 2,
   },
   item: {
     padding: 10,

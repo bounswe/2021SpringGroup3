@@ -21,6 +21,8 @@ import SelectPostType from './screen/SelectPostType';
 import CreatePostType from './screen/CreatePostType';
 import SelectModeratorCommunity from './screen/SelectModeratorCommunity';
 import PostDetail from './screen/PostDetail';
+import Communities from './screen/Communities';
+import Community from './screen/Community';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import {screenOptionStyle} from './theme/styles';
@@ -77,6 +79,11 @@ export function Navigator() {
         options={{headerShown: false}}
         name="CreatePostType"
         component={CreatePostType}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Community"
+        component={Community}
       />
     </Stack.Navigator>
   );
@@ -238,6 +245,11 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name="Profile"
         component={Profile}
+        options={drawerOptions}
+      />
+      <Drawer.Screen
+        name="Communities"
+        component={Communities}
         options={drawerOptions}
       />
       <Drawer.Screen

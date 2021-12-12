@@ -1,4 +1,4 @@
-import React, {useState, createRef} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -7,88 +7,75 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   ToastAndroid,
-  TouchableOpacity,
   ScrollView,
+  Switch,
 } from 'react-native';
-import {getToken} from '../services/asyncStorageService';
+import FieldHeader from '../component/FieldHeader';
+import CommonButton from '../component/CommonButton';
+import ScreenHeader from '../component/ScreenHeader';
 import {COLORS} from '../theme/colors';
-import {TEXT, BASE_URL} from '../constants';
-import {IconButton} from 'react-native-paper';
+import {textInputArea} from '../theme/styles';
+import {textInputContainer} from '../theme/styles';
+import {headerTextStyle} from '../theme/styles';
+import * as Client from '../services/BoxyClient';
 
 export default function CreateCommunity({navigation}) {
   const [name, setName] = useState('');
   const [iconUrl, setIconUrl] = useState('');
-
-  const iconUrlInputRef = createRef();
+  const [description, setDescription] = useState('');
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   const handleCreateCommunity = async () => {
     Keyboard.dismiss();
-    fetch(BASE_URL + 'communities', {
-      method: 'POST',
-      body: JSON.stringify({
-        name: name,
-        iconUrl: iconUrl,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Platform': 'ANDROID',
-        Authorization: await getToken(),
-      },
-    })
-      .then(async response => {
-        const status = response.status;
-        response = await response.json();
-        if (status === 201) {
-          navigateMain();
-        } else {
-          ToastAndroid.show(response.message, ToastAndroid.SHORT);
-        }
-      })
-      .catch(error => {
-        console.info(error);
-        ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
-      });
+    let response = await Client.createCommunity({
+      name: name,
+      iconUrl: iconUrl,
+      description: description,
+      isPrivate: isEnabled,
+    });
+    const status = response.status;
+    if (status === 201) {
+      navigate();
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
   };
 
-  const navigateMain = async () => {
-    navigation.navigate('Home');
+  const navigate = async () => {
+    navigation.navigate('Main');
   };
 
   return (
     // eslint-disable-next-line react-native/no-inline-styles
     <View style={styles.container}>
+      <ScreenHeader
+        titleComponent={<Text style={headerTextStyle}>Create Community</Text>}
+        navigate={navigate}
+      />
       <ScrollView
-        keyboardShouldPersistTaps="handled"
-        styles={styles.contentContainerStyle}>
-        <IconButton
-          icon="close"
-          color="grey"
-          size={20}
-          onPress={() => navigation.navigate('Home')}
-        />
-        <View style={{alignItems: 'center'}}>
-          <Text style={styles.header}>Create Community</Text>
-        </View>
+        contentContainerStyle={{flexGrow: 1}}
+        keyboardShouldPersistTaps="handled">
         <KeyboardAvoidingView enabled>
-          <View style={styles.SectionStyle}>
+          <View style={textInputContainer}>
+            <FieldHeader name={'Community Name'} />
             <TextInput
-              style={styles.inputStyle}
+              multiline
+              style={textInputArea}
               onChangeText={UserName => setName(UserName)}
               underlineColorAndroid="#f000"
               placeholder="Community Name"
               placeholderTextColor="#8b9cb5"
               autoCapitalize="sentences"
               returnKeyType="next"
-              onSubmitEditing={() =>
-                iconUrlInputRef.current && iconUrlInputRef.current.focus()
-              }
               blurOnSubmit={false}
             />
           </View>
-          <View style={styles.SectionStyle}>
+          <View style={textInputContainer}>
+            <FieldHeader name={'Community Profile Photo'} />
             <TextInput
-              style={styles.inputStyle}
-              ref={iconUrlInputRef}
+              multiline
+              style={textInputArea}
               onChangeText={IconUrl => setIconUrl(IconUrl)}
               underlineColorAndroid="#f000"
               placeholder="Icon URL"
@@ -98,14 +85,44 @@ export default function CreateCommunity({navigation}) {
               blurOnSubmit={false}
             />
           </View>
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            activeOpacity={0.5}
-            onPress={handleCreateCommunity}>
-            <View>
-              <Text style={styles.buttonTextStyle}>Create</Text>
+          <View style={textInputContainer}>
+            <FieldHeader name={'Community Description'} />
+            <TextInput
+              multiline
+              style={textInputArea}
+              onChangeText={desc => setDescription(desc)}
+              underlineColorAndroid="#f000"
+              placeholder="Description"
+              placeholderTextColor="#8b9cb5"
+              returnKeyType="next"
+              onSubmitEditing={() => Keyboard.dismiss()}
+              blurOnSubmit={false}
+            />
+          </View>
+          <View style={textInputContainer}>
+            <FieldHeader name={'Private Community'} />
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text
+                style={{color: COLORS.textColor, fontSize: 12, width: '80%'}}>
+                Only members can view posts of the private communities
+              </Text>
+              <Switch
+                trackColor={{false: '#767577', true: '#81b0ff'}}
+                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isEnabled}
+              />
             </View>
-          </TouchableOpacity>
+          </View>
+          <View style={{alignItems: 'center'}}>
+            <CommonButton
+              text="CREATE"
+              onPress={handleCreateCommunity}
+              buttonWidth={'80%'}
+            />
+          </View>
         </KeyboardAvoidingView>
       </ScrollView>
     </View>
@@ -115,56 +132,14 @@ export default function CreateCommunity({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 2,
   },
   header: {
     fontSize: 25,
     alignSelf: 'center',
     color: COLORS.textColor,
   },
-  SectionStyle: {
-    flexDirection: 'row',
-    height: 40,
-    marginTop: 20,
-    marginLeft: 35,
-    marginRight: 35,
-    margin: 10,
-  },
-  buttonStyle: {
-    backgroundColor: COLORS.buttonColor,
-    borderWidth: 0,
-    color: COLORS.buttonColor,
-    borderColor: COLORS.buttonColor,
-    height: 40,
-    alignItems: 'center',
-    borderRadius: 30,
-    marginLeft: 35,
-    marginRight: 35,
-    marginTop: 20,
-    marginBottom: 20,
-  },
-  buttonTextStyle: {
-    color: COLORS.buttonTextColor,
-    paddingVertical: 10,
-    fontSize: 16,
-  },
-  inputStyle: {
-    flex: 1,
-    color: COLORS.inputTextColor,
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderWidth: 1,
-    borderRadius: 30,
-    borderColor: '#dadae8',
-  },
   contentContainerStyle: {
     justifyContent: 'center',
     alignContent: 'center',
-  },
-  imageStyle: {
-    width: '50%',
-    height: 100,
-    resizeMode: 'contain',
-    margin: 30,
   },
 });

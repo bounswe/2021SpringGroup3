@@ -12,15 +12,20 @@ export const headerContainerStyle = {
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-  padding: 10,
-  marginBottom: 10,
+  padding: 7,
   backgroundColor: COLORS.screenHeaderBackground,
   height: 50,
 };
 
 export const headerStyle = {
   flexDirection: 'row',
-  justifyContent: 'flex-start',
+  flex: 4,
+  justifyContent: 'center',
+};
+
+export const headerTextStyle = {
+  color: 'white',
+  fontSize: 20,
 };
 
 export const textInputArea = {
@@ -36,5 +41,20 @@ export const textInputContainer = {
   justifyContent: 'space-between',
   marginLeft: 25,
   marginRight: 20,
-  paddingBottom: 30,
+  paddingBottom: 20,
+  paddingTop: 10,
+};
+
+export const list = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginLeft: 16,
+};
+
+export const listItem = {
+  padding: 10,
+  fontSize: 16,
+  height: 50,
+  color: COLORS.textColor,
+  textAlignVertical: 'center',
 };

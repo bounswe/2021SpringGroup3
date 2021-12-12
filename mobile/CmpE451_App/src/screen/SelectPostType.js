@@ -8,13 +8,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {COLORS} from '../theme/colors';
 import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
 import {getToken} from '../services/asyncStorageService';
 import {postTypeIcon} from '../image/index';
-import {headerStyle} from '../theme/styles';
-import {headerContainerStyle} from '../theme/styles';
-import CloseButton from '../component/CloseButton';
+import {list} from '../theme/styles';
+import {listItem} from '../theme/styles';
+import {headerTextStyle} from '../theme/styles';
+import ScreenHeader from '../component/ScreenHeader';
 
 export default function SelectPostType({navigation, route}) {
   const {communityName, communityId} = route.params;
@@ -66,12 +66,11 @@ export default function SelectPostType({navigation, route}) {
 
   return (
     <View style={styles.container}>
-      <View style={headerContainerStyle}>
-        <View style={headerStyle}>
-          <Text style={{color: 'white', fontSize: 20}}>Choose Post Type</Text>
-        </View>
-        <CloseButton onPress={navigation.goBack} />
-      </View>
+      <ScreenHeader
+        titleComponent={<Text style={headerTextStyle}>Choose Post Type</Text>}
+        navigate={navigation.goBack}
+        iconName="arrow-left-circle"
+      />
       <FlatList
         refreshing={refreshing}
         onRefresh={_onRefresh}
@@ -81,9 +80,9 @@ export default function SelectPostType({navigation, route}) {
             onPress={() => {
               navigateCreatePost(item);
             }}>
-            <View style={styles.list}>
+            <View style={list}>
               <Image source={postTypeIcon} style={styles.image} />
-              <Text style={styles.item}>{item.name}</Text>
+              <Text style={listItem}>{item.name}</Text>
             </View>
           </TouchableOpacity>
         )}
@@ -115,37 +114,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  fieldHeader: {
-    fontSize: 25,
-    alignSelf: 'center',
-    color: COLORS.textColor,
-  },
-  item: {
-    padding: 10,
-    fontSize: 18,
-    height: 60,
-    color: COLORS.textColor,
-    textAlignVertical: 'center',
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: COLORS.screenHeaderBackground,
-    height: 50,
-  },
   image: {
     width: 20,
     height: 20,
-  },
-  list: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 16,
   },
 });

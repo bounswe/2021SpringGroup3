@@ -10,15 +10,14 @@ import DatePicker from 'react-native-date-picker';
 import DynamicFormField from '../component/DynamicFormField';
 import FieldHeader from '../component/FieldHeader';
 import CommonButton from '../component/CommonButton';
-import CloseButton from '../component/CloseButton';
 import ConfirmButton from '../component/ConfirmButton';
+import ScreenHeader from '../component/ScreenHeader';
 import {PAGE_VARIABLES} from '../constants';
 import {COLORS} from '../theme/colors';
 import {textInputArea} from '../theme/styles';
 import {textInputContainer} from '../theme/styles';
-import {headerStyle} from '../theme/styles';
-import {headerContainerStyle} from '../theme/styles';
-import * as Requests from '../util/Requests';
+import {headerTextStyle} from '../theme/styles';
+import * as Requests from '../services/BoxyClient';
 
 export default function CreatePost({route}) {
   const {communityName} = route.params;
@@ -27,15 +26,6 @@ export default function CreatePost({route}) {
   const [textFields, setTextFields] = useState([]);
   const [numberFields, setNumberFields] = useState([]);
   const [locationFields, setLocationFields] = useState([]);
-  const [geoLocationFields, setGeoLocationFields] = useState([
-    {
-      name: '',
-      value: {
-        latitude: 0,
-        longitude: 0,
-      },
-    },
-  ]);
   const [showMap, setShowMap] = useState(false);
   const [address, setAddress] = useState('');
   const [locationIndex, setLocationIndex] = useState(-1);
@@ -106,7 +96,16 @@ export default function CreatePost({route}) {
       if (locationFieldNames != null && locationFieldNames.length > 0) {
         const locationFieldsTemp = [];
         for (let i = 0; i < locationFieldNames.length; i++) {
-          locationFieldsTemp.push({name: locationFieldNames[i], value: ''});
+          locationFieldsTemp.push({
+            name: locationFieldNames[i],
+            value: {
+              geo: {
+                latitude: 0,
+                longitude: 0,
+              },
+              description: '',
+            },
+          });
         }
         setLocationFields(locationFieldsTemp);
       }
@@ -170,18 +169,24 @@ export default function CreatePost({route}) {
         setLinkFields(_linkInputs);
         break;
       case 'geoLocation':
-        const _geoLocationInputs = [...geoLocationFields];
+        const _geoLocationInputs = [...locationFields];
         _geoLocationInputs[index] = {
           name: locationFields[index].name,
-          value: input,
+          value: {
+            geo: input,
+            description: locationFields[index].value.description,
+          },
         };
-        setGeoLocationFields(_geoLocationInputs);
+        setLocationFields(_geoLocationInputs);
         break;
       case 'location':
         const _locationInputs = [...locationFields];
         _locationInputs[index] = {
           name: locationFields[index].name,
-          value: input,
+          value: {
+            geo: _locationInputs[index].value.geo,
+            description: input,
+          },
         };
         setLocationFields(_locationInputs);
         break;
@@ -234,7 +239,7 @@ export default function CreatePost({route}) {
               <View>
                 <IconButton
                   icon="map-marker"
-                  color={COLORS.buttonColor}
+                  color={COLORS.fieldHeaderColor}
                   size={30}
                   onPress={() => {
                     setShowMap(true);
@@ -245,11 +250,11 @@ export default function CreatePost({route}) {
               <TextInput
                 multiline
                 style={styles.locationTextInput}
-                onChangeText={text =>
-                  inputHandler(locationFieldKey, text, index)
-                }
-                value={input.value}
                 placeholder=" address definition"
+                onChangeText={text => {
+                  inputHandler(locationFieldKey, text, index);
+                }}
+                value={locationFields[index].value.description}
               />
             </View>
           </View>
@@ -262,7 +267,7 @@ export default function CreatePost({route}) {
     return (
       <View style={styles.container}>
         <View style={headerContainerStyle}>
-          <View style={headerStyle}>
+          <View style={{flexDirection: 'row'}}>
             <Text style={{color: 'white', fontSize: 20}}>Choose Location</Text>
           </View>
           <ConfirmButton onPress={chooseLocation} />
@@ -276,7 +281,6 @@ export default function CreatePost({route}) {
               Geocoder.from(address)
                 .then(res => {
                   var location = res.results[0].geometry.location;
-                  console.log(location);
                   setRegion({
                     latitude: location.lat,
                     longitude: location.lng,
@@ -333,14 +337,13 @@ export default function CreatePost({route}) {
         getMapView()
       ) : (
         <>
-          <View style={headerContainerStyle}>
-            <View style={headerStyle}>
-              <Text style={{color: 'white', fontSize: 20}}>
-                Post to {communityName}
-              </Text>
-            </View>
-            <CloseButton onPress={navigation.goBack} />
-          </View>
+          <ScreenHeader
+            titleComponent={
+              <Text style={headerTextStyle}>Post to {communityName}</Text>
+            }
+            navigate={navigation.goBack}
+            iconName="arrow-left-circle"
+          />
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{alignItems: 'center'}}>
               <View
@@ -382,7 +385,7 @@ const styles = {
   },
   map: {
     position: 'absolute',
-    top: 110,
+    top: 100,
     left: 0,
     right: 0,
     bottom: 0,
