@@ -23,6 +23,7 @@ import SelectModeratorCommunity from './screen/SelectModeratorCommunity';
 import PostDetail from './screen/PostDetail';
 import Communities from './screen/Communities';
 import Community from './screen/Community';
+import PendingRequests from './screen/PendingRequests';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import {screenOptionStyle} from './theme/styles';
@@ -84,6 +85,11 @@ export function Navigator() {
         options={{headerShown: false}}
         name="Community"
         component={Community}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="PendingRequests"
+        component={PendingRequests}
       />
     </Stack.Navigator>
   );

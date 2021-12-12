@@ -3,25 +3,31 @@ import {Text, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {list} from '../theme/styles';
 import {listItem} from '../theme/styles';
+import CommonIcon from './CommonIcon';
 
-export default function TabScreen({users, onPress}) {
+export default function UserList({users, onPress, icons = []}) {
   return (
     <View>
       {users.map(user => (
-        <TouchableOpacity
-          onPress={() => {
-            if (onPress) {
-              onPress(user);
-            }
-          }}>
-          <View style={list}>
-            <Image
-              source={{uri: user.profilePhotoUrl.value}}
-              style={styles.image}
+        <View style={list}>
+          {icons.map(icon => (
+            <CommonIcon
+              icon={icon.name}
+              onPress={() => icon.onPress(user.id)}
+              IconColor={icon.iconColor}
             />
-            <Text style={listItem}>{user.username}</Text>
-          </View>
-        </TouchableOpacity>
+          ))}
+          <Image source={{uri: user.profilePhotoUrl}} style={styles.image} />
+          <Text
+            style={listItem}
+            onPress={() => {
+              if (onPress) {
+                onPress(user);
+              }
+            }}>
+            {user.username}
+          </Text>
+        </View>
       ))}
     </View>
   );
