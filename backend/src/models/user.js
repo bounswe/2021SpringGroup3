@@ -68,7 +68,7 @@ const userSchema = mongoose.Schema(
       },
       description: {
         type: String,
-        default: true,
+        default: '',
       },
     },
   },
