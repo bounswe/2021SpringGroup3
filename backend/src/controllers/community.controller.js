@@ -107,7 +107,7 @@ exports.approveModeratorRequest = catchAsync(async (req, res) => {
     token: req.token,
     communityId: req.query.communityId,
     userId: req.query.userId,
-   });
+  });
   res.send(result);
 });
 
