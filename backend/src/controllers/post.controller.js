@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { postService } = require('../services');
+const postService = require('../services/post.service');
 
 exports.getPosts = catchAsync(async (req, res) => {
   const result = await postService.getPosts({
