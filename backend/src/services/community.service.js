@@ -3,9 +3,8 @@ const httpStatus = require('http-status');
 const _ = require('lodash');
 
 const { formatters, baseUtil } = require('../utils');
-const { Community } = require('../models');
+const { Community, PostType, Post, Comment } = require('../models');
 const ApiError = require('../utils/ApiError');
-const { likePost } = require('../controllers/post.controller');
 
 const populateCommunity = async (communityId) => {
   return Community.findById(communityId)
@@ -130,7 +129,8 @@ exports.removeUserFromCommunity = async ({ userId, communityId }) => {
         { new: true }
       );
     } else {
-      await Community.deleteOne(community._id);
+      await PostType.deleteMany({ community: community._id });
+      await Community.findByIdAndDelete(community._id);
     }
   }
 };
@@ -377,5 +377,32 @@ exports.approveModeratorRequest = async ({ token, userId, communityId }) => {
   return {
     ...formatters.formatCommunityDetails(community, token.user),
     message: 'Moderator request is approved',
+  };
+};
+
+exports.deleteCommunity = async ({ token, communityId }) => {
+  const community = await Community.findById(communityId).lean();
+  if (!community) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  if (baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, token.user._id.toString())) {
+    const posts = await Post.find({ community: community._id });
+    await Comment.deleteMany({
+      _id: {
+        $in: posts.map((p) => p._id),
+      },
+    });
+    await Post.deleteMany({
+      _id: {
+        $in: posts.map((p) => p._id),
+      },
+    });
+    await PostType.deleteMany({ community: community._id });
+    await Community.findByIdAndDelete(community._id);
+  } else {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to delete this community');
+  }
+  return {
+    message: 'Community  is deleted',
   };
 };

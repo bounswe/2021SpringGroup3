@@ -51,3 +51,11 @@ exports.createComment = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.deletePost = catchAsync(async (req, res) => {
+  const result = await postService.deletePost({
+    token: req.token,
+    postId: req.query.postId,
+  });
+  res.send(result);
+});
