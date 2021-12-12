@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {
   StyleSheet,
@@ -17,25 +18,29 @@ import {COLORS} from '../theme/colors';
 import {textInputArea} from '../theme/styles';
 import {textInputContainer} from '../theme/styles';
 import {headerTextStyle} from '../theme/styles';
-import * as Client from '../services/BoxyClient';
+import * as client from '../services/BoxyClient';
+import {PAGE_VARIABLES} from '../constants';
 
-export default function CreateCommunity({navigation}) {
-  const [name, setName] = useState('');
-  const [iconUrl, setIconUrl] = useState('');
-  const [description, setDescription] = useState('');
-  const [isEnabled, setIsEnabled] = useState(false);
+export default function CreateCommunity({navigation, route}) {
+  let {name, iconUrl, description, isPrivate} = route.params;
+
+  const [newName, setName] = useState(name);
+  const [newIconUrl, setIconUrl] = useState(iconUrl);
+  const [newDescription, setDescription] = useState(description);
+  const [isEnabled, setIsEnabled] = useState(isPrivate);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
-  const handleCreateCommunity = async () => {
+  const handleUpdateCommunity = async () => {
     Keyboard.dismiss();
-    let response = await Client.createCommunity({
-      name: name,
-      iconUrl: iconUrl,
-      description: description,
+    let response = await client.updateCommunity({
+      communityId: PAGE_VARIABLES.communityId,
+      name: newName,
+      iconUrl: newIconUrl,
+      description: newDescription,
       isPrivate: isEnabled,
     });
     const status = response.status;
-    if (status === 201) {
+    if (status === 200) {
       navigate();
     } else {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
@@ -43,15 +48,14 @@ export default function CreateCommunity({navigation}) {
   };
 
   const navigate = async () => {
-    navigation.navigate('Main');
+    navigation.navigate('Community');
   };
 
   return (
-    // eslint-disable-next-line react-native/no-inline-styles
     <View style={styles.container}>
       <ScreenHeader
-        titleComponent={<Text style={headerTextStyle}>Create Community</Text>}
-        navigate={navigate}
+        titleComponent={<Text style={headerTextStyle}>Update Community</Text>}
+        navigate={navigation.goBack}
       />
       <ScrollView
         contentContainerStyle={{flexGrow: 1}}
@@ -62,7 +66,8 @@ export default function CreateCommunity({navigation}) {
             <TextInput
               multiline
               style={textInputArea}
-              onChangeText={UserName => setName(UserName)}
+              onChangeText={Name => setName(Name)}
+              value={newName}
               underlineColorAndroid="#f000"
               placeholder="Community Name"
               placeholderTextColor="#8b9cb5"
@@ -77,6 +82,7 @@ export default function CreateCommunity({navigation}) {
               multiline
               style={textInputArea}
               onChangeText={IconUrl => setIconUrl(IconUrl)}
+              value={newIconUrl}
               underlineColorAndroid="#f000"
               placeholder="Icon URL"
               placeholderTextColor="#8b9cb5"
@@ -90,7 +96,8 @@ export default function CreateCommunity({navigation}) {
             <TextInput
               multiline
               style={textInputArea}
-              onChangeText={desc => setDescription(desc)}
+              onChangeText={Description => setDescription(Description)}
+              value={newDescription}
               underlineColorAndroid="#f000"
               placeholder="Description"
               placeholderTextColor="#8b9cb5"
@@ -118,8 +125,8 @@ export default function CreateCommunity({navigation}) {
           </View>
           <View style={{alignItems: 'center'}}>
             <CommonButton
-              text="CREATE"
-              onPress={handleCreateCommunity}
+              text="UPDATE"
+              onPress={handleUpdateCommunity}
               buttonWidth={'80%'}
             />
           </View>

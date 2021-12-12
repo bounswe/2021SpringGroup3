@@ -177,6 +177,15 @@ export default function Community({navigation}) {
     });
   };
 
+  const navigateUpdateCommunity = () => {
+    navigation.navigate('UpdateCommunity', {
+      name: name,
+      iconUrl: iconUrl,
+      description: description,
+      isPrivate: isPrivate,
+    });
+  };
+
   function allCommunitesTab() {
     return <View />;
   }
@@ -243,6 +252,7 @@ export default function Community({navigation}) {
               icon="cog"
               size={22}
               color="white"
+              onPress={() => navigateUpdateCommunity()}
               style={{marginHorizontal: 3}}
             />
           </View>

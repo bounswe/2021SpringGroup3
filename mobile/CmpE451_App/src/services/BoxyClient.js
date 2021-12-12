@@ -117,6 +117,37 @@ export const createCommunity = async ({
     });
 };
 
+export const updateCommunity = async ({
+  communityId,
+  name,
+  iconUrl,
+  description,
+  isPrivate,
+}) => {
+  return fetch(BASE_URL + 'communities/update', {
+    method: 'POST',
+    body: JSON.stringify({
+      communityId: communityId,
+      name: name,
+      iconUrl: iconUrl,
+      description: description,
+      isPrivate: isPrivate,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 export const getCommunityDetail = async ({communityId}) => {
   return fetch(BASE_URL + 'communities/detail?communityId=' + communityId, {
     method: 'GET',
