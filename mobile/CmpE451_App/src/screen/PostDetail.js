@@ -4,7 +4,8 @@ import {TEXT, PAGE_VARIABLES} from '../constants';
 import {AXIOS_CLIENT} from '../services/axiosCientService';
 import * as Requests from '../services/BoxyClient';
 import PostDetailComponent from '../component/PostDetail';
-
+import ScreenHeader from '../component/ScreenHeader';
+import {headerTextStyle} from '../theme/styles';
 
 export default function PostDetail({route, navigation}) {
 
@@ -71,8 +72,18 @@ export default function PostDetail({route, navigation}) {
     init();
   }, []);
 
+  const navigate = async () => {
+    navigation.navigate('Main');
+  };
+
   return(
-    <PostDetailComponent user={user} date={date} community={community} textFieldNames={textFieldNames} numberFieldNames={numberFieldNames}
-      dateFieldNames={dateFieldNames} linkFieldNames={linkFieldNames} locationFieldNames={locationFieldNames}
-      isLiked={isLiked} likeCount={likeCount}/>
+    <View>
+      <ScreenHeader
+          titleComponent={<Text style={headerTextStyle}>Post</Text>}
+          navigate={navigate}
+        />
+      <PostDetailComponent user={user} date={date} community={community} textFieldNames={textFieldNames} numberFieldNames={numberFieldNames}
+        dateFieldNames={dateFieldNames} linkFieldNames={linkFieldNames} locationFieldNames={locationFieldNames}
+        isLiked={isLiked} likeCount={likeCount}/>
+    </View>
   )};

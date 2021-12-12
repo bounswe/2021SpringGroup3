@@ -38,24 +38,19 @@ export default function Main({navigation}) {
 
     return (
         <View style={styles.container}>
-          <Text>{JSON.stringify(postList[0])}</Text>
-          
-        </View>
-    );
-};
-/*
-<PostDetail user={item.user} date={item.date} community={item.community} textFieldNames={item.textFieldNames} 
-                numberFieldNames={item.numberFieldNames} dateFieldNames={item.dateFieldNames} linkFieldNames={item.linkFieldNames} locationFieldNames={item.locationFieldNames}
-                isLiked={item.isLiked} likeCount={item.likeCount}/>
-<FlatList
+          <FlatList
               style={styles.feed}
               data={postList}
               renderItem={({item}) => <PostDetail user={item.user} date={item.date} community={item.community} textFieldNames={item.textFieldNames} 
                 numberFieldNames={item.numberFieldNames} dateFieldNames={item.dateFieldNames} linkFieldNames={item.linkFieldNames} locationFieldNames={item.locationFieldNames}
                 isLiked={item.isLiked} likeCount={item.likeCount}/> }
-              keyExtractor={item => item.id}
-              showsVerticalScrollIndicator={false}></FlatList>
-*/
+              showsVerticalScrollIndicator={false}
+              keyExtractor={(item, index) => index.toString()}>
+          </FlatList>
+        </View>
+    );
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -144,7 +144,7 @@ export default function PostDetail({user, date, community, textFieldNames, numbe
 
       </View>
 
-        <View style={{flexDirection: 'row', top:18}}>
+        <View style={{flexDirection: 'row', top:5}}>
           <Icon
             name="heart"
             size={24}
@@ -170,7 +170,6 @@ const styles = StyleSheet.create({
     padding: 20,
     flexDirection: 'column',
     marginVertical: 8,
-    minHeight: '100%',
     removeClippedSubviews: true,
   },
   avatar: {
