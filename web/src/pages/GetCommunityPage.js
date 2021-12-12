@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import { Layout, Col  } from 'antd';
+import { Layout, Col, Row, Card, Space } from 'antd';
 import NavBar from '../components/NavBar';
 import AboutCommunity from '../components/AboutCommunity';
+import PostView from '../components/PostView';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { GetCommunityPage as GetCommunityPageRequest } from "../utils/helper";
+import { GetCommunityPosts as GetCommunityPostsRequest } from "../utils/helper";
+import { ConsoleSqlOutlined } from "@ant-design/icons";
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -17,25 +20,39 @@ function GetCommunityPage(props) {
   const dispatch = useDispatch()
 
   const { id } = useParams();
-  
+
   const [result, setResult] = useState('');
 
+  const [posts, setPosts] = useState('');
+
   useEffect(() => {
-    GetCommunityPageRequest({id: id, token: loginState.token}, dispatch)
-      .then( result => setResult(result.data.name));
+    GetCommunityPageRequest({ id: id, token: loginState.token }, dispatch)
+      .then(result => setResult(result.data.name));
   }, [])
 
-  console.log(result);
+  useEffect(() => {
+    GetCommunityPostsRequest({ id: id, token: loginState.token }, dispatch)
+      .then(posts => {
+        setPosts(posts.data.map((post) => {
+          return <div style={{margin: '20px'}}><PostView postObj={post} /></div>
+        }))
+      });
+  }, [])
 
   return (
-    <> 
+    <>
       <Layout>
-        <Header style={{backgroundColor: '#3949ab'}}><NavBar /></Header>
+        <Header style={{ backgroundColor: '#3949ab' }}><NavBar /></Header>
         <Layout>
           <Content>
-            <Col span={24} align="right">
-              <AboutCommunity description={result} members="123 (placeholder)" created="16.11.2021 (placeholder)" communityID={id}/>
-            </Col>
+            <Row>
+              <Col span={5}>
+                <AboutCommunity description={result} members="123 (placeholder)" created="16.11.2021 (placeholder)" communityID={id} />
+              </Col>
+              <Col span={19}>
+                  {posts}
+              </Col>
+            </Row>  
           </Content>
         </Layout>
         <Footer></Footer>
