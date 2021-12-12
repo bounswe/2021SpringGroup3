@@ -10,6 +10,7 @@ import {
 
 import {list} from '../theme/styles';
 import {listItem} from '../theme/styles';
+import {COLORS} from '../theme/colors';
 
 export default function TabScreen({
   refreshing,
@@ -44,7 +45,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    width: 30,
-    height: 30,
+    width: 40,
+    height: 40,
+    borderRadius: 40 / 2,
+    backgroundColor: 'white',
+    borderWidth: 2,
+    borderColor: COLORS.fieldHeaderColor,
+    marginVertical: 12,
+    marginHorizontal: 5,
   },
 });

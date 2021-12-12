@@ -221,6 +221,31 @@ export const rejectJoinRequest = async ({communityId, userId}) => {
     });
 };
 
+export const kickMember = async ({communityId, userId}) => {
+  return fetch(
+    BASE_URL +
+      'communities/kick?communityId=' +
+      communityId +
+      '&userId=' +
+      userId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 export const getPostDetail = async ({communityId, postId}) => {
   var myHeaders = new Headers();
   myHeaders.append('X-Platform', 'ANDROID');

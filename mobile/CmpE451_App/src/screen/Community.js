@@ -16,7 +16,7 @@ import ScreenHeader from '../component/ScreenHeader';
 import {IconButton} from 'react-native-paper';
 import {Button} from 'react-native-elements';
 import {PAGE_VARIABLES} from '../constants';
-import * as Client from '../services/BoxyClient';
+import * as client from '../services/BoxyClient';
 import UserList from '../component/UserList';
 
 export default function Community({navigation}) {
@@ -38,7 +38,7 @@ export default function Community({navigation}) {
 
   useEffect(() => {
     async function fetchCommunityDetails() {
-      let response = await Client.getCommunityDetail({
+      let response = await client.getCommunityDetail({
         communityId: PAGE_VARIABLES.communityId,
       });
 
@@ -83,7 +83,7 @@ export default function Community({navigation}) {
   async function fetchPosts() {}
 
   async function handleJoinCommunity() {
-    let response = await Client.joinCommunity({
+    let response = await client.joinCommunity({
       communityId: PAGE_VARIABLES.communityId,
     });
     if (response.status === 200) {
@@ -98,8 +98,24 @@ export default function Community({navigation}) {
   }
 
   async function handleLeaveCommunity() {
-    let response = await Client.leaveCommunity({
+    let response = await client.leaveCommunity({
       communityId: PAGE_VARIABLES.communityId,
+    });
+    if (response.status === 200) {
+      setIsMember(response.data.isMember);
+      setIsPendingMember(response.data.isPendingMember);
+      setIsModerator(response.data.isModerator);
+      setMembers(response.data.members);
+      setModerators(response.data.moderators);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  }
+
+  async function handleKickMember(userId) {
+    let response = await client.kickMember({
+      communityId: PAGE_VARIABLES.communityId,
+      userId: userId,
     });
     if (response.status === 200) {
       setIsMember(response.data.isMember);
@@ -130,6 +146,25 @@ export default function Community({navigation}) {
       },
     );
   };
+
+  function showKickMemberAlert(userId) {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to kick the member from the community?',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => handleKickMember(userId),
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+  }
 
   const navigate = async () => {
     navigation.navigate('Main');
@@ -174,7 +209,20 @@ export default function Community({navigation}) {
         <View style={styles.sectionHeaderContainer}>
           <Text style={styles.sectionText}>Members</Text>
         </View>
-        <UserList users={members} />
+        <UserList
+          users={members}
+          icons={
+            isModerator
+              ? [
+                  {
+                    name: 'karate',
+                    iconColor: COLORS.buttonColor,
+                    onPress: showKickMemberAlert,
+                  },
+                ]
+              : []
+          }
+        />
       </View>
     );
   }
