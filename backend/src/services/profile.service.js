@@ -5,12 +5,26 @@ const { formatters } = require('../utils');
 const { User, Community, Post, Comment } = require('../models');
 const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
+const communityService = require('./community.service');
 
 exports.getProfile = async ({ token }) => {
   return formatters.formatProfile(token.user);
 };
 
 exports.deleteProfile = async ({ token }) => {
+  const communities = await Community.find({
+    moderators: {
+      $in: [token.user._id],
+    },
+  });
+  await Promise.all([
+    communities.map((c) =>
+      communityService.removeUserFromCommunity({
+        userId: token.user._id,
+        communityId: c._id,
+      })
+    ),
+  ]);
   await Community.updateMany(
     {
       $or: [
@@ -28,7 +42,6 @@ exports.deleteProfile = async ({ token }) => {
     },
     {
       $pull: {
-        moderators: token.user._id,
         members: token.user._id,
         pendingMembers: token.user._id,
       },
@@ -43,16 +56,20 @@ exports.deleteProfile = async ({ token }) => {
       },
     }
   );
-  await Post.updateMany(
-    { creator: token.user._id },
-    {
-      $set: {
-        creator: undefined,
-        isCreatorDeleted: true,
+  const posts = await Post.find({ creator: token.user._id });
+  await Post.deleteMany({ creator: token.user._id });
+  await Comment.deleteMany({
+    $or: [
+      {
+        user: token.user._id,
       },
-    }
-  );
-  await Comment.deleteMany({ user: token.user._id });
+      {
+        _id: {
+          $in: posts.map((p) => p._id),
+        },
+      },
+    ],
+  });
   await User.deleteOne({ _id: token.user._id });
 };
 

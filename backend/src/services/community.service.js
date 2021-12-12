@@ -1,9 +1,11 @@
 /* eslint-disable security/detect-non-literal-regexp */
 const httpStatus = require('http-status');
+const _ = require('lodash');
 
 const { formatters, baseUtil } = require('../utils');
 const { Community } = require('../models');
 const ApiError = require('../utils/ApiError');
+const { likePost } = require('../controllers/post.controller');
 
 const populateCommunity = async (communityId) => {
   return Community.findById(communityId)
@@ -105,16 +107,9 @@ exports.joinCommunity = async ({ token, communityId }) => {
   };
 };
 
-exports.leaveCommunity = async ({ token, userId, communityId }) => {
-  let community = await Community.findById(communityId).lean();
-  if (!community) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
-  }
-  if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, token.user._id.toString())) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'You are not a member of this community');
-  }
-  community = await Community.findByIdAndUpdate(
-    community._id,
+exports.removeUserFromCommunity = async ({ userId, communityId }) => {
+  const community = await Community.findByIdAndUpdate(
+    communityId,
     {
       $pull: {
         members: userId,
@@ -125,19 +120,30 @@ exports.leaveCommunity = async ({ token, userId, communityId }) => {
   );
   if (community.moderators.length === 0) {
     if (community.members.length !== 0) {
-      community = await Community.findByIdAndUpdate(
+      await Community.findByIdAndUpdate(
         community._id,
         {
           $addToSet: {
-            moderators: community.members[0],
+            moderators: _.sample(community.members),
           },
         },
         { new: true }
       );
     } else {
-      Community.deleteOne(community._id);
+      await Community.deleteOne(community._id);
     }
   }
+};
+
+exports.leaveCommunity = async ({ token, communityId }) => {
+  let community = await Community.findById(communityId).lean();
+  if (!community) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, token.user._id.toString())) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You are not a member of this community');
+  }
+  exports.removeUserFromCommunity({ userId: token.user._id, communityId: community._id });
   community = await populateCommunity(communityId);
   return {
     ...formatters.formatCommunityDetails(community, token.user),
@@ -160,9 +166,14 @@ exports.kickFromCommunity = async ({ token, userId, communityId }) => {
   } else {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to kick someone from community');
   }
-  community = await exports.leaveCommunity({ token, userId, communityId });
+  community = await Community.findByIdAndUpdate(community._id, {
+    $pull: {
+      members: token.user._id.toString(),
+    },
+  });
+  community = await populateCommunity(communityId);
   return {
-    ...community,
+    ...formatters.formatCommunityDetails(community, token.user),
     message: 'User has been kicked from the community',
   };
 };
