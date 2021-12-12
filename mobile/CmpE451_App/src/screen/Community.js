@@ -29,11 +29,14 @@ export default function Community({navigation}) {
   const [members, setMembers] = useState([]);
   const [moderators, setModerators] = useState([]);
   const [pendingMembers, setPendingMembers] = useState([]);
+  const [pendingModerators, setPendingModerators] = useState([]);
 
   const [isPrivate, setIsPrivate] = useState(false);
   const [isMember, setIsMember] = useState(false);
   const [isModerator, setIsModerator] = useState(false);
   const [isPendingMember, setIsPendingMember] = useState(false);
+  const [isPendingModerator, setIsPendingModerator] = useState(false);
+
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -49,10 +52,12 @@ export default function Community({navigation}) {
         setMembers(response.data.members);
         setModerators(response.data.moderators);
         setPendingMembers(response.data.pendingMembers);
+        setPendingModerators(response.data.pendingModerators);
         setIsPrivate(response.data.isPrivate);
         setIsMember(response.data.isMember);
         setIsModerator(response.data.isModerator);
         setIsPendingMember(response.data.isPending);
+        setIsPendingModerator(response.data.isPendingModerator);
       } else {
         ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
       }
@@ -70,10 +75,12 @@ export default function Community({navigation}) {
       setMembers([]);
       setModerators([]);
       setPendingMembers([]);
+      setPendingModerators([]);
       setIsPrivate(false);
       setIsMember(false);
       setIsModerator(false);
       setIsPendingMember(false);
+      setIsPendingModerator(false);
     }
     if (!isFocused) {
       resetStates();
@@ -107,6 +114,8 @@ export default function Community({navigation}) {
       setIsModerator(response.data.isModerator);
       setMembers(response.data.members);
       setModerators(response.data.moderators);
+      setIsPendingMember(response.data.isPendingModerator);
+      setPendingModerators(response.data.pendingModerators);
     } else {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
@@ -123,6 +132,18 @@ export default function Community({navigation}) {
       setIsModerator(response.data.isModerator);
       setMembers(response.data.members);
       setModerators(response.data.moderators);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  }
+
+  async function handleApplyModerator() {
+    let response = await client.joinModerators({
+      communityId: PAGE_VARIABLES.communityId,
+    });
+    if (response.status === 200) {
+      setIsPendingMember(response.data.isPendingModerator);
+      setPendingModerators(response.data.pendingModerators);
     } else {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
@@ -158,6 +179,25 @@ export default function Community({navigation}) {
         {
           text: 'Yes',
           onPress: () => handleKickMember(userId),
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+  }
+
+  function showApplyModeratorAlert() {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to apply to be a moderator?',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => handleApplyModerator(),
         },
       ],
       {
@@ -265,34 +305,63 @@ export default function Community({navigation}) {
       </View>
       <View style={styles.section1}>
         <Text style={styles.communityName}>{name}</Text>
-        {isMember || isPendingMember ? (
-          <Button
-            title={isMember ? 'Joined' : 'Pending'}
-            type="outline"
-            buttonStyle={styles.joinedButton}
-            titleStyle={styles.joinedText}
-            onPress={() => {
-              if (isMember) {
-                showLeaveCommunityAlert();
-              }
-            }}
-          />
-        ) : (
-          <Button
-            title="Join"
-            buttonStyle={styles.joinButton}
-            titleStyle={styles.joinText}
-            onPress={handleJoinCommunity}
-            icon={
+        <View style={{alignItems: 'flex-end'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {isModerator && (
               <IconButton
-                icon="plus"
-                size={13}
-                color="white"
+                icon="crown"
+                size={28}
+                color={COLORS.buttonColor}
                 style={{margin: 0}}
               />
-            }
-          />
-        )}
+            )}
+            {!isModerator && !isPendingModerator && (
+              <IconButton
+                icon="crown-outline"
+                onPress={showApplyModeratorAlert}
+                size={28}
+                color={COLORS.buttonColor}
+                style={{margin: 0}}
+              />
+            )}
+            {isPendingModerator && (
+              <IconButton
+                icon="crown-outline"
+                size={28}
+                color="#FAD02C"
+                style={{margin: 0}}
+              />
+            )}
+            {isMember || isPendingMember ? (
+              <Button
+                title={isMember ? 'Joined' : 'Pending'}
+                type="outline"
+                buttonStyle={styles.joinedButton}
+                titleStyle={styles.joinedText}
+                onPress={() => {
+                  if (isMember) {
+                    showLeaveCommunityAlert();
+                  }
+                }}
+              />
+            ) : (
+              <Button
+                title="Join"
+                buttonStyle={styles.joinButton}
+                titleStyle={styles.joinText}
+                onPress={handleJoinCommunity}
+                icon={
+                  <IconButton
+                    icon="plus"
+                    size={13}
+                    color="white"
+                    style={{margin: 0}}
+                  />
+                }
+              />
+            )}
+          </View>
+        </View>
       </View>
       <View style={styles.section2}>
         <Text style={styles.text}>{members.length} Members</Text>
@@ -344,7 +413,6 @@ const styles = StyleSheet.create({
   rightIconContainer: {
     width: '100%',
     backgroundColor: COLORS.fieldHeaderColor,
-    justifyContent: 'flex-end',
     alignItems: 'flex-end',
   },
   section1: {
