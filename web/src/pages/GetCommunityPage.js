@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import { Layout, Col, Row, Card, Space } from 'antd';
+import { Layout, Col, Row } from 'antd';
 import NavBar from '../components/NavBar';
 import AboutCommunity from '../components/AboutCommunity';
 import PostView from '../components/PostView';
@@ -9,7 +9,6 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { GetCommunityPage as GetCommunityPageRequest } from "../utils/helper";
 import { GetCommunityPosts as GetCommunityPostsRequest } from "../utils/helper";
-import { ConsoleSqlOutlined } from "@ant-design/icons";
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -36,7 +35,7 @@ function GetCommunityPage(props) {
         setPosts(posts.data.map((post) => {
           return <div style={{margin: '20px'}}><PostView postObj={post} /></div>
         }))
-      });
+      })
   }, [])
 
   return (

@@ -15,6 +15,7 @@ import AuthRoute from "./AuthRoute";
 import CreateCommunityPage from '../pages/CreateCommunityPage';
 import CreatePostTypePage from '../pages/CreatePostTypePage';
 import GetCommunityPage from '../pages/GetCommunityPage';
+import GetPostPage from '../pages/GetPostPage';
 
 
 export default function RouteList() {
@@ -27,6 +28,7 @@ export default function RouteList() {
         <Route path="/home" exact element={<AuthRoute><HomePage/></AuthRoute>} />
         <Route path="/createCommunity" exact element={<AuthRoute><CreateCommunityPage /></AuthRoute>} />
         <Route path="/createPostType" exact element={<AuthRoute><CreatePostTypePage /></AuthRoute>} />
+        <Route path="/communities/:communityId/posts/:postId" element={<AuthRoute><GetPostPage /></AuthRoute>} />
         <Route path="/communities/:id" element={<AuthRoute><GetCommunityPage /></AuthRoute>} />
         <Route path="*" element={<Navigate replace to="/login" />} />
       </Routes>

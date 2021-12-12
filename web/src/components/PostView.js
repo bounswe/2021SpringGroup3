@@ -80,9 +80,9 @@ const PostView = (props) => {
     setLiked(false)
   }
 
-  const getPost = (postId) => {
-    console.log(`Trying to open post information, send GET request to post/${postId}`);
-    navigate(`/posts/detail/${postId}`)
+  const getPost = (communityId, postId) => {
+    console.log(`Trying to open post information, send GET request to /communities/${communityId}/posts/${postId}`);
+    navigate(`/communities/${communityId}/posts/${postId}`)
   }
 
   const getUser = (userId) => {
@@ -92,7 +92,7 @@ const PostView = (props) => {
 
   const getCommunity = (communtiyId) => {
     console.log(`Trying to open community, send GET request to communitites/${communtiyId}`)
-    navigate(`/communities/detail/${communtiyId}`)
+    navigate(`/communities/${communtiyId}`)
   }
 
   const getPostType = (postTypeId) => {
@@ -118,7 +118,7 @@ const PostView = (props) => {
                 <Col>
                   <Space size={'large'}>
                     <h3><strong
-                      onClick={() => getPost(props.postObj.id)}
+                      onClick={() => getPost(props.postObj.community.id, props.postObj.id)}
                       style={{ cursor: 'pointer' }}>
                       {props.postObj.title}
                     </strong></h3>
@@ -174,7 +174,7 @@ const PostView = (props) => {
           </Col>
 
           <Col span={8} align="middle">
-            <Button type="text" icon={<CommentOutlined />} onClick={() => getPost(props.postObj.id)}></Button>
+            <Button type="text" icon={<CommentOutlined />} onClick={() => getPost(props.postObj.community.id, props.postObj.id)}></Button>
             {props.postObj.commentCount} Comments
           </Col>
 

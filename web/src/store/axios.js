@@ -7,7 +7,8 @@ import {
   GET_COMMUNITIES_ENDPOINT,
   GET_COMMUNITY_PAGE_ENDPOINT,
   GET_POSTS_ENDPOINT,
-  CREATE_POSTTYPE_ENDPOINT 
+  CREATE_POSTTYPE_ENDPOINT,
+  GET_POST_PAGE_ENDPOINT
 } from './urls';
 
 export async function login(info) {
@@ -153,6 +154,25 @@ export async function getCommunityPosts(info) {
       },
     }
     const response = await axios.get(GET_POSTS_ENDPOINT+"?communityId="+info.id, { ...header });
+    console.log(response)
+    return response;
+  } catch (error) {
+    console.log(error);
+    
+    return error
+  }
+}
+
+export async function getPostPage(info) {
+  try {
+    const header = {headers: {
+      'x-platform': 'WEB',
+      'accept': '*/*',
+      'authorization': `${info.token}`
+      },
+    }
+    console.log(GET_POST_PAGE_ENDPOINT+"?communityId="+info.communityId+"&postId="+info.postId)
+    const response = await axios.get(GET_POST_PAGE_ENDPOINT+"?communityId="+info.communityId+"&postId="+info.postId, { ...header });
     console.log(response)
     return response;
   } catch (error) {
