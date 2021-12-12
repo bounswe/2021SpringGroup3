@@ -267,12 +267,43 @@ exports.updateCommunity = async ({ name, iconUrl, description, isPrivate, commun
   };
 };
 
-exports.joinModerators = async ({ token, communityId }) => {
-  let community = await Community.findById(communityId).lean();
-  if (!community) {
+exports.rejectModeratorRequest = async ({ token, userId, communityId }) => {
+  const community = await Community.findById(communityId).lean();
+ if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
-  if (baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, token.user._id.toString())) {
+    if (baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, token.user._id.toString())) {
+    if (baseUtil.checkIfObjectIdArrayIncludesId(community.pendingModerators, userId)) {
+      if (!baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, userId)) {
+        await Community.findByIdAndUpdate(community._id, {
+          $pull: {
+            pendingModerators: userId,
+          },
+        });
+      } else {
+        // to be sure
+        await Community.findByIdAndUpdate(community._id, {
+          $pull: {
+            pendingModerators: userId,
+          },
+        });
+        throw new ApiError(httpStatus.BAD_REQUEST, 'This user is already a moderator of this community');
+      }
+    } else {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'This user has not requested to become a moderator for this community');
+    }
+  } else {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to reject a moderator join request');
+  }
+  return {
+    message: 'Moderator request is rejected',
+  };
+};
+
+
+exports.joinModerators = async ({ token, communityId }) => {
+  let community = await Community.findById(communityId).lean();
+  if (!community){
     throw new ApiError(httpStatus.BAD_REQUEST, 'You are already a moderator of this community');
   }
   if (baseUtil.checkIfObjectIdArrayIncludesId(community.pendingModerators, token.user._id.toString())) {
@@ -289,3 +320,39 @@ exports.joinModerators = async ({ token, communityId }) => {
   );
   return formatters.formatCommunityDetails(community, token.user);
 };
+
+exports.approveModeratorRequest = async ({ token, userId, communityId }) => {
+  const community = await Community.findById(communityId).lean();
+  if (!community) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  if (baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, token.user._id.toString())) {
+    if (baseUtil.checkIfObjectIdArrayIncludesId(community.pendingModerators, userId)) {
+      if (!baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, userId)) {
+        await Community.findByIdAndUpdate(community._id, {
+          $addToSet: {
+            moderators: userId,
+          },
+          $pull: {
+            pendingModerators: userId,
+          },
+        });
+      } else {
+        // to be sure
+        await Community.findByIdAndUpdate(community._id, {
+          $pull: {
+            pendingModerators: userId,
+          },
+        });
+        throw new ApiError(httpStatus.BAD_REQUEST, 'This user is already a moderator of this community');
+      }
+    } else {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'This user has not requested to become a moderator for this community');
+    }
+  } else {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to approve a moderator join request');
+  }
+  return {
+    message: 'Moderator request is approved',
+  };
+ };

@@ -93,6 +93,24 @@ exports.updateCommunity = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+exports.rejectModeratorRequest = catchAsync(async (req, res) => {
+  const result = await communityService.rejectModeratorRequest({
+    token: req.token,
+    communityId: req.query.communityId,
+    userId: req.query.userId,
+  });
+  res.send(result);
+});
+
+exports.approveModeratorRequest = catchAsync(async (req, res) => {
+  const result = await communityService.approveModeratorRequest({
+    token: req.token,
+    communityId: req.query.communityId,
+    userId: req.query.userId,
+   });
+  res.send(result);
+});
+
 exports.joinModerators = catchAsync(async (req, res) => {
   const result = await communityService.joinModerators({
     token: req.token,

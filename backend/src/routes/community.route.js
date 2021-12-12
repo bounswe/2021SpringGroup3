@@ -13,6 +13,12 @@ router
 
 router.route('/detail').get(validate(communityValidation.getCommunityDetail), communityController.getCommunityDetail);
 
+router
+  .route('/join/moderators/reject')
+  .post(validate(communityValidation.kickFromCommunity), communityController.rejectModeratorRequest);
+router
+  .route('/join/moderators/approve')
+  .post(validate(communityValidation.kickFromCommunity), communityController.approveModeratorRequest);
 router.route('/join/approve').post(validate(communityValidation.kickFromCommunity), communityController.acceptJoinRequest);
 router.route('/join/reject').post(validate(communityValidation.kickFromCommunity), communityController.rejectJoinRequest);
 router.route('/join/moderators').post(validate(communityValidation.joinCommunity), communityController.joinModerators);
