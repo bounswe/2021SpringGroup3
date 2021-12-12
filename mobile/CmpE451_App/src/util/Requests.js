@@ -136,3 +136,27 @@ export const getUserSettings = async () => {
     })
     .catch(error => console.log('error', error));
 };
+
+export const getCommunityPosts = async communityId => {
+  var myHeaders = new Headers();
+  myHeaders.append('Authorization', await getToken());
+  myHeaders.append('X-Platform', 'ANDROID');
+  myHeaders.append('Content-Type', 'application/json');
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow',
+  };
+
+  return fetch(
+    'https://api.cmpegroupthree.store/posts?communityId=' +
+      '61929a750d87cc03bcfe53c1',
+    requestOptions,
+  )
+    .then(response => response.text())
+    .then(result => {
+      return JSON.parse(result);
+    })
+    .catch(error => console.log('error', error));
+};

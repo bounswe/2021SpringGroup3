@@ -1,24 +1,36 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import Post from '../component/Post';
-
-export default function Postlist({navigation, props}) {
-  return (
-    <View style={styles.container}>
-      <FlatList
-        style={styles.feed}
-        data={posts}
-        renderItem={({item}) => <Post navigation={navigation} post={item} />}
-        keyExtractor={item => item.id}
-        showsVerticalScrollIndicator={false}></FlatList>
-    </View>
+import PostDetail from './PostDetail';
+export default function Postlist({posts}) {
+  return posts.length > 0 ? (
+    <FlatList
+      style={styles.feed}
+      data={posts}
+      renderItem={({item}) => (
+        <PostDetail
+          user={item.user}
+          date={item.date}
+          community={item.community}
+          textFieldNames={item.textFieldNames}
+          numberFieldNames={item.numberFieldNames}
+          dateFieldNames={item.dateFieldNames}
+          linkFieldNames={item.linkFieldNames}
+          locationFieldNames={item.locationFieldNames}
+          isLiked={item.isLiked}
+          likeCount={item.likeCount}
+        />
+      )}
+      keyExtractor={item => item.id}
+      showsVerticalScrollIndicator={false}></FlatList>
+  ) : (
+    <View></View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EBECF4',
   },
   header: {
     paddingTop: 64,
@@ -40,6 +52,8 @@ const styles = StyleSheet.create({
   },
   feed: {
     marginHorizontal: 16,
+    marginVertical: 10,
+    height: '100%',
   },
   feedItem: {
     backgroundColor: '#FFF',
@@ -76,71 +90,3 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
 });
-
-const posts = [
-  {
-    id: '1',
-    name: 'Zeynep Alagöz',
-    text: 'Öğrenci taleplerinin Boğaziçi Üniversitesi yönetimine hızlı ve doğru şekilde iletilmesini sağlamak amacıyla kurulan Öğrenci Temsilciliği Kurulu (ÖTK) için seçim takvimi açıklandı. 5 Kasım’da başlayacak adaylık başvuruları 12 Kasım’da sona ererken, 26 Kasım-3 Aralık tarihleri arasında seçim yapılacak.',
-    timestamp: 1636156949000,
-    avatar:
-      'https://drive.google.com/uc?export=view&id=1gWuxzaJRQvaEmllvUXAlEf_ClgbD6YRD',
-    image:
-      'https://haberler.boun.edu.tr/sites/haberler.boun.edu.tr/files/styles/haber_front_2_coloumn_-_crop/public/kapak-ve-haber-resimleri/egv5ddlwsaaahk4.jpg?itok=do9z1kur&c=a930decf5bb73ea2ea7598d99188886b',
-    communityName: 'c/Buddy',
-    tags: [
-      {
-        name: '#tag1',
-      },
-      {
-        name: '#tag2',
-      },
-      {
-        name: '#tag3',
-      },
-    ],
-  },
-  {
-    id: '2',
-    name: 'Kıymet Akdemir',
-    text: "NeurotechEU Konsorsiyumu yöneticileri 12 Ekim’de ilk kez yüz yüze yapılan konferansla Almanya Bonn’da bir araya geldi. Buluşmaya NeurotechEU ortağı olan Avrupa'nın önde gelen üniversitelerinden temsilciler katılırken, konsorsiyuma üye yükseköğretim kurumları arasında uzun dönem iş birliklerinin nasıl daha üst seviyelere taşınabileceği ele alındı. Boğaziçi Üniversitesi’ni Biyomedikal Mühendisliği Enstitüsü Müdürü Prof. Dr. Can Yücesoy ile Endüstri Mühendisliği Öğretim Üyesi Prof. Dr. Necati Aras temsil etti.  ",
-    timestamp: 1636156949000,
-    avatar: 'https://www.suaytour.com/Content/images/default-profile.png',
-    image:
-      'https://haberler.boun.edu.tr/sites/haberler.boun.edu.tr/files/styles/haber_front_2_coloumn_-_crop/public/kapak-ve-haber-resimleri/dez_internationales_bfro_055_a_gruppe_mit_team.jpeg?itok=rQ-OMLJ4&c=58386f35d4d807f668d19443f4bc1c6b',
-    communityName: 'c/Buddy',
-    tags: [
-      {
-        name: '#tag1',
-      },
-      {
-        name: '#tag2',
-      },
-      {
-        name: '#tag3',
-      },
-    ],
-  },
-  {
-    id: '3',
-    name: 'Halil Baydar',
-    text: "Londra merkezli yükseköğretim derecelendirme kuruluşu Times Higher Education'ın (THE) hazırladığı, Alanlara Göre En İyi Üniversiteler Sıralaması 2022’de hukuk, sosyal bilimler, işletme ve ekonomi ile eğitim listelerinin ardından, sanat ve beşeri bilimler sıralaması da açıklandı. Buna göre Boğaziçi Üniversitesi bu alanda Türkiye’de ilk, dünyada ise ilk 300’de yer aldı. Boğaziçi Üniversitesi tarih, dil, edebiyat ve felsefe alanlarında da birinci sırada yer alıyor.",
-    timestamp: 1636156949000,
-    avatar:
-      'https://media-exp1.licdn.com/dms/image/C4E03AQFUByr623ke5g/profile-displayphoto-shrink_400_400/0/1590683064023?e=1641427200&v=beta&t=oy8EWEnUHy58jbgxTz9_FqsGFyV-g6T2DqeY0Fyy7a0',
-    image:
-      'https://haberler.boun.edu.tr/sites/haberler.boun.edu.tr/files/styles/haber_front_2_coloumn_-_crop/public/kapak-ve-haber-resimleri/why-is-it-so-important-to-study-humanities-blog-image-780_0.jpg?itok=PnXoU_1M&c=822d5f6a127bc7de1c604d3c2b20afd4',
-    communityName: 'c/Buddy',
-    tags: [
-      {
-        name: '#tag1',
-      },
-      {
-        name: '#tag2',
-      },
-      {
-        name: '#tag3',
-      },
-    ],
-  },
-];

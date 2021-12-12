@@ -17,7 +17,7 @@ import {Button} from 'react-native-elements';
 import {PAGE_VARIABLES} from '../constants';
 import * as Client from '../services/BoxyClient';
 import UserList from '../component/UserList';
-
+import CommunityPosts from '../component/CommunityPosts';
 export default function Community({navigation}) {
   const Tab = createMaterialTopTabNavigator();
 
@@ -99,8 +99,8 @@ export default function Community({navigation}) {
     navigation.navigate('Main');
   };
 
-  function allCommunitesTab() {
-    return <View />;
+  function CommunityPostsTab() {
+    return <CommunityPosts />;
   }
 
   function aboutTab() {
@@ -179,7 +179,11 @@ export default function Community({navigation}) {
       </View>
       <Text style={styles.text}>{description}</Text>
       <Tab.Navigator>
-        <Tab.Screen key={'tab-1'} name={'Posts'} component={allCommunitesTab} />
+        <Tab.Screen
+          key={'tab-1'}
+          name={'Posts'}
+          component={CommunityPostsTab}
+        />
         <Tab.Screen key={'tab-2'} name={'About'} component={aboutTab} />
         <Tab.Screen key={'tab-2'} name={'Members'} component={membersTab} />
       </Tab.Navigator>
