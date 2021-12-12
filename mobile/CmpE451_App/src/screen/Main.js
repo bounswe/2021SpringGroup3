@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet, TextInput, FlatList, TouchableHighlight} from 'react-native';
+import {Text, View, StyleSheet, TextInput, FlatList, TouchableOpacity} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
 import {PAGE_VARIABLES} from '../constants';
@@ -11,7 +11,8 @@ import {headerContainerStyle} from '../theme/styles';
 import {IconButton} from 'react-native-paper';
 import {COLORS} from '../theme/colors';
 import PostDetailComponent from '../component/PostDetail';
-
+import ScreenHeader from '../component/ScreenHeader';
+import {headerTextStyle} from '../theme/styles';
 
 export default function Main({navigation}) {
     const [memberCommunityList, setMemberCommunityList] = useState([]);
@@ -44,16 +45,22 @@ export default function Main({navigation}) {
 
     return (
         <View style={styles.container}>
+          <View style={headerContainerStyle}>
+            <View style={{flex: 1}}>
+            </View>
+            <Text style={headerTextStyle}>Home</Text>
+            <View style={{flex: 1}} />
+          </View>
           <FlatList
               style={styles.feed}
               data={postList}
               renderItem={({item}) => 
-                <TouchableHighlight
+                <TouchableOpacity
                   onPress={() => navigateToPost(item.id, item.community.id)}>
                   <PostDetailComponent user={item.user} date={item.date} community={item.community} textFieldNames={item.textFieldNames} 
                     numberFieldNames={item.numberFieldNames} dateFieldNames={item.dateFieldNames} linkFieldNames={item.linkFieldNames} locationFieldNames={item.locationFieldNames}
                     isLiked={item.isLiked} likeCount={item.likeCount}/>
-                </TouchableHighlight> 
+                </TouchableOpacity> 
               }
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}>
