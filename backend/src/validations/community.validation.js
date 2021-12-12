@@ -58,10 +58,10 @@ exports.updateCommunity = {
   body: Joi.object()
     .keys({
       communityId: Joi.string().custom(objectId).required(),
-      name: Joi.string().min(2).max(30).required(),
+      name: Joi.string().min(2).max(30),
       iconUrl: Joi.string().uri(),
-      description: Joi.string().required(),
-      isPrivate: Joi.boolean().required(),
+      description: Joi.string(),
+      isPrivate: Joi.boolean(),
     })
     .required(),
 };
