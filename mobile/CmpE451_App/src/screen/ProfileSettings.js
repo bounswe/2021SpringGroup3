@@ -274,6 +274,7 @@ export default function ProfileSettings({route}) {
               </Text>
               <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
                 <TextInput
+                  multiline
                   style={[
                     styles.text,
                     {fontWeight: '200', fontSize: 15, width: '80%'},

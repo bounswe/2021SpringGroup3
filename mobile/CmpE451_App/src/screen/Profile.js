@@ -95,10 +95,10 @@ export default function Profile() {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
+          <Text style={[styles.key, {color: '#AEB5BC', fontSize: 18}]}>
             User name:
           </Text>
-          <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
+          <Text style={[styles.text, {fontWeight: '200', fontSize: 28}]}>
             {username}
           </Text>
         </View>
@@ -108,10 +108,10 @@ export default function Profile() {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
+          <Text style={[styles.key, {color: '#AEB5BC', fontSize: 18}]}>
             Bio:
           </Text>
-          <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
+          <Text style={[styles.text, {fontWeight: '200', fontSize: 16}]}>
             {bio}
           </Text>
         </View>
@@ -146,10 +146,10 @@ export default function Profile() {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
+          <Text style={[styles.key, {color: '#AEB5BC', fontSize: 18}]}>
             Birthday:
           </Text>
-          <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
+          <Text style={[styles.text, {fontWeight: '200', fontSize: 16}]}>
             {birthday.substring(0, birthday.lastIndexOf(':') - 6)}
           </Text>
         </View>

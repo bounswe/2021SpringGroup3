@@ -8,7 +8,6 @@ import ScreenHeader from '../component/ScreenHeader';
 import {headerTextStyle} from '../theme/styles';
 
 export default function PostDetail({route, navigation}) {
-
   const [id, setId] = useState([]);
   const [user, setUser] = useState([]);
   const [community, setCommunity] = useState([]);
@@ -45,7 +44,7 @@ export default function PostDetail({route, navigation}) {
         communityId: PAGE_VARIABLES.communityId,
         postId: PAGE_VARIABLES.postId,
       });
-        const {
+      const {
         id,
         user,
         community,
@@ -58,11 +57,11 @@ export default function PostDetail({route, navigation}) {
         isLiked,
         likeCount,
       } = JSON.parse(postDetailResponse);
-      
+
       setId(id);
       setUser(user);
       setDate(date);
-      setCommunity(community)
+      setCommunity(community);
       setTextFieldNames(textFieldNames);
       setNumberFieldNames(numberFieldNames);
       setDateFieldNames(dateFieldNames);
@@ -78,14 +77,26 @@ export default function PostDetail({route, navigation}) {
     navigation.navigate('Main');
   };
 
-  return(
+  return (
     <View>
       <ScreenHeader
-          titleComponent={<Text style={headerTextStyle}></Text>}
-          navigate={navigate}
-        />
-      <PostDetailComponent id = {id} user={user} date={date} community={community} textFieldNames={textFieldNames} numberFieldNames={numberFieldNames}
-        dateFieldNames={dateFieldNames} linkFieldNames={linkFieldNames} locationFieldNames={locationFieldNames}
-        isLiked={isLiked} likeCount={likeCount}/>
+        titleComponent={<Text style={headerTextStyle}></Text>}
+        navigate={navigate}
+        iconName="arrow-left-circle"
+      />
+      <PostDetailComponent
+        id={id}
+        user={user}
+        date={date}
+        community={community}
+        textFieldNames={textFieldNames}
+        numberFieldNames={numberFieldNames}
+        dateFieldNames={dateFieldNames}
+        linkFieldNames={linkFieldNames}
+        locationFieldNames={locationFieldNames}
+        isLiked={isLiked}
+        likeCount={likeCount}
+      />
     </View>
-  )};
+  );
+}
