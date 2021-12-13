@@ -5,11 +5,24 @@ import {SettingsPage, NavigateRow, BaseRow} from 'react-native-settings-view';
 import {COLORS} from '../theme/colors';
 import {headerTextStyle} from '../theme/styles';
 import ScreenHeader from '../component/ScreenHeader';
+import * as client from '../services/BoxyClient';
+import {removeToken} from '../services/asyncStorageService';
+import RNRestart from 'react-native-restart';
 
 export default function Settings({navigation, route}) {
   const navigate = async () => {
     navigation.navigate('Main');
   };
+
+  async function handleDeleteAccount() {
+    let response = await client.deleteAccount();
+    if (response.status / 100 == 2) {
+      await removeToken();
+      RNRestart.Restart();
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -21,34 +34,6 @@ export default function Settings({navigation, route}) {
         <View style={styles.sectionHeaderContainer}>
           <Text style={styles.sectionText}>ACCOUNT</Text>
         </View>
-        <NavigateRow
-          text="Update username"
-          leftIcon={{
-            name: 'cog',
-            type: 'font-awesome',
-            color: COLORS.buttonColor,
-          }}
-          onPress={() => {
-            ToastAndroid.show(
-              'This feature will be enabled soon',
-              ToastAndroid.SHORT,
-            );
-          }}
-        />
-        <NavigateRow
-          text="Update email address"
-          leftIcon={{
-            name: 'cog',
-            type: 'font-awesome',
-            color: COLORS.buttonColor,
-          }}
-          onPress={() => {
-            ToastAndroid.show(
-              'This feature will be enabled soon',
-              ToastAndroid.SHORT,
-            );
-          }}
-        />
         <NavigateRow
           text="Change password"
           leftIcon={{
@@ -71,10 +56,7 @@ export default function Settings({navigation, route}) {
             color: COLORS.buttonColor,
           }}
           onPress={() => {
-            ToastAndroid.show(
-              'This feature will be enabled soon',
-              ToastAndroid.SHORT,
-            );
+            handleDeleteAccount();
           }}
         />
         <View style={styles.sectionHeaderContainer}>
