@@ -1,7 +1,10 @@
 import * as loginAction from "../store/actions/loginActions";
 import { login, logout, register,
   createCommunity, getCommunities, getCommunityPage,
-  createPostType } from '../store/axios';
+  createPostType, 
+  getProfile,
+  getProfileSettings,
+  postProfileSettings} from '../store/axios';
 
 export const Login = async (info, dispatch) => {
 
@@ -79,6 +82,36 @@ export const GetCommunityPage = async (info, dispatch) => {
   if(response.status === 200 || response.status === 201){
     console.log(response.data);
     return response
+    //  dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const GetProfilePage = async (info, dispatch) => {
+  const response = await getProfile(info);
+  if(response.status === 200 || response.status === 201) {
+    return response;
+  } else {
+    return {}
+  }
+}
+
+export const GetProfileSettings = async (info, dispatch) => {
+  const response = await getProfileSettings(info);
+  if(response.status === 200 || response.status === 201) {
+    return response;
+  } else {
+    return {}
+  }
+}
+
+export const PostProfileSettings = async (info, token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await postProfileSettings(info, token);
+  if(response.status === 200 || response.status === 201){
+    return response;
     //  dispatch(loginAction.logoutSuccess());
   }else{
     // dispatch(loginAction.logoutFailure());

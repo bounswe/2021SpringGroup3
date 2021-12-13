@@ -6,7 +6,10 @@ import {
   CREATE_COMMUNITY_ENDPOINT,
   GET_COMMUNITIES_ENDPOINT,
   GET_COMMUNITY_PAGE_ENDPOINT,
-  CREATE_POSTTYPE_ENDPOINT
+  CREATE_POSTTYPE_ENDPOINT,
+  GET_PROFILE_ENDPOINT,
+  GET_PROFILE_SETTINGS_ENDPOINT,
+  POST_PROFILE_SETTINGS_ENDPOINT
 } from './urls';
 
 export async function login(info) {
@@ -135,6 +138,60 @@ export async function getCommunityPage(info) {
     }
     const response = await axios.get(GET_COMMUNITY_PAGE_ENDPOINT+"?communityId="+info.id, { ...header });
     console.log(response)
+    return response;
+  } catch (error) {
+    console.log(error);
+    
+    return error
+  }
+}
+
+export async function getProfile(info) {
+  try {
+    const header = {headers: {
+      'x-platform': 'WEB',
+      'accept': '*/*',
+      'authorization': `${info.token}`
+      },
+    }
+    const response = await axios.get(GET_PROFILE_ENDPOINT, { ...header });
+    console.log(response)
+    return response;
+  } catch (error) {
+    console.log(error);
+    
+    return error
+  }
+}
+
+export async function getProfileSettings(info) {
+  try {
+    const header = {headers: {
+      'x-platform': 'WEB',
+      'accept': '*/*',
+      'authorization': `${info.token}`
+      },
+    }
+    const response = await axios.get(GET_PROFILE_SETTINGS_ENDPOINT, { ...header });
+    console.log(response)
+    return response;
+  } catch (error) {
+    console.log(error);
+    
+    return error
+  }
+}
+
+export async function postProfileSettings(info, token) {
+  try {
+    const header = {headers: {
+      'X-Platform': 'WEB',
+      'accept': '*/*',
+      'authorization': `${token}`
+      },
+    }
+    const body = { ... info }
+    const response = await axios.post(POST_PROFILE_SETTINGS_ENDPOINT, { ...body }, { ...header });
     return response;
   } catch (error) {
     console.log(error);

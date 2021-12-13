@@ -1,31 +1,45 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router";
-import { Layout, Col  } from 'antd';
+import { useParams, useNavigate } from "react-router";
+import { useSelector, useDispatch } from 'react-redux';
+
 import NavBar from '../components/NavBar';
 import AboutCommunity from '../components/AboutCommunity';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router';
 import { GetCommunityPage as GetCommunityPageRequest } from "../utils/helper";
 
+import { Layout, Col  } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
+
+function useForceUpdate(){
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue(value => value + 1); // update the state to force render
+}
 
 function GetCommunityPage(props) {
 
   const loginState = useSelector((state) => state.login);
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { id } = useParams();
   
+  const [commId, setCommID] = useState('');
   const [result, setResult] = useState('');
 
   useEffect(() => {
-    GetCommunityPageRequest({id: id, token: loginState.token}, dispatch)
-      .then( result => setResult(result.data.name));
-  }, [])
+    setCommID(id);
+  }, []);
 
-  console.log(result);
+  const forceUpdate = useForceUpdate();
+
+  useEffect(() => {
+    console.log("id in getcommunitypage ",id)
+    GetCommunityPageRequest({id: id, token: loginState.token}, dispatch)
+      .then( result => {
+        setResult(result.data.name)  
+        forceUpdate();
+      }
+      );
+  }, [])
 
   return (
     <> 
@@ -34,7 +48,7 @@ function GetCommunityPage(props) {
         <Layout>
           <Content>
             <Col span={24} align="right">
-              <AboutCommunity description={result} members="123 (placeholder)" created="16.11.2021 (placeholder)" communityID={id}/>
+              <AboutCommunity key={result.description} description={result} members="123 (placeholder)" created="16.11.2021 (placeholder)" communityID={id}/>
             </Col>
           </Content>
         </Layout>
