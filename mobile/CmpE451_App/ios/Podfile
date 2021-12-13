@@ -18,6 +18,8 @@ target 'CmpE451_App' do
 
   pod 'react-native-config', :path => '../node_modules/react-native-config'
 
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
   target 'CmpE451_AppTests' do
     inherit! :complete
     # Pods for testing

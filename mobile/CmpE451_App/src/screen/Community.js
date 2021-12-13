@@ -6,6 +6,7 @@ import {
   Text,
   StyleSheet,
   ToastAndroid,
+  Alert,
 } from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useIsFocused} from '@react-navigation/native';
@@ -15,7 +16,7 @@ import ScreenHeader from '../component/ScreenHeader';
 import {IconButton} from 'react-native-paper';
 import {Button} from 'react-native-elements';
 import {PAGE_VARIABLES} from '../constants';
-import * as Client from '../services/BoxyClient';
+import * as client from '../services/BoxyClient';
 import UserList from '../component/UserList';
 
 export default function Community({navigation}) {
@@ -23,37 +24,40 @@ export default function Community({navigation}) {
 
   const [iconUrl, setIconUrl] = useState('g');
   const [name, setName] = useState('');
-  const [memberCount, setMemberCount] = useState(20);
   const [description, setDescription] = useState('');
 
   const [members, setMembers] = useState([]);
   const [moderators, setModerators] = useState([]);
   const [pendingMembers, setPendingMembers] = useState([]);
+  const [pendingModerators, setPendingModerators] = useState([]);
 
   const [isPrivate, setIsPrivate] = useState(false);
   const [isMember, setIsMember] = useState(false);
   const [isModerator, setIsModerator] = useState(false);
-  const [isPending, setIsPending] = useState(false);
+  const [isPendingMember, setIsPendingMember] = useState(false);
+  const [isPendingModerator, setIsPendingModerator] = useState(false);
+
   const isFocused = useIsFocused();
 
   useEffect(() => {
     async function fetchCommunityDetails() {
-      let response = await Client.getCommunityDetail({
+      let response = await client.getCommunityDetail({
         communityId: PAGE_VARIABLES.communityId,
       });
 
       if (response.status === 200) {
         setIconUrl(response.data.iconUrl);
         setName(response.data.name);
-        setMemberCount(response.data.memberCount);
         setDescription(response.data.description);
         setMembers(response.data.members);
         setModerators(response.data.moderators);
         setPendingMembers(response.data.pendingMembers);
+        setPendingModerators(response.data.pendingModerators);
         setIsPrivate(response.data.isPrivate);
         setIsMember(response.data.isMember);
         setIsModerator(response.data.isModerator);
-        setIsPending(response.data.isPending);
+        setIsPendingMember(response.data.isPending);
+        setIsPendingModerator(response.data.isPendingModerator);
       } else {
         ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
       }
@@ -67,15 +71,16 @@ export default function Community({navigation}) {
     async function resetStates() {
       setIconUrl('url');
       setName('');
-      setMemberCount(0);
       setDescription('');
       setMembers([]);
       setModerators([]);
       setPendingMembers([]);
+      setPendingModerators([]);
       setIsPrivate(false);
       setIsMember(false);
       setIsModerator(false);
-      setIsPending(false);
+      setIsPendingMember(false);
+      setIsPendingModerator(false);
     }
     if (!isFocused) {
       resetStates();
@@ -85,18 +90,140 @@ export default function Community({navigation}) {
   async function fetchPosts() {}
 
   async function handleJoinCommunity() {
-    let response = await Client.joinCommunity({
+    let response = await client.joinCommunity({
       communityId: PAGE_VARIABLES.communityId,
     });
     if (response.status === 200) {
       setIsMember(response.data.isMember);
+      setIsPendingMember(response.data.isPendingMember);
+      setIsModerator(response.data.isModerator);
+      setMembers(response.data.members);
+      setModerators(response.date.moderators);
     } else {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
   }
 
+  async function handleLeaveCommunity() {
+    let response = await client.leaveCommunity({
+      communityId: PAGE_VARIABLES.communityId,
+    });
+    if (response.status === 200) {
+      setIsMember(response.data.isMember);
+      setIsPendingMember(response.data.isPendingMember);
+      setIsModerator(response.data.isModerator);
+      setMembers(response.data.members);
+      setModerators(response.data.moderators);
+      setIsPendingMember(response.data.isPendingModerator);
+      setPendingModerators(response.data.pendingModerators);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  }
+
+  async function handleKickMember(userId) {
+    let response = await client.kickMember({
+      communityId: PAGE_VARIABLES.communityId,
+      userId: userId,
+    });
+    if (response.status === 200) {
+      setIsMember(response.data.isMember);
+      setIsPendingMember(response.data.isPendingMember);
+      setIsModerator(response.data.isModerator);
+      setMembers(response.data.members);
+      setModerators(response.data.moderators);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  }
+
+  async function handleApplyModerator() {
+    let response = await client.joinModerators({
+      communityId: PAGE_VARIABLES.communityId,
+    });
+    if (response.status === 200) {
+      setIsPendingMember(response.data.isPendingModerator);
+      setPendingModerators(response.data.pendingModerators);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  }
+
+  const showLeaveCommunityAlert = () => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to leave the community?',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => handleLeaveCommunity(),
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+  };
+
+  function showKickMemberAlert(userId) {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to kick the member from the community?',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => handleKickMember(userId),
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+  }
+
+  function showApplyModeratorAlert() {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to apply to be a moderator?',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => handleApplyModerator(),
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+  }
+
   const navigate = async () => {
     navigation.navigate('Main');
+  };
+
+  const navigatePendingMembers = () => {
+    navigation.navigate('PendingRequests', {
+      pendingMembers: pendingMembers,
+      communityId: PAGE_VARIABLES.communityId,
+    });
+  };
+
+  const navigateUpdateCommunity = () => {
+    navigation.navigate('UpdateCommunity', {
+      name: name,
+      iconUrl: iconUrl,
+      description: description,
+      isPrivate: isPrivate,
+    });
   };
 
   function allCommunitesTab() {
@@ -111,7 +238,7 @@ export default function Community({navigation}) {
             <Text style={styles.sectionText}>About us</Text>
           </View>
           <Text style={listItem}>
-            We are a {isPrivate ? 'private' : 'public'} community!
+            This is a {isPrivate ? 'private' : 'public'} community!
           </Text>
           <View style={styles.sectionHeaderContainer}>
             <Text style={styles.sectionText}>Moderators</Text>
@@ -131,7 +258,20 @@ export default function Community({navigation}) {
         <View style={styles.sectionHeaderContainer}>
           <Text style={styles.sectionText}>Members</Text>
         </View>
-        <UserList users={members} />
+        <UserList
+          users={members}
+          icons={
+            isModerator
+              ? [
+                  {
+                    name: 'karate',
+                    iconColor: COLORS.buttonColor,
+                    onPress: showKickMemberAlert,
+                  },
+                ]
+              : []
+          }
+        />
       </View>
     );
   }
@@ -139,8 +279,23 @@ export default function Community({navigation}) {
     <View style={styles.container}>
       <ScreenHeader title="Communities" navigate={navigate} />
       {isModerator && (
-        <View style={styles.settingsContainer}>
-          <IconButton icon="cog" size={25} color="white" />
+        <View style={styles.rightIconContainer}>
+          <View style={{flexDirection: 'row'}}>
+            <IconButton
+              icon="bell"
+              onPress={() => navigatePendingMembers()}
+              size={22}
+              color="white"
+              style={{marginHorizontal: 0}}
+            />
+            <IconButton
+              icon="cog"
+              size={22}
+              color="white"
+              onPress={() => navigateUpdateCommunity()}
+              style={{marginHorizontal: 3}}
+            />
+          </View>
         </View>
       )}
       <View style={styles.communityInfoHeader}>
@@ -150,32 +305,66 @@ export default function Community({navigation}) {
       </View>
       <View style={styles.section1}>
         <Text style={styles.communityName}>{name}</Text>
-        {isMember ? (
-          <Button
-            title="Joined"
-            type="outline"
-            buttonStyle={styles.joinedButton}
-            titleStyle={styles.joinedText}
-          />
-        ) : (
-          <Button
-            title="Join"
-            buttonStyle={styles.joinButton}
-            titleStyle={styles.joinText}
-            onPress={handleJoinCommunity}
-            icon={
+        <View style={{alignItems: 'flex-end'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {isModerator && (
               <IconButton
-                icon="plus"
-                size={13}
-                color="white"
+                icon="crown"
+                size={28}
+                color={COLORS.buttonColor}
                 style={{margin: 0}}
               />
-            }
-          />
-        )}
+            )}
+            {!isModerator && !isPendingModerator && (
+              <IconButton
+                icon="crown-outline"
+                onPress={showApplyModeratorAlert}
+                size={28}
+                color={COLORS.buttonColor}
+                style={{margin: 0}}
+              />
+            )}
+            {isPendingModerator && (
+              <IconButton
+                icon="crown-outline"
+                size={28}
+                color="#FAD02C"
+                style={{margin: 0}}
+              />
+            )}
+            {isMember || isPendingMember ? (
+              <Button
+                title={isMember ? 'Joined' : 'Pending'}
+                type="outline"
+                buttonStyle={styles.joinedButton}
+                titleStyle={styles.joinedText}
+                onPress={() => {
+                  if (isMember) {
+                    showLeaveCommunityAlert();
+                  }
+                }}
+              />
+            ) : (
+              <Button
+                title="Join"
+                buttonStyle={styles.joinButton}
+                titleStyle={styles.joinText}
+                onPress={handleJoinCommunity}
+                icon={
+                  <IconButton
+                    icon="plus"
+                    size={13}
+                    color="white"
+                    style={{margin: 0}}
+                  />
+                }
+              />
+            )}
+          </View>
+        </View>
       </View>
       <View style={styles.section2}>
-        <Text style={styles.text}>{memberCount} Members</Text>
+        <Text style={styles.text}>{members.length} Members</Text>
       </View>
       <Text style={styles.text}>{description}</Text>
       <Tab.Navigator>
@@ -221,10 +410,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.fieldHeaderColor,
     paddingTop: 40,
   },
-  settingsContainer: {
+  rightIconContainer: {
     width: '100%',
     backgroundColor: COLORS.fieldHeaderColor,
-    justifyContent: 'flex-end',
     alignItems: 'flex-end',
   },
   section1: {

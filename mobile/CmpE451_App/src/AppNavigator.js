@@ -14,7 +14,7 @@ import Main from './screen/Main.js';
 import Notification from './screen/Notification';
 import Registration from './screen/Registration';
 import Profile from './screen/Profile';
-import Settings from './screen/Settings';
+import ProfileSettings from './screen/ProfileSettings';
 import CreateCommunity from './screen/CreateCommunity';
 import SelectCommunity from './screen/SelectCommunity';
 import SelectPostType from './screen/SelectPostType';
@@ -23,6 +23,8 @@ import SelectModeratorCommunity from './screen/SelectModeratorCommunity';
 import PostDetail from './screen/PostDetail';
 import Communities from './screen/Communities';
 import Community from './screen/Community';
+import PendingRequests from './screen/PendingRequests';
+import UpdateCommunity from './screen/UpdateCommunity';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import {screenOptionStyle} from './theme/styles';
@@ -84,6 +86,16 @@ export function Navigator() {
         options={{headerShown: false}}
         name="Community"
         component={Community}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="PendingRequests"
+        component={PendingRequests}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="UpdateCommunity"
+        component={UpdateCommunity}
       />
     </Stack.Navigator>
   );
@@ -167,7 +179,7 @@ const handleLogout = () => {
 
 const requestLogout = async () => {
   const token = await getToken();
-  console.log("token", token);
+  console.log('token', token);
   fetch(BASE_URL + 'auth/logout', {
     method: 'DELETE',
     headers: {
@@ -263,8 +275,8 @@ const DrawerNavigator = () => {
         options={drawerOptions}
       />
       <Drawer.Screen
-        name="Settings"
-        component={Settings}
+        name="ProfileSettings"
+        component={ProfileSettings}
         options={drawerOptions}
       />
     </Drawer.Navigator>

@@ -16,6 +16,7 @@ import {PAGE_VARIABLES} from '../constants';
 import {COLORS} from '../theme/colors';
 import {textInputArea} from '../theme/styles';
 import {textInputContainer} from '../theme/styles';
+import {headerContainerStyle} from '../theme/styles';
 import {headerTextStyle} from '../theme/styles';
 import * as Requests from '../services/BoxyClient';
 

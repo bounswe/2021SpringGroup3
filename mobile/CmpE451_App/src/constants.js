@@ -18,6 +18,10 @@ export const TEXT = {
   successfullyCreated: 'Successfully created!',
 };
 
+export const DEFAULT_PROFILE_IMAGE = {
+  uri: 'https://www.suaytour.com/Content/images/default-profile.png',
+};
+
 export const PAGE_VARIABLES = {
   communityId: 0,
   postTypeId: 0,
