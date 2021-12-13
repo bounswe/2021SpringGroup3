@@ -252,6 +252,56 @@ export const rejectJoinRequest = async ({communityId, userId}) => {
     });
 };
 
+export const acceptJoinModeratorsRequest = async ({communityId, userId}) => {
+  return fetch(
+    BASE_URL +
+      'communities/join/moderators/approve?communityId=' +
+      communityId +
+      '&userId=' +
+      userId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const rejectJoinModeratorsRequest = async ({communityId, userId}) => {
+  return fetch(
+    BASE_URL +
+      'communities/join/moderators/reject?communityId=' +
+      communityId +
+      '&userId=' +
+      userId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 export const kickMember = async ({communityId, userId}) => {
   return fetch(
     BASE_URL +
