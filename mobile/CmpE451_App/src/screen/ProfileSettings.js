@@ -67,13 +67,16 @@ export default function ProfileSettings({route}) {
     longitudeDelta: 0.0421,
   });
 
-  useEffect(async () => {
-    const {username, profilePhotoUrl, bio, birthday, location} =
-      await Request.getUserSettings();
-    setToggleProfileImage(profilePhotoUrl.isPublic);
-    setToggleBio(bio.isPublic);
-    setToggleBirthday(birthday.isPublic);
-    setToggleLocation(location.isPublic);
+  useEffect(() => {
+    async function getUserSettings() {
+      const {username, profilePhotoUrl, bio, birthday, location} =
+        await Request.getUserSettings();
+      setToggleProfileImage(profilePhotoUrl.isPublic);
+      setToggleBio(bio.isPublic);
+      setToggleBirthday(birthday.isPublic);
+      setToggleLocation(location.isPublic);
+    }
+    getUserSettings();
   }, []);
   async function handleUpload() {
     const response = await launchImageLibrary({
@@ -104,12 +107,15 @@ export default function ProfileSettings({route}) {
           value: bio != '' ? bio : null,
           isPublic: bioToggle,
         },
-        birthday: {
-          value: birthday != '' ? birthday.toString() : null,
-          isPublic: birthdayToggle,
-        },
+        birthday:
+          birthday != ''
+            ? {
+                value: birthday != '' ? birthday.toString() : null,
+                isPublic: birthdayToggle,
+              }
+            : null,
         location:
-          address === ''
+          location === ''
             ? null
             : {
                 value: {
@@ -238,10 +244,10 @@ export default function ProfileSettings({route}) {
             <View
               style={{
                 flexDirection: 'column',
-                justifyContent: 'space-around',
-                alignItems: 'center',
+                //justifyContent: 'space-around',
+                alignSelf: 'center',
               }}>
-              <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
+              <Text style={[styles.key, {color: '#AEB5BC', fontSize: 10}]}>
                 User name:
               </Text>
               <Text
@@ -250,8 +256,8 @@ export default function ProfileSettings({route}) {
                   {
                     fontWeight: '200',
                     fontSize: 36,
-                    width: '80%',
-                    paddingLeft: 35,
+                    width: '100%',
+                    alignSelf: 'center',
                   },
                 ]}>
                 {username}
@@ -263,19 +269,16 @@ export default function ProfileSettings({route}) {
                 justifyContent: 'space-around',
                 alignItems: 'center',
               }}>
-              <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
+              <Text style={[styles.key, {color: '#AEB5BC', fontSize: 16}]}>
                 Bio:
               </Text>
               <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
                 <TextInput
                   style={[
                     styles.text,
-                    {fontWeight: '200', fontSize: 36, width: '80%'},
+                    {fontWeight: '200', fontSize: 15, width: '80%'},
                   ]}
-                  onChangeText={bioo => {
-                    console.log('biooo: ', bio);
-                    setBio(bioo);
-                  }}
+                  onChangeText={setBio}
                   placeholder={bio == '' ? 'Bio...' : bio}>
                   {bio}
                 </TextInput>
@@ -295,10 +298,10 @@ export default function ProfileSettings({route}) {
                 justifyContent: 'space-around',
                 alignItems: 'center',
               }}>
-              <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
+              {/*<Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
                 Location:
               </Text>
-              <View
+               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
@@ -307,7 +310,7 @@ export default function ProfileSettings({route}) {
                   onPress={() => setShowMap(true)}
                   style={[
                     styles.text,
-                    {fontWeight: '200', fontSize: 36, width: '80%'},
+                    {fontWeight: '200', fontSize: 15, width: '80%'},
                   ]}>
                   {location}
                 </Text>
@@ -319,7 +322,7 @@ export default function ProfileSettings({route}) {
                   size="small"
                   onToggle={isOn => setToggleLocation(!locationToggle)}
                 />
-              </View>
+              </View> */}
             </View>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
               <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
@@ -328,7 +331,7 @@ export default function ProfileSettings({route}) {
               <View style={{flexDirection: 'row'}}>
                 <DatePicker
                   mode="date"
-                  date={new Date()}
+                  date={birthday === '' ? new Date() : new Date(birthday)}
                   //date={birthday == '' ? new Date() : new Date(birthday)}
                   style={{height: 100}}
                   onDateChange={date => setBirthday(date)}
@@ -359,6 +362,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: 'HelveticaNeue',
     color: '#52575D',
+    alignSelf: 'center',
   },
   container: {
     flex: 1,

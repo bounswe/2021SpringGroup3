@@ -377,7 +377,7 @@ export const getOtherProfile = async id => {
   var myHeaders = new Headers();
   myHeaders.append('Authorization', await getToken());
   myHeaders.append('X-Platform', 'ANDROID');
-
+  console.log('IDDDDDD: ', id);
   var requestOptions = {
     method: 'GET',
     headers: myHeaders,
@@ -385,15 +385,17 @@ export const getOtherProfile = async id => {
   };
 
   return fetch(
-    'https://api.cmpegroupthree.store/profile/settings?id=' + id,
+    'https://api.cmpegroupthree.store/profile/other?userId=' + id,
     requestOptions,
   )
     .then(response => response.text())
     .then(result => {
+      console.log('userIduserId ', id);
+      console.log('userProfile: ', result);
       return JSON.parse(result);
     })
     .catch(error => console.log('error', error));
-});
+};
 export const deleteAccount = async () => {
   return fetch(BASE_URL + 'profile/settings', {
     method: 'DELETE',
@@ -413,19 +415,14 @@ export const deleteAccount = async () => {
 };
 
 export const getPosts = async ({communityId}) => {
-  return fetch(
-    BASE_URL +
-      'posts' +
-      '?communityId=' + communityId,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Platform': 'ANDROID',
-        Authorization: await getToken(),
-      },
+  return fetch(BASE_URL + 'posts' + '?communityId=' + communityId, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
     },
-  )
+  })
     .then(async response => {
       const status = response.status;
       response = await response.json();
@@ -439,8 +436,7 @@ export const getPosts = async ({communityId}) => {
       console.info(error);
       ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
     });
-
-});
+};
 
 const returnResponse = async response => {
   const statusCode = response.status;

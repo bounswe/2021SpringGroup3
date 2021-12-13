@@ -20,9 +20,11 @@ import {
   DEFAULT_PROFILE_IMAGE,
 } from '../constants';
 import Loader from '../component/Loader';
+import {IconButton} from 'react-native-paper';
+import {useIsFocused} from '@react-navigation/native';
 
-export default function OtherUserProfile({id}) {
-  const navigation = useNavigation();
+export default function OtherUserProfile({navigation, route}) {
+  const {id} = route.params;
   const [bio, setBio] = useState();
   const [birthday, setBirthday] = useState();
   const [location, setLocation] = useState();
@@ -30,28 +32,31 @@ export default function OtherUserProfile({id}) {
   const [username, setUsername] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(async () => {
-    const profile = await Request.getOtherProfile(id);
-    setLocation(
-      profile.location.isPublic ? profile.location.description : null,
-    );
-    setBio(profile.bio.isPublic ? profile.bio : null);
-    setBirthday(profile.birthday.isPublic ? profile.birthday.value : null);
-    setProfileImageUrl(
-      profile.profilePhotoUrl.isPublic ? profile.profilePhotoUrl.value : null,
-    );
-    setUsername(profile.username);
-    setIsLoading(false);
-  }, [navigation]);
+  const [profileImageIsPublic, setProfileImageIsPublic] = useState(false);
 
-  return isLoading ? (
-    <Loader loading={'loading'}></Loader>
-  ) : (
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    async function getProfile() {
+      const profile = await Request.getOtherProfile(id);
+      //setLocation(profile.location.description);
+      setBio(profile.bio);
+      setBirthday(profile.birthday);
+      setProfileImageUrl(profile.profilePhotoUrl);
+      setUsername(profile.username);
+      setProfileImageIsPublic(true);
+    }
+    if (isFocused) {
+      getProfile();
+    }
+  }, [isFocused]);
+
+  return (
     <View style={styles.container}>
       <SafeAreaView style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.titleBar}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity onPress={() => navigation.navigate('Community')}>
               <Ionicons
                 name="ios-arrow-back"
                 size={24}
@@ -59,14 +64,23 @@ export default function OtherUserProfile({id}) {
             </TouchableOpacity>
           </View>
           <View style={{alignSelf: 'center'}}>
-            <View style={styles.profileImage}>
-              <Image
-                source={{
-                  uri: profileImageUrl,
-                }}
-                style={styles.image}
-                resizeMode="center"></Image>
-            </View>
+            {profileImageIsPublic ? (
+              <View style={styles.profileImage}>
+                <Image
+                  source={{
+                    uri: profileImageUrl,
+                  }}
+                  style={styles.image}
+                  resizeMode="center"></Image>
+              </View>
+            ) : (
+              <IconButton
+                icon="lock"
+                size={22}
+                color="black"
+                style={{marginHorizontal: 0}}
+              />
+            )}
           </View>
 
           <View style={styles.infoContainer}>
@@ -93,10 +107,19 @@ export default function OtherUserProfile({id}) {
                 Bio:
               </Text>
               <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
-                {bio != null ? bio : 'Private'}
+                {bio != null ? (
+                  bio
+                ) : (
+                  <IconButton
+                    icon="lock"
+                    size={22}
+                    color="black"
+                    style={{marginHorizontal: 0}}
+                  />
+                )}
               </Text>
             </View>
-            <View
+            {/* <View
               style={{
                 flexDirection: 'column',
                 justifyContent: 'center',
@@ -106,9 +129,9 @@ export default function OtherUserProfile({id}) {
                 Location:
               </Text>
               <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
-                {location != null ? location : 'Private'}
+                {location != null ? location : ''}
               </Text>
-            </View>
+            </View> */}
             <View
               style={{
                 flexDirection: 'column',
@@ -119,9 +142,16 @@ export default function OtherUserProfile({id}) {
                 Birthday:
               </Text>
               <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
-                {birthday != null
-                  ? birthday.substring(0, birthday.lastIndexOf(':') - 6)
-                  : 'Private'}
+                {birthday != null ? (
+                  birthday.substring(0, birthday.lastIndexOf(':') - 6)
+                ) : (
+                  <IconButton
+                    icon="lock"
+                    size={22}
+                    color="black"
+                    style={{marginHorizontal: 0}}
+                  />
+                )}
               </Text>
             </View>
           </View>

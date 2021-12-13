@@ -21,7 +21,9 @@ import {
 } from '../constants';
 import Loader from '../component/Loader';
 import MapView, {Marker} from 'react-native-maps';
-
+import {useIsFocused} from '@react-navigation/native';
+import ScreenHeader from '../component/ScreenHeader';
+import {headerTextStyle} from '../theme/styles';
 export default function Profile() {
   const navigation = useNavigation();
   const [bio, setBio] = useState();
@@ -30,17 +32,26 @@ export default function Profile() {
   const [profileImageUrl, setProfileImageUrl] = useState();
   const [username, setUsername] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    async function getMyProfile() {
+      const profile = await Request.getMyProfile();
+      setLocation(profile.location);
+      console.log('location: ', location);
+      setBio(profile.bio);
+      setBirthday(profile.birthday);
+      setProfileImageUrl(profile.profilePhotoUrl);
+      setUsername(profile.username);
+      setIsLoading(false);
+    }
+    if (isFocused) {
+      getMyProfile();
+    }
+  }, [isFocused]);
 
-  useEffect(async () => {
-    const profile = await Request.getMyProfile();
-    setLocation(profile.location);
-    setBio(profile.bio);
-    setBirthday(profile.birthday);
-    setProfileImageUrl(profile.profilePhotoUrl);
-    setUsername(profile.username);
-    setIsLoading(false);
-  }, [navigation]);
-
+  const navigate = async () => {
+    navigation.navigate('Main');
+  };
   function navigateSettings() {
     navigation.navigate('ProfileSettings', {
       username,
@@ -54,6 +65,10 @@ export default function Profile() {
     <Loader loading={'loading'}></Loader>
   ) : (
     <View style={styles.container}>
+      <ScreenHeader
+        titleComponent={<Text style={headerTextStyle}>Create Community</Text>}
+        navigate={navigate}
+      />
       <View style={styles.titleBar}>
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
@@ -100,7 +115,7 @@ export default function Profile() {
             {bio}
           </Text>
         </View>
-        <View
+        {/* <View
           style={{
             flexDirection: 'column',
             justifyContent: 'center',
@@ -115,7 +130,7 @@ export default function Profile() {
             ]}>
             {location.description}
           </Text>
-          {/* <MapView
+          <MapView
             style={styles.map}
             initialRegion={{
               latitude: location.value.latitude,
@@ -123,8 +138,8 @@ export default function Profile() {
               latitudeDelta: 0.004757,
               longitudeDelta: 0.006866,
             }}
-          /> */}
-        </View>
+          />
+        </View> */}
         <View
           style={{
             flexDirection: 'column',

@@ -7,6 +7,7 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
+  Linking,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
@@ -41,11 +42,7 @@ export default function CommunityPosts({}) {
     likeCount,
   }) {
     return (
-      <TouchableOpacity
-        onPress={() => {
-          navigato;
-        }}
-        style={styles.container}>
+      <TouchableOpacity onPress={() => {}} style={styles.container}>
         <View>
           <Image source={{uri: user.imageUrl}} style={styles.avatar} />
           <View

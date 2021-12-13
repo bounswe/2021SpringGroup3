@@ -98,8 +98,10 @@ export const getPostTypeDetail = async ({communityId, postTypeId}) => {
 
 export const updateUserSettings = async body => {
   var myHeaders = new Headers();
+  console.log('body: ', body);
+  const token = await getToken();
   myHeaders.append('X-Platform', 'ANDROID');
-  myHeaders.append('Authorization', await getToken());
+  myHeaders.append('Authorization', token);
   myHeaders.append('Content-Type', 'application/json');
   var requestOptions = {
     method: 'POST',
@@ -113,6 +115,7 @@ export const updateUserSettings = async body => {
   )
     .then(response => response.text())
     .then(result => {
+      console.log('result: ', result);
       return JSON.parse(result);
     })
     .catch(error => console.log('error', error));

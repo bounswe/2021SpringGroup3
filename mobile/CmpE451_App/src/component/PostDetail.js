@@ -12,7 +12,6 @@ import MapView, {Marker} from 'react-native-maps';
 import * as Client from '../services/BoxyClient';
 import Main from '../screen/Main.js';
 
-
 import {
   FlatList,
   Image,
@@ -21,11 +20,21 @@ import {
   ToastAndroid,
   ScrollView,
 } from 'react-native';
-export default function PostDetail({id, user, date, community, textFieldNames, numberFieldNames,
-    dateFieldNames, linkFieldNames, locationFieldNames,
-    isLiked, likeCount}) {
 
-    return (
+export default function PostDetail({
+  id,
+  user,
+  date,
+  community,
+  textFieldNames,
+  numberFieldNames,
+  dateFieldNames,
+  linkFieldNames,
+  locationFieldNames,
+  isLiked,
+  likeCount,
+}) {
+  return (
     <View style={styles.feedItem}>
       <View>
         <Image source={{uri: user.profilePhotoUrl}} style={styles.avatar} />
@@ -109,6 +118,7 @@ export default function PostDetail({id, user, date, community, textFieldNames, n
           )}
         />
       </View>
+
       <View>
         <FlatList
           showsHorizontalScrollIndicator={false}
@@ -131,8 +141,8 @@ export default function PostDetail({id, user, date, community, textFieldNames, n
                       locationFieldNames[index]['value']['geo']['latitude'],
                     longitude:
                       locationFieldNames[index]['value']['geo']['longitude'],
-                    latitudeDelta: 0.004757,
-                    longitudeDelta: 0.006866,
+                    latitudeDelta: 0.004867,
+                    longitudeDelta: 0.006976,
                   }}></MapView>
                 <Text></Text>
                 <Text></Text>
@@ -142,73 +152,28 @@ export default function PostDetail({id, user, date, community, textFieldNames, n
                 <Text></Text>
                 <Text></Text>
               </View>
-            )}
-          />
-          </View>
-
-          <View>
-          <FlatList
-            showsHorizontalScrollIndicator={false}
-            data={locationFieldNames}
-            renderItem={({item,index}) => (
-              <View>
-                <View>
-                  <Text style={styles.fieldName}>{locationFieldNames[index].name}</Text>
-                  <Text style={styles.content}>{locationFieldNames[index].value.description}</Text>
-                </View>
-                <View>
-                  <MapView
-                    style={styles.map}
-                    initialRegion={{
-                        latitude: locationFieldNames[index]['value']['geo']['latitude'],
-                        longitude: locationFieldNames[index]['value']['geo']['longitude'],
-                        latitudeDelta: 0.004867,
-                        longitudeDelta: 0.006976,
-                      }}
-                    >
-                  </MapView>
-                  <Text></Text>
-                  <Text></Text>
-                  <Text></Text>
-                  <Text></Text>
-                  <Text></Text>
-                  <Text></Text>
-                  <Text></Text>
-                </View>
-              </View>
-            )}
-          />
-
+            </View>
+          )}
+        />
       </View>
 
-        <View style={{flexDirection: 'row', top:10}}>
-                <View>
-                    <Icon
-                      name="heart"
-                      size={24}
-                      color={
-                        likeCount===0
-                          ? COLORS.unlikeButtonColor
-                          : "red"
-                      }
-                      style={{marginRight: 8}}
-                    />
-                </View>
-          
-          <Text> {likeCount} likes </Text>
+      <View style={{flexDirection: 'row', top: 10}}>
+        <View>
+          <Icon
+            name="heart"
+            size={24}
+            color={likeCount === 0 ? COLORS.unlikeButtonColor : 'red'}
+            style={{marginRight: 8}}
+          />
         </View>
+
+        <Text> {likeCount} likes </Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#FFF',
-    borderRadius: 5,
-    padding: 8,
-    flexDirection: 'row',
-    marginVertical: 8,
-  },
   feedItem: {
     backgroundColor: '#FFF',
     borderRadius: 5,
@@ -239,21 +204,20 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   map: {
-  position: 'absolute',
-  top: 10,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  width: 180,
-
-},
-marker: {
-  height: 48,
-  width: 48,
-},
-region: {
-  color: '#fff',
-  lineHeight: 20,
-  margin: 20,
-},
+    position: 'absolute',
+    top: 10,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: 180,
+  },
+  marker: {
+    height: 48,
+    width: 48,
+  },
+  region: {
+    color: '#fff',
+    lineHeight: 20,
+    margin: 20,
+  },
 });
