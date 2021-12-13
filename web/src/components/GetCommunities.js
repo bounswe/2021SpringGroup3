@@ -18,8 +18,6 @@ const GetCommunities = (props) => {
         .then( result => setResult(result.data));
     }, [])
 
-    console.log("navbar select: ",result)
-
     let options = result.map(item => {
         return {
             label: item.name,

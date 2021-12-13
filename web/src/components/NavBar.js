@@ -28,11 +28,7 @@ const NavBar = (props) => {
         console.log("Searching value: ", value);
     }
 
-    const handleLogout = () => {
-        console.log("Trying to log out");
-        Logout(loginState.token, dispatch)
-        navigate('/login')
-    }
+
 
     const onCreateCommunity = () => {
         console.log("Request for creating a new community");
@@ -43,10 +39,31 @@ const NavBar = (props) => {
         console.log("Request for creating a new post");
     }
 
+    const handleProfileNavigate = () => {
+        console.log("Navigating to profile page");
+        navigate('/profile')
+    }
+
+    const handleSettingsNavigate = () => {
+        navigate('/profile/edit');
+    }
+
+    const handleLogout = () => {
+        console.log("Trying to log out");
+        Logout(loginState.token, dispatch)
+        navigate('/login')
+    }
+
     const profileMenu = (
         <Menu>
+            <Menu.Item key="profile">
+                <Button type="text" onClick={handleProfileNavigate}>
+                    <UserOutlined style={{ fontSize: '16px', marginRight: '4px' }} />
+                    Profile
+                </Button>
+            </Menu.Item>
             <Menu.Item key="settings">
-                <Button type="text">
+                <Button type="text" onClick={handleSettingsNavigate}>
                     <SettingTwoTone style={{ fontSize: '16px', marginRight: '4px' }} />
                     Settings
                 </Button>
