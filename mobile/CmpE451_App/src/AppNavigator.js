@@ -24,6 +24,8 @@ import PostDetail from './screen/PostDetail';
 import Communities from './screen/Communities';
 import Community from './screen/Community';
 import OtherUserProfile from './screen/OtherUserProfile';
+import PendingRequests from './screen/PendingRequests';
+import UpdateCommunity from './screen/UpdateCommunity';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {screenOptionStyle} from './theme/styles';
 import {COLORS} from './theme//colors';
@@ -89,6 +91,16 @@ export function Navigator() {
         options={{headerShown: false}}
         name="OtherUserProfile"
         component={OtherUserProfile}
+      />
+       <Stack.Screen
+        options={{headerShown: false}}
+        name="PendingRequests"
+        component={PendingRequests}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="UpdateCommunity"
+        component={UpdateCommunity}
       />
     </Stack.Navigator>
   );

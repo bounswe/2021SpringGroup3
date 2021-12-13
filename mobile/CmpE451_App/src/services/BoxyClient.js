@@ -117,6 +117,37 @@ export const createCommunity = async ({
     });
 };
 
+export const updateCommunity = async ({
+  communityId,
+  name,
+  iconUrl,
+  description,
+  isPrivate,
+}) => {
+  return fetch(BASE_URL + 'communities/update', {
+    method: 'POST',
+    body: JSON.stringify({
+      communityId: communityId,
+      name: name,
+      iconUrl: iconUrl,
+      description: description,
+      isPrivate: isPrivate,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 export const getCommunityDetail = async ({communityId}) => {
   return fetch(BASE_URL + 'communities/detail?communityId=' + communityId, {
     method: 'GET',
@@ -153,13 +184,118 @@ export const joinCommunity = async ({communityId}) => {
     });
 };
 
-const returnResponse = async response => {
-  const statusCode = response.status;
-  response = await response.json();
-  return {
-    status: statusCode,
-    data: response,
-  };
+export const leaveCommunity = async ({communityId}) => {
+  return fetch(BASE_URL + 'communities/leave?communityId=' + communityId, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const acceptJoinRequest = async ({communityId, userId}) => {
+  return fetch(
+    BASE_URL +
+      'communities/join/approve?communityId=' +
+      communityId +
+      '&userId=' +
+      userId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const rejectJoinRequest = async ({communityId, userId}) => {
+  return fetch(
+    BASE_URL +
+      'communities/join/reject?communityId=' +
+      communityId +
+      '&userId=' +
+      userId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const kickMember = async ({communityId, userId}) => {
+  return fetch(
+    BASE_URL +
+      'communities/kick?communityId=' +
+      communityId +
+      '&userId=' +
+      userId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const joinModerators = async ({communityId}) => {
+  return fetch(
+    BASE_URL + 'communities/join/moderators?communityId=' + communityId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
 };
 
 export const getPostDetail = async ({communityId, postId}) => {
@@ -207,4 +343,13 @@ export const getOtherProfile = async id => {
       return JSON.parse(result);
     })
     .catch(error => console.log('error', error));
+};
+
+const returnResponse = async response => {
+  const statusCode = response.status;
+  response = await response.json();
+  return {
+    status: statusCode,
+    data: response,
+  };
 };
