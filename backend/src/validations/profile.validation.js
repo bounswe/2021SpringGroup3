@@ -2,14 +2,14 @@ const Joi = require('joi');
 const { objectId } = require('./custom.validation');
 
 const profileField = Joi.object().keys({
-  value: Joi.string().required(),
-  isPublic: Joi.boolean().required(),
+  value: Joi.string(),
+  isPublic: Joi.boolean(),
 });
 
 const locationField = Joi.object().keys({
-  value: Joi.object().required(),
-  isPublic: Joi.boolean().required(),
-  description: Joi.string().required(),
+  value: Joi.object(),
+  isPublic: Joi.boolean(),
+  description: Joi.string(),
 });
 
 exports.setProfile = {

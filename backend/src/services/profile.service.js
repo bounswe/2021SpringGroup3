@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 const httpStatus = require('http-status');
 const short = require('short-uuid');
 const fs = require('fs-extra');
@@ -78,18 +80,29 @@ exports.getProfileSettings = async ({ token }) => {
 };
 
 exports.setProfile = async ({ token, body }) => {
-  const path = `images/profiles/${token.user._id.toString()}/${short.generate()}.jpg`;
-  await fs.outputFile(path, body.profilePhoto.value, { encoding: 'base64' });
+  const update = {};
+  for (const key in body) {
+    if (body[key].value !== null && body[key].value !== undefined) {
+      update[`${key}.value`] = body[key].value;
+    }
+    if (typeof body[key].isPublic === 'boolean') {
+      update[`${key}.isPublic`] = body[key].isPublic;
+    }
+  }
+  delete update.profilePhoto;
+  if (body.profilePhoto) {
+    const path = `images/profiles/${token.user._id.toString()}/${short.generate()}.jpg`;
+    await fs.outputFile(path, body.profilePhoto.value, { encoding: 'base64' });
+    update.profilePhotoUrl = {
+      value: `${config.serverUrl}${path}`,
+      isPublic:
+        typeof body.profilePhoto.isPublic === 'boolean' ? body.profilePhoto.isPublic : token.user.profilePhoto.isPublic,
+    };
+  }
   const user = await User.findByIdAndUpdate(
     token.user._id,
     {
-      $set: {
-        ...body,
-        profilePhotoUrl: {
-          value: `${config.serverUrl}${path}`,
-          isPublic: body.profilePhoto.isPublic,
-        },
-      },
+      $set: update,
     },
     { new: true }
   );

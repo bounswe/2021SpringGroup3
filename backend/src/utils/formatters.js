@@ -149,6 +149,7 @@ exports.formatOtherProfile = function (user) {
     location: user.location && user.location.isPublic ? user.location : '',
   };
 };
+
 const defaultProfileField = {
   value: '',
   isPublic: true,
