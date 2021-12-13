@@ -1,4 +1,4 @@
-import {View, Text, Linking} from 'react-native';
+import {View, Text, Linking, Alert} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -9,6 +9,9 @@ import * as Requests from '../services/BoxyClient';
 import {IconButton} from 'react-native-paper';
 import Geocoder from 'react-native-geocoding';
 import MapView, {Marker} from 'react-native-maps';
+import * as Client from '../services/BoxyClient';
+import Main from '../screen/Main.js';
+
 
 import {
   FlatList,
@@ -19,14 +22,14 @@ import {
   ScrollView,
 } from 'react-native';
 
-export default function PostDetail({user, date, community, textFieldNames, numberFieldNames,
-      dateFieldNames, linkFieldNames, locationFieldNames,
-      isLiked, likeCount}) {
+export default function PostDetail({id, user, date, community, textFieldNames, numberFieldNames,
+    dateFieldNames, linkFieldNames, locationFieldNames,
+    isLiked, likeCount}) {
 
     return (
     <View style={styles.feedItem}>
       <View>
-        <Image source={{uri: user.imageUrl}} style={styles.avatar} />
+        <Image source={{uri: user.profilePhotoUrl}} style={styles.avatar} />
         <View
           style={{
             flexDirection: 'row',
@@ -125,8 +128,8 @@ export default function PostDetail({user, date, community, textFieldNames, numbe
                     initialRegion={{
                         latitude: locationFieldNames[index]['value']['geo']['latitude'],
                         longitude: locationFieldNames[index]['value']['geo']['longitude'],
-                        latitudeDelta: 0.004757,
-                        longitudeDelta: 0.006866,
+                        latitudeDelta: 0.004867,
+                        longitudeDelta: 0.006976,
                       }}
                     >
                   </MapView>
@@ -144,17 +147,20 @@ export default function PostDetail({user, date, community, textFieldNames, numbe
 
       </View>
 
-        <View style={{flexDirection: 'row', top:18}}>
-          <Icon
-            name="heart"
-            size={24}
-            color={
-              isLiked
-                ? COLORS.buttonColor
-                : COLORS.unlikeButtonColor
-            }
-            style={{marginRight: 8}}
-          />
+        <View style={{flexDirection: 'row', top:10}}>
+                <View>
+                    <Icon
+                      name="heart"
+                      size={24}
+                      color={
+                        likeCount===0
+                          ? COLORS.unlikeButtonColor
+                          : "red"
+                      }
+                      style={{marginRight: 8}}
+                    />
+                </View>
+          
           <Text> {likeCount} likes </Text>
         </View>
     </View>
@@ -170,7 +176,6 @@ const styles = StyleSheet.create({
     padding: 20,
     flexDirection: 'column',
     marginVertical: 8,
-    minHeight: '100%',
     removeClippedSubviews: true,
   },
   avatar: {
@@ -200,7 +205,7 @@ const styles = StyleSheet.create({
   left: 0,
   right: 0,
   bottom: 0,
-  width: 250,
+  width: 180,
 
 },
 marker: {
