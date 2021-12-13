@@ -181,3 +181,21 @@ export async function getProfileSettings(info) {
     return error
   }
 }
+
+export async function postProfileSettings(info, token) {
+  try {
+    const header = {headers: {
+      'X-Platform': 'WEB',
+      'accept': '*/*',
+      'authorization': `${token}`
+      },
+    }
+    const body = { ... info }
+    const response = await axios.post(POST_PROFILE_SETTINGS_ENDPOINT, { ...body }, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+    
+    return error
+  }
+}

@@ -22,8 +22,6 @@ function ProfileEditPage(props) {
             .then( result => setResult(result.data));
     }, []);
 
-    console.log(result);
-
     return (
         <> 
             <Layout>
@@ -31,7 +29,7 @@ function ProfileEditPage(props) {
             <Layout>
                 <Content>
                 <Col span={24} align="right">
-                    <ProfileEdit profileValues={result}/>
+                    <ProfileEdit key={result} profileValues={result}/>
                 </Col>
                 </Content>
             </Layout>

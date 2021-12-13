@@ -3,7 +3,8 @@ import { login, logout, register,
   createCommunity, getCommunities, getCommunityPage,
   createPostType, 
   getProfile,
-  getProfileSettings} from '../store/axios';
+  getProfileSettings,
+  postProfileSettings} from '../store/axios';
 
 export const Login = async (info, dispatch) => {
 
@@ -102,6 +103,18 @@ export const GetProfileSettings = async (info, dispatch) => {
   if(response.status === 200 || response.status === 201) {
     return response;
   } else {
+    return {}
+  }
+}
+
+export const PostProfileSettings = async (info, token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await postProfileSettings(info, token);
+  if(response.status === 200 || response.status === 201){
+    return response;
+    //  dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
     return {}
   }
 }

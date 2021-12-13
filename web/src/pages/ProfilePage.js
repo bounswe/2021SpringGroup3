@@ -20,8 +20,8 @@ function ProfilePage(props) {
     useEffect(() => {
         GetProfilePageRequest({token: loginState.token}, dispatch)
             .then( result => {
-                console.log(result);
                 setResult(result.data);
+                console.log(result);
             });
     }, [])
 

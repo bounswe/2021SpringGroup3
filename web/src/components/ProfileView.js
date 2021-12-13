@@ -4,6 +4,7 @@ import buttonColor from '../colors'
 
 import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
+import { postProfileSettings } from '../store/axios';
 
 const { Text, Title } = Typography;
 
@@ -32,11 +33,7 @@ const ProfileView = (props) => {
         console.log(`Trying to stop following user, send a DELETE request to users/${userId}/follow`);
         setFollowing(false)
     }
-
-    const reportPost = (postId) => {
-        console.log(`Trying to report post, open post report selection component with ${postId}`)
-    }
-
+    
     return (
         <>
             <Card size="small" style={profileCardStyle}>
@@ -70,14 +67,13 @@ const ProfileView = (props) => {
                     <Col span={24}>
                         <Space size={'middle'}>
                             <strong>Location</strong>
-                            <Text>{props.userObj.location}</Text>
+                            <Text></Text>
                         </Space>
                     </Col>
                 </Card>
-
-
             </Card>
         </>
+        //('value' in props.userObj.location) ? props.userObj.location.value.latitude + " " + props.userObj.location.value.longitude : "No location info"
     )
 }
 
