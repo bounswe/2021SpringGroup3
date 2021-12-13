@@ -215,3 +215,40 @@ export const getPosts = async ({communityId}) => {
       ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
     });
 };
+
+export const likePost = async ({communityId, postId}) => {
+  return fetch(BASE_URL + 'posts/like?communityId=' + communityId +
+      '&postId=' + postId, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const deletePost = async ({postId}) => {
+  return fetch(BASE_URL + 'posts?postId=' + postId, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};

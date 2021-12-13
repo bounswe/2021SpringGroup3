@@ -9,6 +9,7 @@ import {headerTextStyle} from '../theme/styles';
 
 export default function PostDetail({route, navigation}) {
 
+  const [id, setId] = useState([]);
   const [user, setUser] = useState([]);
   const [community, setCommunity] = useState([]);
   const [date, setDate] = useState([]);
@@ -58,6 +59,7 @@ export default function PostDetail({route, navigation}) {
         likeCount,
       } = JSON.parse(postDetailResponse);
       
+      setId(id);
       setUser(user);
       setDate(date);
       setCommunity(community)
@@ -82,7 +84,7 @@ export default function PostDetail({route, navigation}) {
           titleComponent={<Text style={headerTextStyle}></Text>}
           navigate={navigate}
         />
-      <PostDetailComponent user={user} date={date} community={community} textFieldNames={textFieldNames} numberFieldNames={numberFieldNames}
+      <PostDetailComponent id = {id} user={user} date={date} community={community} textFieldNames={textFieldNames} numberFieldNames={numberFieldNames}
         dateFieldNames={dateFieldNames} linkFieldNames={linkFieldNames} locationFieldNames={locationFieldNames}
         isLiked={isLiked} likeCount={likeCount}/>
     </View>

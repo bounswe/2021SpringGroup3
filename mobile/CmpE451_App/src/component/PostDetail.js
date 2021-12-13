@@ -1,4 +1,4 @@
-import {View, Text, Linking} from 'react-native';
+import {View, Text, Linking, Alert} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -9,6 +9,8 @@ import * as Requests from '../services/BoxyClient';
 import {IconButton} from 'react-native-paper';
 import Geocoder from 'react-native-geocoding';
 import MapView, {Marker} from 'react-native-maps';
+import * as Client from '../services/BoxyClient';
+import Main from '../screen/Main.js';
 
 import {
   FlatList,
@@ -19,9 +21,42 @@ import {
   ScrollView,
 } from 'react-native';
 
-export default function PostDetail({user, date, community, textFieldNames, numberFieldNames,
-      dateFieldNames, linkFieldNames, locationFieldNames,
-      isLiked, likeCount}) {
+export default function PostDetail({route, id, user, date, community, textFieldNames, numberFieldNames,
+    dateFieldNames, linkFieldNames, locationFieldNames,
+    isLiked, likeCount}) {
+
+    const pressedLike = async () => {
+      Client.likePost({
+        communityId: community.id,
+        postId: id,
+      });
+    }
+
+    const deletePost = async () => {
+      Client.deletePost({
+        postId: id,
+      });
+      navigation.navigate(Main);
+    }
+
+    const pressedDelete = () => {
+      Alert.alert(
+        'Warning',
+        'Are you sure you want to delete the post?',
+        [
+          {
+            text: 'Cancel',
+          },
+          {
+            text: 'Yes',
+            onPress: () => deletePost(),
+          },
+        ],
+        {
+          cancelable: true,
+        },
+      );
+    };
 
     return (
     <View style={styles.feedItem}>
@@ -145,18 +180,31 @@ export default function PostDetail({user, date, community, textFieldNames, numbe
       </View>
 
         <View style={{flexDirection: 'row', top:5}}>
-          <Icon
-            name="heart"
-            size={24}
-            color={
-              isLiked
-                ? COLORS.buttonColor
-                : COLORS.unlikeButtonColor
-            }
-            style={{marginRight: 8}}
-          />
+          <TouchableOpacity
+              onPress={()=>{pressedLike()}}>
+                <View>
+                    <Icon
+                      name="heart"
+                      size={24}
+                      color={
+                        likeCount===0
+                          ? COLORS.unlikeButtonColor
+                          : "red"
+                      }
+                      style={{marginRight: 8}}
+                    />
+                </View>
+            </TouchableOpacity>
+          
           <Text> {likeCount} likes </Text>
         </View>
+        <IconButton
+            icon="delete"
+            size={30}
+            color="red"
+            style={{alignSelf: 'flex-end', top:-30}}
+            onPress={()=>pressedDelete()}
+          />
     </View>
     
   );
