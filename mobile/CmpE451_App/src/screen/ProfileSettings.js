@@ -23,7 +23,7 @@ import Geocoder from 'react-native-geocoding';
 import {headerContainerStyle} from '../theme/styles';
 import {headerStyle} from '../theme/styles';
 import {textInputArea} from '../theme/styles';
-
+import {CleanEmptyValuesObject} from '../util/ObjectUtil';
 import {
   TEXT,
   PAGE_VARIABLES,
@@ -34,32 +34,20 @@ import ConfirmButton from '../component/ConfirmButton';
 import {IconButton} from 'react-native-paper';
 import {COLORS} from '../theme/colors';
 export default function ProfileSettings({route}) {
-  const {username, location, birthday, bio, profileImageUrl} = route.params;
+  const {username, _location, _birthday, _bio, _profileImageUrl} = route.params;
   const navigation = useNavigation();
-  const [newBio, setNewBio] = useState({value: bio, isPublic: false});
-  const [newBirthday, setNewBirthday] = useState({
-    value: birthday,
-    isPublic: false,
-  });
-  const [newLocation, setNewLocation] = useState({
-    value: location,
-    isPublic: false,
-  });
-  const [newProfileImage, setNewProfileImage] = useState({
-    value: {
-      uri: '',
-      fileName: '',
-      type: '',
-      base64: '',
-    },
-    isPublic: false,
-  });
-  const [oldProfileImage, setOldProfileImage] = useState({
-    value: profileImageUrl,
-    isPublic: false,
-  });
-  const [newUsername, setNewUsername] = useState(username);
-  const [datePickerShow, setDatePickerShow] = useState(false);
+  const [bio, setBio] = useState(_bio);
+  const [birthday, setBirthday] = useState(_birthday);
+  const [location, setLocation] = useState(_location);
+  const [profileImage, setProfileImage] = useState();
+
+  const [bioToggle, setToggleBio] = useState();
+  const [birthdayToggle, setToggleBirthday] = useState();
+  const [locationToggle, setToggleLocation] = useState();
+  const [profileImageToggle, setToggleProfileImage] = useState(true);
+
+  const [showMap, setShowMap] = useState(false);
+
   const [address, setAddress] = useState('');
   const [markerState, setMarker] = useState({
     target: 347,
@@ -78,19 +66,14 @@ export default function ProfileSettings({route}) {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
-  const [showMap, setShowMap] = useState(false);
 
   useEffect(async () => {
     const {username, profilePhotoUrl, bio, birthday, location} =
       await Request.getUserSettings();
-    setOldProfileImage({
-      value: profilePhotoUrl.value,
-      isPublic: profilePhotoUrl.isPublic,
-    });
-    setNewUsername(username);
-    setNewBio({value: bio.value, isPublic: bio.isPublic});
-    setNewBirthday({value: birthday.value, isPublic: birthday.isPublic});
-    setNewLocation({value: location.description, isPublic: location.isPublic});
+    setToggleProfileImage(profilePhotoUrl.isPublic);
+    setToggleBio(bio.isPublic);
+    setToggleBirthday(birthday.isPublic);
+    setToggleLocation(location.isPublic);
   }, []);
   async function handleUpload() {
     const response = await launchImageLibrary({
@@ -99,49 +82,45 @@ export default function ProfileSettings({route}) {
       maxWidth: 500,
       maxHeight: 500,
     });
-    if (response.didCancel) console.log('Cancel', cancel);
-    const image = {
+    if (response.didCancel) return;
+    setProfileImage({
       uri: response.assets[0].uri,
       fileName: response.assets[0].fileName,
       type: response.assets[0].type,
       base64: response.assets[0].base64,
-    };
-    setNewProfileImage({value: image, isPublic: oldProfileImage.isPublic});
-  }
-  function checkAllFields() {
-    if (
-      newProfileImage.value.base64 === '' ||
-      newBio.value === '' ||
-      newBirthday.value === ''
-    ) {
-      Alert.alert('Please Fill All Fields');
-      return true;
-    }
-  }
-  async function updateUserSettings() {
-    if (checkAllFields()) return;
-    const response = await Request.updateUserSettings({
-      profilePhoto: {
-        value: newProfileImage.value.base64,
-        isPublic: newProfileImage.isPublic,
-      },
-      bio: {
-        value: newBio.value,
-        isPublic: newBio.isPublic,
-      },
-      birthday: {
-        value: newBirthday.value,
-        isPublic: newBirthday.isPublic,
-      },
-      location: {
-        value: {
-          langitute: regionState.latitude,
-          latitude: regionState.latitude,
-        },
-        isPublic: newLocation.isPublic,
-        description: newLocation.value,
-      },
     });
+  }
+
+  async function updateUserSettings() {
+    const response = await Request.updateUserSettings(
+      CleanEmptyValuesObject({
+        profilePhoto: profileImage
+          ? {
+              value: profileImage.base64,
+              isPublic: profileImageToggle,
+            }
+          : null,
+        bio: {
+          value: bio != '' ? bio : null,
+          isPublic: bioToggle,
+        },
+        birthday: {
+          value: birthday != '' ? birthday.toString() : null,
+          isPublic: birthdayToggle,
+        },
+        location:
+          address === ''
+            ? null
+            : {
+                value: {
+                  langitute: regionState.latitude,
+                  latitude: regionState.latitude,
+                },
+                isPublic: locationToggle,
+                description: address,
+              },
+      }),
+    );
     navigation.navigate('Profile');
   }
   function chooseLocation() {
@@ -163,20 +142,15 @@ export default function ProfileSettings({route}) {
             color={COLORS.buttonColor}
             size={20}
             onPress={() => {
-              setNewLocation({value: address, isPublic: newLocation.isPublic});
+              setLocation(address);
               Geocoder.from(address)
                 .then(res => {
                   var location = res.results[0].geometry.location;
-                  console.log(location);
                   setRegion({
                     latitude: location.lat,
                     longitude: location.lng,
                     latitudeDelta: regionState.latitudeDelta,
                     longitudeDelta: regionState.longitudeDelta,
-                  });
-                  setNewLocation({
-                    value: address,
-                    isPublic: newLocation.isPublic,
                   });
                 })
                 .catch(error => console.warn(error));
@@ -211,16 +185,7 @@ export default function ProfileSettings({route}) {
       </View>
     );
   }
-  function getLocation() {
-    if ((newLocation.value = '' && location == '')) return 'Location...';
-    else if (newLocation.value != '') return newLocation.value;
-    else return location;
-  }
-  return oldProfileImage.value == '' ? (
-    <View>
-      <Text>oldProfileImage.value</Text>
-    </View>
-  ) : (
+  return (
     <SafeAreaView style={styles.container}>
       {showMap ? (
         getMapView()
@@ -240,31 +205,25 @@ export default function ProfileSettings({route}) {
                 color="#52575D"></Ionicons>
             </TouchableOpacity>
           </View>
-
           <View style={{alignSelf: 'center'}}>
             <View style={styles.profileImage}>
               <Image
                 source={{
-                  uri: newProfileImage.value.uri
-                    ? newProfileImage.value.uri
-                    : oldProfileImage.value,
+                  uri: profileImage ? profileImage.uri : _profileImageUrl,
                 }}
                 style={styles.image}
                 resizeMode="center"></Image>
             </View>
-            <ToggleSwitch
-              isOn={newProfileImage.isPublic}
-              onColor="green"
-              offColor="red"
-              labelStyle={{color: 'black', fontWeight: '900'}}
-              size="small"
-              onToggle={isOn =>
-                setNewProfileImage({
-                  value: newProfileImage.value,
-                  isPublic: !newProfileImage.isPublic,
-                })
-              }
-            />
+            {profileImage ? (
+              <ToggleSwitch
+                isOn={profileImageToggle}
+                onColor="green"
+                offColor="red"
+                labelStyle={{color: 'black', fontWeight: '900'}}
+                size="small"
+                onToggle={isOn => setToggleProfileImage(!profileImageToggle)}
+              />
+            ) : null}
             <View style={styles.add}>
               <TouchableOpacity onPress={handleUpload}>
                 <Ionicons
@@ -275,7 +234,6 @@ export default function ProfileSettings({route}) {
               </TouchableOpacity>
             </View>
           </View>
-
           <View style={styles.infoContainer}>
             <View
               style={{
@@ -314,22 +272,20 @@ export default function ProfileSettings({route}) {
                     styles.text,
                     {fontWeight: '200', fontSize: 36, width: '80%'},
                   ]}
-                  onChangeText={_bio => {
-                    setNewBio({value: _bio, isPublic: newBio.isPublic});
+                  onChangeText={bioo => {
+                    console.log('biooo: ', bio);
+                    setBio(bioo);
                   }}
-                  placeholder={bio == '' ? 'Bio...' : bio}></TextInput>
+                  placeholder={bio == '' ? 'Bio...' : bio}>
+                  {bio}
+                </TextInput>
                 <ToggleSwitch
-                  isOn={newBio.isPublic}
+                  isOn={bioToggle}
                   onColor="green"
                   offColor="red"
                   labelStyle={{color: 'black', fontWeight: '900'}}
                   size="small"
-                  onToggle={isOn =>
-                    setNewBio({
-                      value: newBio.value,
-                      isPublic: !newBio.isPublic,
-                    })
-                  }
+                  onToggle={isOn => setToggleBio(!bioToggle)}
                 />
               </View>
             </View>
@@ -353,20 +309,15 @@ export default function ProfileSettings({route}) {
                     styles.text,
                     {fontWeight: '200', fontSize: 36, width: '80%'},
                   ]}>
-                  {newLocation.value}
+                  {location}
                 </Text>
                 <ToggleSwitch
-                  isOn={newLocation.isPublic}
+                  isOn={locationToggle}
                   onColor="green"
                   offColor="red"
                   labelStyle={{color: 'black', fontWeight: '900'}}
                   size="small"
-                  onToggle={isOn =>
-                    setNewLocation({
-                      value: newLocation.value,
-                      isPublic: !newLocation.isPublic,
-                    })
-                  }
+                  onToggle={isOn => setToggleLocation(!locationToggle)}
                 />
               </View>
             </View>
@@ -377,27 +328,18 @@ export default function ProfileSettings({route}) {
               <View style={{flexDirection: 'row'}}>
                 <DatePicker
                   mode="date"
-                  date={new Date(birthday == '' ? null : birthday)}
+                  date={new Date()}
+                  //date={birthday == '' ? new Date() : new Date(birthday)}
                   style={{height: 100}}
-                  onDateChange={date =>
-                    setNewBirthday({
-                      value: date,
-                      isPublic: newBirthday.isPublic,
-                    })
-                  }
+                  onDateChange={date => setBirthday(date)}
                 />
                 <ToggleSwitch
-                  isOn={newBirthday.isPublic}
+                  isOn={birthdayToggle}
                   onColor="green"
                   offColor="red"
                   labelStyle={{color: 'black', fontWeight: '900'}}
                   size="small"
-                  onToggle={isOn =>
-                    setNewBirthday({
-                      value: newBirthday.value,
-                      isPublic: !newBirthday.isPublic,
-                    })
-                  }
+                  onToggle={isOn => setToggleBirthday(!birthdayToggle)}
                 />
               </View>
             </View>

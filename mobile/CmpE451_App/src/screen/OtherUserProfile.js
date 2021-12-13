@@ -12,7 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 import UnderConstruction from '../component/UnderConstruction';
-import * as Request from '../util/Requests';
+import * as Request from '../services/BoxyClient';
 import {
   TEXT,
   PAGE_VARIABLES,
@@ -21,7 +21,7 @@ import {
 } from '../constants';
 import Loader from '../component/Loader';
 
-export default function Profile() {
+export default function OtherUserProfile({id}) {
   const navigation = useNavigation();
   const [bio, setBio] = useState();
   const [birthday, setBirthday] = useState();
@@ -31,27 +31,19 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(async () => {
-    const profile = await Request.getMyProfile();
-    setLocation(profile.location.description);
-    setBio(profile.bio);
-    setBirthday(profile.birthday);
-    setProfileImageUrl(profile.profilePhotoUrl);
+    const profile = await Request.getOtherProfile(id);
+    setLocation(
+      profile.location.isPublic ? profile.location.description : null,
+    );
+    setBio(profile.bio.isPublic ? profile.bio : null);
+    setBirthday(profile.birthday.isPublic ? profile.birthday.value : null);
+    setProfileImageUrl(
+      profile.profilePhotoUrl.isPublic ? profile.profilePhotoUrl.value : null,
+    );
     setUsername(profile.username);
     setIsLoading(false);
   }, [navigation]);
 
-  function isEmpty(key) {
-    return key == null || key == '' || key == undefined;
-  }
-  function navigateSettings() {
-    navigation.navigate('ProfileSettings', {
-      username,
-      _location: location,
-      _birthday: birthday,
-      _bio: bio,
-      _profileImageUrl: profileImageUrl,
-    });
-  }
   return isLoading ? (
     <Loader loading={'loading'}></Loader>
   ) : (
@@ -59,14 +51,11 @@ export default function Profile() {
       <SafeAreaView style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.titleBar}>
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons
                 name="ios-arrow-back"
                 size={24}
                 color="#52575D"></Ionicons>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={navigateSettings}>
-              <Ionicons name="settings" size={24} color="#52575D"></Ionicons>
             </TouchableOpacity>
           </View>
           <View style={{alignSelf: 'center'}}>
@@ -104,7 +93,7 @@ export default function Profile() {
                 Bio:
               </Text>
               <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
-                {bio}
+                {bio != null ? bio : 'Private'}
               </Text>
             </View>
             <View
@@ -117,7 +106,7 @@ export default function Profile() {
                 Location:
               </Text>
               <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
-                {location}
+                {location != null ? location : 'Private'}
               </Text>
             </View>
             <View
@@ -130,7 +119,9 @@ export default function Profile() {
                 Birthday:
               </Text>
               <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
-                {birthday.substring(0, birthday.lastIndexOf(':') - 6)}
+                {birthday != null
+                  ? birthday.substring(0, birthday.lastIndexOf(':') - 6)
+                  : 'Private'}
               </Text>
             </View>
           </View>

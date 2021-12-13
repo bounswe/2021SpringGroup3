@@ -186,3 +186,25 @@ export const getPostDetail = async ({communityId, postId}) => {
     })
     .catch(error => console.log('error', error));
 };
+
+export const getOtherProfile = async id => {
+  var myHeaders = new Headers();
+  myHeaders.append('Authorization', await getToken());
+  myHeaders.append('X-Platform', 'ANDROID');
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow',
+  };
+
+  return fetch(
+    'https://api.cmpegroupthree.store/profile/settings?id=' + id,
+    requestOptions,
+  )
+    .then(response => response.text())
+    .then(result => {
+      return JSON.parse(result);
+    })
+    .catch(error => console.log('error', error));
+};

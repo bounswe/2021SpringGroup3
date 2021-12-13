@@ -103,6 +103,9 @@ export default function Community({navigation}) {
     return <CommunityPosts />;
   }
 
+  function selectUser(user) {
+    navigation.navigate('OtherUserProfile', {id: user.id});
+  }
   function aboutTab() {
     return (
       <ScrollView>
@@ -131,7 +134,7 @@ export default function Community({navigation}) {
         <View style={styles.sectionHeaderContainer}>
           <Text style={styles.sectionText}>Members</Text>
         </View>
-        <UserList users={members} />
+        <UserList users={members} onPress={selectUser} />
       </View>
     );
   }
