@@ -391,6 +391,35 @@ export const deleteAccount = async () => {
     });
 };
 
+export const getPosts = async ({communityId}) => {
+  return fetch(
+    BASE_URL +
+      'posts' +
+      '?communityId=' + communityId,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(async response => {
+      const status = response.status;
+      response = await response.json();
+      if (status === 200) {
+        return response;
+      } else {
+        ToastAndroid.show(response.message, ToastAndroid.SHORT);
+      }
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 const returnResponse = async response => {
   const statusCode = response.status;
   response = await response.json();
