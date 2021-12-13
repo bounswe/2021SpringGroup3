@@ -168,7 +168,7 @@ exports.kickFromCommunity = async ({ token, userId, communityId }) => {
   }
   community = await Community.findByIdAndUpdate(community._id, {
     $pull: {
-      members: token.user._id.toString(),
+      members: userId,
     },
   });
   community = await populateCommunity(communityId);
