@@ -12,6 +12,7 @@ import MapView, {Marker} from 'react-native-maps';
 import * as Client from '../services/BoxyClient';
 import Main from '../screen/Main.js';
 
+
 import {
   FlatList,
   Image,
@@ -24,39 +25,6 @@ import {
 export default function PostDetail({id, user, date, community, textFieldNames, numberFieldNames,
     dateFieldNames, linkFieldNames, locationFieldNames,
     isLiked, likeCount}) {
-
-    const pressedLike = async () => {
-      Client.likePost({
-        communityId: community.id,
-        postId: id,
-      });
-    }
-
-    const deletePost = async () => {
-      Client.deletePost({
-        postId: id,
-      });
-      navigation.navigate(Main);
-    }
-
-    const pressedDelete = () => {
-      Alert.alert(
-        'Warning',
-        'Are you sure you want to delete the post?',
-        [
-          {
-            text: 'Cancel',
-          },
-          {
-            text: 'Yes',
-            onPress: () => deletePost(),
-          },
-        ],
-        {
-          cancelable: true,
-        },
-      );
-    };
 
     return (
     <View style={styles.feedItem}>
@@ -160,8 +128,8 @@ export default function PostDetail({id, user, date, community, textFieldNames, n
                     initialRegion={{
                         latitude: locationFieldNames[index]['value']['geo']['latitude'],
                         longitude: locationFieldNames[index]['value']['geo']['longitude'],
-                        latitudeDelta: 0.004757,
-                        longitudeDelta: 0.006866,
+                        latitudeDelta: 0.004867,
+                        longitudeDelta: 0.006976,
                       }}
                     >
                   </MapView>
@@ -179,9 +147,7 @@ export default function PostDetail({id, user, date, community, textFieldNames, n
 
       </View>
 
-        <View style={{flexDirection: 'row', top:5}}>
-          <TouchableOpacity
-              onPress={()=>{pressedLike()}}>
+        <View style={{flexDirection: 'row', top:10}}>
                 <View>
                     <Icon
                       name="heart"
@@ -194,17 +160,9 @@ export default function PostDetail({id, user, date, community, textFieldNames, n
                       style={{marginRight: 8}}
                     />
                 </View>
-            </TouchableOpacity>
           
           <Text> {likeCount} likes </Text>
         </View>
-        <IconButton
-            icon="delete"
-            size={30}
-            color="red"
-            style={{alignSelf: 'flex-end', top:-30}}
-            onPress={()=>pressedDelete()}
-          />
     </View>
     
   );
@@ -247,7 +205,7 @@ const styles = StyleSheet.create({
   left: 0,
   right: 0,
   bottom: 0,
-  width: 250,
+  width: 180,
 
 },
 marker: {
