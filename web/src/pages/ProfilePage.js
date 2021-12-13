@@ -16,11 +16,15 @@ function ProfilePage(props) {
     const dispatch = useDispatch();
 
     const [result, setResult] = useState('');
+    const [latitude, setLatitude] = useState('');
+    const [longitude, setLongitude] = useState('');
 
     useEffect(() => {
         GetProfilePageRequest({token: loginState.token}, dispatch)
             .then( result => {
                 setResult(result.data);
+                setLatitude(result.data.location.value.latitude);
+                setLongitude(result.data.location.value.longitude);
                 console.log(result);
             });
     }, [])
@@ -30,7 +34,7 @@ function ProfilePage(props) {
             <Header ><NavBar /></Header>
             <Layout>
                 <Content>
-                    <ProfileView  userObj={result}/>
+                    <ProfileView  userObj={result} latitude={latitude} longitude={longitude}/>
                 </Content>
             </Layout>
             <Footer></Footer>

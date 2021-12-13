@@ -21,25 +21,20 @@ function GetCommunityPage(props) {
   const dispatch = useDispatch();
 
   const { id } = useParams();
-  
-  const [commId, setCommID] = useState('');
+
   const [result, setResult] = useState('');
-
-  useEffect(() => {
-    setCommID(id);
-  }, []);
-
-  const forceUpdate = useForceUpdate();
+  const [memberCount, setMemberCount] = useState('');
 
   useEffect(() => {
     console.log("id in getcommunitypage ",id)
     GetCommunityPageRequest({id: id, token: loginState.token}, dispatch)
       .then( result => {
-        setResult(result.data.name)  
-        forceUpdate();
+        setResult(result.data);
+        setMemberCount(Object.keys(result.data.members).length);
+        console.log(result.data)
       }
       );
-  }, [])
+  }, [id])
 
   return (
     <> 
@@ -48,7 +43,7 @@ function GetCommunityPage(props) {
         <Layout>
           <Content>
             <Col span={24} align="right">
-              <AboutCommunity key={result.description} description={result} members="123 (placeholder)" created="16.11.2021 (placeholder)" communityID={id}/>
+              <AboutCommunity image={result.iconUrl} description={result.name} members={memberCount} communityID={id}/>
             </Col>
           </Content>
         </Layout>
