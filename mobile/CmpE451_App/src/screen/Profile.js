@@ -20,6 +20,7 @@ import {
   DEFAULT_PROFILE_IMAGE,
 } from '../constants';
 import Loader from '../component/Loader';
+import MapView, {Marker} from 'react-native-maps';
 
 export default function Profile() {
   const navigation = useNavigation();
@@ -32,7 +33,7 @@ export default function Profile() {
 
   useEffect(async () => {
     const profile = await Request.getMyProfile();
-    setLocation(profile.location.description);
+    setLocation(profile.location);
     setBio(profile.bio);
     setBirthday(profile.birthday);
     setProfileImageUrl(profile.profilePhotoUrl);
@@ -40,13 +41,10 @@ export default function Profile() {
     setIsLoading(false);
   }, [navigation]);
 
-  function isEmpty(key) {
-    return key == null || key == '' || key == undefined;
-  }
   function navigateSettings() {
     navigation.navigate('ProfileSettings', {
       username,
-      _location: location,
+      _location: location.description,
       _birthday: birthday,
       _bio: bio,
       _profileImageUrl: profileImageUrl,
@@ -56,91 +54,104 @@ export default function Profile() {
     <Loader loading={'loading'}></Loader>
   ) : (
     <View style={styles.container}>
-      <SafeAreaView style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.titleBar}>
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
-              <Ionicons
-                name="ios-arrow-back"
-                size={24}
-                color="#52575D"></Ionicons>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={navigateSettings}>
-              <Ionicons name="settings" size={24} color="#52575D"></Ionicons>
-            </TouchableOpacity>
-          </View>
-          <View style={{alignSelf: 'center'}}>
-            <View style={styles.profileImage}>
-              <Image
-                source={{
-                  uri: profileImageUrl,
-                }}
-                style={styles.image}
-                resizeMode="center"></Image>
-            </View>
-          </View>
+      <View style={styles.titleBar}>
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={navigateSettings}>
+          <Ionicons name="settings" size={24} color="#52575D"></Ionicons>
+        </TouchableOpacity>
+      </View>
+      <View style={{alignSelf: 'center'}}>
+        <View style={styles.profileImage}>
+          <Image
+            source={{
+              uri: profileImageUrl,
+            }}
+            style={styles.image}
+            resizeMode="center"></Image>
+        </View>
+      </View>
 
-          <View style={styles.infoContainer}>
-            <View
-              style={{
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
-                User name:
-              </Text>
-              <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
-                {username}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
-                Bio:
-              </Text>
-              <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
-                {bio}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
-                Location:
-              </Text>
-              <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
-                {location}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
-                Birthday:
-              </Text>
-              <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
-                {birthday.substring(0, birthday.lastIndexOf(':') - 6)}
-              </Text>
-            </View>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+      <View style={styles.infoContainer}>
+        <View
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
+            User name:
+          </Text>
+          <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
+            {username}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
+            Bio:
+          </Text>
+          <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
+            {bio}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}>
+          <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
+            Location:
+          </Text>
+          <Text
+            style={[
+              styles.text,
+              {fontWeight: '200', fontSize: 36, padding: 10},
+            ]}>
+            {location.description}
+          </Text>
+          {/* <MapView
+            style={styles.map}
+            initialRegion={{
+              latitude: location.value.latitude,
+              longitude: location.value.longitude,
+              latitudeDelta: 0.004757,
+              longitudeDelta: 0.006866,
+            }}
+          /> */}
+        </View>
+        <View
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
+            Birthday:
+          </Text>
+          <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
+            {birthday.substring(0, birthday.lastIndexOf(':') - 6)}
+          </Text>
+        </View>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  map: {
+    position: 'absolute',
+    top: 10,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: 250,
+  },
   container: {
     flex: 1,
     backgroundColor: '#FFF',

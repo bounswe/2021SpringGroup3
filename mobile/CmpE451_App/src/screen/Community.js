@@ -18,6 +18,8 @@ import {PAGE_VARIABLES} from '../constants';
 import * as Client from '../services/BoxyClient';
 import UserList from '../component/UserList';
 import CommunityPosts from '../component/CommunityPosts';
+import MessageList from '../component/MessageList';
+
 export default function Community({navigation}) {
   const Tab = createMaterialTopTabNavigator();
 
