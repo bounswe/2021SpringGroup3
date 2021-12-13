@@ -21,7 +21,7 @@ import {
   ScrollView,
 } from 'react-native';
 
-export default function PostDetail({route, id, user, date, community, textFieldNames, numberFieldNames,
+export default function PostDetail({id, user, date, community, textFieldNames, numberFieldNames,
     dateFieldNames, linkFieldNames, locationFieldNames,
     isLiked, likeCount}) {
 
