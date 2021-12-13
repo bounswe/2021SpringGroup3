@@ -4,10 +4,12 @@ import {TEXT, PAGE_VARIABLES} from '../constants';
 import {AXIOS_CLIENT} from '../services/axiosCientService';
 import * as Requests from '../services/BoxyClient';
 import PostDetailComponent from '../component/PostDetail';
-
+import ScreenHeader from '../component/ScreenHeader';
+import {headerTextStyle} from '../theme/styles';
 
 export default function PostDetail({route, navigation}) {
 
+  const [id, setId] = useState([]);
   const [user, setUser] = useState([]);
   const [community, setCommunity] = useState([]);
   const [date, setDate] = useState([]);
@@ -57,6 +59,7 @@ export default function PostDetail({route, navigation}) {
         likeCount,
       } = JSON.parse(postDetailResponse);
       
+      setId(id);
       setUser(user);
       setDate(date);
       setCommunity(community)
@@ -71,8 +74,18 @@ export default function PostDetail({route, navigation}) {
     init();
   }, []);
 
+  const navigate = async () => {
+    navigation.navigate('Main');
+  };
+
   return(
-    <PostDetailComponent user={user} date={date} community={community} textFieldNames={textFieldNames} numberFieldNames={numberFieldNames}
-      dateFieldNames={dateFieldNames} linkFieldNames={linkFieldNames} locationFieldNames={locationFieldNames}
-      isLiked={isLiked} likeCount={likeCount}/>
+    <View>
+      <ScreenHeader
+          titleComponent={<Text style={headerTextStyle}></Text>}
+          navigate={navigate}
+        />
+      <PostDetailComponent id = {id} user={user} date={date} community={community} textFieldNames={textFieldNames} numberFieldNames={numberFieldNames}
+        dateFieldNames={dateFieldNames} linkFieldNames={linkFieldNames} locationFieldNames={locationFieldNames}
+        isLiked={isLiked} likeCount={likeCount}/>
+    </View>
   )};

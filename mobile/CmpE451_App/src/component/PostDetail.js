@@ -1,4 +1,4 @@
-import {View, Text, Linking} from 'react-native';
+import {View, Text, Linking, Alert} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -9,6 +9,9 @@ import * as Requests from '../services/BoxyClient';
 import {IconButton} from 'react-native-paper';
 import Geocoder from 'react-native-geocoding';
 import MapView, {Marker} from 'react-native-maps';
+import * as Client from '../services/BoxyClient';
+import Main from '../screen/Main.js';
+
 
 import {
   FlatList,
@@ -18,23 +21,14 @@ import {
   ToastAndroid,
   ScrollView,
 } from 'react-native';
+export default function PostDetail({id, user, date, community, textFieldNames, numberFieldNames,
+    dateFieldNames, linkFieldNames, locationFieldNames,
+    isLiked, likeCount}) {
 
-export default function PostDetail({
-  user,
-  date,
-  community,
-  textFieldNames,
-  numberFieldNames,
-  dateFieldNames,
-  linkFieldNames,
-  locationFieldNames,
-  isLiked,
-  likeCount,
-}) {
-  return (
-    <View style={styles.container}>
+    return (
+    <View style={styles.feedItem}>
       <View>
-        <Image source={{uri: user.imageUrl}} style={styles.avatar} />
+        <Image source={{uri: user.profilePhotoUrl}} style={styles.avatar} />
         <View
           style={{
             flexDirection: 'row',
@@ -148,20 +142,61 @@ export default function PostDetail({
                 <Text></Text>
                 <Text></Text>
               </View>
-            </View>
-          )}
-        />
+            )}
+          />
+          </View>
+
+          <View>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            data={locationFieldNames}
+            renderItem={({item,index}) => (
+              <View>
+                <View>
+                  <Text style={styles.fieldName}>{locationFieldNames[index].name}</Text>
+                  <Text style={styles.content}>{locationFieldNames[index].value.description}</Text>
+                </View>
+                <View>
+                  <MapView
+                    style={styles.map}
+                    initialRegion={{
+                        latitude: locationFieldNames[index]['value']['geo']['latitude'],
+                        longitude: locationFieldNames[index]['value']['geo']['longitude'],
+                        latitudeDelta: 0.004867,
+                        longitudeDelta: 0.006976,
+                      }}
+                    >
+                  </MapView>
+                  <Text></Text>
+                  <Text></Text>
+                  <Text></Text>
+                  <Text></Text>
+                  <Text></Text>
+                  <Text></Text>
+                  <Text></Text>
+                </View>
+              </View>
+            )}
+          />
+
       </View>
 
-      <View style={{flexDirection: 'row', top: 18}}>
-        <Icon
-          name="heart"
-          size={24}
-          color={isLiked ? COLORS.buttonColor : COLORS.unlikeButtonColor}
-          style={{marginRight: 8}}
-        />
-        <Text> {likeCount} likes </Text>
-      </View>
+        <View style={{flexDirection: 'row', top:10}}>
+                <View>
+                    <Icon
+                      name="heart"
+                      size={24}
+                      color={
+                        likeCount===0
+                          ? COLORS.unlikeButtonColor
+                          : "red"
+                      }
+                      style={{marginRight: 8}}
+                    />
+                </View>
+          
+          <Text> {likeCount} likes </Text>
+        </View>
     </View>
   );
 }
@@ -180,7 +215,6 @@ const styles = StyleSheet.create({
     padding: 20,
     flexDirection: 'column',
     marginVertical: 8,
-    minHeight: '100%',
     removeClippedSubviews: true,
   },
   avatar: {
@@ -205,20 +239,21 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   map: {
-    position: 'absolute',
-    top: 10,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: 250,
-  },
-  marker: {
-    height: 48,
-    width: 48,
-  },
-  region: {
-    color: '#fff',
-    lineHeight: 20,
-    margin: 20,
-  },
+  position: 'absolute',
+  top: 10,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  width: 180,
+
+},
+marker: {
+  height: 48,
+  width: 48,
+},
+region: {
+  color: '#fff',
+  lineHeight: 20,
+  margin: 20,
+},
 });

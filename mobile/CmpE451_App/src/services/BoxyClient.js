@@ -252,6 +252,56 @@ export const rejectJoinRequest = async ({communityId, userId}) => {
     });
 };
 
+export const acceptJoinModeratorsRequest = async ({communityId, userId}) => {
+  return fetch(
+    BASE_URL +
+      'communities/join/moderators/approve?communityId=' +
+      communityId +
+      '&userId=' +
+      userId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const rejectJoinModeratorsRequest = async ({communityId, userId}) => {
+  return fetch(
+    BASE_URL +
+      'communities/join/moderators/reject?communityId=' +
+      communityId +
+      '&userId=' +
+      userId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 export const kickMember = async ({communityId, userId}) => {
   return fetch(
     BASE_URL +
@@ -343,7 +393,54 @@ export const getOtherProfile = async id => {
       return JSON.parse(result);
     })
     .catch(error => console.log('error', error));
+});
+export const deleteAccount = async () => {
+  return fetch(BASE_URL + 'profile/settings', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return response;
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
 };
+
+export const getPosts = async ({communityId}) => {
+  return fetch(
+    BASE_URL +
+      'posts' +
+      '?communityId=' + communityId,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(async response => {
+      const status = response.status;
+      response = await response.json();
+      if (status === 200) {
+        return response;
+      } else {
+        ToastAndroid.show(response.message, ToastAndroid.SHORT);
+      }
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+
+});
 
 const returnResponse = async response => {
   const statusCode = response.status;

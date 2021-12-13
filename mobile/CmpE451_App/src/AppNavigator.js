@@ -26,6 +26,7 @@ import Community from './screen/Community';
 import OtherUserProfile from './screen/OtherUserProfile';
 import PendingRequests from './screen/PendingRequests';
 import UpdateCommunity from './screen/UpdateCommunity';
+import Settings from './screen/Settings';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {screenOptionStyle} from './theme/styles';
 import {COLORS} from './theme//colors';
@@ -101,6 +102,11 @@ export function Navigator() {
         options={{headerShown: false}}
         name="UpdateCommunity"
         component={UpdateCommunity}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="ProfileSettings"
+        component={ProfileSettings}
       />
     </Stack.Navigator>
   );
@@ -280,8 +286,8 @@ const DrawerNavigator = () => {
         options={drawerOptions}
       />
       <Drawer.Screen
-        name="ProfileSettings"
-        component={ProfileSettings}
+        name="Settings"
+        component={Settings}
         options={drawerOptions}
       />
     </Drawer.Navigator>

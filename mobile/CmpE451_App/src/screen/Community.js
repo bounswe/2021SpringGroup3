@@ -58,7 +58,7 @@ export default function Community({navigation}) {
         setIsPrivate(response.data.isPrivate);
         setIsMember(response.data.isMember);
         setIsModerator(response.data.isModerator);
-        setIsPendingMember(response.data.isPending);
+        setIsPendingMember(response.data.isPendingMember);
         setIsPendingModerator(response.data.isPendingModerator);
       } else {
         ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
@@ -144,7 +144,7 @@ export default function Community({navigation}) {
       communityId: PAGE_VARIABLES.communityId,
     });
     if (response.status === 200) {
-      setIsPendingMember(response.data.isPendingModerator);
+      setIsPendingModerator(response.data.isPendingModerator);
       setPendingModerators(response.data.pendingModerators);
     } else {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
@@ -211,18 +211,16 @@ export default function Community({navigation}) {
   const navigate = async () => {
     navigation.navigate('Main');
   };
-
   function CommunityPostsTab() {
     return <CommunityPosts />;
   }
-  
-  const navigatePendingMembers = () => {
+  const navigatePendingRequests = () => {
     navigation.navigate('PendingRequests', {
       pendingMembers: pendingMembers,
+      pendingModerators: pendingModerators,
       communityId: PAGE_VARIABLES.communityId,
     });
   };
-
   const navigateUpdateCommunity = () => {
     navigation.navigate('UpdateCommunity', {
       name: name,
@@ -289,7 +287,7 @@ export default function Community({navigation}) {
           <View style={{flexDirection: 'row'}}>
             <IconButton
               icon="bell"
-              onPress={() => navigatePendingMembers()}
+              onPress={() => navigatePendingRequests()}
               size={22}
               color="white"
               style={{marginHorizontal: 0}}

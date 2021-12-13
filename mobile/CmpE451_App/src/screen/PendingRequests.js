@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {Text, StyleSheet, ToastAndroid, View} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import UserList from '../component/UserList';
@@ -8,8 +8,10 @@ import * as client from '../services/BoxyClient';
 
 export default function PendingRequests({navigation, route}) {
   const Tab = createMaterialTopTabNavigator();
-  let {pendingMembers, communityId} = route.params;
+  let {pendingMembers, communityId, pendingModerators} = route.params;
   const [pendingMemberList, setPendingMemberList] = useState(pendingMembers);
+  const [pendingModeratorList, setPendingModeratorList] =
+    useState(pendingModerators);
 
   async function acceptPendingMember(userId) {
     let response = await client.acceptJoinRequest({
@@ -37,6 +39,32 @@ export default function PendingRequests({navigation, route}) {
     }
   }
 
+  async function acceptPendingModerator(userId) {
+    let response = await client.acceptJoinModeratorsRequest({
+      communityId: communityId,
+      userId: userId,
+    });
+    if (response.status === 200) {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+      setPendingModeratorList(response.data.pendingMembers);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  }
+
+  async function rejectPendingModerator(userId) {
+    let response = await client.rejectJoinModeratorsRequest({
+      communityId: communityId,
+      userId: userId,
+    });
+    if (response.status === 200) {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+      setPendingModeratorList(response.data.pendingMembers);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  }
+
   function joinCommunityRequestsTab() {
     return (
       <UserList
@@ -57,6 +85,26 @@ export default function PendingRequests({navigation, route}) {
     );
   }
 
+  function joinModeratorsRequestsTab() {
+    return (
+      <UserList
+        users={pendingModeratorList}
+        icons={[
+          {
+            name: 'check-circle-outline',
+            iconColor: 'green',
+            onPress: acceptPendingModerator,
+          },
+          {
+            name: 'close-circle-outline',
+            iconColor: 'red',
+            onPress: rejectPendingModerator,
+          },
+        ]}
+      />
+    );
+  }
+
   return (
     <View style={styles.container}>
       <ScreenHeader
@@ -69,6 +117,11 @@ export default function PendingRequests({navigation, route}) {
           key={'tab-1'}
           name={'Join Requests'}
           component={joinCommunityRequestsTab}
+        />
+        <Tab.Screen
+          key={'tab-2'}
+          name={'Moderator Requests'}
+          component={joinModeratorsRequestsTab}
         />
       </Tab.Navigator>
     </View>
