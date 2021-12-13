@@ -7159,6 +7159,13 @@
     "prop-types" "^15.7.2"
     "yargs" "^16.1.1"
 
+"react-native-view-more-text@^2.1.0":
+  "integrity" "sha512-zmYfgXfIKZDrGpzm/aTfiRn6dRp15MWvil6NsmZp9CTwaDonavgfiSxx5Yzn6ONB7HnIR2CZDyB7JBFUXIHNuA=="
+  "resolved" "https://registry.npmjs.org/react-native-view-more-text/-/react-native-view-more-text-2.1.0.tgz"
+  "version" "2.1.0"
+  dependencies:
+    "prop-types" "^15.5.7"
+
 "react-native@*", "react-native@^0.0.0-0 || ^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || ^0.65.0 || ^0.66.0 || 1000.0.0", "react-native@> 0.57", "react-native@>= 0.30.0", "react-native@>= 0.51", "react-native@>=0.35", "react-native@>=0.42.0", "react-native@>=0.47.1", "react-native@>=0.55", "react-native@>=0.57", "react-native@>=0.59", "react-native@>=0.61", "react-native@0.66.1":
   "integrity" "sha512-BBvytmqlOLL+bRcO0jBiYfg16lYRsYDOC8/5E+bpnhb3EGtU+YCQAYfszw6JL7Hfy0ftnQNP5yj8pt+vqMHXIA=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.66.1.tgz"

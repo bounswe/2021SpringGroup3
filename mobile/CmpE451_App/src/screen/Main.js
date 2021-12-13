@@ -20,6 +20,7 @@ export default function Main({navigation}) {
     const [refreshing, setRefreshing] = React.useState(false);
     const [refreshingCommunities, setRefreshingCommunities] = useState(false);
     const [refreshingPosts, setRefreshingPosts] = useState(false);
+    const [postList2, setPostList2] = useState([]);
 
     useEffect(() => {
         async function init() {
@@ -27,38 +28,35 @@ export default function Main({navigation}) {
             isMember: true,
         });
         setMemberCommunityList(_memberCommunityList);
-
         const tempPostList = []
-        for(let i = 0; i<memberCommunityList.length; i++){
-            const communityPostList = await client.getPosts({communityId: memberCommunityList[i].id});
+        for(let i = 0; i<_memberCommunityList.length; i++){
+            const communityPostList = await client.getPosts({communityId: _memberCommunityList[i].id});
             for(let j=0; j<communityPostList.length; j++){
               tempPostList.push(communityPostList[j])
             }
         };
         setPostList(tempPostList);
-        }
+      }
         init();
     }, []);
-    
-    const _onRefreshCommunities = async () => {
-      const _memberCommunityList = await client.getCommunities({isMember: true});
-      setMemberCommunityList(_memberCommunityList);
-    };
 
     const _onRefreshPosts = async () => {
-      const tempPostList = []
-        for(let i = 0; i<memberCommunityList.length; i++){
-            const communityPostList = await client.getPosts({communityId: memberCommunityList[i].id});
+      const _memberCommunityList = await client.getCommunities({
+            isMember: true,
+        });
+        setMemberCommunityList(_memberCommunityList);
+        const tempPostList = []
+        for(let i = 0; i<_memberCommunityList.length; i++){
+            const communityPostList = await client.getPosts({communityId: _memberCommunityList[i].id});
             for(let j=0; j<communityPostList.length; j++){
               tempPostList.push(communityPostList[j])
             }
         };
-      setPostList(tempPostList);
+        setPostList(tempPostList);
     };
 
     const onRefresh = React.useCallback(() => {
       setRefreshing(true);
-      _onRefreshCommunities();
       _onRefreshPosts();
       wait(2000).then(() => setRefreshing(false));
     }, []);
@@ -99,6 +97,7 @@ export default function Main({navigation}) {
               }
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}>
+                
                 
           </FlatList>
         </View>

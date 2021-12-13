@@ -12,6 +12,7 @@ import MapView, {Marker} from 'react-native-maps';
 import * as Client from '../services/BoxyClient';
 import Main from '../screen/Main.js';
 
+
 import {
   FlatList,
   Image,
@@ -21,7 +22,7 @@ import {
   ScrollView,
 } from 'react-native';
 
-export default function PostDetail({id, user, date, community, textFieldNames, numberFieldNames,
+export default function PostDetail({navigation, id, user, date, community, textFieldNames, numberFieldNames,
     dateFieldNames, linkFieldNames, locationFieldNames,
     isLiked, likeCount}) {
 
@@ -160,8 +161,8 @@ export default function PostDetail({id, user, date, community, textFieldNames, n
                     initialRegion={{
                         latitude: locationFieldNames[index]['value']['geo']['latitude'],
                         longitude: locationFieldNames[index]['value']['geo']['longitude'],
-                        latitudeDelta: 0.004757,
-                        longitudeDelta: 0.006866,
+                        latitudeDelta: 0.004867,
+                        longitudeDelta: 0.006976,
                       }}
                     >
                   </MapView>
@@ -179,7 +180,7 @@ export default function PostDetail({id, user, date, community, textFieldNames, n
 
       </View>
 
-        <View style={{flexDirection: 'row', top:5}}>
+        <View style={{flexDirection: 'row', top:10}}>
           <TouchableOpacity
               onPress={()=>{pressedLike()}}>
                 <View>
@@ -201,7 +202,7 @@ export default function PostDetail({id, user, date, community, textFieldNames, n
         <IconButton
             icon="delete"
             size={30}
-            color="red"
+            color="#b22222"
             style={{alignSelf: 'flex-end', top:-30}}
             onPress={()=>pressedDelete()}
           />
@@ -247,7 +248,7 @@ const styles = StyleSheet.create({
   left: 0,
   right: 0,
   bottom: 0,
-  width: 250,
+  width: 180,
 
 },
 marker: {

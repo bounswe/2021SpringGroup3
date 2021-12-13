@@ -381,6 +381,7 @@ export const deletePost = async ({postId}) => {
     },
   })
     .then(response => {
+      console.log(response);
       return returnResponse(response);
     })
     .catch(error => {
