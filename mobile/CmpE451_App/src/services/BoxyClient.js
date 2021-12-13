@@ -373,6 +373,24 @@ export const getPostDetail = async ({communityId, postId}) => {
     .catch(error => console.log('error', error));
 };
 
+export const deleteAccount = async () => {
+  return fetch(BASE_URL + 'profile/settings', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return response;
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 export const getPosts = async ({communityId}) => {
   return fetch(
     BASE_URL +
