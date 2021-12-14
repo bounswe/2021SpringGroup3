@@ -67,7 +67,7 @@ const ProfileView = (props) => {
                     <Col span={24}>
                         <Space size={'middle'}>
                             <strong>Location</strong>
-                            <Text></Text>
+                            <Text>{props.latitude + " " + props.longitude}</Text>
                         </Space>
                     </Col>
                 </Card>
