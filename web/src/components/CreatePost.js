@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router";
-import { Row, Col, Form, Input, Typography, Button, Radio, Select, DatePicker, Card } from 'antd';
+import { Row, Col, Form, Input, Typography, Button, Radio, Select, DatePicker, Card, message } from 'antd';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -12,52 +12,49 @@ import { GetPostTypes as GetPostTypesRequest } from '../utils/helper';
 import { GetPostTypeDetail as GetPostTypeDetailRequest } from '../utils/helper';
 import MapPicker from 'react-google-map-picker'
 
-const DefaultLocation = { lat: 40, lng: 29};
+const DefaultLocation = { lat: 41, lng: 29};
 const DefaultZoom = 10;
 
 const { Text, Title } = Typography;
 const { Option } = Select;
 
 const CreatePost = (props) => {
-
-  
-
-    //react-map-picker
-    const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
-    const [location, setLocation] = useState(defaultLocation);
-    const [zoom, setZoom] = useState(DefaultZoom);
-    function handleChangeLocation (lat, lng){
-      setLocation({lat:lat, lng:lng});
-    }
-    
-    function handleChangeZoom (newZoom){
-      setZoom(newZoom);
-    }
-  
-    function handleResetLocation(){
-      setDefaultLocation({ ... DefaultLocation});
-      setZoom(DefaultZoom);
-    }
-    const MapPickerElement =                 
-      <div>
-        <button onClick={handleResetLocation}>Reset Location</button><br/>
-        <label>Latitute:</label><input type='text' value={location.lat} disabled/><br/>
-        <label>Longitute:</label><input type='text' value={location.lng} disabled/><br/>
-        <label>Zoom:</label><input type='text' value={zoom} disabled/><br/>
-        
-  
-        <MapPicker defaultLocation={defaultLocation}
-          zoom={zoom}
-          mapTypeId="roadmap"
-          style={{height:'700px'}}
-          onChangeLocation={handleChangeLocation} 
-          onChangeZoom={handleChangeZoom}
-          apiKey='AIzaSyBT4whK0_2fcQEvS_u2nmnvOXZH_9sAuzE'/>
-      </div>
-
   const loginState = useSelector((state) => state.login);
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  //react-map-picker
+  const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
+  const [location, setLocation] = useState(defaultLocation);
+  const [zoom, setZoom] = useState(DefaultZoom);
+  function handleChangeLocation (lat, lng){
+    setLocation({lat:lat, lng:lng});
+  }
+  
+  function handleChangeZoom (newZoom){
+    setZoom(newZoom);
+  }
+
+  function handleResetLocation(){
+    setDefaultLocation({ ... DefaultLocation});
+    setZoom(DefaultZoom);
+  }
+  const MapPickerElement =                 
+    <div>
+      <button onClick={handleResetLocation}>Reset Location</button><br/>
+      <label>Latitute:</label><input type='text' value={location.lat} disabled/><br/>
+      <label>Longitute:</label><input type='text' value={location.lng} disabled/><br/>
+      <label>Zoom:</label><input type='text' value={zoom} disabled/><br/>
+      
+
+      <MapPicker defaultLocation={defaultLocation}
+        zoom={zoom}
+        mapTypeId="roadmap"
+        style={{height:'700px'}}
+        onChangeLocation={handleChangeLocation} 
+        onChangeZoom={handleChangeZoom}
+        apiKey='AIzaSyBT4whK0_2fcQEvS_u2nmnvOXZH_9sAuzE'/>
+    </div>
 
   const { communityId } = useParams();
 
@@ -100,7 +97,6 @@ const CreatePost = (props) => {
       locationFields: []
     }
     for (let key of Object.keys(values)) {
-      console.log(key, textFieldsNames, values[key])
       if (textFieldsNames.includes(key)) {
         body.textFields.push({name: key, value: values[key]})
       } else if (numberFieldsNames.includes(key)) {
@@ -108,13 +104,14 @@ const CreatePost = (props) => {
       } else if (linkFieldsNames.includes(key)) {
         body.linkFields.push({name: key, value: values[key]})
       } else if (dateFieldsNames.includes(key)) {
-        body.dateFields.push({name: key, value: values[key]})
+        body.dateFields.push({name: key, value: values[key]._d})
       } else if (locationFieldsNames.includes(key)) {
         body.locationFields.push({description: key, geo: {longitude: location.lng, latitude: location.lat}})
       }
     }
+
+    console.log(body)
     const result = await CreatePostRequest({ body: body, token: loginState.token }, dispatch);
-    console.log(result)
     if (result && result.data) {
       navigate(`/communities/${result.data.community.id}/posts/${result.data.post.id}`)
     } else {
@@ -136,8 +133,8 @@ const CreatePost = (props) => {
     setTextFieldsNames([])
     setNumberFieldsNames([]);
     setLinkFieldsNames([]);
-    setDateFields([]);
-    setLocationFields([]);
+    setDateFieldsNames([]);
+    setLocationFieldsNames([]);
   }
 
   useEffect(() => {
@@ -170,8 +167,8 @@ const CreatePost = (props) => {
         setTextFieldsNames([...result.data.textFieldNames]);
         setNumberFieldsNames([...result.data.numberFieldNames]);
         setLinkFieldsNames([...result.data.linkFieldNames]);
-        setDateFields([...result.data.dateFieldNames]);
-        setLocationFields([...result.data.locationFieldNames]);
+        setDateFieldsNames([...result.data.dateFieldNames]);
+        setLocationFieldsNames([...result.data.locationFieldNames]);
 
         setTextFields(result.data.textFieldNames.map(name => {
           return (
@@ -225,7 +222,7 @@ const CreatePost = (props) => {
                   name={name}
                   required
                   rules={[{ required: true, message: `Please enter ${name}` }]}>
-                  <DatePicker />
+                  <DatePicker format="MMM Do YY"/>
                 </Form.Item>
               </Col>
             </Row>
@@ -236,7 +233,12 @@ const CreatePost = (props) => {
             <Row key={name}>
               <Col span={24}><Text strong>{name}</Text></Col>
               <Col span={24}>
-                {MapPickerElement}
+                <Form.Item 
+                  name="location"
+                  required 
+                >
+                  {MapPickerElement}
+                </Form.Item>
               </Col>
             </Row>
           )

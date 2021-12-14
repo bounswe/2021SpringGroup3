@@ -4,7 +4,8 @@ import { login, logout, register,
   createPost, getCommunityPosts, getPostPage,
   createPostType, getPostTypes, getPostTypeDetail, getProfile,
   getProfileSettings,
-  postProfileSettings } from '../store/axios';
+  postProfileSettings, 
+  getProfileOther } from '../store/axios';
 
 export const Login = async (info, dispatch) => {
 
@@ -152,6 +153,15 @@ export const GetPostPage = async (info, dispatch) => {
 
 export const GetProfilePage = async (info, dispatch) => {
   const response = await getProfile(info);
+  if(response.status === 200 || response.status === 201) {
+    return response;
+  } else {
+    return {}
+  }
+}
+
+export const GetProfileOtherPage = async (info, dispatch) => {
+  const response = await getProfileOther(info);
   if(response.status === 200 || response.status === 201) {
     return response;
   } else {
