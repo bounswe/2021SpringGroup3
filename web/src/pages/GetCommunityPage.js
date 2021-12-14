@@ -1,25 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router";
+
 import { Layout, Col, Row } from 'antd';
 import NavBar from '../components/NavBar';
 import AboutCommunity from '../components/AboutCommunity';
 import PostView from '../components/PostView';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useParams, useNavigate } from "react-router";
+import { useSelector, useDispatch } from 'react-redux';
 import { GetCommunityPage as GetCommunityPageRequest } from "../utils/helper";
 import { GetCommunityPosts as GetCommunityPostsRequest } from "../utils/helper";
 
+import { Layout, Col  } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
+
+function useForceUpdate(){
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue(value => value + 1); // update the state to force render
+}
 
 function GetCommunityPage(props) {
 
   const loginState = useSelector((state) => state.login);
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { id } = useParams();
-
   const [result, setResult] = useState('');
 
   const [posts, setPosts] = useState('');

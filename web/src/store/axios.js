@@ -11,7 +11,12 @@ import {
   GET_POSTS_ENDPOINT,
   CREATE_POSTTYPE_ENDPOINT,
   GET_POSTTYPES_ENDPOINT,
-  GET_POSTTYPE_DETAIL_ENDPOINT
+  GET_POSTTYPE_DETAIL_ENDPOINT,
+  GET_POST_PAGE_ENDPOINT,
+  CREATE_POSTTYPE_ENDPOINT,
+  GET_PROFILE_ENDPOINT,
+  GET_PROFILE_SETTINGS_ENDPOINT,
+  POST_PROFILE_SETTINGS_ENDPOINT
 } from './urls';
 
 export async function login(info) {
@@ -185,6 +190,7 @@ export async function getCommunityPage(info) {
   }
 }
 
+
 export async function createPost(info, token) {
   try {
     const header = {headers: {
@@ -195,6 +201,7 @@ export async function createPost(info, token) {
     }
     const body = { ...info }
     const response = await axios.post(CREATE_POST_ENDPOINT, { ...body }, { ...header });
+
     return response;
   } catch (error) {
     console.log(error);
@@ -202,6 +209,28 @@ export async function createPost(info, token) {
     return error
   }
 }
+    
+ 
+
+export async function getProfile(info) {
+  try {
+    const header = {headers: {
+      'x-platform': 'WEB',
+      'accept': '*/*',
+      'authorization': `${info.token}`
+      },
+    }
+
+    const response = await axios.get(GET_PROFILE_ENDPOINT, { ...header });
+    console.log(response)
+    return response;
+  } catch (error) {
+    console.log(error);
+    
+    return error
+  }
+}
+    
 
 export async function getCommunityPosts(info) {
   try {
@@ -231,6 +260,42 @@ export async function getPostPage(info) {
     }
     const response = await axios.get(GET_POST_PAGE_ENDPOINT+"?communityId="+info.communityId+"&postId="+info.postId, { ...header });
     console.log(response)
+    return response;
+  } catch (error) {
+    console.log(error);
+    
+    return error
+  }
+  
+
+export async function getProfileSettings(info) {
+  try {
+    const header = {headers: {
+      'x-platform': 'WEB',
+      'accept': '*/*',
+      'authorization': `${info.token}`
+      },
+    }
+    const response = await axios.get(GET_PROFILE_SETTINGS_ENDPOINT, { ...header });
+    console.log(response)
+    return response;
+  } catch (error) {
+    console.log(error);
+    
+    return error
+  }
+}
+
+export async function postProfileSettings(info, token) {
+  try {
+    const header = {headers: {
+      'X-Platform': 'WEB',
+      'accept': '*/*',
+      'authorization': `${token}`
+      },
+    }
+    const body = { ... info }
+    const response = await axios.post(POST_PROFILE_SETTINGS_ENDPOINT, { ...body }, { ...header });
     return response;
   } catch (error) {
     console.log(error);
