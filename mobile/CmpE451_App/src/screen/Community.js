@@ -257,26 +257,28 @@ export default function Community({navigation}) {
   }
   function membersTab() {
     return (
-      <View style={styles.container}>
-        <View style={styles.sectionHeaderContainer}>
-          <Text style={styles.sectionText}>Members</Text>
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.sectionHeaderContainer}>
+            <Text style={styles.sectionText}>Members</Text>
+          </View>
+          <UserList
+            onPress={selectUser}
+            users={members}
+            icons={
+              isModerator
+                ? [
+                    {
+                      name: 'karate',
+                      iconColor: COLORS.buttonColor,
+                      onPress: showKickMemberAlert,
+                    },
+                  ]
+                : []
+            }
+          />
         </View>
-        <UserList
-          onPress={selectUser}
-          users={members}
-          icons={
-            isModerator
-              ? [
-                  {
-                    name: 'karate',
-                    iconColor: COLORS.buttonColor,
-                    onPress: showKickMemberAlert,
-                  },
-                ]
-              : []
-          }
-        />
-      </View>
+      </ScrollView>
     );
   }
   return (

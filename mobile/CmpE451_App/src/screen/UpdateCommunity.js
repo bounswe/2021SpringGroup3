@@ -56,6 +56,7 @@ export default function CreateCommunity({navigation, route}) {
       <ScreenHeader
         titleComponent={<Text style={headerTextStyle}>Update Community</Text>}
         navigate={navigation.goBack}
+        iconName="arrow-left-circle"
       />
       <ScrollView
         contentContainerStyle={{flexGrow: 1}}
