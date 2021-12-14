@@ -1,7 +1,7 @@
-import React, { useParams, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Select } from 'antd';
+import { Select } from 'antd';
 import { GetCommunities as GetCommunitiesRequest } from '../utils/helper';
 
 const { Option } = Select;
@@ -33,7 +33,7 @@ const GetCommunities = (props) => {
     return ( 
         <Select 
             defaultValue="Communities" 
-            style={{ width: 120 }} 
+            style={{ width: 180, marginBottom: "30px"}} 
             options={options} 
             onSelect={handleChange}
         >

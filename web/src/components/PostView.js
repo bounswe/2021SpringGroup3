@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { Card, Row, Col, Button, Typography, Space, Avatar } from 'antd';
 import '../App.css';
 import FieldContent from './FieldContent';
@@ -12,16 +13,48 @@ import 'antd/dist/antd.css';
 
 const { Text } = Typography;
 
-const Post = (props) => {
+const PostView = (props) => {
 
-  console.log(props)
+  const navigate = useNavigate()
 
-  let contentFields = props.postObj.fieldContents.map((fieldContent) => {
+  console.log(props.postObj)
+
+  props.postObj.postType = {
+    color: '#6e74dc',
+    name: 'Post Type',
+    id: ''
+  }
+
+  let contentFields = [];
+
+  contentFields.push(... props.postObj.textFieldNames.map((fieldContent) => {
+    fieldContent.type = 'text';
     return <FieldContent fieldContent={fieldContent} />
-  })
+  }))
 
-  let dataTypeStyle = {
-    backgroundColor: props.postObj.dataType.color,
+  contentFields.push(... props.postObj.numberFieldNames.map((fieldContent) => {
+    fieldContent.type = 'number';
+    return <FieldContent fieldContent={fieldContent} />
+  }))
+
+  contentFields.push(... props.postObj.dateFieldNames.map((fieldContent) => {
+    fieldContent.type = 'date';
+    return <FieldContent fieldContent={fieldContent} />
+  }))
+
+  contentFields.push(... props.postObj.linkFieldNames.map((fieldContent) => {
+    fieldContent.type = 'link';
+    return <FieldContent fieldContent={fieldContent} />
+  }))
+
+  contentFields.push(... props.postObj.locationFieldNames.map((fieldContent) => {
+    fieldContent.type = 'location';
+    return <FieldContent fieldContent={fieldContent} />
+  }))
+
+  let postTypeStyle = {
+    backgroundColor: props.postObj.postType.color,
+    color: '#ffffff',
     paddingLeft: '8px',
     paddingRight: '8px',
     borderRadius: '20px',
@@ -47,20 +80,24 @@ const Post = (props) => {
     setLiked(false)
   }
 
-  const getPost = (postId) => {
-    console.log(`Trying to open post information, send GET request to post/${postId}`);
+  const getPost = (communityId, postId) => {
+    console.log(`Trying to open post information, send GET request to /communities/${communityId}/posts/${postId}`);
+    navigate(`/communities/${communityId}/posts/${postId}`)
   }
 
   const getUser = (userId) => {
     console.log(`Trying to open user profile, send GET request to users/${userId}`)
+    navigate(`/profile/${userId}`)
   }
 
   const getCommunity = (communtiyId) => {
     console.log(`Trying to open community, send GET request to communitites/${communtiyId}`)
+    navigate(`/communities/${communtiyId}`)
   }
 
-  const getDataType = (dataTypeId) => {
-    console.log(`Trying to open posts with data types, send GET request to posts/?dataType=${dataTypeId}`)
+  const getPostType = (postTypeId) => {
+    console.log(`Trying to open posts with data types, send GET request to posts/?postType=${postTypeId}`)
+    //navigate(`/post-types/detail/${postTypeId}`)
   }
 
   const reportPost = (postId) => {
@@ -74,14 +111,14 @@ const Post = (props) => {
           <Space size={'middle'}>
             <Col>
 
-              <Avatar size={50} style={{cursor: 'pointer'}} src={props.postObj.profilePicture} onClick={() => getUser(props.postObj.userId)} />
+              <Avatar size={50} style={{cursor: 'pointer'}} src={props.postObj.user.profilePhotoUrl} onClick={() => getUser(props.postObj.user.id)} />
             </Col>
             <Col>
               <Row>
                 <Col>
                   <Space size={'large'}>
                     <h3><strong
-                      onClick={() => getPost(props.postObj.id)}
+                      onClick={() => getPost(props.postObj.community.id, props.postObj.id)}
                       style={{ cursor: 'pointer' }}>
                       {props.postObj.title}
                     </strong></h3>
@@ -94,24 +131,24 @@ const Post = (props) => {
                     <Space size={'small'}>
                       Posted by
                       <strong
-                        onClick={() => getUser(props.postObj.userId)}
+                        onClick={() => getUser(props.postObj.user.id)}
                         style={{ cursor: 'pointer' }}>
-                        {props.postObj.username}
+                        {props.postObj.user.username}
                       </strong>
                     </Space>
                     <Space size={'small'}>
                       • Posted in
                       <strong
-                        onClick={() => getCommunity(props.postObj.communityId)}
+                        onClick={() => getCommunity(props.postObj.community.id)}
                         style={{ cursor: 'pointer' }}>
-                        {props.postObj.communityName}
+                        {props.postObj.community.name}
                       </strong>
                     </Space>
-                    • {props.postObj.createdAt}ago • 
+                    • {props.postObj.date} • 
                     <strong
-                      style={dataTypeStyle}
-                      onClick={() => getDataType(props.postObj.dataType.id)}>
-                      {props.postObj.dataType.name}
+                      style={postTypeStyle}
+                      onClick={() => getPostType(props.postObj.postType.id)}>
+                      {props.postObj.postType.name}
                     </strong>
                   </Space>
                 </Col>
@@ -137,7 +174,7 @@ const Post = (props) => {
           </Col>
 
           <Col span={8} align="middle">
-            <Button type="text" icon={<CommentOutlined />} onClick={() => getPost(props.postObj.communityId)}></Button>
+            <Button type="text" icon={<CommentOutlined />} onClick={() => getPost(props.postObj.community.id, props.postObj.id)}></Button>
             {props.postObj.commentCount} Comments
           </Col>
 
@@ -151,4 +188,4 @@ const Post = (props) => {
   )
 }
 
-export default Post
+export default PostView

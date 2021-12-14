@@ -12,6 +12,8 @@ function CreateCommunityPage() {
     
       <Layout>
         <Header style={{backgroundColor: '#3949ab'}}><NavBar /></Header>
+
+
         <Layout>
           <Content><CreateCommunity /></Content>
         </Layout>

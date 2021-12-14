@@ -6,6 +6,9 @@ import {
   CREATE_COMMUNITY_ENDPOINT,
   GET_COMMUNITIES_ENDPOINT,
   GET_COMMUNITY_PAGE_ENDPOINT,
+  GET_POSTS_ENDPOINT,
+  CREATE_POSTTYPE_ENDPOINT,
+  GET_POST_PAGE_ENDPOINT,
   CREATE_POSTTYPE_ENDPOINT,
   GET_PROFILE_ENDPOINT,
   GET_PROFILE_SETTINGS_ENDPOINT,
@@ -146,6 +149,7 @@ export async function getCommunityPage(info) {
   }
 }
 
+
 export async function getProfile(info) {
   try {
     const header = {headers: {
@@ -154,6 +158,7 @@ export async function getProfile(info) {
       'authorization': `${info.token}`
       },
     }
+
     const response = await axios.get(GET_PROFILE_ENDPOINT, { ...header });
     console.log(response)
     return response;
@@ -163,6 +168,43 @@ export async function getProfile(info) {
     return error
   }
 }
+  
+
+export async function getCommunityPosts(info) {
+  try {
+    const header = {headers: {
+      'x-platform': 'WEB',
+      'accept': '*/*',
+      'authorization': `${info.token}`
+      },
+    }
+    const response = await axios.get(GET_POSTS_ENDPOINT+"?communityId="+info.id, { ...header });
+    console.log(response)
+    return response;
+  } catch (error) {
+    console.log(error);
+    
+    return error
+  }
+}
+
+export async function getPostPage(info) {
+  try {
+    const header = {headers: {
+      'x-platform': 'WEB',
+      'accept': '*/*',
+      'authorization': `${info.token}`
+      },
+    }
+    const response = await axios.get(GET_POST_PAGE_ENDPOINT+"?communityId="+info.communityId+"&postId="+info.postId, { ...header });
+    console.log(response)
+    return response;
+  } catch (error) {
+    console.log(error);
+    
+    return error
+  }
+  
 
 export async function getProfileSettings(info) {
   try {

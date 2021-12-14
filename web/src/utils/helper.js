@@ -1,10 +1,11 @@
 import * as loginAction from "../store/actions/loginActions";
 import { login, logout, register,
   createCommunity, getCommunities, getCommunityPage,
-  createPostType, 
+  getCommunityPosts, createPostType, getPostPage, createPostType, 
   getProfile,
   getProfileSettings,
-  postProfileSettings} from '../store/axios';
+  postProfileSettings } from '../store/axios';
+
 
 export const Login = async (info, dispatch) => {
 
@@ -82,7 +83,33 @@ export const GetCommunityPage = async (info, dispatch) => {
   if(response.status === 200 || response.status === 201){
     console.log(response.data);
     return response
-    //  dispatch(loginAction.logoutSuccess());
+    // dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const GetCommunityPosts = async (info, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await getCommunityPosts(info);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data)
+    return response
+    // dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const GetPostPage = async (info, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await getPostPage(info);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data)
+    return response
+    // dispatch(loginAction.logoutSuccess());
   }else{
     // dispatch(loginAction.logoutFailure());
     return {}

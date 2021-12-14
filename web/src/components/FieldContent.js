@@ -15,56 +15,67 @@ const { Text } = Typography;
 
 const FieldContent = (props) => {
 
-  console.log(props)
-
   const renderContentTypeSwitch = () => {
+
     switch (props.fieldContent.type) {
       case 'text':
         return <>
-        <Space size={'small'} align="start">
-          <strong>{props.fieldContent.title}</strong>
-          {props.fieldContent.content}
+          <Space size={'small'} align="start">
+            <strong>{props.fieldContent.name}</strong>
+            {props.fieldContent.value}
           </Space>
         </>
       case 'number':
         return <>
-        <Space size={'small'} align="start">
-          <strong>{props.fieldContent.title}</strong>
-          {props.fieldContent.content}
+          <Space size={'small'} align="start">
+            <strong>{props.fieldContent.name}</strong>
+            {props.fieldContent.value}
           </Space>
         </>
-      case 'imageURL':
-        return <>
-        <Space size={'small'} align="start">
-          <strong>{props.fieldContent.title}</strong>
-          <Image
-          width={300}
-          src={props.fieldContent.content}
-        />
-        </Space>
-        </>
+      // case 'imageURL':
+      //   return <>
+      //   <Space size={'small'} align="start">
+      //     <strong>{props.fieldContent.name}</strong>
+      //     <Image
+      //     width={300}
+      //     src={props.fieldContent.value}
+      //   />
+      //   </Space>
+      //   </>
       case 'location':
         return <>
-        <Space size={'small'} align="start">
-        <strong>{props.fieldContent.title}</strong>
-          {props.fieldContent.content}
-        </Space>
-          
+          <Space size={'small'} align="start">
+            <strong>{props.fieldContent.name}</strong>
+            {props.fieldContent.description}
+          </Space>
+
         </>
       case 'date':
         return <>
           <Space size={'small'} align="start">
-            <strong>{props.fieldContent.title}</strong>
-            {props.fieldContent.content}
+            <strong>{props.fieldContent.name}</strong>
+            {props.fieldContent.value}
           </Space>
-          </>
-      case 'link':
-        return <>
-        <Space size={'small'} align="start">
-        <strong>{props.fieldContent.title}</strong>
-          <a href={props.fieldContent.content} target="_blank">{props.fieldContent.content}</a>
-        </Space>
         </>
+      case 'link':
+        if (props.fieldContent.value.slice(-4) == 'jpeg' || props.fieldContent.value.slice(-3) == 'png' || props.fieldContent.value.slice(-3) == 'jpg') {
+          return <>
+            <Space size={'small'} align="start">
+              <strong>{props.fieldContent.name}</strong>
+              <Image
+                width={300}
+                src={props.fieldContent.value}
+              />
+            </Space>
+          </>
+        } else {
+          return <>
+            <Space size={'small'} align="start">
+              <strong>{props.fieldContent.name}</strong>
+              <a href={props.fieldContent.value} target="_blank">{props.fieldContent.value}</a>
+            </Space>
+          </>
+        }
       default:
         return <></>
     }

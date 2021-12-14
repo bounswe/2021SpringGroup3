@@ -1,8 +1,5 @@
 import React from 'react';
 import { Col, Descriptions, Button } from 'antd';
-
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
 
 import 'antd/dist/antd.css';
@@ -14,7 +11,7 @@ const AboutCommunity = (props) => {
     console.log(props)
 
     return ( 
-        <div style={{width: "20vw"}}>
+        <div style={{margin: '20px'}}>
             <Col span={24} align="middle">
                 <Button shape="round" type='primary'>Follow Community</Button>
             </Col>
@@ -25,6 +22,9 @@ const AboutCommunity = (props) => {
             </Descriptions>
             <Col span={24} align="middle">
                 <Button shape="round" type='primary' onClick={() => navigate(`/createPostType`,{ state: { id: props.communityID }})}> Create Post Type</Button>
+            </Col>
+            <Col span={24} align="middle">
+                <Button shape="round" type='primary' onClick={() => navigate(`/createPost`,{ state: { id: props.communityID }})}> Create Post</Button>
             </Col>
         </div>
      );

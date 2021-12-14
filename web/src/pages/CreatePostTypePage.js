@@ -13,9 +13,10 @@ function CreatePostTypePage(props) {
 
   return (
     <>
-    
       <Layout>
         <Header style={{backgroundColor: '#3949ab'}}><NavBar /></Header>
+
+
         <Layout>
           <Content><CreatePostType id={id}/></Content>
         </Layout>
