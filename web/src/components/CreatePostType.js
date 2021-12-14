@@ -11,10 +11,18 @@ const types = [
   { label: 'number', value: 'number' },
   { label: 'link', value: 'link' },
   { label: 'date', value: 'date' },
-  { label: 'lacation', value: 'location' },
+  { label: 'location', value: 'location' },
 ];
 
 const CreatePostType = (props) => {
+
+  const buttonStyle = {
+    backgroundColor: '#6f74dd',
+    borderColor: '#6f74dd',
+    color: '#ffffff',
+    cursor: 'pointer',
+  }
+
   const loginState = useSelector((state) => state.login);
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -92,7 +100,7 @@ const CreatePostType = (props) => {
           </Form.List>
           <Form.Item >
             <Col span={24} align="middle">
-              <Button type="primary" shape="round" htmlType="submit">
+              <Button style={buttonStyle} type="primary" shape="round" htmlType="submit">
                 Create Post Type
               </Button>
             </Col>

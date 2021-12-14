@@ -16,5 +16,6 @@ export const GET_POSTTYPES_ENDPOINT = `${BASE_URL}post-types`;
 export const GET_POSTTYPE_DETAIL_ENDPOINT = `${BASE_URL}post-types/detail`;
 
 export const GET_PROFILE_ENDPOINT = `${BASE_URL}profile`;
+export const GET_PROFILE_OTHER_ENDPOINT = `${BASE_URL}profile/other`;
 export const GET_PROFILE_SETTINGS_ENDPOINT = `${BASE_URL}profile/settings`;
 export const POST_PROFILE_SETTINGS_ENDPOINT = `${BASE_URL}profile/settings`;

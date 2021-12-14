@@ -11,7 +11,7 @@ import { PostProfileSettings as PostProfileSettingsRequest} from '../utils/helpe
 
 import MapPicker from 'react-google-map-picker'
 
-const DefaultLocation = { lat: 10, lng: 106};
+const DefaultLocation = { lat: 41, lng: 29};
 const DefaultZoom = 10;
 
 const { Text, Title } = Typography;
@@ -22,6 +22,8 @@ const ProfileEdit = (props) => {
   const loginState = useSelector((state) => state.login);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [image64,setImage64] = useState('');
 
   //react-map-picker
   const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
@@ -41,10 +43,10 @@ const ProfileEdit = (props) => {
   }
   const MapPickerElement =                 
     <div>
-      <button onClick={handleResetLocation}>Reset Location</button>
-      <label>Latitute:</label><input type='text' value={location.lat} disabled/>
-      <label>Longitute:</label><input type='text' value={location.lng} disabled/>
-      <label>Zoom:</label><input type='text' value={zoom} disabled/>
+      <button onClick={handleResetLocation}>Reset Location</button><br/>
+      <label>Latitute</label><input type='text' value={location.lat} disabled/><br/>
+      <label>Longitute</label><input type='text' value={location.lng} disabled/><br/>
+      <label>Zoom</label><input type='text' value={zoom} disabled/><br/>
       
       <MapPicker defaultLocation={defaultLocation}
         zoom={zoom}
@@ -79,17 +81,18 @@ const ProfileEdit = (props) => {
   }
 
   const onFinish = async (values) => {
-
+    profileBody.profilePhoto.value = image64;
     profileBody.profilePhoto.isPublic = values.isProfilePicturePublic == true;
 
     profileBody.bio.value = values.bio;
     profileBody.bio.isPublic = values.isBioPublic == true;
 
-    profileBody.birthday.value = values.birthday;
+    profileBody.birthday.value = values.birthday._d;
     profileBody.birthday.isPublic = values.isBirthdayPublic == true;
 
+    profileBody.location.value.latitude = location.lat;
+    profileBody.location.value.longitude = location.lng;
     profileBody.location.isPublic = values.isLocationPublic == true;
-
     await PostProfileSettingsRequest(profileBody, loginState.token, dispatch);
 
     console.log('Success:', profileBody);
@@ -116,7 +119,7 @@ const ProfileEdit = (props) => {
           <Col span={12}>
             <Title level={4}>Profile Settings</Title>
           </Col>
-          <Col span={11} offset={1}>
+          <Col span={6} offset={1}>
             <Title level={4}>Privacy Settings</Title>
           </Col>
         </Row>
@@ -127,8 +130,9 @@ const ProfileEdit = (props) => {
           onFinishFailed={onFinishFailed}
         >
           <Row>
-            <Text strong>Profile Picture</Text>
+            
             <Col span={12}>
+              <Col span={24}><Text strong>Profile Picture</Text></Col>
               <Form.Item
               name="upload"
               valuePropName="fileList"
@@ -147,8 +151,7 @@ const ProfileEdit = (props) => {
               
                       reader.onload = e => {
                           console.log(e);
-                          profileBody.profilePhoto.value = e.target.result.substring(e.target.result.indexOf('base64') + 7);
-                          console.log(profileBody);
+                          setImage64(e.target.result.substring(e.target.result.indexOf('base64') + 7));
                       };
                     }
                     // Prevent upload
@@ -159,7 +162,7 @@ const ProfileEdit = (props) => {
                 </Upload>
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col span={4}>
               <Form.Item name="isProfilePicturePublic" valuePropName="checked">
                 <Switch style={buttonColor}
                   checkedChildren={<TeamOutlined />}
@@ -198,7 +201,7 @@ const ProfileEdit = (props) => {
                 <TextArea rows={4} placeholder="Enter bio" />
               </Form.Item>
             </Col>
-            <Col span={11} offset={1}>
+            <Col span={4}>
               <Form.Item name="isBioPublic" valuePropName="checked">
                 <Switch style={buttonColor}
                   checkedChildren={<TeamOutlined />}
@@ -211,11 +214,11 @@ const ProfileEdit = (props) => {
           <Row>
             <Col span={12}>
             <Text strong>Birthday</Text>
-
-                <DatePicker />
-
+              <Form.Item name="birthday">
+                <DatePicker format="MMM Do YY"/>
+              </Form.Item>
             </Col>
-            <Col span={11} offset={1}>
+            <Col span={4}>
               <Form.Item name="isBirthdayPublic" valuePropName="checked">
                 <Switch style={buttonColor}
                   checkedChildren={<TeamOutlined />}
@@ -233,10 +236,10 @@ const ProfileEdit = (props) => {
                 required
                 initialValue={props.profileValues.location}  
               >
-                
+                {MapPickerElement}
               </Form.Item>
             </Col>
-            <Col span={11} offset={1}>
+            <Col span={4}>
               <Form.Item name="isLocationPublic" valuePropName="checked">
                 <Switch style={buttonColor}
                   checkedChildren={<TeamOutlined />}
@@ -250,7 +253,7 @@ const ProfileEdit = (props) => {
             <Col span={12}>
               <Text>Other users must send me a request to follow my profile</Text>
             </Col>
-            <Col span={11} offset={1}>
+            <Col span={4}>
               <Form.Item name="isProfilePublic" valuePropName="checked">
                 <Switch style={buttonColor}
                   checkedChildren={<CheckOutlined  />}
@@ -261,9 +264,11 @@ const ProfileEdit = (props) => {
           </Row>
 
           <Form.Item>
+          <Col span={24} align='middle'>
             <Button type="primary" htmlType="submit" shape="round" icon={<SaveOutlined />} style={buttonColor}>
               Save Profile
             </Button>
+            </Col>
           </Form.Item>
           
         </Form>

@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import NavBar from '../components/NavBar';
 import ProfileView from '../components/ProfileView';
 import { GetProfilePage as GetProfilePageRequest} from "../utils/helper";
+import { GetProfileOtherPage as GetProfileOtherPageRequest } from "../utils/helper";
 
 import { Layout, Col  } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
@@ -15,18 +16,32 @@ function ProfilePage(props) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const { id } = useParams('');
+
     const [result, setResult] = useState('');
     const [latitude, setLatitude] = useState('');
     const [longitude, setLongitude] = useState('');
 
     useEffect(() => {
-        GetProfilePageRequest({token: loginState.token}, dispatch)
+        if (id) {
+            GetProfileOtherPageRequest({token: loginState.token, id: id}, dispatch)
+            .then( result => {
+                setResult(result.data);
+                if('value' in result.data.location){
+                    setLatitude(result.data.location.value.latitude);
+                    setLongitude(result.data.location.value.longitude);                }
+
+                console.log(result);
+            })
+        } else {
+            GetProfilePageRequest({token: loginState.token}, dispatch)
             .then( result => {
                 setResult(result.data);
                 setLatitude(result.data.location.value.latitude);
                 setLongitude(result.data.location.value.longitude);
                 console.log(result);
             });
+        }
     }, [])
 
     return (

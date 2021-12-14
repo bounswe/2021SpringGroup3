@@ -87,7 +87,7 @@ const PostView = (props) => {
 
   const getUser = (userId) => {
     console.log(`Trying to open user profile, send GET request to users/${userId}`)
-    navigate(`/profile/${userId}`)
+    navigate(`/profiles/${userId}`)
   }
 
   const getCommunity = (communtiyId) => {

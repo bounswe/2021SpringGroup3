@@ -37,6 +37,7 @@ export default function RouteList() {
         <Route path="/communities/:id" element={<AuthRoute><GetCommunityPage /></AuthRoute>} />
         <Route path="/profile" element={<AuthRoute><ProfilePage /></AuthRoute>} />
         <Route path="/profile/edit" element={<AuthRoute><ProfileEditPage/></AuthRoute>} />
+        <Route path="/profiles/:id" element={<AuthRoute><ProfilePage /></AuthRoute>} />
         <Route path="*" element={<Navigate replace to="/login" />} />
       </Routes>
     </Router>

@@ -9,7 +9,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { GetCommunityPage as GetCommunityPageRequest } from "../utils/helper";
 import { GetCommunityPosts as GetCommunityPostsRequest } from "../utils/helper";
 
-import { Layout, Col  } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 
 function useForceUpdate(){
@@ -35,7 +34,7 @@ function GetCommunityPage(props) {
         setResult(result.data);
         setMemberCount(Object.keys(result.data.members).length);
         console.log(result.data)
-      }
+      })
     GetCommunityPostsRequest({ id: id, token: loginState.token }, dispatch)
       .then(posts => {
         setPosts(posts.data.map((post) => {
@@ -52,7 +51,7 @@ function GetCommunityPage(props) {
           <Content>
             <Row>
               <Col span={5} align="right">
-              <AboutCommunity image={result.iconUrl} description={result.name} members={memberCount} communityID={id}/>
+              <AboutCommunity image={result.iconUrl} name={result.name} description={result.description} members={memberCount} communityID={id}/>
               </Col>
               <Col span={19}>
                   {posts}
