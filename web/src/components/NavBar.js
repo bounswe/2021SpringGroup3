@@ -37,6 +37,7 @@ const NavBar = (props) => {
 
     const onCreatePost = () => {
         console.log("Request for creating a new post");
+        navigate('/createPost')
     }
 
     const handleProfileNavigate = () => {

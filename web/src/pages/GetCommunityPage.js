@@ -31,19 +31,16 @@ function GetCommunityPage(props) {
   useEffect(() => {
     GetCommunityPageRequest({ id: id, token: loginState.token }, dispatch)
       .then(result => setResult(result.data.name));
-  }, [])
-
-  useEffect(() => {
     GetCommunityPostsRequest({ id: id, token: loginState.token }, dispatch)
       .then(posts => {
         setPosts(posts.data.map((post) => {
           return <div style={{margin: '20px'}}><PostView postObj={post} /></div>
         }))
       })
-  }, [])
+  }, [id])
 
   return (
-    <>
+    <div key={id}>
       <Layout>
         <Header style={{ backgroundColor: '#3949ab' }}><NavBar /></Header>
         <Layout>
@@ -60,7 +57,7 @@ function GetCommunityPage(props) {
         </Layout>
         <Footer></Footer>
       </Layout>
-    </>
+    </div>
   );
 }
 
