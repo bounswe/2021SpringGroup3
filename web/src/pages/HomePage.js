@@ -12,8 +12,6 @@ function HomePage() {
     
       <Layout>
         <Header style={{backgroundColor: '#3949ab'}}><NavBar /></Header>
-
-
         <Layout>
           <Content>
             <Row>

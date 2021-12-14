@@ -12,3 +12,5 @@ export const GET_POSTS_ENDPOINT = `${BASE_URL}posts`;
 export const GET_POST_PAGE_ENDPOINT = `${BASE_URL}posts/detail`;
 
 export const CREATE_POSTTYPE_ENDPOINT = `${BASE_URL}post-types`;
+export const GET_POSTTYPES_ENDPOINT = `${BASE_URL}post-types`;
+export const GET_POSTTYPE_DETAIL_ENDPOINT = `${BASE_URL}post-types/detail`;
