@@ -153,8 +153,7 @@ export const getCommunityPosts = async communityId => {
   };
 
   return fetch(
-    'https://api.cmpegroupthree.store/posts?communityId=' +
-      '61b61f3b1b70f63ee80a3730',
+    'https://api.cmpegroupthree.store/posts?communityId=' + communityId,
     requestOptions,
   )
     .then(response => response.text())

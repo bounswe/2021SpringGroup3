@@ -24,9 +24,14 @@ import MapView, {Marker} from 'react-native-maps';
 
 export default function CommunityPosts({}) {
   const [posts, setPosts] = useState([]);
-  useEffect(async () => {
-    const _posts = await Request.getCommunityPosts(PAGE_VARIABLES.communityId);
-    setPosts(_posts);
+  useEffect(() => {
+    async function getPosts() {
+      const _posts = await Request.getCommunityPosts(
+        PAGE_VARIABLES.communityId,
+      );
+      setPosts(_posts);
+    }
+    getPosts();
   }, []);
 
   function PostDetail({
@@ -74,7 +79,7 @@ export default function CommunityPosts({}) {
               showsHorizontalScrollIndicator={false}
               data={textFieldNames}
               renderItem={({item}) => (
-                <View>
+                <View style={{width: '90%'}}>
                   <Text style={styles.fieldName}>{item.name}</Text>
                   <Text style={styles.content}>{item.value}</Text>
                   <Text></Text>
@@ -115,7 +120,7 @@ export default function CommunityPosts({}) {
               showsHorizontalScrollIndicator={false}
               data={linkFieldNames}
               renderItem={({item}) => (
-                <View>
+                <View style={{width: '90%'}}>
                   <Text style={styles.fieldName}>{item.name}</Text>
                   <TouchableOpacity onPress={() => Linking.openURL(item.value)}>
                     <Text style={{color: COLORS.buttonColor}}>
@@ -232,6 +237,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   content: {
+    flexWrap: 'wrap',
     fontSize: 16,
     fontWeight: '500',
   },
