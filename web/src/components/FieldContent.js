@@ -46,7 +46,7 @@ const FieldContent = (props) => {
         return <>
           <Space size={'small'} align="start">
             <strong>{props.fieldContent.name}</strong>
-            {props.fieldContent.description}
+            {props.fieldContent.value.geo.longitude + ' ' + props.fieldContent.value.geo.latitude}
           </Space>
 
         </>

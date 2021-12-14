@@ -29,7 +29,8 @@ function ProfilePage(props) {
                 setResult(result.data);
                 if('value' in result.data.location){
                     setLatitude(result.data.location.value.latitude);
-                    setLongitude(result.data.location.value.longitude);                }
+                    setLongitude(result.data.location.value.longitude);
+                }
 
                 console.log(result);
             })

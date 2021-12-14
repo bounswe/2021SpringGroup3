@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Form, Input, Typography, Button, Radio, Select } from 'antd';
+import { Row, Col, Form, Input, Typography, Button, Radio, Select, Card} from 'antd';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -24,11 +24,17 @@ const CreateCommunity = (props) => {
         console.log("Failed: ",error);
     }
 
+    const postCardStyle = {
+        width: '100%',
+        backgroundColor: '#f8f8f8',
+        borderRadius: '20px'
+      }
+
     return ( 
-        <div>
+        <Card size="small" style={postCardStyle}>
             <Row>
                 <Col span={24} align="middle">
-                    <Title level={2} strong="true">Create a new community</Title>
+                    <Title level={2} strong="true">Create a New Community</Title>
                 </Col>
                 <Col span={10} offset={7} align="middle">
                     <Form
@@ -97,7 +103,7 @@ const CreateCommunity = (props) => {
                     </Form>
                 </Col>
             </Row>         
-        </div>
+        </Card>
      );
 }
  
