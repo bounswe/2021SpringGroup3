@@ -1,17 +1,17 @@
 import React from "react";
 import { Layout,  } from 'antd';
 import NavBar from '../components/NavBar';
-import CreateCommunity from '../components/CreateCommunity';
+import CreatePost from '../components/CreatePost';
 
 const { Header, Footer, Sider, Content } = Layout;
 
-function CreateCommunityPage() {
+function CreatePostPage() {
   return (
     <>
       <Layout>
         <Header style={{backgroundColor: '#3949ab'}}><NavBar /></Header>
         <Layout>
-          <Content><CreateCommunity /></Content>
+          <Content><CreatePost /></Content>
         </Layout>
         <Footer></Footer>
       </Layout>
@@ -19,4 +19,4 @@ function CreateCommunityPage() {
   );
 }
 
-export default CreateCommunityPage;
+export default CreatePostPage;

@@ -18,8 +18,6 @@ const GetCommunities = (props) => {
         .then( result => setResult(result.data));
     }, [])
 
-    console.log("navbar select: ",result)
-
     let options = result.map(item => {
         return {
             label: item.name,
@@ -29,13 +27,17 @@ const GetCommunities = (props) => {
 
     function handleChange(value) {
         console.log(`selected ${value}`);
-        navigate(`/communities/${value}`);
+        if (props.isCreatePost) {
+            props.onSelectCommunity(value)
+        } else {
+            navigate(`/communities/${value}`);
+        }
     }
 
     return ( 
         <Select 
             defaultValue="Communities" 
-            style={{ width: 180, marginBottom: "30px"}} 
+            style={{ width: props.isCreatePost ? "100%" : 180, marginBottom: "30px"}} 
             options={options} 
             onSelect={handleChange}
         >
