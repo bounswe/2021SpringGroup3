@@ -96,6 +96,9 @@ const CreatePost = (props) => {
       dateFields: [],
       locationFields: []
     }
+
+    console.log(locationFieldsNames)
+
     for (let key of Object.keys(values)) {
       if (textFieldsNames.includes(key)) {
         body.textFields.push({name: key, value: values[key]})
@@ -106,7 +109,7 @@ const CreatePost = (props) => {
       } else if (dateFieldsNames.includes(key)) {
         body.dateFields.push({name: key, value: values[key]._d})
       } else if (locationFieldsNames.includes(key)) {
-        body.locationFields.push({description: key, geo: {longitude: location.lng, latitude: location.lat}})
+        body.locationFields.push({name: key, value: { geo: {longitude: location.lng, latitude:  location.lat} , description: "text"}})
       }
     }
 
@@ -234,7 +237,7 @@ const CreatePost = (props) => {
               <Col span={24}><Text strong>{name}</Text></Col>
               <Col span={24}>
                 <Form.Item 
-                  name="location"
+                  name={name}
                   required 
                 >
                   {MapPickerElement}
@@ -249,6 +252,10 @@ const CreatePost = (props) => {
   return (
     <Card size="small" style={postCardStyle}>
       <Row>
+      <Col offset={8} span={8}  align="middle">
+      <Title level={2} strong="true">Create a New Post</Title>
+      </Col>
+        
         <Col offset={8} span={8} style={{ marginTop: '20px' }} align="middle">
           <Col span={24}>
             <Text><b>Select Community to Post in</b></Text>
