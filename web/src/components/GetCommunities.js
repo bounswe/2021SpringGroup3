@@ -1,7 +1,7 @@
-import React, { useParams, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Select } from 'antd';
+import { Select } from 'antd';
 import { GetCommunities as GetCommunitiesRequest } from '../utils/helper';
 
 const { Option } = Select;
@@ -27,13 +27,17 @@ const GetCommunities = (props) => {
 
     function handleChange(value) {
         console.log(`selected ${value}`);
-        navigate(`/communities/${value}`);
+        if (props.isCreatePost) {
+            props.onSelectCommunity(value)
+        } else {
+            navigate(`/communities/${value}`);
+        }
     }
 
     return ( 
         <Select 
             defaultValue="Communities" 
-            style={{ width: 120 }} 
+            style={{ width: props.isCreatePost ? "100%" : 180, marginBottom: "30px"}} 
             options={options} 
             onSelect={handleChange}
         >

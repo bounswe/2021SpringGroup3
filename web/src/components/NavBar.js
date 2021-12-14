@@ -1,12 +1,12 @@
 import React from 'react';
 import { Row, Col, Input, Image, Button, Dropdown, Menu, Space } from 'antd';
-import { HomeTwoTone, MessageTwoTone, BellTwoTone, UserOutlined, DownOutlined, SettingTwoTone, LogoutOutlined, RightCircleFilled } from '@ant-design/icons';
+import { MessageFilled, BellFilled, UserOutlined, DownOutlined, SettingTwoTone, LogoutOutlined, RightCircleFilled } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { Logout } from '../utils/helper';
 import { logout } from '../store/actions/loginActions';
-import logo from '../utils/logo.png'
+import logo from '../utils/BoxyHeadlineCat.png'
 import GetCommunities from './GetCommunities'
 
 const { Search } = Input;
@@ -16,6 +16,13 @@ const NavBar = (props) => {
     const loginState = useSelector((state) => state.login);
     const navigate = useNavigate()
     const dispatch = useDispatch()
+
+    const buttonStyle = {
+        backgroundColor: '#6f74dd',
+        borderColor: '#6f74dd',
+        color: '#ffffff',
+        cursor: 'pointer'
+    }
 
     const onSearch = value => {
         console.log("Searching value: ", value);
@@ -30,6 +37,7 @@ const NavBar = (props) => {
 
     const onCreatePost = () => {
         console.log("Request for creating a new post");
+        navigate('/createPost')
     }
 
     const handleProfileNavigate = () => {
@@ -72,38 +80,37 @@ const NavBar = (props) => {
 
     return (
         <div>
-            <Row style={{ padding: '4px 16px 4px 16px' }}>
-                <Col span={10} verticalAlign='top'>
+            <Row>
+                <Col span={21} verticalalign='top'>
                     <Space size='middle'>
-                        <Image src={logo} style={{ cursor: 'pointer' }} width={40} preview={false} onClick={() => { navigate('/home') }} />
+                        <Image src={logo} style={{ cursor: 'pointer' }} width={120} preview={false} onClick={() => { navigate('/home') }} />
                         <GetCommunities communities={props.communities} />
-                        <Button shape="round" onClick={onCreateCommunity}>
+                        <Button shape="round" onClick={onCreateCommunity} style={{ ...buttonStyle, marginBottom: '30px' }}>
                             Create Community
                         </Button>
-                        <Button shape="round" onClick={onCreatePost}>
+                        <Button shape="round" onClick={onCreatePost} style={{ ...buttonStyle, marginBottom: '30px' }}>
                             Create Post
                         </Button>
+                        <div style={{ marginTop: "15px" }}>
+                            <Search width={100} style={{ width: '140%' }} placeholder="Input search text" onSearch={onSearch} enterButton />
+                        </div>
                     </Space>
                 </Col>
-                <Col span={10}>
-                    <Search style={{ marginTop: '9px' }} placeholder="input search text" onSearch={onSearch} enterButton />
-                </Col>
-                <Col span={4} align="right">
-                    <Space size="middle">
+                <Col span={3} align='right'>
+                    <Space size="middle" style={{marginTop: "5px"}}>
                         <a target="_blank" rel="noopener noreferrer">
-                            <MessageTwoTone style={{ fontSize: '32px' }} />
+                            <MessageFilled style={{ fontSize: '32px', color: "#ffffff" }} />
                         </a>
                         <a target="_blank" rel="noopener noreferrer">
-                            <BellTwoTone style={{ fontSize: '32px' }} />
+                            <BellFilled style={{ fontSize: '32px', color: "#ffffff" }} />
                         </a>
                         <Dropdown overlay={profileMenu} placement="bottomLeft">
                             <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                                <UserOutlined style={{ fontSize: '32px' }} />
+                                <UserOutlined style={{ fontSize: '32px', color: "#ffffff" }} />
                                 <DownOutlined />
                             </a>
                         </Dropdown>
                     </Space>
-
                 </Col>
             </Row>
             <hr />

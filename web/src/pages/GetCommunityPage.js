@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router";
-import { useSelector, useDispatch } from 'react-redux';
 
+import { Layout, Col, Row } from 'antd';
 import NavBar from '../components/NavBar';
 import AboutCommunity from '../components/AboutCommunity';
+import PostView from '../components/PostView';
+import { useParams, useNavigate } from "react-router";
+import { useSelector, useDispatch } from 'react-redux';
 import { GetCommunityPage as GetCommunityPageRequest } from "../utils/helper";
+import { GetCommunityPosts as GetCommunityPostsRequest } from "../utils/helper";
 
 import { Layout, Col  } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
@@ -24,32 +27,42 @@ function GetCommunityPage(props) {
 
   const [result, setResult] = useState('');
   const [memberCount, setMemberCount] = useState('');
+  const [posts, setPosts] = useState('');
 
   useEffect(() => {
-    console.log("id in getcommunitypage ",id)
     GetCommunityPageRequest({id: id, token: loginState.token}, dispatch)
       .then( result => {
         setResult(result.data);
         setMemberCount(Object.keys(result.data.members).length);
         console.log(result.data)
       }
-      );
+    GetCommunityPostsRequest({ id: id, token: loginState.token }, dispatch)
+      .then(posts => {
+        setPosts(posts.data.map((post) => {
+          return <div style={{margin: '20px'}}><PostView postObj={post} /></div>
+        }))
+      })
   }, [id])
 
   return (
-    <> 
+    <div key={id}>
       <Layout>
-        <Header style={{backgroundColor: '#3949ab'}}><NavBar /></Header>
+        <Header style={{ backgroundColor: '#3949ab' }}><NavBar /></Header>
         <Layout>
           <Content>
-            <Col span={24} align="right">
+            <Row>
+              <Col span={5} align="right">
               <AboutCommunity image={result.iconUrl} description={result.name} members={memberCount} communityID={id}/>
-            </Col>
+              </Col>
+              <Col span={19}>
+                  {posts}
+              </Col>
+            </Row>  
           </Content>
         </Layout>
         <Footer></Footer>
       </Layout>
-    </>
+    </div>
   );
 }
 

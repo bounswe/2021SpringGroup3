@@ -1,10 +1,5 @@
 
 import RouteList from './routing/RouteList';
-import Login from './components/Login';
-import Confirmation from './components/Confirmation';
-import Post from './components/Post';
-import ProfileEdit from './components/ProfileEdit';
-import ProfileView from './components/ProfileView';
 import React from "react";
 import 'antd/dist/antd.css';
 import './App.css';

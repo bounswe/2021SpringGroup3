@@ -1,10 +1,10 @@
 import * as loginAction from "../store/actions/loginActions";
 import { login, logout, register,
   createCommunity, getCommunities, getCommunityPage,
-  createPostType, 
-  getProfile,
+  createPost, getCommunityPosts, getPostPage,
+  createPostType, getPostTypes, getPostTypeDetail, getProfile,
   getProfileSettings,
-  postProfileSettings} from '../store/axios';
+  postProfileSettings } from '../store/axios';
 
 export const Login = async (info, dispatch) => {
 
@@ -62,6 +62,29 @@ export const CreatePostType = async (info, token, dispatch) => {
   }
 }
 
+export const GetPostTypes = async (info, token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await getPostTypes(info, token);
+  if(response.status === 200 || response.status === 201){
+    return response;
+    //  dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const GetPostTypeDetail = async (info, token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await getPostTypeDetail(info, token);
+  if(response.status === 200 || response.status === 201){
+    return response;
+    //  dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
 
 export const GetCommunities = async (info, dispatch) => {
   // dispatch(loginAction.logout());
@@ -82,7 +105,45 @@ export const GetCommunityPage = async (info, dispatch) => {
   if(response.status === 200 || response.status === 201){
     console.log(response.data);
     return response
-    //  dispatch(loginAction.logoutSuccess());
+    // dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const CreatePost = async (info, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await createPost(info.body, info.token);
+  if(response.status === 200 || response.status === 201){
+    return response
+    // dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const GetCommunityPosts = async (info, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await getCommunityPosts(info);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data)
+    return response
+    // dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const GetPostPage = async (info, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await getPostPage(info);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data)
+    return response
+    // dispatch(loginAction.logoutSuccess());
   }else{
     // dispatch(loginAction.logoutFailure());
     return {}
