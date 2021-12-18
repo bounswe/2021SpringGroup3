@@ -677,6 +677,78 @@
         }
       }
     },
+    "/posts/like": {
+      "get": {
+        "tags": [
+          "Post Controller"
+        ],
+        "description": "",
+        "operationId": "like post",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "postId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liked post successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostView"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Community or post does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Community or post does not exist"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/communities": {
       "get": {
         "tags": [
@@ -851,6 +923,76 @@
         }
       }
     },
+    "/communities/leave": {
+      "post": {
+        "tags": [
+          "Community Controller"
+        ],
+        "description": "",
+        "operationId": "leave community",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "You left the community",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You left the community"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Community does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Community does not exist"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/communities/detail": {
       "get": {
         "tags": [
@@ -948,6 +1090,62 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MyProfile"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/other": {
+      "get": {
+        "tags": [
+          "Profile Controller"
+        ],
+        "description": "",
+        "operationId": "get someone else's profile",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get profile page successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyProfile"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User does not exist"
+                    }
+                  }
                 }
               }
             }
@@ -1459,6 +1657,26 @@
           "isModerator": {
             "type": "boolean",
             "example": false
+          },
+          "members" :  {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/User"
+                }
+              ]
+            }
+          },
+          "moderators" :  {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/User"
+                }
+              ]
+            }
           }
 
         }
@@ -1594,11 +1812,11 @@
         "properties": {
           "latitude": {
             "type": "integer",
-            "example": 3.435345
+            "example": 3.435345,
           },
           "longitude": {
             "type": "integer",
-            "example": 3.435345
+            "example": 3.435345,
           }
         }
       },
@@ -1624,7 +1842,7 @@
           "description": {
             "type": "string",
             "example": "text"
-          }
+          },
 
         }
       },
