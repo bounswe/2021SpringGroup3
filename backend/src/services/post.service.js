@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 
 const ApiError = require('../utils/ApiError');
-const { formatters } = require('../utils');
+const { formatters, baseUtil } = require('../utils');
 const { PostType, Community, Post, Comment } = require('../models');
 
 exports.getPosts = async ({ token, communityId }) => {
@@ -116,8 +116,8 @@ exports.likePost = async ({ token, communityId, postId }) => {
   if (!post) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post does not exist');
   }
-  if (post.community._id.toString() !== communityId) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Community ID does not match');
+  if (!baseUtil.checkIfObjectIdArrayIncludesId(post.community.members, token.user._id.toString())) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You need to be a member of this community to like the post');
   }
   post = await Post.findByIdAndUpdate(
     post._id,
