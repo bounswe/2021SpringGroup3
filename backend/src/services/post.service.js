@@ -111,7 +111,7 @@ exports.getPostDetail = async ({ token, communityId, postId }) => {
   };
 };
 
-exports.likePost = async ({ token, communityId, postId }) => {
+exports.likePost = async ({ token, postId }) => {
   let post = await Post.findById(postId).populate(['creator', 'community']).lean();
   if (!post) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post does not exist');
@@ -172,6 +172,6 @@ exports.createComment = async ({ token, postId, text }) => {
   }
   throw new ApiError(
     httpStatus.BAD_REQUEST,
-    'You need to be the creator of the post or moderator of the community it belongs to post a comment for it'
+    'You need to be the creator of the post or member of the community it belongs to post a comment for it'
   );
 };
