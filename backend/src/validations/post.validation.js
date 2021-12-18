@@ -61,7 +61,7 @@ exports.getPostDetail = {
 exports.likePost = {
   query: Joi.object()
     .keys({
-      communityId: Joi.string().custom(objectId).required(),
+      postId: Joi.string().custom(objectId).required(),
     })
     .required(),
 };
