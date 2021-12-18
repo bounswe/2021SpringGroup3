@@ -196,6 +196,65 @@
         }
       }
     },
+    "/auth/changePassword": {
+      "post": {
+        "tags": [
+          "Authentication Controller"
+        ],
+        "description": "Change password endpoint",
+        "operationId": "changePassword",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePassword"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Change password is success"
+          },
+          "400": {
+            "description": "invalid password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "invalid password"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/logout": {
       "delete": {
         "tags": [
@@ -525,6 +584,176 @@
         }
       }
     },
+    "/posts/like": {
+      "post": {
+        "tags": [
+          "Post Controller"
+        ],
+        "description": "",
+        "operationId": "like post",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "postId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Like post successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostView"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You need to be a member of it's community to like this post"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Post does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Post does not exist"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/comment": {
+      "post": {
+        "tags": [
+          "Post Controller"
+        ],
+        "description": "Create a comment for the post",
+        "operationId": "comment post",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "postId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Comment created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comment"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You need to be a member of it's community to comment for this post"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Post does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Post does not exist"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/posts": {
       "post": {
         "tags": [
@@ -675,15 +904,13 @@
             }
           }
         }
-      }
-    },
-    "/posts/like": {
-      "get": {
+      },
+      "delete": {
         "tags": [
           "Post Controller"
         ],
-        "description": "",
-        "operationId": "like post",
+        "description": "Deletes the post. Also deletes comments it has. You need to be the creator of the post or a moderator in it's community",
+        "operationId": "delete",
         "security": [
           {
             "bearerAuth": []
@@ -704,14 +931,6 @@
           },
           {
             "in": "query",
-            "name": "communityId",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "in": "query",
             "name": "postId",
             "schema": {
               "type": "string"
@@ -721,17 +940,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Liked post successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PostView"
-                }
-              }
-            }
+            "description": "Delete success"
           },
-          "404": {
-            "description": "Community or post does not exist",
+          "401": {
+            "description": "You are not authorized to delete this post",
             "content": {
               "application/json": {
                 "schema": {
@@ -739,7 +951,23 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "Community or post does not exist"
+                      "example": "Not authorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Post does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Post does not exist"
                     }
                   }
                 }
@@ -827,40 +1055,34 @@
               ]
             },
             "required": true
-          },
-          {
-            "in": "body",
-            "name": "name",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "in": "body",
-            "name": "iconUrl",
-            "schema": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "in": "body",
-            "name": "description",
-            "schema": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "in": "body",
-            "name": "isPrivate",
-            "schema": {
-              "type": "boolean"
-            },
-            "required": false
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "isPrivate": {
+                    "type": "string"
+                  },
+                  "iconUrl": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Communities array is returned",
@@ -873,6 +1095,45 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "Community Controller"
+        ],
+        "description": "Delete a community. You need to be a moderator to delete a community. This operation also deletes posts, comments it has",
+        "operationId": "delete community",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Community is deleted"
+          }
+        }
       }
     },
     "/communities/join": {
@@ -880,7 +1141,7 @@
         "tags": [
           "Community Controller"
         ],
-        "description": "",
+        "description": "Join to a community. You will be put into the pendingMembers list if the community is private",
         "operationId": "join community",
         "security": [
           {
@@ -923,13 +1184,13 @@
         }
       }
     },
-    "/communities/leave": {
+    "/communities/moderators/join": {
       "post": {
         "tags": [
           "Community Controller"
         ],
-        "description": "",
-        "operationId": "leave community",
+        "description": "Join to community moderators. You will be put into the pendingModerators list and wait for a moderator to approve your request",
+        "operationId": "join communities moderators",
         "security": [
           {
             "bearerAuth": []
@@ -959,36 +1220,234 @@
         ],
         "responses": {
           "200": {
-            "description": "You left the community",
+            "description": "Joined to community moderators",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "You left the community"
-                    }
-                  }
+                  "$ref": "#/components/schemas/CommunitiesPreviews"
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/communities/moderators/approve": {
+      "post": {
+        "tags": [
+          "Community Controller"
+        ],
+        "description": "Approve a community moderator join request",
+        "operationId": "approve community moderator join request",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "userId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request is decided"
+          },
+          "401": {
+            "description": "You need to be a moderator to decide this join request"
           },
           "404": {
-            "description": "Community does not exist",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Community does not exist"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Community or user does not exist"
+          }
+        }
+      }
+    },
+    "/communities/moderators/reject": {
+      "post": {
+        "tags": [
+          "Community Controller"
+        ],
+        "description": "Reject a community moderator join request",
+        "operationId": "reject community moderator join request",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "userId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request is decided"
+          },
+          "401": {
+            "description": "You need to be a moderator to decide this join request"
+          },
+          "404": {
+            "description": "Community or user does not exist"
+          }
+        }
+      }
+    },
+    "/communities/approve": {
+      "post": {
+        "tags": [
+          "Community Controller"
+        ],
+        "description": "Approve a community join request",
+        "operationId": "approve community join request",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "userId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request is decided"
+          },
+          "401": {
+            "description": "You need to be a moderator to decide this join request"
+          },
+          "404": {
+            "description": "Community or user does not exist"
+          }
+        }
+      }
+    },
+    "/communities/reject": {
+      "post": {
+        "tags": [
+          "Community Controller"
+        ],
+        "description": "Reject a community join request",
+        "operationId": "reject community join request",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "userId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request is decided"
+          },
+          "401": {
+            "description": "You need to be a moderator to decide this join request"
+          },
+          "404": {
+            "description": "Community or user does not exist"
           }
         }
       }
@@ -1095,15 +1554,13 @@
             }
           }
         }
-      }
-    },
-    "/profile/other": {
-      "get": {
+      },
+      "delete": {
         "tags": [
           "Profile Controller"
         ],
-        "description": "",
-        "operationId": "get someone else's profile",
+        "description": "Delete profile",
+        "operationId": "delete profile",
         "security": [
           {
             "bearerAuth": []
@@ -1125,30 +1582,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Get profile page successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MyProfile"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "User does not exist",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User does not exist"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Delete profile is success."
           }
         }
       }
@@ -1282,6 +1716,19 @@
           "password": {
             "type": "string",
             "example": ""
+          }
+        }
+      },
+      "ChangePassword": {
+        "title": "Change password model",
+        "type": "object",
+        "required": [
+          "password"
+        ],
+        "properties": {
+          "password": {
+            "type": "string",
+            "example": "asfasdfasfd1"
           }
         }
       },
@@ -1444,6 +1891,19 @@
           ]
         }
       },
+      "Comment": {
+        "title": "comment model",
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "example": ""
+          }
+        }
+      },
       "PostView": {
         "title": "Post View model",
         "type": "object",
@@ -1591,7 +2051,6 @@
           "name",
           "id",
           "isPrivate"
-
         ],
         "properties": {
           "name": {
@@ -1623,7 +2082,6 @@
           "name",
           "id",
           "isPrivate"
-
         ],
         "properties": {
           "name": {
@@ -1657,28 +2115,7 @@
           "isModerator": {
             "type": "boolean",
             "example": false
-          },
-          "members" :  {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/User"
-                }
-              ]
-            }
-          },
-          "moderators" :  {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/User"
-                }
-              ]
-            }
           }
-
         }
       },
       "JoinCommunity": {
@@ -1778,7 +2215,6 @@
           }
         }
       },
-
       "User": {
         "title": "User model",
         "type": "object",
@@ -1802,7 +2238,7 @@
           }
         }
       },
-      "LocationValueModel":{
+      "LocationValueModel": {
         "title": "Location Value Model",
         "type": "object",
         "required": [
@@ -1812,11 +2248,11 @@
         "properties": {
           "latitude": {
             "type": "integer",
-            "example": 3.435345,
+            "example": 3.435345
           },
           "longitude": {
             "type": "integer",
-            "example": 3.435345,
+            "example": 3.435345
           }
         }
       },
@@ -1830,10 +2266,8 @@
         ],
         "properties": {
           "value": {
-
             "type": "object",
             "$ref": "#/components/schemas/LocationValueModel"
-
           },
           "isPublic": {
             "type": "boolean",
@@ -1842,8 +2276,7 @@
           "description": {
             "type": "string",
             "example": "text"
-          },
-
+          }
         }
       },
       "PostLocation": {
@@ -1855,17 +2288,13 @@
         ],
         "properties": {
           "geo": {
-
             "type": "object",
             "$ref": "#/components/schemas/LocationValueModel"
-
           },
-
           "description": {
             "type": "string",
             "example": "text"
           }
-
         }
       }
     }
