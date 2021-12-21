@@ -1,3 +1,5 @@
+const Joi = require('joi');
+
 exports.objectId = (value, helpers) => {
   if (!value.match(/^[0-9a-fA-F]{24}$/)) {
     return helpers.message('"{{#label}}" must be a valid mongo id');
@@ -14,3 +16,17 @@ exports.password = (value, helpers) => {
   }
   return value;
 };
+
+exports.activityStream = Joi.object().keys({
+  context: Joi.string().required(),
+  summary: Joi.string().required(),
+  type: Joi.string().required(),
+  actor: Joi.object().keys({
+    type: Joi.string().required(),
+    name: Joi.string().required(),
+  }),
+  object: Joi.object().keys({
+    type: Joi.string().required(),
+    name: Joi.string().required(),
+  }),
+});
