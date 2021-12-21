@@ -67,3 +67,15 @@ exports.getPostTypeDetail = async ({ communityId, postTypeId }) => {
   }
   return formatters.formatPostTypeDetail(postType);
 };
+
+exports.searchPostTypes = async ({ communityId, query }) => {
+  const community = await Community.find(communityId).lean();
+  if (!community) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  const postTypes = await PostType.find({
+    community: community._id,
+    name: { $regex: query, $options: 'i' },
+  }).lean();
+  return formatters.formatPostTypes(postTypes);
+};

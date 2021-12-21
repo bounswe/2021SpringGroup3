@@ -30,3 +30,11 @@ exports.getPostTypeDetail = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.searchPostTypes = catchAsync(async (req, res) => {
+  const result = await postTypeService.searchPostTypes({
+    communityId: req.query.communityId,
+    query: req.query.query,
+  });
+  res.send(result);
+});

@@ -11,5 +11,6 @@ router
   .get(validate(postTypeValidation.getPostTypes), postTypeController.getPostTypes);
 
 router.route('/detail').get(validate(postTypeValidation.getPostTypeDetail), postTypeController.getPostTypeDetail);
+router.route('/search').get(validate(postTypeValidation.searchPostTypes), postTypeController.searchPostTypes);
 
 module.exports = router;
