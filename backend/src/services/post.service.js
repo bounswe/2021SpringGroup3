@@ -175,3 +175,20 @@ exports.createComment = async ({ token, postId, text }) => {
     'You need to be the creator of the post or member of the community it belongs to post a comment for it'
   );
 };
+
+exports.getHomepage = async ({ token }) => {
+  const communities = await Community.find({
+    members: {
+      $in: [token.user._id],
+    },
+  });
+  const posts = await Post.find({
+    community: {
+      $in: communities.map((c) => c._id),
+    },
+  })
+    .sort({ createdAt: -1 })
+    .populate(['creator', 'community'])
+    .lean();
+  return formatters.formatPosts(posts, token.user);
+};

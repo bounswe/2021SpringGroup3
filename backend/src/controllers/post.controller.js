@@ -59,3 +59,10 @@ exports.deletePost = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.getHomepage = catchAsync(async (req, res) => {
+  const result = await postService.getHomepage({
+    token: req.token,
+  });
+  res.send(result);
+});
