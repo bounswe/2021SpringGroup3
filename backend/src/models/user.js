@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const validator = require('validator');
 
 const userSchema = mongoose.Schema(
   {
@@ -17,6 +18,11 @@ const userSchema = mongoose.Schema(
       index: true,
       required: true,
       unique: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error('Invalid email');
+        }
+      },
     },
     timezone: { type: String },
     lastActiveAt: { type: Date, default: Date.now },
@@ -24,7 +30,12 @@ const userSchema = mongoose.Schema(
       type: String,
       trim: true,
       minlength: 8,
-      private: true, // used by the toJSON plugin
+      private: true,
+      validate(value) {
+        if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
+          throw new Error('Password must contain at least one letter and one number');
+        }
+      },
     },
     isActivated: {
       type: Boolean,

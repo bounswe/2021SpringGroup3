@@ -11,7 +11,7 @@ const subSchema = mongoose.Schema({
   },
 });
 
-const commentSchema = mongoose.Schema(
+const activityStreamSchema = mongoose.Schema(
   {
     context: {
       type: String,
@@ -37,6 +37,6 @@ const commentSchema = mongoose.Schema(
   }
 );
 
-const Comment = mongoose.model('Comment', commentSchema);
+const ActivityStream = mongoose.model('Activity_Stream', activityStreamSchema);
 
-module.exports = Comment;
+module.exports = ActivityStream;
