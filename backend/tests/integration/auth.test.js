@@ -1,11 +1,12 @@
 const request = require('supertest');
+const mongoose = require('mongoose');
 const faker = require('faker');
 const httpStatus = require('http-status');
 const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
 const { User } = require('../../src/models');
 const { baseUtil } = require('../../src/utils');
-const { userOne, insertUsers } = require('../fixtures/user.fixture');
+const { userOne, insertUsers, insertUserToken } = require('../fixtures/user.fixture');
 
 const headers = {
   Accept: 'application/json',
@@ -119,6 +120,61 @@ describe('Auth routes', () => {
           ...headers,
         })
         .expect(httpStatus.UNAUTHORIZED);
+    });
+  });
+
+  describe('POST /auth/changePassword', () => {
+    let newUser;
+    beforeEach(() => {
+      newUser = {
+        _id: mongoose.Types.ObjectId(),
+        username: faker.internet.userName(),
+        email: faker.internet.email().toLowerCase(),
+        password: faker.random.alphaNumeric(25),
+      };
+    });
+    test('should return 400 error if password length is less than 8 characters', async () => {
+      const userToken = baseUtil.sha1(Date.now().toString());
+      await insertUsers([newUser]);
+      await insertUserToken(newUser._id, userToken);
+
+      headers.authorization = userToken;
+      await request(app)
+        .post('/auth/changePassword')
+        .set(headers)
+        .send({
+          password: 'passwo',
+        })
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('should return 200 if password is changed', async () => {
+      const userToken = baseUtil.sha1(Date.now().toString());
+      await insertUsers([newUser]);
+      await insertUserToken(newUser._id, userToken);
+      const password = faker.random.alphaNumeric(27);
+
+      let dbUser = await User.findById(newUser._id);
+      expect(dbUser).toBeDefined();
+
+      const oldPassword = dbUser.password;
+
+      headers.authorization = userToken;
+      const res = await request(app)
+        .post('/auth/changePassword')
+        .set(headers)
+        .send({
+          password,
+        })
+        .expect(200);
+
+      expect(res.body).toEqual({ message: 'Your password has changed successfully' });
+
+      dbUser = await User.findById(newUser._id);
+      expect(dbUser).toBeDefined();
+
+      const isPasswordMatch = oldPassword === dbUser.password;
+      expect(isPasswordMatch).toEqual(true);
     });
   });
 });
