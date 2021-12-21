@@ -116,3 +116,14 @@ exports.getOtherProfile = async ({ userId }) => {
   }
   return formatters.formatOtherProfile(user);
 };
+
+exports.setNotificationId = async ({ token, notificationId }) => {
+  await User.findByIdAndUpdate(token.user._id, {
+    $set: {
+      notificationId,
+    },
+  });
+  return {
+    message: 'Notification id is set',
+  };
+};

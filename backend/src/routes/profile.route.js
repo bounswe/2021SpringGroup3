@@ -14,4 +14,6 @@ router
 
 router.route('/other').get(validate(profileValidation.getOtherProfile), profileController.getOtherProfile);
 
+router.post('/setNotificationId', validate(profileValidation.setNotificationId), profileController.setNotificationId);
+
 module.exports = router;
