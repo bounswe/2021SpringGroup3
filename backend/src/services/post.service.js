@@ -12,7 +12,7 @@ exports.getPosts = async ({ token, communityId }) => {
   const posts = await Post.find({
     community: community._id,
   })
-    .sort({ _id: -1 })
+    .sort({ createdAt: -1 })
     .populate(['creator'])
     .lean();
   return formatters.formatPosts(
