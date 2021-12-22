@@ -359,6 +359,78 @@
         }
       }
     },
+    "/post-types/search": {
+      "get": {
+        "tags": [
+          "PostType Controller"
+        ],
+        "description": "",
+        "operationId": "search postTypes",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "communityId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post types are returned from the community. Selects post types if it has query in it's name",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostTypesPreviews"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Community does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Community does not exist"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/post-types": {
       "post": {
         "tags": [
@@ -747,6 +819,46 @@
                       "example": "Post does not exist"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/homepage": {
+      "get": {
+        "tags": [
+          "Post Controller"
+        ],
+        "description": "",
+        "operationId": "get homepage",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns posts from user's communities",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostViews"
                 }
               }
             }
@@ -1516,6 +1628,54 @@
         }
       }
     },
+    "/communities/search": {
+      "get": {
+        "tags": [
+          "Community Controller"
+        ],
+        "description": "",
+        "operationId": "search communities",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Community search result. Select communities that has query in it's name",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunitiesPreviews"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/profile": {
       "get": {
         "tags": [
@@ -1663,7 +1823,40 @@
         },
         "responses": {
           "200": {
-            "description": "Communities array is returned"
+            "description": "Profile settings is updated"
+          }
+        }
+      }
+    },
+    "/profile/setNotificationId": {
+      "post": {
+        "tags": [
+          "Profile Controller"
+        ],
+        "description": "",
+        "operationId": "set notification id, which is player id onesignal provides",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification id is set"
           }
         }
       }
