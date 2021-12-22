@@ -80,7 +80,7 @@ const AboutCommunity = (props) => {
                     {
                         props.isModerator ?
                             <Button style={buttonStyle} shape="round" type='primary'
-                                onClick={() => navigate(`/createPostType`, { state: { id: props.communityId } })}>
+                                onClick={() => navigate(`/createPostType`, { state: { id: props.communityId, communityName: props.name } })}>
                                 Create Post Type
                             </Button> :
                             <></>

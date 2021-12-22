@@ -77,22 +77,20 @@ export async function logout(info) {
   }
 }
 
-export async function createCommunity(info) {
+export async function createCommunity(info, token) {
   try {
     const header = {headers: {
       'X-Platform': 'WEB',
       'accept': '*/*',
-      'authorization': `${info.token}`
+      'authorization': `${token}`
       },
     }
-    console.log(header);
-    const body= { name: info.name }
-    const response = await axios.post(CREATE_COMMUNITY_ENDPOINT, { ...body }, { ...header });
+    console.log(info)
+    const response = await axios.post(CREATE_COMMUNITY_ENDPOINT, { ...info }, { ...header });
     return response;
   } catch (error) {
     console.log(error);
-    
-    return error
+    return error;
   }
 }
 
@@ -110,8 +108,7 @@ export async function createPostType(info, token) {
     return response;
   } catch (error) {
     console.log(error);
-    
-    return error
+    return error;
   }
 }
 
@@ -129,8 +126,7 @@ export async function getPostTypes(info) {
     return response;
   } catch (error) {
     console.log(error);
-    
-    return error
+    return error;
   }
 }
 
@@ -314,8 +310,8 @@ export async function postProfileSettings(info, token) {
       'authorization': `${token}`
       },
     }
-    const body = { ... info }
-    const response = await axios.post(POST_PROFILE_SETTINGS_ENDPOINT, { ...body }, { ...header });
+    console.log(info)
+    const response = await axios.post(POST_PROFILE_SETTINGS_ENDPOINT, { ...info }, { ...header });
     return response;
   } catch (error) {
     console.log(error);

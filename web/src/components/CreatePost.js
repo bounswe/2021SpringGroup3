@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router";
-import { Row, Col, Form, Input, Typography, Button, Radio, Select, DatePicker, Card, message } from 'antd';
+import { Row, Col, Form, Input, Typography, Button, Select, DatePicker, Card } from 'antd';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -53,7 +53,7 @@ const CreatePost = (props) => {
         style={{height:'700px'}}
         onChangeLocation={handleChangeLocation} 
         onChangeZoom={handleChangeZoom}
-        apiKey='AIzaSyBT4whK0_2fcQEvS_u2nmnvOXZH_9sAuzE'/>
+        apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}/>
     </div>
 
   const { communityId } = useParams();
@@ -68,8 +68,11 @@ const CreatePost = (props) => {
     backgroundColor: '#6f74dd',
     borderColor: '#6f74dd',
     color: '#ffffff',
-    cursor: 'pointer'
-  }
+    cursor: 'pointer',
+    marginTop: '3px',
+    marginBottom: '3px',
+    fontWeight: 'bold'
+}
 
   const [textFieldsNames, setTextFieldsNames] = useState([]);
   const [numberFieldsNames, setNumberFieldsNames] = useState([]);
@@ -252,20 +255,20 @@ const CreatePost = (props) => {
   return (
     <Card size="small" style={postCardStyle}>
       <Row>
-      <Col offset={8} span={8}  align="middle">
+      <Col span={10} offset={7}  align="middle">
       <Title level={2} strong="true">Create a New Post</Title>
       </Col>
         
-        <Col offset={8} span={8} style={{ marginTop: '20px' }} align="middle">
+        <Col span={10} offset={7} style={{ marginTop: '20px' }} align="middle">
           <Col span={24}>
             <Text><b>Select Community to Post in</b></Text>
           </Col>
           <GetCommunities isCreatePost={true} onSelectCommunity={handleCommunityChange} />
         </Col>
-        <Col offset={8} span={8} align="middle">
+        <Col span={10} offset={7} align="middle">
           {postTypes}
         </Col>
-        <Col offset={8} span={8}>
+        <Col span={10} offset={7}>
           <Form name="basic" onFinish={onFinish} onFinishFailed={onFinishFailed}>
             {textFields}
             {numberFields}
@@ -276,7 +279,7 @@ const CreatePost = (props) => {
               { postTypeId ?
                 <Form.Item>
                 <Button style={buttonStyle} type="primary" htmlType="submit" shape="round">
-                  Create Post
+                  Submit Post
                 </Button>
                 </Form.Item> : <></>
               }

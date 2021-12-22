@@ -47,7 +47,7 @@ function ProfilePage(props) {
 
     return (
         <Layout>
-            <Header ><NavBar /></Header>
+            <Header style={{backgroundColor: '#3949ab'}}><NavBar /></Header>
             <Layout>
                 <Content>
                     <ProfileView  userObj={result} latitude={latitude} longitude={longitude}/>

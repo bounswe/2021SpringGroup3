@@ -38,9 +38,9 @@ export const Register = async (info, dispatch) => {
     }
 }
 
-export const CreateCommunity = async (info, dispatch) => {
+export const CreateCommunity = async (info, token, dispatch) => {
   // dispatch(loginAction.logout());
-  const response = await createCommunity(info);
+  const response = await createCommunity(info, token);
   if(response.status === 200 || response.status === 201){
     console.log(response.data.community.id);
     return response.data.community.id;
