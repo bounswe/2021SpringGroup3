@@ -14,7 +14,7 @@ const GetCommunities = (props) => {
     const [result, setResult] = useState([]);
   
     useEffect(() => {
-        GetCommunitiesRequest({token: loginState.token}, dispatch)
+        GetCommunitiesRequest({ isMember: true }, loginState.token, dispatch)
         .then( result => setResult(result.data));
     }, [])
 

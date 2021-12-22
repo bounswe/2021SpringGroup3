@@ -25,15 +25,12 @@ function GetCommunityPage(props) {
   const { id } = useParams();
 
   const [result, setResult] = useState('');
-  const [memberCount, setMemberCount] = useState('');
   const [posts, setPosts] = useState('');
 
   useEffect(() => {
     GetCommunityPageRequest({id: id, token: loginState.token}, dispatch)
       .then( result => {
         setResult(result.data);
-        setMemberCount(Object.keys(result.data.members).length);
-        console.log(result.data)
       })
     GetCommunityPostsRequest({ id: id, token: loginState.token }, dispatch)
       .then(posts => {
@@ -51,7 +48,8 @@ function GetCommunityPage(props) {
           <Content>
             <Row>
               <Col span={5} align="right">
-              <AboutCommunity image={result.iconUrl} name={result.name} description={result.description} members={memberCount} communityID={id}/>
+              <AboutCommunity image={result.iconUrl} name={result.name} description={result.description} members={result.members} moderators={result.moderators}
+                isMember={result.isMember} isModerator={result.isModerator} isPrivate={result.isPrivate} creator={result.user} communityId={id}/>
               </Col>
               <Col span={19}>
                   {posts}

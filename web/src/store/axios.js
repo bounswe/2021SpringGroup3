@@ -135,12 +135,12 @@ export async function getPostTypes(info) {
 }
 
 
-export async function getPostTypeDetail(info) {
+export async function getPostTypeDetail(info, token) {
   try {
     const header = {headers: {
       'X-Platform': 'WEB',
       'accept': '*/*',
-      'authorization': `${info.token}`
+      'authorization': `${token}`
       },
     }
     console.log(header);
@@ -153,15 +153,16 @@ export async function getPostTypeDetail(info) {
   }
 }
 
-export async function getCommunities(info) {
+export async function getCommunities(info, token) {
   try {
     const header = {headers: {
       'x-platform': 'WEB',
       'accept': '*/*',
-      'authorization': `${info.token}`
+      'authorization': `${token}`
       },
     }
-    const response = await axios.get(GET_COMMUNITIES_ENDPOINT, { ...header });
+    console.log(token)
+    const response = await axios.get(GET_COMMUNITIES_ENDPOINT+"?isMember="+info.isMember, { ...header });
     console.log(response)
     return response;
   } catch (error) {

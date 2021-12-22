@@ -87,9 +87,9 @@ export const GetPostTypeDetail = async (info, token, dispatch) => {
   }
 }
 
-export const GetCommunities = async (info, dispatch) => {
+export const GetCommunities = async (info, token, dispatch) => {
   // dispatch(loginAction.logout());
-  const response = await getCommunities(info);
+  const response = await getCommunities(info, token);
   if(response.status === 200 || response.status === 201){
     console.log(response.data);
     return response

@@ -165,7 +165,7 @@ const CreatePost = (props) => {
     resetFields();
     setPostTypeId(selectedId);
     console.log('sdafasdfasdfdsa',communityId, selectedId)
-    GetPostTypeDetailRequest({ communityId: communityId, postTypeId: selectedId, token: loginState.token }, dispatch)
+    GetPostTypeDetailRequest({ communityId: communityId, postTypeId: selectedId }, loginState.token, dispatch)
       .then(result => {
         setTextFieldsNames([...result.data.textFieldNames]);
         setNumberFieldsNames([...result.data.numberFieldNames]);
