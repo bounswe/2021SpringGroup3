@@ -406,3 +406,10 @@ exports.deleteCommunity = async ({ token, communityId }) => {
     message: 'Community  is deleted',
   };
 };
+
+exports.searchCommunity = async ({ query }) => {
+  const communities = await Community.find({
+    name: { $regex: query, $options: 'i' },
+  }).lean();
+  return formatters.formatCommunities(communities);
+};

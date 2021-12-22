@@ -14,4 +14,6 @@ router.route('/detail').get(validate(postValidation.getPostDetail), postControll
 router.route('/like').post(validate(postValidation.likePost), postController.likePost);
 router.route('/comment').post(validate(postValidation.createComment), postController.createComment);
 
+router.route('/homepage').get(postController.getHomepage);
+
 module.exports = router;

@@ -28,4 +28,6 @@ router.route('/leave').post(validate(communityValidation.leaveCommunity), commun
 router.route('/kick').post(validate(communityValidation.kickFromCommunity), communityController.kickFromCommunity);
 router.route('/update').post(validate(communityValidation.updateCommunity), communityController.updateCommunity);
 
+router.route('/search').get(validate(communityValidation.searchCommunity), communityController.searchCommunity);
+
 module.exports = router;

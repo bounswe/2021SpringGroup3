@@ -36,3 +36,11 @@ exports.getOtherProfile = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.setNotificationId = catchAsync(async (req, res) => {
+  const result = await profileService.setNotificationId({
+    token: req.token,
+    notificationId: req.body.notificationId,
+  });
+  res.send(result);
+});

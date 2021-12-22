@@ -33,3 +33,11 @@ exports.getOtherProfile = {
     })
     .required(),
 };
+
+exports.setNotificationId = {
+  body: Joi.object()
+    .keys({
+      notificationId: Joi.string().required(),
+    })
+    .required(),
+};

@@ -64,11 +64,11 @@ exports.changePassword = async ({ token, password }) => {
     },
     user: token.user._id,
   });
-  await User.findByIdAndUpdate(token.user._id, {
-    $set: {
-      password,
-    },
+  const user = await User.findById(token.user._id);
+  user.set({
+    password,
   });
+  user.save();
   return {
     message: 'Your password has changed successfully',
   };
