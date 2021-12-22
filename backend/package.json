@@ -65,6 +65,7 @@
     "moment": "^2.29.1",
     "mongoose": "^5.7.7",
     "morgan": "^1.9.1",
+    "onesignal-node": "^3.3.0",
     "pm2": "^4.1.2",
     "request-promise": "^4.2.6",
     "short-uuid": "^4.2.0",
