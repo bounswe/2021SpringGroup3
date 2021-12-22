@@ -1,11 +1,21 @@
 import React from 'react';
 
-import { Col, Descriptions, Button, Image, Card, Row, Space } from 'antd';
+import { Col, Descriptions, Button, Image, Card, Row, Space, notification } from 'antd';
 
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router';
+
+import { LeaveCommunity as LeaveCommunityRequest } from '../utils/helper';
+import { JoinCommunity as JoinCommunityRequest } from '../utils/helper';
+import { JoinCommunityModerator as JoinCommunityModeratorRequest } from '../utils/helper';
+
+import { ApproveUser as ApproveUserRequest } from '../utils/helper';
+import { RejectUser as RejectUserRequest } from '../utils/helper';
+
+import { ApproveModerator as ApproveModeratorRequest } from '../utils/helper';
+import { RejectModerator as RejectModeratorRequest } from '../utils/helper';
 
 import 'antd/dist/antd.css';
 
@@ -40,6 +50,9 @@ const AboutCommunity = (props) => {
     const navigate = useNavigate()
 
     const sendRequestToJoin = () => {
+        notification.success({
+            message: 'Community join request sent!',
+        });
         console.log(props.communityId)
     }
 
@@ -51,10 +64,19 @@ const AboutCommunity = (props) => {
         console.log(props.communityId)
     }
 
+    const sendRequestToBeModerator = () => {
+        notification.success({
+            message: 'Community moderator role request sent!',
+        });
+        console.log(props.communityId)
+    }
+
+    
+
     console.log(props)
 
     return (
-        <div style={{ margin: '20px' }}>
+        <div style={{ marginTop: '20px', marginLeft: '20px' }}>
             <Card style={cardStyle} title={props.name} align="left" cover={<Image src={props.image} />}>
                 <Col span={24} align="middle">
                     {props.isMember ?
@@ -116,14 +138,20 @@ const AboutCommunity = (props) => {
                     <b>Members</b>
                 </Col>
                 {props.members === undefined ? "No members" : props.members.slice(0, 5).map(m => <Col span={24}>{m.username}</Col>)}
-                <Col span={24} style={{ marginTop: "20px" }}>
+                <Col span={24} style={{ marginTop: "20px", marginBottom: "20px" }}>
                     <Space>
                         <b>Creator</b> {props.creator ? props.creator.username : "-"}
                     </Space>
                 </Col>
-
-
-
+                <Col span={24} align="middle">
+                    {!props.isModerator ?
+                        <Button style={buttonStyle} shape="round" type='primary'
+                            onClick={() => sendRequestToBeModerator()}>
+                            Request to be a Mod
+                        </Button> :
+                        <></>
+                    }
+                </Col>
             </Card>
         </div>
     );
