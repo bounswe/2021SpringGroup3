@@ -47,6 +47,17 @@ export default function CreateCommunity({navigation, route}) {
     }
   };
 
+  const handleDeleteCommunity = async () => {
+    let response = await client.deleteCommunity({
+      communityId: PAGE_VARIABLES.communityId,
+    });
+    if (response.status / 100 == 2) {
+      navigation.navigate('Main');
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  };
+
   const navigate = async () => {
     navigation.navigate('Community');
   };
@@ -129,6 +140,13 @@ export default function CreateCommunity({navigation, route}) {
               text="UPDATE"
               onPress={handleUpdateCommunity}
               buttonWidth={'80%'}
+            />
+            <CommonButton
+              text="DELETE"
+              buttonBackgroundColor={'#D22B2B'}
+              buttonMarginTop={28}
+              onPress={handleDeleteCommunity}
+              buttonWidth={'40%'}
             />
           </View>
         </KeyboardAvoidingView>
