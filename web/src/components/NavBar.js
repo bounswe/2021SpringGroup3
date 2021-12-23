@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col, Input, Image, Button, Dropdown, Menu, Space } from 'antd';
-import { MessageFilled, BellFilled, UserOutlined, DownOutlined, SettingTwoTone, LogoutOutlined, RightCircleFilled } from '@ant-design/icons';
+import { MessageFilled, BellFilled, UserOutlined, LogoutOutlined, DownOutlined, SettingOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -27,7 +27,6 @@ const NavBar = (props) => {
     const onSearch = value => {
         console.log("Searching value: ", value);
     }
-
 
 
     const onCreateCommunity = () => {
@@ -65,7 +64,7 @@ const NavBar = (props) => {
             </Menu.Item>
             <Menu.Item key="settings">
                 <Button type="text" onClick={handleSettingsNavigate}>
-                    <SettingTwoTone style={{ fontSize: '16px', marginRight: '4px' }} />
+                    <SettingOutlined style={{ fontSize: '16px', marginRight: '4px' }} />
                     Settings
                 </Button>
             </Menu.Item>

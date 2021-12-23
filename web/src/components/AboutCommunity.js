@@ -11,12 +11,6 @@ import { LeaveCommunity as LeaveCommunityRequest } from '../utils/helper';
 import { JoinCommunity as JoinCommunityRequest } from '../utils/helper';
 import { JoinCommunityModerator as JoinCommunityModeratorRequest } from '../utils/helper';
 
-import { ApproveUser as ApproveUserRequest } from '../utils/helper';
-import { RejectUser as RejectUserRequest } from '../utils/helper';
-
-import { ApproveModerator as ApproveModeratorRequest } from '../utils/helper';
-import { RejectModerator as RejectModeratorRequest } from '../utils/helper';
-
 import 'antd/dist/antd.css';
 
 const AboutCommunity = (props) => {
@@ -47,31 +41,52 @@ const AboutCommunity = (props) => {
         borderRadius: '20px'
     }
 
+    const loginState = useSelector((state) => state.login);
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
-    const sendRequestToJoin = () => {
-        notification.success({
-            message: 'Community join request sent!',
-        });
-        console.log(props.communityId)
+    const join = async () => {
+        try {
+            let body = { communityId: props.communityId }
+            const result = await JoinCommunityRequest(body, loginState.token, dispatch);
+            notification.success({
+                message: props.isPrivate ? `Join request sent to ${props.name} mods.` : `Joined to ${props.name} community.`,
+            });
+        } catch (err) {
+            notification.error({
+                message: `An error occured.`,
+            });
+        }
     }
 
-    const join = () => {
-        console.log(props.communityId)
+    const leave = async () => {
+        try {
+            let body = { communityId: props.communityId }
+            const result = await LeaveCommunityRequest(body, loginState.token, dispatch);
+            notification.success({
+                message: `Left ${props.name} community.`,
+            });
+            navigate(`/`)
+        } catch (err) {
+            notification.error({
+                message: `An error occured.`,
+            });
+        }
     }
 
-    const leave = () => {
-        console.log(props.communityId)
+    const joinModerator = async () => {
+        try {
+            let body = { communityId: props.communityId }
+            const result = await JoinCommunityModeratorRequest(body, loginState.token, dispatch);
+            notification.success({
+                message: `Mod role request sent to ${props.name} mods.`,
+            });
+        } catch (err) {
+            notification.error({
+                message: `An error occured.`,
+            });
+        }
     }
-
-    const sendRequestToBeModerator = () => {
-        notification.success({
-            message: 'Community moderator role request sent!',
-        });
-        console.log(props.communityId)
-    }
-
-    
 
     console.log(props)
 
@@ -88,7 +103,7 @@ const AboutCommunity = (props) => {
                         ) :
                         (props.isPrivate ?
                             <Button style={buttonStyle} shape="round" type='primary'
-                                onClick={() => sendRequestToJoin()}>
+                                onClick={() => join()}>
                                 Request to Join Community
                             </Button> :
                             <Button style={buttonStyle} shape="round" type='primary'
@@ -146,7 +161,7 @@ const AboutCommunity = (props) => {
                 <Col span={24} align="middle">
                     {!props.isModerator ?
                         <Button style={buttonStyle} shape="round" type='primary'
-                            onClick={() => sendRequestToBeModerator()}>
+                            onClick={() => joinModerator()}>
                             Request to be a Mod
                         </Button> :
                         <></>
