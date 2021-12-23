@@ -1,5 +1,5 @@
 import * as loginAction from "../store/actions/loginActions";
-import { login, logout, register,
+import { login, logout, register, getHomePagePosts,
   createCommunity, getCommunities, getCommunityPage,
   leaveCommunity, joinCommunity, joinCommunityModerator,
   acceptUser, rejectUser, acceptModerator, rejectModerator, kickUser, deleteCommunity,
@@ -38,6 +38,19 @@ export const Register = async (info, dispatch) => {
     }else{
       dispatch(loginAction.registerFailure());
     }
+}
+
+export const GetHomePagePosts = async (token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await getHomePagePosts(token);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data.community.id);
+    return response.data.community.id;
+    //  dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
 }
 
 export const CreateCommunity = async (info, token, dispatch) => {

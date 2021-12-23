@@ -30,7 +30,7 @@ function GetCommunityPage(props) {
   const { id } = useParams();
 
   const [result, setResult] = useState('');
-  const [posts, setPosts] = useState('');
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     GetCommunityPageRequest({ id: id, token: loginState.token }, dispatch)
