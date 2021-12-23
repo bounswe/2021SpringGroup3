@@ -6,6 +6,7 @@ exports.getPosts = catchAsync(async (req, res) => {
   const result = await postService.getPosts({
     token: req.token,
     communityId: req.query.communityId,
+    sortBy: req.query.sortBy,
   });
   res.send(result);
 });

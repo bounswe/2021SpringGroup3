@@ -45,6 +45,7 @@ exports.getPosts = {
   query: Joi.object()
     .keys({
       communityId: Joi.string().custom(objectId).required(),
+      sortBy: Joi.string().valid('createdAt', 'likeCount').default('createdAt'),
     })
     .required(),
 };

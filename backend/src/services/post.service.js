@@ -4,15 +4,28 @@ const ApiError = require('../utils/ApiError');
 const { formatters, baseUtil } = require('../utils');
 const { PostType, Community, Post, Comment } = require('../models');
 
-exports.getPosts = async ({ token, communityId }) => {
+exports.getPosts = async ({ token, communityId, sortBy }) => {
   const community = await Community.findById(communityId).lean();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
+  if (sortBy === 'createdAt') {
+    const posts = await Post.find({
+      community: community._id,
+    })
+      .sort({ createdAt: -1 })
+      .populate(['creator'])
+      .lean();
+    return formatters.formatPosts(
+      posts.map((p) => ({ ...p, community })),
+      token.user
+    );
+  }
+
   const posts = await Post.find({
     community: community._id,
   })
-    .sort({ createdAt: -1 })
+    .sort({ likeCount: -1 })
     .populate(['creator'])
     .lean();
   return formatters.formatPosts(
