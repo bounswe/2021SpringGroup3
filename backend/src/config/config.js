@@ -10,6 +10,8 @@ const envVarsSchema = Joi.object()
     PORT: Joi.number().default(3000),
     SERVER_URL: Joi.string().uri().default('https://api.cmpegroupthree.store/'),
     MONGODB_URL: Joi.string().required().description('Mongo DB url'),
+    ONESIGNAL_APP_ID: Joi.string().default('').description('Onesignal app id'),
+    ONESIGNAL_API_KEY: Joi.string().default('').description('Onesignal api key'),
   })
   .unknown();
 
@@ -32,4 +34,8 @@ module.exports = {
     },
   },
   serverUrl: envVars.SERVER_URL,
+  onesignal: {
+    appId: envVars.ONESIGNAL_APP_ID,
+    apiKey: envVars.ONESIGNAL_API_KEY,
+  },
 };
