@@ -44,3 +44,11 @@ exports.setNotificationId = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.search = catchAsync(async (req, res) => {
+  const result = await profileService.search({
+    query: req.query.query,
+    communityId: req.query.communityId,
+  });
+  res.send(result);
+});

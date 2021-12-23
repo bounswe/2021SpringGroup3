@@ -46,6 +46,10 @@ exports.formatUser = function (user) {
   };
 };
 
+exports.formatUsers = function (users) {
+  return users.map(formatUserPreview);
+};
+
 exports.formatPreviewCommunity = function (community) {
   return {
     id: community._id.toString(),

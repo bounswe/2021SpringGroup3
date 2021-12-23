@@ -41,3 +41,10 @@ exports.setNotificationId = {
     })
     .required(),
 };
+
+exports.search = {
+  query: Joi.object().keys({
+    query: Joi.string().required(),
+    communityId: Joi.string().custom(objectId),
+  }),
+};

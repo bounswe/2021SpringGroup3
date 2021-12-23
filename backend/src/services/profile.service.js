@@ -127,3 +127,23 @@ exports.setNotificationId = async ({ token, notificationId }) => {
     message: 'Notification id is set',
   };
 };
+
+exports.search = async ({ query, communityId }) => {
+  if (communityId) {
+    const community = await Community.findById(communityId).populate({
+      path: 'members',
+      match: {
+        username: { $regex: query, $options: 'i' },
+      },
+      options: { sort: { followerCount: -1 } },
+    });
+    return formatters.formatUsers(community.members);
+  }
+
+  const users = await User.find({
+    username: { $regex: query, $options: 'i' },
+  })
+    .sort({ followerCount: -1 })
+    .lean();
+  return formatters.formatUsers(users);
+};
