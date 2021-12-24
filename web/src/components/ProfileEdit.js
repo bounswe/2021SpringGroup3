@@ -7,6 +7,7 @@ import 'antd/dist/antd.css';
 import { TeamOutlined, LockOutlined, SaveOutlined, UserOutlined, CheckOutlined, CloseOutlined, UploadOutlined} from '@ant-design/icons';
 
 import buttonColor from '../colors'
+import base64avatar from '../utils/images'
 import { PostProfileSettings as PostProfileSettingsRequest} from '../utils/helper';
 
 import MapPicker from 'react-google-map-picker'
@@ -43,7 +44,7 @@ const ProfileEdit = (props) => {
   const [isPublicLocation, setisPublicLocation] = useState(props.profileValues.location ? props.profileValues.location.isPublic : true)
   const [isPublicProfile, setisPublicProfile] = useState(props.profileValues.isPublic)
 
-  const [image64,setImage64] = useState('');
+  const [image64,setImage64] = useState(null);
 
   //react-map-picker
   const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
@@ -102,7 +103,10 @@ const ProfileEdit = (props) => {
 
   const onFinish = async (values) => {
     try {
+      console.log(base64avatar)
+      console.log(image64)
       profileBody.profilePhoto.value = image64;
+      if (!profileBody.profilePhoto.value) profileBody.profilePhoto.value = base64avatar;
       profileBody.profilePhoto.isPublic = isPublicProfilePhoto == true;
   
       profileBody.bio.value = values.bio;
