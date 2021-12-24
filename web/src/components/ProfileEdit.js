@@ -103,8 +103,6 @@ const ProfileEdit = (props) => {
 
   const onFinish = async (values) => {
     try {
-      console.log(base64avatar)
-      console.log(image64)
       profileBody.profilePhoto.value = image64;
       if (!profileBody.profilePhoto.value) profileBody.profilePhoto.value = base64avatar;
       profileBody.profilePhoto.isPublic = isPublicProfilePhoto == true;
