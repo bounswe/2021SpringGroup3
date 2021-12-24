@@ -11,13 +11,12 @@ import DynamicFormField from '../component/DynamicFormField';
 import FieldHeader from '../component/FieldHeader';
 import CommonButton from '../component/CommonButton';
 import ConfirmButton from '../component/ConfirmButton';
-import ScreenHeader from '../component/ScreenHeader';
+import DeleteButton from '../component/DeleteButton';
 import {PAGE_VARIABLES} from '../constants';
 import {COLORS} from '../theme/colors';
 import {textInputArea} from '../theme/styles';
 import {textInputContainer} from '../theme/styles';
 import {headerContainerStyle} from '../theme/styles';
-import {headerTextStyle} from '../theme/styles';
 import * as Requests from '../services/BoxyClient';
 
 export default function CreatePost({route}) {
@@ -27,7 +26,9 @@ export default function CreatePost({route}) {
   const [textFields, setTextFields] = useState([]);
   const [numberFields, setNumberFields] = useState([]);
   const [locationFields, setLocationFields] = useState([]);
+  const [tags, setTags] = useState([]);
   const [showMap, setShowMap] = useState(false);
+  const [showTags, setShowTags] = useState(false);
   const [address, setAddress] = useState('');
   const [locationIndex, setLocationIndex] = useState(-1);
   const textFieldKey = 'text';
@@ -36,6 +37,7 @@ export default function CreatePost({route}) {
   const linkFieldKey = 'link';
   const geoLocationFieldKey = 'geoLocation';
   const locationFieldKey = 'location';
+  const tagFieldKey = 'tag';
   const [markerState, setMarker] = useState({
     target: 347,
     coordinate: {
@@ -54,6 +56,7 @@ export default function CreatePost({route}) {
     longitudeDelta: 0.0421,
   });
   const navigation = useNavigation();
+
   function handleBackButtonClick() {
     navigation.goBack();
     return true;
@@ -137,6 +140,7 @@ export default function CreatePost({route}) {
       numberFields: numberFields,
       locationFields: locationFields,
       linkFields: linkFields,
+      tags: tags,
     });
     response = await JSON.parse(response);
     if (response.code === 400) {
@@ -190,6 +194,11 @@ export default function CreatePost({route}) {
           },
         };
         setLocationFields(_locationInputs);
+        break;
+      case 'tag':
+        const _tags = [...tags];
+        _tags[index] = input;
+        setTags(_tags);
         break;
       default:
         console.info('field type not found');
@@ -309,6 +318,95 @@ export default function CreatePost({route}) {
     );
   }
 
+  const addTagFieldHandler = () => {
+    const _tagInputs = [...tags];
+    _tagInputs.push('');
+    setTags(_tagInputs);
+  };
+
+  const deleteTagFieldHandler = deleteIndex => {
+    const _tagInputs = tags.filter((input, index) => index !== deleteIndex);
+    setTags(_tagInputs);
+  };
+
+  function getTags() {
+    return (
+      <View style={styles.container}>
+        <View style={headerContainerStyle}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyItems: 'space-between',
+              justifyContent: 'space-between',
+            }}>
+            <IconButton
+              icon="arrow-left-circle"
+              color={'white'}
+              size={30}
+              style={{flex: 1}}
+              onPress={() => {
+                setShowTags(false);
+              }}
+            />
+            <View
+              style={{justifyContent: 'center', flexDirection: 'row', flex: 5}}>
+              <Text style={{color: 'white', fontSize: 20}}>Add Tags</Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+              }}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            alignItems: 'center',
+          }}>
+          <View style={styles.fieldHeader}>
+            <Text style={styles.fieldHeaderText}>
+              {' '}
+              Tag your post (optional){' '}
+            </Text>
+            <IconButton
+              icon="plus"
+              color={COLORS.buttonColor}
+              size={30}
+              onPress={() => addTagFieldHandler()}
+            />
+          </View>
+          <View style={{alignItems: 'center', width: '80%', marginBottom: 10}}>
+            {tags.map((input, index) => (
+              <View
+                style={{
+                  width: '100%',
+                  flexDirection: 'row',
+                }}>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder={'Enter tag name'}
+                    value={input.value}
+                    onChangeText={text =>
+                      inputHandler(tagFieldKey, text, index)
+                    }
+                  />
+                </View>
+                <DeleteButton onPress={() => deleteTagFieldHandler(index)} />
+              </View>
+            ))}
+          </View>
+          <CommonButton
+            text="POST"
+            onPress={createPostHandler}
+            buttonWidth={'80%'}
+          />
+        </View>
+      </View>
+    );
+  }
+
   function postForm() {
     return (
       <View style={{width: '100%'}}>
@@ -334,17 +432,48 @@ export default function CreatePost({route}) {
   }
   return (
     <View style={styles.container}>
-      {showMap ? (
+      {showTags ? (
+        getTags()
+      ) : showMap ? (
         getMapView()
       ) : (
         <>
-          <ScreenHeader
-            titleComponent={
-              <Text style={headerTextStyle}>Post to {communityName}</Text>
-            }
-            navigate={navigation.goBack}
-            iconName="arrow-left-circle"
-          />
+          <View style={headerContainerStyle}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyItems: 'space-between',
+                justifyContent: 'space-between',
+              }}>
+              <IconButton
+                icon="arrow-left-circle"
+                color={'white'}
+                size={30}
+                style={{flex: 1}}
+                onPress={navigation.goBack}
+              />
+              <View
+                style={{
+                  justifyContent: 'center',
+                  flexDirection: 'row',
+                  flex: 5,
+                }}>
+                <Text style={{color: 'white', fontSize: 20}}>
+                  Post to {communityName}
+                </Text>
+              </View>
+              <IconButton
+                icon="arrow-right-circle"
+                color={'white'}
+                size={30}
+                style={{flex: 1}}
+                onPress={() => {
+                  setShowTags(true);
+                }}
+              />
+            </View>
+          </View>
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{alignItems: 'center'}}>
               <View
@@ -354,11 +483,6 @@ export default function CreatePost({route}) {
                 }}>
                 {postForm()}
               </View>
-              <CommonButton
-                text="POST"
-                onPress={createPostHandler}
-                buttonWidth={'80%'}
-              />
             </View>
           </ScrollView>
         </>
@@ -370,6 +494,7 @@ const styles = {
   container: {
     flex: 1,
     height: '100%',
+    width: '100%',
     backgroundColor: COLORS.formBackgroundColor,
   },
   textInput: {
@@ -399,5 +524,24 @@ const styles = {
     color: '#fff',
     lineHeight: 20,
     margin: 20,
+  },
+  fieldHeaderText: {
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    color: '#00227b',
+  },
+  fieldHeader: {
+    width: '80%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 10,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgray',
   },
 };
