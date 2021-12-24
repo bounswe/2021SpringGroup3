@@ -414,6 +414,24 @@ export const deleteAccount = async () => {
     });
 };
 
+export const deleteCommunity = async ({communityId}) => {
+  return fetch(BASE_URL + 'communities?communityId=' + communityId, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return response;
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 export const getPosts = async ({communityId}) => {
   return fetch(BASE_URL + 'posts' + '?communityId=' + communityId, {
     method: 'GET',
