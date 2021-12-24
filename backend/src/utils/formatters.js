@@ -113,7 +113,7 @@ exports.formatPostDetail = function (post, user) {
     dateFieldNames: post.dateFields,
     linkFieldNames: post.linkFields,
     locationFieldNames: post.locationFields,
-    isLiked: post.likers.includes(user._id),
+    isLiked: baseUtil.checkIfObjectIdArrayIncludesId(post.likers, user._id.toString()),
     likeCount: post.likers.length,
   };
 };
