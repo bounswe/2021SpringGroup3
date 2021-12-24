@@ -13,7 +13,7 @@ router
 router.route('/detail').get(validate(postValidation.getPostDetail), postController.getPostDetail);
 router.route('/like').post(validate(postValidation.likePost), postController.likePost);
 router.route('/comment').post(validate(postValidation.createComment), postController.createComment);
-
 router.route('/homepage').get(postController.getHomepage);
+router.route('/search').get(validate(postValidation.search), postController.search);
 
 module.exports = router;

@@ -67,3 +67,14 @@ exports.getHomepage = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.search = catchAsync(async (req, res) => {
+  const result = await postService.search({
+    token: req.token,
+    communityId: req.query.communityId,
+    tag: req.query.tag,
+    postTypeId: req.query.postTypeId,
+    sortBy: req.query.sortBy,
+  });
+  res.send(result);
+});

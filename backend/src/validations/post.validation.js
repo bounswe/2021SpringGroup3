@@ -83,3 +83,14 @@ exports.createComment = {
     })
     .required(),
 };
+
+exports.search = {
+  query: Joi.object()
+    .keys({
+      communityId: Joi.string().custom(objectId).required(),
+      sortBy: Joi.string().valid('createdAt', 'likeCount').default('createdAt'),
+      tag: Joi.string(),
+      postTypeId: Joi.string().custom(objectId),
+    })
+    .required(),
+};
