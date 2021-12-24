@@ -6,7 +6,7 @@ import NavBar from "../components/NavBar";
 import ProfileEdit from "../components/ProfileEdit";
 import { GetProfileSettings as GetProfileSettingsRequest } from "../utils/helper.js";
 
-import { Layout, Col  } from 'antd';
+import { Layout, Col } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 
 function ProfileEditPage(props) {
@@ -16,24 +16,24 @@ function ProfileEditPage(props) {
 
     const [result, setResult] = useState('');
 
-    useEffect (() => {
+    useEffect(() => {
         // Request profile settings here
-        GetProfileSettingsRequest({token: loginState.token}, dispatch)
-            .then( result => setResult(result.data));
+        GetProfileSettingsRequest({ token: loginState.token }, dispatch)
+            .then(result => setResult(result.data));
     }, []);
 
     return (
-        <> 
+        <>
             <Layout>
-            <Header style={{backgroundColor: '#3949ab'}}><NavBar /></Header>
-            <Layout>
-                <Content>
-                <Col span={24} align="right">
-                    <ProfileEdit key={result} profileValues={result}/>
-                </Col>
-                </Content>
-            </Layout>
-            <Footer></Footer>
+                <Header style={{ backgroundColor: '#3949ab' }}><NavBar /></Header>
+                <Layout>
+                    <Content>
+                        <Col span={24} align="right">
+                            { result && <ProfileEdit key={result} profileValues={result} /> }
+                        </Col>
+                    </Content>
+                </Layout>
+                <Footer></Footer>
             </Layout>
         </>
     );
