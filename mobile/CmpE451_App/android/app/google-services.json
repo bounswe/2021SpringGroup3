@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "585814434931",
+    "project_id": "verdant-cable-333619",
+    "storage_bucket": "verdant-cable-333619.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:585814434931:android:0a20f67fc122c1c70c7606",
+        "android_client_info": {
+          "package_name": "com.cmpe451_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "585814434931-n9mk3qil9q4dqef72ovarveq13lb93vd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWNS2TxAtnvZ3eOnGwlPZPjRYuyvNcwFc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "585814434931-n9mk3qil9q4dqef72ovarveq13lb93vd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
