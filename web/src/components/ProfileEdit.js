@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
-import { Form, Input, Button, Checkbox, Typography, Row, Col, Switch, DatePicker, Upload, Avatar, message } from 'antd';
+import { Form, Input, Button, Checkbox, Typography, Row, Col, Switch, DatePicker, Upload, Avatar, message, notification } from 'antd';
 import 'antd/dist/antd.css';
 
 import { TeamOutlined, LockOutlined, SaveOutlined, UserOutlined, CheckOutlined, CloseOutlined, UploadOutlined} from '@ant-design/icons';
@@ -83,22 +83,29 @@ const ProfileEdit = (props) => {
   }
 
   const onFinish = async (values) => {
-    profileBody.profilePhoto.value = image64;
-    profileBody.profilePhoto.isPublic = values.isProfilePicturePublic == true;
+    try {
+      profileBody.profilePhoto.value = image64;
+      profileBody.profilePhoto.isPublic = values.isProfilePicturePublic == true;
+  
+      profileBody.bio.value = values.bio;
+      profileBody.bio.isPublic = values.isBioPublic == true;
+  
+      profileBody.birthday.value = values.birthday._d;
+      profileBody.birthday.isPublic = values.isBirthdayPublic == true;
+  
+      profileBody.location.value.latitude = location.lat;
+      profileBody.location.value.longitude = location.lng;
+      profileBody.location.isPublic = values.isLocationPublic == true;
+      await PostProfileSettingsRequest(profileBody, loginState.token, dispatch);
+  
+      console.log('Success:', profileBody);
+      navigate('/profile');
+    } catch (err) {
+      notification.error({
+        message: `Please fill all the inputs.`,
+      });
+    }
 
-    profileBody.bio.value = values.bio;
-    profileBody.bio.isPublic = values.isBioPublic == true;
-
-    profileBody.birthday.value = values.birthday._d;
-    profileBody.birthday.isPublic = values.isBirthdayPublic == true;
-
-    profileBody.location.value.latitude = location.lat;
-    profileBody.location.value.longitude = location.lng;
-    profileBody.location.isPublic = values.isLocationPublic == true;
-    await PostProfileSettingsRequest(profileBody, loginState.token, dispatch);
-
-    console.log('Success:', profileBody);
-    navigate('/profile');
   };
 
   const onFinishFailed = (errorInfo) => {
