@@ -1,5 +1,6 @@
 import * as loginAction from "../store/actions/loginActions";
-import { login, logout, register, getHomePagePosts,
+import { login, logout, register, 
+  getHomePagePosts, getRecommendedUsers, getRecommendedCommunities,
   createCommunity, getCommunities, getCommunityPage,
   leaveCommunity, joinCommunity, joinCommunityModerator,
   acceptUser, rejectUser, acceptModerator, rejectModerator, kickUser, deleteCommunity,
@@ -44,8 +45,31 @@ export const GetHomePagePosts = async (token, dispatch) => {
   // dispatch(loginAction.logout());
   const response = await getHomePagePosts(token);
   if(response.status === 200 || response.status === 201){
-    console.log(response.data.community.id);
-    return response.data.community.id;
+    return response;
+    //  dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const GetRecommendedUsers = async (token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await getRecommendedUsers(token);
+  if(response.status === 200 || response.status === 201){
+    return response;
+    //  dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const GetRecommendedCommunities = async (info, token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await getRecommendedCommunities(info, token);
+  if(response.status === 200 || response.status === 201){
+    return response;
     //  dispatch(loginAction.logoutSuccess());
   }else{
     // dispatch(loginAction.logoutFailure());

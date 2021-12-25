@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Col, Descriptions, Button, Image, Card, Row, Space, notification } from 'antd';
 
@@ -41,6 +41,8 @@ const AboutCommunity = (props) => {
         borderRadius: '20px'
     }
 
+    const [isMember, setIsMember] = useState(props.isMember);
+
     const loginState = useSelector((state) => state.login);
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -52,6 +54,7 @@ const AboutCommunity = (props) => {
             notification.success({
                 message: props.isPrivate ? `Join request sent to ${props.name} mods.` : `Joined to ${props.name} community.`,
             });
+            if (!props.isPrivate) setIsMember(true);
         } catch (err) {
             notification.error({
                 message: `An error occured.`,
@@ -94,7 +97,7 @@ const AboutCommunity = (props) => {
         <div style={{ marginTop: '20px', marginLeft: '20px' }}>
             <Card style={cardStyle} title={props.name} align="left" cover={<Image src={props.image} />}>
                 <Col span={24} align="middle">
-                    {props.isMember ?
+                    {isMember ?
                         (
                             <Button style={cancelButtonStyle} shape="round" type='primary'
                                 onClick={() => leave()}>
@@ -125,7 +128,7 @@ const AboutCommunity = (props) => {
                 </Col>
                 <Col span={24} align="middle">
                     {
-                        props.isMember ?
+                        isMember ?
                             <Button style={buttonStyle} shape="round" type='primary'
                                 onClick={() => navigate(`/createPost`, { state: { id: props.communityId } })}>
                                 Create Post
