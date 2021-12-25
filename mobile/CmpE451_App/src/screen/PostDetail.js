@@ -8,35 +8,17 @@ import ScreenHeader from '../component/ScreenHeader';
 import {headerTextStyle} from '../theme/styles';
 
 export default function PostDetail({route, navigation}) {
-  const [id, setId] = useState([]);
-  const [user, setUser] = useState([]);
-  const [community, setCommunity] = useState([]);
-  const [date, setDate] = useState([]);
-  const [dateFieldNames, setDateFieldNames] = useState([]);
-  const [linkFieldNames, setLinkFieldNames] = useState([]);
-  const [textFieldNames, setTextFieldNames] = useState([]);
-  const [numberFieldNames, setNumberFieldNames] = useState([]);
-  const [locationFieldNames, setLocationFieldNames] = useState([]);
-  const [isLiked, setIsLiked] = useState([]);
-  const [likeCount, setLikeCount] = useState([]);
-
-  const [markerState, setMarker] = useState({
-    target: 347,
-    coordinate: {
-      latitude: 37.76135920121826,
-      longitude: -122.4682573019337,
-    },
-    position: {
-      x: 150,
-      y: 269,
-    },
-  });
-  const [regionState, setRegion] = useState({
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
+  const [idState, setId] = useState([]);
+  const [userState, setUser] = useState([]);
+  const [communityState, setCommunity] = useState([]);
+  const [dateState, setDate] = useState([]);
+  const [dateFieldNamesState, setDateFieldNames] = useState([]);
+  const [linkFieldNamesState, setLinkFieldNames] = useState([]);
+  const [textFieldNamesState, setTextFieldNames] = useState([]);
+  const [numberFieldNamesState, setNumberFieldNames] = useState([]);
+  const [locationFieldNamesState, setLocationFieldNames] = useState([]);
+  const [isLikedState, setIsLiked] = useState([]);
+  const [likeCountState, setLikeCount] = useState([]);
 
   useEffect(() => {
     async function init() {
@@ -57,7 +39,6 @@ export default function PostDetail({route, navigation}) {
         isLiked,
         likeCount,
       } = JSON.parse(postDetailResponse);
-
       setId(id);
       setUser(user);
       setDate(date);
@@ -85,17 +66,17 @@ export default function PostDetail({route, navigation}) {
         iconName="arrow-left-circle"
       />
       <PostDetailComponent
-        id={id}
-        user={user}
-        date={date}
-        community={community}
-        textFieldNames={textFieldNames}
-        numberFieldNames={numberFieldNames}
-        dateFieldNames={dateFieldNames}
-        linkFieldNames={linkFieldNames}
-        locationFieldNames={locationFieldNames}
-        isLiked={isLiked}
-        likeCount={likeCount}
+        id={idState}
+        user={userState}
+        date={dateState}
+        community={communityState}
+        textFieldNames={textFieldNamesState}
+        numberFieldNames={numberFieldNamesState}
+        dateFieldNames={dateFieldNamesState}
+        linkFieldNames={linkFieldNamesState}
+        locationFieldNames={locationFieldNamesState}
+        isLiked={isLikedState}
+        likeCount={likeCountState}
       />
     </View>
   );
