@@ -115,7 +115,7 @@ exports.formatPostDetail = function (post, user) {
     locationFieldNames: post.locationFields,
     isLiked: baseUtil.checkIfObjectIdArrayIncludesId(post.likers, user._id.toString()),
     likeCount: post.likers.length,
-    tags: post.tags
+    tags: post.tags,
   };
 };
 
