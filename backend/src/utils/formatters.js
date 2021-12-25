@@ -31,6 +31,7 @@ const formatUserPreview = (user, isFollowing = false) => {
     username: user.username,
     profilePhotoUrl: formatProfilePhotoUrl(user, isFollowing),
     isPrivate: user.isPrivate || false,
+    followerCount: user.followerCount || 0,
   };
 };
 
@@ -60,6 +61,7 @@ exports.formatPreviewCommunity = function (community) {
     iconUrl: community.iconUrl,
     description: community.description,
     isPrivate: community.isPrivate,
+    memberCount: community.memberCount || 0,
   };
 };
 
