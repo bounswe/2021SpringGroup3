@@ -146,9 +146,9 @@ exports.search = async ({ query, communityId }) => {
   return formatters.formatUsers(users);
 };
 
-exports.recommend = async () => {
+exports.recommend = async ({ token }) => {
   const users = await User.find().sort({ followerCount: -1, createdAt: -1 }).limit(100).lean();
-  return formatters.formatUsers(users);
+  return formatters.formatUsers(users, token.user);
 };
 
 exports.followProfile = async ({ token, userId }) => {

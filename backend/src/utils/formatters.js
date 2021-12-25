@@ -76,6 +76,7 @@ exports.formatCommunityDetails = function (community, user) {
     isMember: baseUtil.checkIfObjectIdArrayIncludesId(community.members, user._id.toString()),
     isPendingMember: baseUtil.checkIfObjectIdArrayIncludesId(community.pendingMembers, user._id.toString()),
     isPendingModerator: baseUtil.checkIfObjectIdArrayIncludesId(community.pendingModerators, user._id.toString()),
+    memberCount: community.memberCount || (community.members || []).length,
   };
   const modSet = new Set(com.moderators.map((m) => m.id));
   com.members = com.members.map((m) => ({
@@ -149,19 +150,25 @@ exports.formatProfile = function (user) {
     birthday: user.birthday?.value || '',
     location: user.location || '',
     isPrivate: user.isPrivate || false,
+    followerCount: user.followerCount,
   };
+};
+
+const getValueFromProfileField = (field, isFollowing) => {
+  if (field && (field.isPublic || isFollowing)) return field.value;
+  return '';
 };
 
 exports.formatOtherProfile = function (profile, user) {
   const isFollowing = baseUtil.checkIfObjectIdArrayIncludesId(profile.followers, user._id.toString());
   return {
     username: profile.username,
-    profilePhotoUrl:
-      profile.profilePhotoUrl && (profile.profilePhotoUrl.isPublic || isFollowing) ? profile.profilePhotoUrl.value : '',
-    bio: profile.bio && (user.bio.isPublic || isFollowing) ? profile.bio.value : '',
-    birthday: profile.birthday && (profile.birthday.isPublic || isFollowing) ? profile.birthday.value : '',
-    location: profile.location && (profile.location.isPublic || isFollowing) ? profile.location : '',
+    profilePhotoUrl: getValueFromProfileField(profile.profilePhotoUrl, isFollowing),
+    bio: getValueFromProfileField(profile.bio, isFollowing),
+    birthday: getValueFromProfileField(profile.birthday, isFollowing),
+    location: getValueFromProfileField(profile.location, isFollowing),
     isPrivate: profile.isPrivate || false,
+    followerCount: user.followerCount,
   };
 };
 

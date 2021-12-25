@@ -736,7 +736,6 @@
             "schema": {
               "type": "string",
               "example": "createdAt or likeCount"
-
             },
             "required": false
           }
@@ -1973,6 +1972,45 @@
           },
           "400": {
             "description": "You are not following this user"
+          },
+          "404": {
+            "description": "User does not exist"
+          }
+        }
+      }
+    },
+    "/profile/other": {
+      "post": {
+        "tags": ["Profile Controller"],
+        "description": "Unfollow a user",
+        "operationId": "user unfollow",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": ["ANDROID", "WEB"]
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "userId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns user info"
           },
           "404": {
             "description": "User does not exist"

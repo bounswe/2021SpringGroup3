@@ -55,7 +55,9 @@ exports.search = catchAsync(async (req, res) => {
 });
 
 exports.recommend = catchAsync(async (req, res) => {
-  const result = await profileService.recommend();
+  const result = await profileService.recommend({
+    token: req.token,
+  });
   res.send(result);
 });
 
