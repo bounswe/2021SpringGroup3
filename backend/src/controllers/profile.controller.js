@@ -52,3 +52,8 @@ exports.search = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.recommend = catchAsync(async (req, res) => {
+  const result = await profileService.recommend();
+  res.send(result);
+});

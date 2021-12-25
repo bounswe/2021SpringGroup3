@@ -16,5 +16,6 @@ router.route('/other').get(validate(profileValidation.getOtherProfile), profileC
 
 router.post('/setNotificationId', validate(profileValidation.setNotificationId), profileController.setNotificationId);
 router.route('/search').get(validate(profileValidation.search), profileController.search);
+router.route('/recommend').get(profileController.recommend);
 
 module.exports = router;

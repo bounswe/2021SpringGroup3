@@ -147,3 +147,8 @@ exports.search = async ({ query, communityId }) => {
     .lean();
   return formatters.formatUsers(users);
 };
+
+exports.recommend = async () => {
+  const users = await User.find().sort({ followerCount: -1, createdAt: -1 }).limit(10).lean();
+  return formatters.formatUsers(users);
+};
