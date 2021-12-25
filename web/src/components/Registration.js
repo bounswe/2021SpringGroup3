@@ -1,12 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Checkbox, Typography, Row, Col } from 'antd';
+import { Form, Input, Button, Checkbox, Typography, Row, Col, Image } from 'antd';
+import { FormOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 
 import { useDispatch } from 'react-redux';
 import { Register } from '../utils/helper';
 import { useNavigate } from 'react-router-dom'
 
-const {Text} = Typography;
+import logo from '../utils/BoxyHeadlineCat.png';
+
+const { Text } = Typography;
+
+const subButtonStyle = {
+  fontSize: '12px',
+  color: '#8b949e',
+  cursor: 'pointer'
+}
+
+const buttonStyle = {
+  backgroundColor: '#6f74dd',
+  borderColor: '#6f74dd',
+  color: '#ffffff',
+  cursor: 'pointer',
+  width: '100%',
+  fontWeight: 'bold'
+}
 
 const Registration = () => {
 
@@ -27,12 +45,15 @@ const Registration = () => {
     <Row gutter={[0, 16]}>
       <Col span={24}></Col>
       <Col span={6} offset={9}>
+        <Col span={24} align={'middle'} style={{ margin: '30px' }}>
+          <Image src={logo} width={300} preview={false} />
+        </Col>
         <Form
           name="basic"
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
-        > 
-        <Text strong>Username</Text>
+        >
+          <Text strong>Username</Text>
           <Form.Item
             name="username"
             required
@@ -93,16 +114,15 @@ const Registration = () => {
             <Checkbox required><a href="##">Accepting the terms of GPDR and KVKK</a></Checkbox>
           </Form.Item>
 
-          <Form.Item
-            wrapperCol={{
-              offset: 4,
-          }}
-          >
-            <Button type="primary" htmlType="submit" shape="round">
-              Submit Registration Form
+          <Form.Item>
+            <Button type="primary" htmlType="submit" shape="round" style={buttonStyle} icon={<FormOutlined />}>
+              Register
             </Button>
           </Form.Item>
         </Form>
+        <Col span={24} align="middle">
+          <Text style={subButtonStyle} onClick={() => navigate('/login')}>Already have an account?</Text>
+        </Col>
       </Col>
     </Row>
   );

@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
-import { Form, Input, Row, Col, Button, Typography, Layout, Space } from 'antd';
+import { Form, Input, Row, Col, Button, Typography, Space, Image } from 'antd';
+import { LoginOutlined } from '@ant-design/icons';
 
 import { useNavigate } from 'react-router-dom'
 
@@ -10,7 +11,8 @@ import { useDispatch } from 'react-redux';
 
 import { Login as LoginHelper } from '../utils/helper';
 
-import { LoginOutlined } from '@ant-design/icons';
+import logo from '../utils/BoxyHeadlineCat.png';
+
 import 'antd/dist/antd.css';
 
 const { Text } = Typography;
@@ -21,6 +23,15 @@ const subButtonStyle = {
   cursor: 'pointer'
 }
 
+const buttonStyle = {
+  backgroundColor: '#6f74dd',
+  borderColor: '#6f74dd',
+  color: '#ffffff',
+  cursor: 'pointer',
+  width: '100%',
+  fontWeight: 'bold'
+}
+
 const Login = () => {
 
   const navigate = useNavigate()
@@ -28,7 +39,7 @@ const Login = () => {
 
   const onFinish = (values) => {
     console.log('Success:', values);
-    LoginHelper({username: values.username, password: values.password}, dispatch)
+    LoginHelper({ username: values.username, password: values.password }, dispatch)
     navigate('/home');
   };
 
@@ -48,8 +59,11 @@ const Login = () => {
     <Row gutter={[0, 16]}>
       <Col span={24}></Col>
       <Col span={6} offset={9}>
+        <Col span={24} align={'middle'} style={{ margin: '30px' }}>
+          <Image src={logo} width={300} preview={false} />
+        </Col>
         <Form
-          style={{marginBottom: '20px'}}
+          style={{ marginBottom: '20px' }}
           name="basic"
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
@@ -77,13 +91,13 @@ const Login = () => {
               },
             ]}
           >
-          <Input.Password placeholder="Enter password" />
+            <Input.Password placeholder="Enter password" />
           </Form.Item>
 
           <Col span={24} align="middle">
-              <Button type="primary" htmlType="submit" shape="round" icon={<LoginOutlined />}>
-                  Login
-              </Button>
+            <Button type="primary" htmlType="submit" shape="round" style={buttonStyle} icon={<LoginOutlined />}>
+              Login
+            </Button>
           </Col>
         </Form>
         <Col span={24} align="middle">
@@ -92,7 +106,7 @@ const Login = () => {
             <Text style={subButtonStyle} onClick={sendToRegistration}>Don't have an account?</Text>
           </Space>
         </Col>
-      </Col >
+      </Col>
     </Row >
   )
 }
