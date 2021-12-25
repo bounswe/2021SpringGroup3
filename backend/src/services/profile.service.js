@@ -29,22 +29,27 @@ exports.deleteProfile = async ({ token }) => {
   ]);
   await Community.updateMany(
     {
-      $or: [
-        {
-          members: {
-            $in: [token.user._id],
-          },
-        },
-        {
-          pendingMembers: {
-            $in: [token.user._id],
-          },
-        },
-      ],
+      members: {
+        $in: [token.user._id],
+      },
     },
     {
       $pull: {
         members: token.user._id,
+      },
+      $inc: {
+        memberCount: -1,
+      },
+    }
+  );
+  await Community.updateMany(
+    {
+      pendingMembers: {
+        $in: [token.user._id],
+      },
+    },
+    {
+      $pull: {
         pendingMembers: token.user._id,
       },
     }
@@ -74,22 +79,27 @@ exports.deleteProfile = async ({ token }) => {
   });
   await User.updateMany(
     {
-      $or: [
-        {
-          followers: {
-            $in: [token.user._id],
-          },
-        },
-        {
-          pendingFollowers: {
-            $in: [token.user._id],
-          },
-        },
-      ],
+      followers: {
+        $in: [token.user._id],
+      },
     },
     {
       $pull: {
         followers: token.user._id,
+      },
+      $inc: {
+        followerCount: -1,
+      },
+    }
+  );
+  await User.updateMany(
+    {
+      pendingFollowers: {
+        $in: [token.user._id],
+      },
+    },
+    {
+      $pull: {
         pendingFollowers: token.user._id,
       },
     }
