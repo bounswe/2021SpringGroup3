@@ -22,6 +22,7 @@ exports.setProfile = {
       bio: profileField,
       birthday: profileField,
       location: locationField,
+      isPublic: Joi.boolean(),
     })
     .required(),
 };
@@ -47,4 +48,12 @@ exports.search = {
     query: Joi.string().required(),
     communityId: Joi.string().custom(objectId),
   }),
+};
+
+exports.follow = {
+  query: Joi.object()
+    .keys({
+      userId: Joi.string().custom(objectId).required(),
+    })
+    .required(),
 };

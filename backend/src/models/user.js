@@ -85,10 +85,19 @@ const userSchema = mongoose.Schema(
         type: String,
       },
     },
-    followers: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
+    followers: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User' }],
+    pendingFollowers: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User' }],
     followerCount: {
       type: Number,
       default: 0,
+    },
+    pendingFollowerCount: {
+      type: Number,
+      default: 0,
+    },
+    isPrivate: {
+      type: Boolean,
+      default: false,
     },
   },
 

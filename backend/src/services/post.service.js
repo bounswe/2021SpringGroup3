@@ -108,11 +108,10 @@ exports.getPostDetail = async ({ token, communityId, postId }) => {
     .populate({
       path: 'user',
       model: 'User',
-      select: ['_id', 'username', 'profilePhotoUrl'],
     });
   return {
     ...formatters.formatPostDetail(post, token.user),
-    comments: formatters.formatComments(comments),
+    comments: formatters.formatComments(comments, token.user),
   };
 };
 
@@ -180,10 +179,9 @@ exports.createComment = async ({ token, postId, text }) => {
       .populate({
         path: 'user',
         model: 'User',
-        select: ['_id', 'username', 'profilePhotoUrl'],
       });
     return {
-      comments: formatters.formatComments(comments),
+      comments: formatters.formatComments(comments, token.user),
     };
   }
   throw new ApiError(

@@ -32,6 +32,7 @@ exports.setProfile = catchAsync(async (req, res) => {
 
 exports.getOtherProfile = catchAsync(async (req, res) => {
   const result = await profileService.getOtherProfile({
+    token: req.token,
     userId: req.query.userId,
   });
   res.send(result);
@@ -55,5 +56,37 @@ exports.search = catchAsync(async (req, res) => {
 
 exports.recommend = catchAsync(async (req, res) => {
   const result = await profileService.recommend();
+  res.send(result);
+});
+
+exports.followProfile = catchAsync(async (req, res) => {
+  const result = await profileService.followProfile({
+    token: req.token,
+    userId: req.query.userId,
+  });
+  res.send(result);
+});
+
+exports.unfollowProfile = catchAsync(async (req, res) => {
+  const result = await profileService.unfollowProfile({
+    token: req.token,
+    userId: req.query.userId,
+  });
+  res.send(result);
+});
+
+exports.rejectFollowRequest = catchAsync(async (req, res) => {
+  const result = await profileService.rejectFollowRequest({
+    token: req.token,
+    userId: req.query.userId,
+  });
+  res.send(result);
+});
+
+exports.approveFollowRequest = catchAsync(async (req, res) => {
+  const result = await profileService.approveFollowRequest({
+    token: req.token,
+    userId: req.query.userId,
+  });
   res.send(result);
 });

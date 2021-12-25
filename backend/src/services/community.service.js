@@ -10,10 +10,10 @@ const onesignalService = require('./onesignal.service');
 const populateCommunity = async (communityId) => {
   return Community.findById(communityId)
     .populate('creator')
-    .populate({ path: 'members', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
-    .populate({ path: 'moderators', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
-    .populate({ path: 'pendingMembers', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
-    .populate({ path: 'pendingModerators', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] });
+    .populate({ path: 'members', model: 'User' })
+    .populate({ path: 'moderators', model: 'User' })
+    .populate({ path: 'pendingMembers', model: 'User' })
+    .populate({ path: 'pendingModerators', model: 'User' });
 };
 
 exports.getCommunities = async ({ token, isModerator, isMember }) => {

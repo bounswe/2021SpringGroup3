@@ -3,7 +3,7 @@
 const httpStatus = require('http-status');
 const short = require('short-uuid');
 const fs = require('fs-extra');
-const { formatters } = require('../utils');
+const { formatters, baseUtil } = require('../utils');
 const { User, Community, Post, Comment } = require('../models');
 const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
@@ -76,7 +76,8 @@ exports.deleteProfile = async ({ token }) => {
 };
 
 exports.getProfileSettings = async ({ token }) => {
-  return formatters.formatProfileSettings(token.user);
+  const profile = await User.findById(token.user._id).populate(['followers', 'pendingFollowers']).lean();
+  return formatters.formatProfileSettings(profile);
 };
 
 exports.setProfile = async ({ token, body }) => {
@@ -99,22 +100,19 @@ exports.setProfile = async ({ token, body }) => {
         typeof body.profilePhoto.isPublic === 'boolean' ? body.profilePhoto.isPublic : token.user.profilePhoto.isPublic,
     };
   }
-  const user = await User.findByIdAndUpdate(
-    token.user._id,
-    {
-      $set: update,
-    },
-    { new: true }
-  );
+  await User.findByIdAndUpdate(token.user._id, {
+    $set: update,
+  });
+  const user = User.findById(token.user._id).populate(['followers', 'pendingFollowers']).lean();
   return formatters.formatProfileSettings(user);
 };
 
-exports.getOtherProfile = async ({ userId }) => {
+exports.getOtherProfile = async ({ userId, token }) => {
   const user = await User.findById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
   }
-  return formatters.formatOtherProfile(user);
+  return formatters.formatOtherProfile(user, token.user);
 };
 
 exports.setNotificationId = async ({ token, notificationId }) => {
@@ -151,4 +149,127 @@ exports.search = async ({ query, communityId }) => {
 exports.recommend = async () => {
   const users = await User.find().sort({ followerCount: -1, createdAt: -1 }).limit(100).lean();
   return formatters.formatUsers(users);
+};
+
+exports.followProfile = async ({ token, userId }) => {
+  let user = await User.findById(userId).lean();
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+  }
+  if (baseUtil.checkIfObjectIdArrayIncludesId(user.followers, token.user._id.toString())) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You are already following this user');
+  }
+  if (user.isPrivate) {
+    if (baseUtil.checkIfObjectIdArrayIncludesId(user.pendingFollowers, token.user._id.toString())) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'You already have a follow request for this user');
+    }
+    await User.findByIdAndUpdate(user._id, {
+      $addToSet: {
+        pendingFollowers: token.user._id,
+      },
+      $inc: {
+        pendingFollowerCount: 1,
+      },
+    });
+  } else {
+    user = await User.findByIdAndUpdate(
+      user._id,
+      {
+        $addToSet: {
+          followers: token.user._id,
+        },
+        $inc: {
+          followerCount: 1,
+        },
+      },
+      { new: true }
+    );
+  }
+  return {
+    ...formatters.formatOtherProfile(user, token.user),
+    followStatus: user.isPrivate ? 'waiting' : 'followed',
+  };
+};
+
+exports.unfollowProfile = async ({ token, userId }) => {
+  let user = await User.findById(userId).lean();
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+  }
+  if (!baseUtil.checkIfObjectIdArrayIncludesId(user.followers, token.user._id.toString())) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'You are not following this user');
+  }
+  user = await User.findByIdAndUpdate(
+    user._id,
+    {
+      $pull: {
+        followers: token.user._id,
+      },
+      $inc: {
+        followerCount: -1,
+      },
+    },
+    { new: true }
+  );
+  return formatters.formatOtherProfile(user, token.user);
+};
+
+exports.approveFollowRequest = async ({ token, userId }) => {
+  if (!baseUtil.checkIfObjectIdArrayIncludesId(token.user.pendingFollowers, userId)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'This user does not have a follow request for you');
+  }
+  const user = await User.findById(userId).lean();
+  if (!user) {
+    // to be safe
+    await User.findByIdAndUpdate(token.user._id, {
+      $pull: {
+        pendingFollowers: user._id,
+      },
+      $inc: {
+        pendingFollowerCount: -1,
+      },
+    });
+    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+  }
+  await User.findByIdAndUpdate(token.user._id, {
+    $addToSet: {
+      followers: user._id,
+    },
+    $pull: {
+      pendingFollowers: user._id,
+    },
+    $inc: {
+      followerCount: 1,
+      pendingFollowerCount: -1,
+    },
+  });
+  return exports.getProfileSettings({ token });
+};
+
+exports.rejectFollowRequest = async ({ token, userId }) => {
+  if (!baseUtil.checkIfObjectIdArrayIncludesId(token.user.pendingFollowers, userId)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'This user does not have a follow request for you');
+  }
+  const user = await User.findById(userId).lean();
+  if (!user) {
+    // to be safe
+    await User.findByIdAndUpdate(token.user._id, {
+      $pull: {
+        pendingFollowers: user._id,
+      },
+      $inc: {
+        pendingFollowerCount: -1,
+      },
+    });
+    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+  }
+  await User.findByIdAndUpdate(token.user._id, {
+    $pull: {
+      pendingFollowers: user._id,
+    },
+    $inc: {
+      pendingFollowerCount: -1,
+    },
+  });
+  return exports.getProfileSettings({ token });
 };
