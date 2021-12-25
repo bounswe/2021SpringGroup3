@@ -1,24 +1,17 @@
-import {View, Text, Linking, Alert} from 'react-native';
+import {View, Text, Linking} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {COLORS} from '../theme/colors';
-import {TEXT, PAGE_VARIABLES} from '../constants';
-import {AXIOS_CLIENT} from '../services/axiosCientService';
-import * as Requests from '../services/BoxyClient';
-import {IconButton} from 'react-native-paper';
-import Geocoder from 'react-native-geocoding';
-import MapView, {Marker} from 'react-native-maps';
-import * as Client from '../services/BoxyClient';
-import Main from '../screen/Main.js';
-
+import {useIsFocused} from '@react-navigation/native';
+import * as client from '../services/BoxyClient';
+import MapView from 'react-native-maps';
 import {
   FlatList,
   Image,
   StyleSheet,
   TouchableOpacity,
   ToastAndroid,
-  ScrollView,
 } from 'react-native';
 
 export default function PostDetail({
@@ -34,6 +27,31 @@ export default function PostDetail({
   isLiked,
   likeCount,
 }) {
+  const [isLikedState, setIsLikedState] = useState(false);
+  const [likeCounState, setLikeCountState] = useState(0);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    async function init() {
+      setIsLikedState(isLiked);
+      setLikeCountState(likeCount);
+    }
+    if (isFocused) {
+      init();
+    }
+  }, [isFocused, isLiked, likeCount]);
+
+  const handleLikePost = async () => {
+    let response = await client.likePost({postId: id});
+    const status = response.status;
+    if (status === 200) {
+      setLikeCountState(response.data.likeCount);
+      setIsLikedState(response.data.isLiked);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  };
+
   return (
     <View style={styles.feedItem}>
       <View>
@@ -70,7 +88,7 @@ export default function PostDetail({
             <View>
               <Text style={styles.fieldName}>{item.name}</Text>
               <Text style={styles.content}>{item.value}</Text>
-              <Text></Text>
+              <Text />
             </View>
           )}
         />
@@ -83,7 +101,7 @@ export default function PostDetail({
             <View>
               <Text style={styles.fieldName}>{item.name}</Text>
               <Text style={styles.content}>{item.value}</Text>
-              <Text></Text>
+              <Text />
             </View>
           )}
         />
@@ -98,7 +116,7 @@ export default function PostDetail({
               <Text style={styles.content}>
                 {moment(item.value).format('MMMM Do YYYY, h:mm:ss a')}
               </Text>
-              <Text></Text>
+              <Text />
             </View>
           )}
         />
@@ -113,7 +131,7 @@ export default function PostDetail({
               <TouchableOpacity onPress={() => Linking.openURL(item.value)}>
                 <Text style={{color: COLORS.buttonColor}}>{item.value}</Text>
               </TouchableOpacity>
-              <Text></Text>
+              <Text />
             </View>
           )}
         />
@@ -137,20 +155,19 @@ export default function PostDetail({
                 <MapView
                   style={styles.map}
                   initialRegion={{
-                    latitude:
-                      locationFieldNames[index]['value']['geo']['latitude'],
-                    longitude:
-                      locationFieldNames[index]['value']['geo']['longitude'],
+                    latitude: locationFieldNames[index].value.geo.latitude,
+                    longitude: locationFieldNames[index].value.geo.longitude,
                     latitudeDelta: 0.004867,
                     longitudeDelta: 0.006976,
-                  }}></MapView>
-                <Text></Text>
-                <Text></Text>
-                <Text></Text>
-                <Text></Text>
-                <Text></Text>
-                <Text></Text>
-                <Text></Text>
+                  }}
+                />
+                <Text />
+                <Text />
+                <Text />
+                <Text />
+                <Text />
+                <Text />
+                <Text />
               </View>
             </View>
           )}
@@ -159,15 +176,25 @@ export default function PostDetail({
 
       <View style={{flexDirection: 'row', top: 10}}>
         <View>
-          <Icon
-            name="heart"
-            size={24}
-            color={likeCount === 0 ? COLORS.unlikeButtonColor : 'red'}
-            style={{marginRight: 8}}
-          />
+          {isLikedState ? (
+            <Icon
+              name="heart"
+              size={24}
+              color={'red'}
+              style={{marginRight: 8}}
+            />
+          ) : (
+            <Icon
+              name="heart"
+              size={24}
+              color={COLORS.unlikeButtonColor}
+              style={{marginRight: 8}}
+              onPress={handleLikePost}
+            />
+          )}
         </View>
 
-        <Text> {likeCount} likes </Text>
+        <Text> {likeCounState} likes </Text>
       </View>
     </View>
   );

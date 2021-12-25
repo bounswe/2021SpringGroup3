@@ -19,7 +19,6 @@ import {PAGE_VARIABLES} from '../constants';
 import * as client from '../services/BoxyClient';
 import UserList from '../component/UserList';
 import CommunityPosts from '../component/CommunityPosts';
-import MessageList from '../component/MessageList';
 
 export default function Community({navigation}) {
   const Tab = createMaterialTopTabNavigator();
@@ -88,8 +87,6 @@ export default function Community({navigation}) {
       resetStates();
     }
   }, [navigation, isFocused]);
-
-  async function fetchPosts() {}
 
   async function handleJoinCommunity() {
     let response = await client.joinCommunity({
