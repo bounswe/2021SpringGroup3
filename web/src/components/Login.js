@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import React from "react";
 import { useDispatch } from 'react-redux';
 
-import {  Login as LoginHelper } from '../utils/helper';
+import { Login as LoginHelper } from '../utils/helper';
 
 import { LoginOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
@@ -29,7 +29,7 @@ const Login = () => {
   const onFinish = (values) => {
     console.log('Success:', values);
     LoginHelper({username: values.username, password: values.password}, dispatch)
-    navigate('/home')
+    navigate('/home');
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -37,11 +37,11 @@ const Login = () => {
   };
 
   const sendToRegistration = () => {
-    console.log('Sending to registration');
+    navigate('/register');
   }
 
   const sendToResetPassword = () => {
-    console.log('Sending to reset password');
+    navigate('/register');
   }
 
   return (

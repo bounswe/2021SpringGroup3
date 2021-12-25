@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
-import { Form, Input, Button, Checkbox, Typography, Row, Col, Switch, DatePicker, Upload, Avatar, message, notification } from 'antd';
+import { Form, Input, Button, Space, Typography, Row, Col, Switch, DatePicker, Upload, Avatar, message, notification } from 'antd';
 import 'antd/dist/antd.css';
 
-import { TeamOutlined, LockOutlined, SaveOutlined, UserOutlined, CheckOutlined, CloseOutlined, UploadOutlined} from '@ant-design/icons';
+import { TeamOutlined, LockOutlined, SaveOutlined, UserOutlined, CheckOutlined, CloseOutlined, UploadOutlined } from '@ant-design/icons';
 
 import buttonColor from '../colors'
 import base64avatar from '../utils/images'
-import { PostProfileSettings as PostProfileSettingsRequest} from '../utils/helper';
+import { PostProfileSettings as PostProfileSettingsRequest } from '../utils/helper';
 
 import MapPicker from 'react-google-map-picker'
 import moment from 'moment'
 
-const DefaultLocation = { lat: 41, lng: 29};
+const DefaultLocation = { lat: 41, lng: 29 };
 const DefaultZoom = 10;
 
 const { Text, Title } = Typography;
@@ -32,7 +32,7 @@ const ProfileEdit = (props) => {
     cursor: 'pointer',
     marginTop: '20px',
     fontWeight: 'bold'
-}
+  }
 
   const loginState = useSelector((state) => state.login);
   const navigate = useNavigate();
@@ -44,40 +44,40 @@ const ProfileEdit = (props) => {
   const [isPublicLocation, setisPublicLocation] = useState(props.profileValues.location ? props.profileValues.location.isPublic : true)
   const [isPublicProfile, setisPublicProfile] = useState(props.profileValues.isPublic)
 
-  const [image64,setImage64] = useState(null);
+  const [image64, setImage64] = useState(null);
 
   //react-map-picker
   const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
   const [location, setLocation] = useState(defaultLocation);
   const [zoom, setZoom] = useState(DefaultZoom);
-  function handleChangeLocation (lat, lng){
-    setLocation({lat:lat, lng:lng});
+  function handleChangeLocation(lat, lng) {
+    setLocation({ lat: lat, lng: lng });
   }
-  
-  function handleChangeZoom (newZoom){
+
+  function handleChangeZoom(newZoom) {
     setZoom(newZoom);
   }
 
-  function handleResetLocation(){
-    setDefaultLocation({ ... DefaultLocation});
+  function handleResetLocation() {
+    setDefaultLocation({ ...DefaultLocation });
     setZoom(DefaultZoom);
   }
-  const MapPickerElement =                 
+  const MapPickerElement =
     <div>
-      <button onClick={handleResetLocation}>Reset Location</button><br/>
-      <label>Latitute</label><input type='text' value={location.lat} disabled/><br/>
-      <label>Longitute</label><input type='text' value={location.lng} disabled/><br/>
-      <label>Zoom</label><input type='text' value={zoom} disabled/><br/>
-      
+      <button onClick={handleResetLocation}>Reset Location</button><br />
+      <label>Latitute</label><input type='text' value={location.lat} disabled /><br />
+      <label>Longitute</label><input type='text' value={location.lng} disabled /><br />
+      <label>Zoom</label><input type='text' value={zoom} disabled /><br />
+
       <MapPicker defaultLocation={defaultLocation}
         zoom={zoom}
         mapTypeId="roadmap"
-        style={{height:'700px'}}
-        onChangeLocation={handleChangeLocation} 
+        style={{ height: '700px' }}
+        onChangeLocation={handleChangeLocation}
         onChangeZoom={handleChangeZoom}
-        apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}/>
+        apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY} />
     </div>
-  
+
   var profileBody = {
     "profilePhoto": {
       "value": '',
@@ -106,20 +106,20 @@ const ProfileEdit = (props) => {
       profileBody.profilePhoto.value = image64;
       if (!profileBody.profilePhoto.value) profileBody.profilePhoto.value = base64avatar;
       profileBody.profilePhoto.isPublic = isPublicProfilePhoto == true;
-  
+
       profileBody.bio.value = values.bio;
       profileBody.bio.isPublic = isPublicBio == true;
-  
+
       profileBody.birthday.value = values.birthday._d;
       profileBody.birthday.isPublic = isPublicBirthday == true;
-  
+
       profileBody.location.value.latitude = location.lat;
       profileBody.location.value.longitude = location.lng;
       profileBody.location.isPublic = isPublicLocation == true;
 
       //profileBody.isPublic = isPublicProfile == true;
       await PostProfileSettingsRequest(profileBody, loginState.token, dispatch);
-  
+
       console.log('Success:', profileBody);
       navigate('/profile');
     } catch (err) {
@@ -146,7 +146,10 @@ const ProfileEdit = (props) => {
     <Row gutter={[0, 16]}>
       <Col span={24}></Col>
       <Col span={12} offset={6}>
-        <Row>
+            <Col span={24} align='middle'>
+              <Title level={2} strong="true">{`${props.profileValues.username}'s Settings`}</Title>
+            </Col>
+        <Row style={{ marginTop: '30px' }}>
           <Col span={12}>
             <Title level={4}>Profile Settings</Title>
           </Col>
@@ -161,13 +164,13 @@ const ProfileEdit = (props) => {
           onFinishFailed={onFinishFailed}
         >
           <Row>
-            
+
             <Col span={12}>
               <Col span={24}><Text strong>Profile Picture</Text></Col>
               <Form.Item
-              name="upload"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
+                name="upload"
+                valuePropName="fileList"
+                getValueFromEvent={normFile}
               >
                 <Upload
                   name="pp"
@@ -176,30 +179,30 @@ const ProfileEdit = (props) => {
                     if (!isJpgOrPng) {
                       message.error('You can only upload JPG/PNG file!');
                     }
-                    else{
+                    else {
                       const reader = new FileReader();
                       reader.readAsDataURL(file);
-              
+
                       reader.onload = e => {
-                          console.log(e);
-                          setImage64(e.target.result.substring(e.target.result.indexOf('base64') + 7));
+                        console.log(e);
+                        setImage64(e.target.result.substring(e.target.result.indexOf('base64') + 7));
                       };
                     }
                     // Prevent upload
                     return false;
                   }}
-                  onRemove={() => {setImage64("")}}
+                  onRemove={() => { setImage64("") }}
                   listType="picture">
-                  { image64 ? <></> : <Button icon={<UploadOutlined />}>Click to upload</Button> } 
+                  {image64 ? <></> : <Button icon={<UploadOutlined />}>Click to upload</Button>}
                 </Upload>
               </Form.Item>
             </Col>
             <Col offset={1} span={11} align="left">
               <Form.Item name="isProfilePicturePublic">
                 <Switch style={buttonColor}
-                  checked ={isPublicProfilePhoto}
-                  checkedChildren={<><TeamOutlined /> <Text strong style={{color: 'white'}}>Public</Text></>}
-                  unCheckedChildren={<><LockOutlined /> <Text strong style={{color: 'white'}}>Private</Text></>}
+                  checked={isPublicProfilePhoto}
+                  checkedChildren={<><TeamOutlined /> <Text strong style={{ color: 'white' }}>Public</Text></>}
+                  unCheckedChildren={<><LockOutlined /> <Text strong style={{ color: 'white' }}>Private</Text></>}
                   onClick={() => setisPublicProfilePhoto(!isPublicProfilePhoto)}
                 />
               </Form.Item>
@@ -207,27 +210,8 @@ const ProfileEdit = (props) => {
           </Row>
 
           <Row>
-            <Col span={12} >
-              <Text strong>Username</Text>
-              <Form.Item
-                name="username"
-                initialValue={props.profileValues.username}
-                required
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter your username',
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row>
             <Col span={12}>
-            <Text strong>Bio</Text>
+              <Text strong>Bio</Text>
               <Form.Item name="bio" initialValue={props.profileValues.bio.value}>
                 <TextArea rows={4} placeholder="Enter bio" />
               </Form.Item>
@@ -235,9 +219,9 @@ const ProfileEdit = (props) => {
             <Col offset={1} span={11} align="left">
               <Form.Item name="isBioPublic">
                 <Switch style={buttonColor}
-                  checked ={isPublicBio}
-                  checkedChildren={<><TeamOutlined /> <Text strong style={{color: 'white'}}>Public</Text></>}
-                  unCheckedChildren={<><LockOutlined /> <Text strong style={{color: 'white'}}>Private</Text></>}
+                  checked={isPublicBio}
+                  checkedChildren={<><TeamOutlined /> <Text strong style={{ color: 'white' }}>Public</Text></>}
+                  unCheckedChildren={<><LockOutlined /> <Text strong style={{ color: 'white' }}>Private</Text></>}
                   onClick={() => setisPublicBio(!isPublicBio)}
                 />
               </Form.Item>
@@ -246,17 +230,17 @@ const ProfileEdit = (props) => {
 
           <Row>
             <Col span={12}>
-            <Text strong>Birthday</Text>
+              <Text strong>Birthday</Text>
               <Form.Item name="birthday" initialValue={moment(props.profileValues.birthday.value)}>
-                <DatePicker format="MMM Do YYYY"/>
+                <DatePicker format="MMM Do YYYY" />
               </Form.Item>
             </Col>
             <Col offset={1} span={11} align="left">
               <Form.Item name="isBirthdayPublic">
                 <Switch style={buttonColor}
-                  checked ={isPublicBirthday}
-                  checkedChildren={<><TeamOutlined /> <Text strong style={{color: 'white'}}>Public</Text></>}
-                  unCheckedChildren={<><LockOutlined /> <Text strong style={{color: 'white'}}>Private</Text></>}
+                  checked={isPublicBirthday}
+                  checkedChildren={<><TeamOutlined /> <Text strong style={{ color: 'white' }}>Public</Text></>}
+                  unCheckedChildren={<><LockOutlined /> <Text strong style={{ color: 'white' }}>Private</Text></>}
                   onClick={() => setisPublicBirthday(!isPublicBirthday)}
                 />
               </Form.Item>
@@ -265,11 +249,11 @@ const ProfileEdit = (props) => {
 
           <Row>
             <Col span={12}>
-            <Text strong>Location</Text>
-              <Form.Item 
+              <Text strong>Location</Text>
+              <Form.Item
                 name="location"
                 required
-                initialValue={props.profileValues.location}  
+                initialValue={props.profileValues.location}
               >
                 {MapPickerElement}
               </Form.Item>
@@ -277,30 +261,30 @@ const ProfileEdit = (props) => {
             <Col offset={1} span={11} align="left">
               <Form.Item name="isLocationPublic">
                 <Switch style={buttonColor}
-                  checked ={isPublicLocation}
-                  checkedChildren={<><TeamOutlined /> <Text strong style={{color: 'white'}}>Public</Text></>}
-                  unCheckedChildren={<><LockOutlined /> <Text strong style={{color: 'white'}}>Private</Text></>}
+                  checked={isPublicLocation}
+                  checkedChildren={<><TeamOutlined /> <Text strong style={{ color: 'white' }}>Public</Text></>}
+                  unCheckedChildren={<><LockOutlined /> <Text strong style={{ color: 'white' }}>Private</Text></>}
                   onClick={() => setisPublicLocation(!isPublicLocation)}
                 />
               </Form.Item>
             </Col>
           </Row>
-          
+
           <Row>
             <Col span={12}>
               <Col span={24}>
-              <Text strong>Follow Requests</Text>
+                <Text strong>Follow Requests</Text>
               </Col>
               <Col span={24}>
-              <Text>If you set your pofile to private, other users must send you a request to follow your profile to message you or to view your private information.</Text>
+                <Text>If you set your pofile to private, other users must send you a request to follow your profile to message you or to view your private information.</Text>
               </Col>
             </Col>
             <Col offset={1} span={11} align="left">
               <Form.Item name="isProfilePublic">
                 <Switch style={buttonColor}
-                  checked ={isPublicProfile}
-                  checkedChildren={<><TeamOutlined /> <Text strong style={{color: 'white'}}>Public</Text></>}
-                  unCheckedChildren={<><LockOutlined /> <Text strong style={{color: 'white'}}>Private</Text></>}
+                  checked={isPublicProfile}
+                  checkedChildren={<><TeamOutlined /> <Text strong style={{ color: 'white' }}>Public</Text></>}
+                  unCheckedChildren={<><LockOutlined /> <Text strong style={{ color: 'white' }}>Private</Text></>}
                   onClick={() => setisPublicProfile(!isPublicProfile)}
                 />
               </Form.Item>
@@ -308,17 +292,17 @@ const ProfileEdit = (props) => {
           </Row>
 
           <Form.Item>
-          <Col span={24} align='middle'>
-            <Button type="primary" htmlType="submit" shape="round" icon={<SaveOutlined />} style={buttonStyle}>
-              Save Profile
-            </Button>
+            <Col span={24} align='middle'>
+              <Button type="primary" htmlType="submit" shape="round" icon={<SaveOutlined />} style={buttonStyle}>
+                Save Profile
+              </Button>
             </Col>
           </Form.Item>
-          
+
         </Form>
       </Col>
     </Row>
-    
+
   );
 }
 

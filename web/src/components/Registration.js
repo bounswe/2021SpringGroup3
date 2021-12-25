@@ -3,15 +3,20 @@ import { Form, Input, Button, Checkbox, Typography, Row, Col } from 'antd';
 import 'antd/dist/antd.css';
 
 import { useDispatch } from 'react-redux';
-import {  Register } from '../utils/helper';
+import { Register } from '../utils/helper';
+import { useNavigate } from 'react-router-dom'
 
 const {Text} = Typography;
 
 const Registration = () => {
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const onFinish = (values) => {
     console.log('Success:', values);
     Register(values, dispatch)
+    navigate('/login')
   };
 
   const onFinishFailed = (errorInfo) => {

@@ -112,7 +112,7 @@ const ProfileView = (props) => {
                             <strong>Bio</strong>
                             {props.userObj.bio ? 
                             props.userObj.bio : 
-                            <Text style={{fontStyle: 'italic', color:"grey"}}>{`${props.userObj.username}'s bio is private, you should follow them to view it.`}</Text>}
+                            <Text style={{fontStyle: 'italic', color:"grey"}}>{`${props.userObj.username}'s bio is not set, or private.`}</Text>}
                         </Space>
                     </Col>
 
@@ -121,14 +121,14 @@ const ProfileView = (props) => {
                             <strong>Birthday</strong>
                             {props.userObj.birthday ? 
                                 dateTimeFormat.format(date) :
-                                <Text style={{fontStyle: 'italic', color:"grey"}}>{`${props.userObj.username}'s birthday is private, you should follow them to view it.`}</Text>}
+                                <Text style={{fontStyle: 'italic', color:"grey"}}>{`${props.userObj.username}'s birthday is not set, or private.`}</Text>}
                         </Space>
                     </Col>
 
                     <Col span={24}>
                         <Space size={'middle'}>
                         <strong>Location</strong>
-                        {!props.latitude && <Text style={{fontStyle: 'italic', color:"grey"}}>{`${props.userObj.username}'s location is private, you should follow them to view it.`}</Text>}
+                        {!props.latitude && <Text style={{fontStyle: 'italic', color:"grey"}}>{`${props.userObj.username}'s location is not set, or private.`}</Text>}
                         </Space>
                     </Col>
                     {
