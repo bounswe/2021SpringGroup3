@@ -76,10 +76,14 @@ exports.deletePost = {
 };
 
 exports.createComment = {
+  query: Joi.object()
+    .keys({
+      postId: Joi.string().custom(objectId).required(),
+    })
+    .required(),
   body: Joi.object()
     .keys({
       text: Joi.string().min(2).max(300).required(),
-      postId: Joi.string().custom(objectId).required(),
     })
     .required(),
 };

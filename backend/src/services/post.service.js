@@ -101,14 +101,17 @@ exports.getPostDetail = async ({ token, communityId, postId }) => {
   if (post.community._id.toString() !== communityId) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community ID does not match');
   }
-  const comments = await Comment.find({ post: post._id }).populate({
-    path: 'user',
-    model: 'User',
-    select: ['_id', 'username', 'profilePhotoUrl'],
-  });
+  const comments = await Comment.find({ post: post._id })
+    .sort({
+      createdAt: 1,
+    })
+    .populate({
+      path: 'user',
+      model: 'User',
+    });
   return {
     ...formatters.formatPostDetail(post, token.user),
-    comments: formatters.formatComments(comments),
+    comments: formatters.formatComments(comments, token.user),
   };
 };
 
@@ -164,11 +167,21 @@ exports.createComment = async ({ token, postId, text }) => {
     (post.community.members && new Set(post.community.members.map((m) => m.toString())).has(token.user._id.toString())) ||
     (post.creator && post.creator.toString() === token.user._id)
   ) {
-    const comment = await Comment.create({ text, user: token.user._id, post: post._id });
-    return {
-      message: 'Comment is created',
-      id: comment._id.toString(),
+    await Comment.create({
       text,
+      post: post._id,
+      user: token.user._id,
+    });
+    const comments = await Comment.find({ post: post._id })
+      .sort({
+        createdAt: 1,
+      })
+      .populate({
+        path: 'user',
+        model: 'User',
+      });
+    return {
+      comments: formatters.formatComments(comments, token.user),
     };
   }
   throw new ApiError(
