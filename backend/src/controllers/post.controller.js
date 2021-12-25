@@ -48,7 +48,7 @@ exports.createComment = catchAsync(async (req, res) => {
   const result = await postService.createComment({
     token: req.token,
     text: req.body.text,
-    postId: req.body.postId,
+    postId: req.query.postId,
   });
   res.send(result);
 });

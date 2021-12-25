@@ -72,6 +72,28 @@ exports.deleteProfile = async ({ token }) => {
       },
     ],
   });
+  await User.updateMany(
+    {
+      $or: [
+        {
+          followers: {
+            $in: [token.user._id],
+          },
+        },
+        {
+          pendingFollowers: {
+            $in: [token.user._id],
+          },
+        },
+      ],
+    },
+    {
+      $pull: {
+        followers: token.user._id,
+        pendingFollowers: token.user._id,
+      },
+    }
+  );
   await User.deleteOne({ _id: token.user._id });
 };
 
