@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Col, Row, Image, Card, Typography, Avatar, Space } from 'antd';
+import { TeamOutlined, LockOutlined } from '@ant-design/icons';
 
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -31,19 +32,16 @@ const RecommendedUsers = (props) => {
                 <Col span={24} align="left">
                     {props.users && props.users.map(user => {
                         return (
-                            <Col span={24} style={{ cursor: 'pointer', marginBottom: '10px' }} onClick={() => navigate(`/profiles/${user.id}`)}>
+                            <Col span={24} style={{ cursor: 'pointer', marginBottom: '15px' }} onClick={() => navigate(`/profiles/${user.id}`)}>
                                 <Space size='middle'>
-                                    <Col span={4}>
-                                        <Avatar size={40} src={user.profilePhotoUrl.value} />
-                                    </Col>
-                                    <Col span={20}>
-                                        <Row>
+                                    <Avatar size={40} src={user.profilePhotoUrl.value} />
+                                    <Space direction='vertical' size='0px'>
+                                        <Space>
                                             <Text strong>{user.username}</Text>
-                                        </Row>
-                                        <Row>
-                                            <Text style={{ color: 'grey', fontSize: '12px' }}>{user.followerCount + ' followers'}</Text>
-                                        </Row>
-                                    </Col>
+                                            { user.isProfilePrivate ? <LockOutlined /> : <TeamOutlined /> }
+                                        </Space>
+                                        <Text style={{ color: 'grey', fontSize: '12px' }}>{user.followerCount + ' followers'}</Text>
+                                    </Space>
                                 </Space>
                             </Col>
                         )

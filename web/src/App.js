@@ -8,9 +8,9 @@ import OneSignal from 'react-onesignal';
 
 function App() {
 
-  useEffect(() => {
-    OneSignal.init({ appId: process.env.REACT_APP_ONESIGNAL_APP_ID })
-  });
+  // useEffect(() => {
+  //   OneSignal.init({ appId: process.env.REACT_APP_ONESIGNAL_APP_ID })
+  // });
 
   return (
     <>

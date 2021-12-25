@@ -1,7 +1,7 @@
 import { useState, React, useEffect } from 'react';
 
-import { Col, Descriptions, Button, Image, Card, Row, Space, notification, Tooltip, Typography, Popconfirm, message } from 'antd';
-import { CheckOutlined, CloseOutlined, UserDeleteOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Col, Descriptions, Button, Image, Card, Row, Space, notification, Tooltip, Typography, Popconfirm, message, Avatar } from 'antd';
+import { CheckOutlined, CloseOutlined, UserDeleteOutlined, DeleteOutlined, ExclamationCircleOutlined, TeamOutlined, LockOutlined } from '@ant-design/icons';
 
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -50,55 +50,82 @@ const CommunityModeration = (props) => {
 
     const [requests, setRequests] = useState(props.pendingMembers.map(user => {
         return <div key={user.id}>
-            <Col span={24} style={{ marginBottom: '3px' }}>
-                <Tooltip title="Accept join request">
-                    <Button type='primary' shape='circle' style={buttonStyle}
-                        icon={<CheckOutlined />}
-                        onClick={() => accept(user)}>
-                    </Button>
-                </Tooltip>
-                <Tooltip title="Reject join request">
-                    <Button type='primary' shape='circle' style={cancelButtonStyle}
-                        icon={<CloseOutlined />}
-                        onClick={() => reject(user)}>
-                    </Button>
-                </Tooltip>
-                <Text strong>{user.username}</Text>
-            </Col>
+                <Col span={24} style={{ marginBottom: '15px' }}>
+                    <Space size='small'>
+                        <Tooltip title="Accept join request">
+                            <Button type='primary' shape='circle' style={buttonStyle}
+                                icon={<CheckOutlined />}
+                                onClick={() => accept(user)}>
+                            </Button>
+                        </Tooltip>
+                        <Tooltip title="Reject join request">
+                            <Button type='primary' shape='circle' style={cancelButtonStyle}
+                                icon={<CloseOutlined />}
+                                onClick={() => reject(user)}>
+                            </Button>
+                        </Tooltip>
+                        <Avatar size={40} src={user.profilePhotoUrl.value} />
+                        <Space direction='vertical' size='0px' style={{ cursor: 'pointer' }} onClick={() => navigate(`/profiles/${user.id}`)}>
+                            <Space>
+                                <Text strong>{user.username}</Text>
+                                {user.isProfilePrivate ? <LockOutlined /> : <TeamOutlined />}
+                            </Space>
+                            <Text style={{ color: 'grey', fontSize: '12px' }}>{user.followerCount + ' followers'}</Text>
+                        </Space>
+                    </Space>
+                </Col>
         </div>
     }))
 
     const [modRequests, setModRequests] = useState(props.pendingModerators.map(user => {
         return <div key={user.id}>
-            <Col span={24} style={{ marginBottom: '3px' }}>
-                <Tooltip title="Accept mod request">
-                    <Button type='primary' shape='circle' style={buttonStyle}
-                        icon={<CheckOutlined />}
-                        onClick={() => acceptMod(user)}>
-                    </Button>
-                </Tooltip>
-                <Tooltip title="Reject mod request">
-                    <Button type='primary' shape='circle' style={cancelButtonStyle}
-                        icon={<CloseOutlined />}
-                        onClick={() => rejectMod(user)}>
-                    </Button>
-                </Tooltip>
-                <Text strong>{user.username}</Text>
+                <Col span={24} style={{ marginBottom: '15px' }}>
+                    <Space size='small'>
+                        <Tooltip title="Accept mod request">
+                            <Button type='primary' shape='circle' style={buttonStyle}
+                                icon={<CheckOutlined />}
+                                onClick={() => acceptMod(user)}>
+                            </Button>
+                        </Tooltip>
+                        <Tooltip title="Reject mod request">
+                            <Button type='primary' shape='circle' style={cancelButtonStyle}
+                                icon={<CloseOutlined />}
+                                onClick={() => rejectMod(user)}>
+                            </Button>
+                        </Tooltip>
+                        <Avatar size={40} src={user.profilePhotoUrl.value} />
+                        <Space direction='vertical' size='0px' style={{ cursor: 'pointer' }} onClick={() => navigate(`/profiles/${user.id}`)}>
+                            <Space>
+                                <Text strong>{user.username}</Text>
+                                {user.isProfilePrivate ? <LockOutlined /> : <TeamOutlined />}
+                            </Space>
+                            <Text style={{ color: 'grey', fontSize: '12px' }}>{user.followerCount + ' followers'}</Text>
+                        </Space>
+                    </Space>
             </Col>
         </div>
     }))
 
     const [members, setMembers] = useState(props.members.map(user => {
         return <div key={user.id}>
-            <Col span={24} style={{ marginBottom: '3px' }}>
-                <Tooltip placement="left" title="Kick user from community">
-                    <Button disabled={user.username == loginState.username} type='primary' shape='circle' style={cancelButtonStyle}
-                        icon={<UserDeleteOutlined />}
-                        onClick={() => kick(user)}>
-                    </Button>
-                </Tooltip>
-                <Text strong>{user.username}</Text>
-            </Col>
+                <Col span={24} style={{ marginBottom: '15px' }}>
+                    <Space size='small'>
+                        <Tooltip title="Kick user from community">
+                            <Button disabled={user.username == loginState.username} type='primary' shape='circle' style={cancelButtonStyle}
+                                icon={<UserDeleteOutlined />}
+                                onClick={() => kick(user)}>
+                            </Button>
+                        </Tooltip>
+                        <Avatar size={40} src={user.profilePhotoUrl.value} />
+                        <Space direction='vertical' size='0px' style={{ cursor: 'pointer' }} onClick={() => navigate(`/profiles/${user.id}`)}>
+                            <Space>
+                                <Text strong>{user.username}</Text>
+                                {user.isProfilePrivate ? <LockOutlined /> : <TeamOutlined />}
+                            </Space>
+                            <Text style={{ color: 'grey', fontSize: '12px' }}>{user.followerCount + ' followers'}</Text>
+                        </Space>
+                    </Space>
+                </Col>
         </div>
 
     }))
@@ -214,7 +241,7 @@ const CommunityModeration = (props) => {
                 {members}
             </Card>
             <Col span={24} align="right" style={{ marginTop: "20px" }}>
-                <Popconfirm 
+                <Popconfirm
                     icon={<ExclamationCircleOutlined style={{ color: 'red' }} />}
                     placement="leftBottom"
                     title={`Are you sure that you want to delete ${props.name} community?`}

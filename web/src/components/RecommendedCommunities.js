@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Col, List, Image, Card, Typography, Avatar, Space } from 'antd';
+import { TeamOutlined, LockOutlined } from '@ant-design/icons';
 
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -25,20 +26,20 @@ const RecommendedCommunities = (props) => {
 
     console.log(props)
 
-//     <Card style={cardStyle} title={'Top Communities'} align="left">
-//     <List
-//         dataSource={props.communities}
-//         renderItem={community => {
-//             <List.Item>
-//                 <List.Item.Meta
-//                     avatar={<Avatar size={40} src={community.iconUrl} />}
-//                     title={<Text strong>{community.name}</Text>}
-//                     description={<Text style={{ color: 'grey', fontSize: '12px' }}>{community.memberCount + ' members'}</Text>}
-//                 />
-//             </List.Item>
-//         }}
-//     />
-// </Card>
+    //  <Card style={cardStyle} title={'Top Communities'} align="left">
+    //     <List
+    //         dataSource={props.communities}
+    //         renderItem={community => {
+    //             <List.Item>
+    //                 <List.Item.Meta
+    //                     avatar={<Avatar size={40} src={community.iconUrl} />}
+    //                     title={<Text strong>{community.name}</Text>}
+    //                     description={<Text style={{ color: 'grey', fontSize: '12px' }}>{community.memberCount + ' members'}</Text>}
+    //                 />
+    //             </List.Item>
+    //         }}
+    //     />
+    // </Card>
 
     return (
         <div style={{ marginTop: '20px', marginLeft: '20px' }}>
@@ -46,19 +47,16 @@ const RecommendedCommunities = (props) => {
                 <Col span={24} align="left">
                     {props.communities && props.communities.map(community => {
                         return (
-                            <Col span={24} style={{ cursor: 'pointer', marginBottom: '10px' }} onClick={() => navigate(`/communities/${community.id}`)}>
+                            <Col span={24} style={{ cursor: 'pointer', marginBottom: '15px' }} onClick={() => navigate(`/communities/${community.id}`)}>
                                 <Space size='middle'>
-                                    <Col span={4}>
-                                        <Avatar size={40} src={community.iconUrl} />
-                                    </Col>
-                                    <Col span={20}>
-                                        <Col span={24}>
+                                    <Avatar size={40} src={community.iconUrl} />
+                                    <Space direction='vertical' size='0px'>
+                                        <Space>
                                             <Text strong>{community.name}</Text>
-                                        </Col>
-                                        <Col span={24}>
-                                            <Text style={{ color: 'grey', fontSize: '12px' }}>{community.memberCount + ' members'}</Text>
-                                        </Col>
-                                    </Col>
+                                            {community.isPrivate ? <LockOutlined /> : <TeamOutlined />}
+                                        </Space>
+                                        <Text style={{ color: 'grey', fontSize: '12px' }}>{community.memberCount + ' members'}</Text>
+                                    </Space>
                                 </Space>
                             </Col>
                         )

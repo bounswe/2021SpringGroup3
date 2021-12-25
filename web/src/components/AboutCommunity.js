@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-import { Col, Descriptions, Button, Image, Card, Row, Space, notification } from 'antd';
+import { Col, Descriptions, Button, Image, Card, Row, Space, notification, Tooltip, Typography, Avatar } from 'antd';
+import { TeamOutlined, LockOutlined } from '@ant-design/icons';
 
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -12,6 +13,8 @@ import { JoinCommunity as JoinCommunityRequest } from '../utils/helper';
 import { JoinCommunityModerator as JoinCommunityModeratorRequest } from '../utils/helper';
 
 import 'antd/dist/antd.css';
+
+const { Text, Title } = Typography;
 
 const AboutCommunity = (props) => {
 
@@ -95,7 +98,21 @@ const AboutCommunity = (props) => {
 
     return (
         <div style={{ marginTop: '20px', marginLeft: '20px' }}>
-            <Card style={cardStyle} title={props.name} align="left" cover={<Image src={props.image} />}>
+            <Card style={cardStyle}
+                title={
+                    <Space size='middle'>
+                        {
+                            props.isPrivate ?
+                                <Tooltip title="Private Community"><LockOutlined /></Tooltip> :
+                                <Tooltip title="Public Community"><TeamOutlined /></Tooltip>
+                        }
+                        {props.name}
+                        <Text style={{ color: 'grey', fontSize: '14px' }}>{props.members === undefined ? "0 members" : props.members.length + ' members'}</Text>
+                    </Space>
+                }
+                align="left"
+                cover={<Image src={props.image} />}
+            >
                 <Col span={24} align="middle">
                     {isMember ?
                         (
@@ -144,22 +161,60 @@ const AboutCommunity = (props) => {
                     {props.description}
                 </Col>
                 <Col span={24} style={{ marginTop: "20px" }}>
-                    <Space>
-                        <b>Member Count</b> {props.members === undefined ? "0" : props.members.length}
-                    </Space>
-                </Col>
-                <Col span={24} style={{ marginTop: "20px" }}>
                     <b>Moderators</b>
                 </Col>
-                {props.moderators === undefined ? "No mods" : props.moderators.slice(0, 5).map(m => <Col span={24}>{m.username}</Col>)}
+                {props.moderators === undefined ? "No mods" : props.moderators.slice(0, 10).map(user => {
+                    return (
+                        <Col span={24} style={{ cursor: 'pointer', marginBottom: '15px' }} onClick={() => navigate(`/profiles/${user.id}`)}>
+                            <Space size='middle'>
+                                <Avatar size={40} src={user.profilePhotoUrl.value} />
+                                <Space direction='vertical' size='0px'>
+                                    <Space>
+                                        <Text strong>{user.username}</Text>
+                                        {user.isProfilePrivate ? <LockOutlined /> : <TeamOutlined />}
+                                    </Space>
+                                    <Text style={{ color: 'grey', fontSize: '12px' }}>{user.followerCount + ' followers'}</Text>
+                                </Space>
+                            </Space>
+                        </Col>
+                    )
+                })}
                 <Col span={24} style={{ marginTop: "20px" }}>
                     <b>Members</b>
                 </Col>
-                {props.members === undefined ? "No members" : props.members.slice(0, 5).map(m => <Col span={24}>{m.username}</Col>)}
+                {props.members === undefined ? "No members" : props.members.slice(0, 10).map(user => {
+                    return (
+                        <Col span={24} style={{ cursor: 'pointer', marginBottom: '15px' }} onClick={() => navigate(`/profiles/${user.id}`)}>
+                            <Space size='middle'>
+                                <Avatar size={40} src={user.profilePhotoUrl.value} />
+                                <Space direction='vertical' size='0px'>
+                                    <Space>
+                                        <Text strong>{user.username}</Text>
+                                        {user.isProfilePrivate ? <LockOutlined /> : <TeamOutlined />}
+                                    </Space>
+                                    <Text style={{ color: 'grey', fontSize: '12px' }}>{user.followerCount + ' followers'}</Text>
+                                </Space>
+                            </Space>
+                        </Col>
+                    )
+                })}
                 <Col span={24} style={{ marginTop: "20px", marginBottom: "20px" }}>
-                    <Space>
-                        <b>Creator</b> {props.creator ? props.creator.username : "-"}
-                    </Space>
+                    <Col span={24} style={{ marginTop: "20px" }}>
+                        <b>Creator</b>
+                    </Col>
+                    {props.creator ?
+                        <Col span={24} style={{ cursor: 'pointer', marginBottom: '15px' }} onClick={() => navigate(`/profiles/${props.creator.id}`)}>
+                            <Space size='middle'>
+                                <Avatar size={40} src={props.creator.profilePhotoUrl.value} />
+                                <Space direction='vertical' size='0px'>
+                                    <Space>
+                                        <Text strong>{props.creator.username}</Text>
+                                        {props.creator.isProfilePrivate ? <LockOutlined /> : <TeamOutlined />}
+                                    </Space>
+                                    <Text style={{ color: 'grey', fontSize: '12px' }}>{props.creator.followerCount + ' followers'}</Text>
+                                </Space>
+                            </Space>
+                        </Col> : "-"}
                 </Col>
                 <Col span={24} align="middle">
                     {!props.isModerator ?
