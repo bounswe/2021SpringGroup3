@@ -456,6 +456,24 @@ export const getPosts = async ({communityId}) => {
     });
 };
 
+export const likePost = async ({postId}) => {
+  return fetch(BASE_URL + 'posts/like' + '?postId=' + postId, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 const returnResponse = async response => {
   const statusCode = response.status;
   response = await response.json();
