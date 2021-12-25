@@ -112,6 +112,7 @@ exports.getPostDetail = async ({ token, communityId, postId }) => {
   return {
     ...formatters.formatPostDetail(post, token.user),
     comments: formatters.formatComments(comments, token.user),
+    commentCount: comments.length,
   };
 };
 
