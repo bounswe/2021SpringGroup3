@@ -1639,7 +1639,7 @@
               "enum": ["ANDROID", "WEB"]
             },
             "required": true
-          },
+          }
         ],
         "responses": {
           "200": {
@@ -2057,7 +2057,7 @@
               "enum": ["ANDROID", "WEB"]
             },
             "required": true
-          },
+          }
         ],
         "responses": {
           "200": {
@@ -2079,7 +2079,7 @@
           }
         }
       }
-    },
+    }
   },
   "components": {
     "securitySchemes": {
