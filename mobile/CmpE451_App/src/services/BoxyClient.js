@@ -474,6 +474,27 @@ export const likePost = async ({postId}) => {
     });
 };
 
+export const commentPost = async ({postId, comment}) => {
+  return fetch(BASE_URL + 'posts/comment' + '?postId=' + postId, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+    body: JSON.stringify({
+      text: comment,
+    }),
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 const returnResponse = async response => {
   const statusCode = response.status;
   response = await response.json();

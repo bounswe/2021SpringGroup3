@@ -2,9 +2,11 @@ import {View, Text, Linking} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {IconButton} from 'react-native-paper';
 import {COLORS} from '../theme/colors';
 import {useIsFocused} from '@react-navigation/native';
 import * as client from '../services/BoxyClient';
+import Comment from './Comment.js';
 import MapView from 'react-native-maps';
 import {
   FlatList,
@@ -12,6 +14,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ToastAndroid,
+  TextInput,
 } from 'react-native';
 
 export default function PostDetail({
@@ -26,9 +29,14 @@ export default function PostDetail({
   locationFieldNames,
   isLiked,
   likeCount,
+  comments,
+  showComments = true,
+  commentCount = 0,
 }) {
   const [isLikedState, setIsLikedState] = useState(false);
   const [likeCounState, setLikeCountState] = useState(0);
+  const [comment, setComment] = useState('');
+  const [commentCountState, setCommentCountState] = useState(commentCount);
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -52,150 +60,228 @@ export default function PostDetail({
     }
   };
 
+  const handleCommentPost = async () => {
+    let response = await client.commentPost({postId: id, comment: comment});
+    const status = response.status;
+    if (status === 200) {
+      // TODO add comment to state
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  };
+
   return (
-    <View style={styles.feedItem}>
-      <View>
-        <Image source={{uri: user.profilePhotoUrl}} style={styles.avatar} />
+    <View>
+      <View style={styles.feedItem}>
+        <View>
+          <Image source={{uri: user.profilePhotoUrl}} style={styles.avatar} />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <View
+              style={{
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+              }}>
+              <Text style={{fontSize: 18, color: COLORS.textColor}}>
+                {user.username}
+              </Text>
+              <Text style={{fontSize: 12, color: COLORS.textColor}}>
+                {community.name}
+              </Text>
+              <Text style={styles.timestamp}>{moment(date).fromNow()}</Text>
+              <Text> </Text>
+              <Text> </Text>
+            </View>
+          </View>
+        </View>
+        <View>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            data={textFieldNames}
+            renderItem={({item}) => (
+              <View>
+                <Text style={styles.fieldName}>{item.name}</Text>
+                <Text style={styles.content}>{item.value}</Text>
+                <Text />
+              </View>
+            )}
+          />
+        </View>
+        <View>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            data={numberFieldNames}
+            renderItem={({item}) => (
+              <View>
+                <Text style={styles.fieldName}>{item.name}</Text>
+                <Text style={styles.content}>{item.value}</Text>
+                <Text />
+              </View>
+            )}
+          />
+        </View>
+        <View>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            data={dateFieldNames}
+            renderItem={({item}) => (
+              <View>
+                <Text style={styles.fieldName}>{item.name}</Text>
+                <Text style={styles.content}>
+                  {moment(item.value).format('MMMM Do YYYY, h:mm:ss a')}
+                </Text>
+                <Text />
+              </View>
+            )}
+          />
+        </View>
+        <View>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            data={linkFieldNames}
+            renderItem={({item}) => (
+              <View>
+                <Text style={styles.fieldName}>{item.name}</Text>
+                <TouchableOpacity onPress={() => Linking.openURL(item.value)}>
+                  <Text style={{color: COLORS.buttonColor}}>{item.value}</Text>
+                </TouchableOpacity>
+                <Text />
+              </View>
+            )}
+          />
+        </View>
+        <View>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            data={locationFieldNames}
+            renderItem={({item, index}) => (
+              <View>
+                <View>
+                  <Text style={styles.fieldName}>
+                    {locationFieldNames[index].name}
+                  </Text>
+                  <Text style={styles.content}>
+                    {locationFieldNames[index].value.description}
+                  </Text>
+                </View>
+                <View>
+                  <MapView
+                    style={styles.map}
+                    initialRegion={{
+                      latitude: locationFieldNames[index].value.geo.latitude,
+                      longitude: locationFieldNames[index].value.geo.longitude,
+                      latitudeDelta: 0.004867,
+                      longitudeDelta: 0.006976,
+                    }}
+                  />
+                  <Text />
+                  <Text />
+                  <Text />
+                  <Text />
+                  <Text />
+                  <Text />
+                  <Text />
+                </View>
+              </View>
+            )}
+          />
+        </View>
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
+            top: 10,
           }}>
+          <View style={{flexDirection: 'row', flex: 1, top: 10}}>
+            <View>
+              {isLikedState ? (
+                <Icon
+                  name="heart"
+                  size={24}
+                  color={'red'}
+                  style={{marginRight: 8}}
+                />
+              ) : (
+                <Icon
+                  name="heart"
+                  size={24}
+                  color={COLORS.unlikeButtonColor}
+                  style={{marginRight: 8}}
+                  onPress={handleLikePost}
+                />
+              )}
+            </View>
+            <Text> {likeCounState} </Text>
+          </View>
           <View
             style={{
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              alignItems: 'baseline',
+              flexDirection: 'row',
+              top: 5,
+              flex: 1,
             }}>
-            <Text style={{fontSize: 18, color: COLORS.textColor}}>
-              {user.username}
-            </Text>
-            <Text style={{fontSize: 12, color: COLORS.textColor}}>
-              {community.name}
-            </Text>
-            <Text style={styles.timestamp}>{moment(date).fromNow()}</Text>
-            <Text> </Text>
-            <Text> </Text>
+            <View>
+              <IconButton
+                icon="comment"
+                size={24}
+                color={COLORS.unlikeButtonColor}
+                style={{margin: 0}}
+              />
+            </View>
+            <Text style={{top: 5}}> {commentCountState} </Text>
           </View>
+          <View style={{flex: 4}} />
         </View>
       </View>
-
-      <View>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          data={textFieldNames}
-          renderItem={({item}) => (
-            <View>
-              <Text style={styles.fieldName}>{item.name}</Text>
-              <Text style={styles.content}>{item.value}</Text>
-              <Text />
-            </View>
-          )}
-        />
-      </View>
-      <View>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          data={numberFieldNames}
-          renderItem={({item}) => (
-            <View>
-              <Text style={styles.fieldName}>{item.name}</Text>
-              <Text style={styles.content}>{item.value}</Text>
-              <Text />
-            </View>
-          )}
-        />
-      </View>
-      <View>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          data={dateFieldNames}
-          renderItem={({item}) => (
-            <View>
-              <Text style={styles.fieldName}>{item.name}</Text>
-              <Text style={styles.content}>
-                {moment(item.value).format('MMMM Do YYYY, h:mm:ss a')}
-              </Text>
-              <Text />
-            </View>
-          )}
-        />
-      </View>
-      <View>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          data={linkFieldNames}
-          renderItem={({item}) => (
-            <View>
-              <Text style={styles.fieldName}>{item.name}</Text>
-              <TouchableOpacity onPress={() => Linking.openURL(item.value)}>
-                <Text style={{color: COLORS.buttonColor}}>{item.value}</Text>
-              </TouchableOpacity>
-              <Text />
-            </View>
-          )}
-        />
-      </View>
-
-      <View>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          data={locationFieldNames}
-          renderItem={({item, index}) => (
-            <View>
+      {showComments && (
+        <View style={{flexDirection: 'column'}}>
+          <View style={styles.commentContainer}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingHorizontal: 5,
+              }}>
+              <TextInput
+                multiline
+                style={{flex: 5}}
+                onChangeText={text => setComment(text)}
+                underlineColorAndroid="#f000"
+                placeholder="Add a comment"
+                placeholderTextColor="#8b9cb5"
+                blurOnSubmit={false}
+              />
               <View>
-                <Text style={styles.fieldName}>
-                  {locationFieldNames[index].name}
-                </Text>
-                <Text style={styles.content}>
-                  {locationFieldNames[index].value.description}
-                </Text>
-              </View>
-              <View>
-                <MapView
-                  style={styles.map}
-                  initialRegion={{
-                    latitude: locationFieldNames[index].value.geo.latitude,
-                    longitude: locationFieldNames[index].value.geo.longitude,
-                    latitudeDelta: 0.004867,
-                    longitudeDelta: 0.006976,
-                  }}
+                <IconButton
+                  icon="send"
+                  size={24}
+                  color={COLORS.unlikeButtonColor}
+                  style={{flex: 1, margin: 5}}
+                  onPress={handleCommentPost}
                 />
-                <Text />
-                <Text />
-                <Text />
-                <Text />
-                <Text />
-                <Text />
-                <Text />
               </View>
             </View>
-          )}
-        />
-      </View>
-
-      <View style={{flexDirection: 'row', top: 10}}>
-        <View>
-          {isLikedState ? (
-            <Icon
-              name="heart"
-              size={24}
-              color={'red'}
-              style={{marginRight: 8}}
-            />
-          ) : (
-            <Icon
-              name="heart"
-              size={24}
-              color={COLORS.unlikeButtonColor}
-              style={{marginRight: 8}}
-              onPress={handleLikePost}
-            />
-          )}
+          </View>
+          <Text style={{margin: 5}}> All Comments </Text>
+          <FlatList
+            style={styles.feed}
+            data={comments}
+            renderItem={({item}) => (
+              <Comment
+                id={item.id}
+                user={item.user}
+                date={item.date}
+                content={item.content}
+              />
+            )}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+          />
         </View>
-
-        <Text> {likeCounState} likes </Text>
-      </View>
+      )}
     </View>
   );
 }
@@ -205,6 +291,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     borderRadius: 5,
     padding: 20,
+    flexDirection: 'column',
+    marginVertical: 8,
+    removeClippedSubviews: true,
+  },
+  commentContainer: {
+    backgroundColor: '#FFF',
+    borderRadius: 5,
     flexDirection: 'column',
     marginVertical: 8,
     removeClippedSubviews: true,
