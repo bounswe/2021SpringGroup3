@@ -29,5 +29,6 @@ router.route('/kick').post(validate(communityValidation.kickFromCommunity), comm
 router.route('/update').post(validate(communityValidation.updateCommunity), communityController.updateCommunity);
 
 router.route('/search').get(validate(communityValidation.searchCommunity), communityController.searchCommunity);
+router.route('/recommend').get(communityController.recommend);
 
 module.exports = router;
