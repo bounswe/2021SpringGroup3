@@ -46,6 +46,10 @@ exports.formatUser = function (user) {
   };
 };
 
+exports.formatUsers = function (users) {
+  return users.map(formatUserPreview);
+};
+
 exports.formatPreviewCommunity = function (community) {
   return {
     id: community._id.toString(),
@@ -109,8 +113,9 @@ exports.formatPostDetail = function (post, user) {
     dateFieldNames: post.dateFields,
     linkFieldNames: post.linkFields,
     locationFieldNames: post.locationFields,
-    isLiked: post.likers.includes(user._id),
+    isLiked: baseUtil.checkIfObjectIdArrayIncludesId(post.likers, user._id.toString()),
     likeCount: post.likers.length,
+    tags: post.tags,
   };
 };
 

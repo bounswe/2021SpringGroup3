@@ -45,6 +45,7 @@ exports.getPosts = {
   query: Joi.object()
     .keys({
       communityId: Joi.string().custom(objectId).required(),
+      sortBy: Joi.string().valid('createdAt', 'likeCount').default('createdAt'),
     })
     .required(),
 };
@@ -79,6 +80,17 @@ exports.createComment = {
     .keys({
       text: Joi.string().min(2).max(300).required(),
       postId: Joi.string().custom(objectId).required(),
+    })
+    .required(),
+};
+
+exports.search = {
+  query: Joi.object()
+    .keys({
+      communityId: Joi.string().custom(objectId).required(),
+      sortBy: Joi.string().valid('createdAt', 'likeCount').default('createdAt'),
+      tag: Joi.string(),
+      postTypeId: Joi.string().custom(objectId),
     })
     .required(),
 };

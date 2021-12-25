@@ -128,6 +128,9 @@ exports.removeUserFromCommunity = async ({ userId, communityId }) => {
         members: userId,
         moderators: userId,
       },
+      $inc: {
+        memberCount: -1,
+      },
     },
     { new: true }
   );
@@ -184,6 +187,9 @@ exports.kickFromCommunity = async ({ token, userId, communityId }) => {
     $pull: {
       members: userId,
     },
+    $inc: {
+      memberCount: -1,
+    },
   });
   community = await populateCommunity(communityId);
   return {
@@ -206,6 +212,9 @@ exports.approveJoinRequest = async ({ token, userId, communityId }) => {
           },
           $pull: {
             pendingMembers: userId,
+          },
+          $inc: {
+            memberCount: 1,
           },
         });
       } else {
@@ -465,5 +474,10 @@ exports.searchCommunity = async ({ query }) => {
   const communities = await Community.find({
     name: { $regex: query, $options: 'i' },
   }).lean();
+  return formatters.formatCommunities(communities);
+};
+
+exports.recommend = async () => {
+  const communities = await Community.find().sort({ memberCount: -1, createdAt: -1 }).limit(10).lean();
   return formatters.formatCommunities(communities);
 };

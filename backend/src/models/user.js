@@ -85,7 +85,13 @@ const userSchema = mongoose.Schema(
         type: String,
       },
     },
+    followers: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
+    followerCount: {
+      type: Number,
+      default: 0,
+    },
   },
+
   {
     timestamps: true,
   }

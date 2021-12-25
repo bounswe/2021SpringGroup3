@@ -6,6 +6,7 @@ exports.getPosts = catchAsync(async (req, res) => {
   const result = await postService.getPosts({
     token: req.token,
     communityId: req.query.communityId,
+    sortBy: req.query.sortBy,
   });
   res.send(result);
 });
@@ -63,6 +64,17 @@ exports.deletePost = catchAsync(async (req, res) => {
 exports.getHomepage = catchAsync(async (req, res) => {
   const result = await postService.getHomepage({
     token: req.token,
+  });
+  res.send(result);
+});
+
+exports.search = catchAsync(async (req, res) => {
+  const result = await postService.search({
+    token: req.token,
+    communityId: req.query.communityId,
+    tag: req.query.tag,
+    postTypeId: req.query.postTypeId,
+    sortBy: req.query.sortBy,
   });
   res.send(result);
 });
