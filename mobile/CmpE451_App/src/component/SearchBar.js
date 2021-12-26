@@ -2,9 +2,9 @@ import {View, Text} from 'react-native';
 import React from 'react';
 import {IconButton} from 'react-native-paper';
 import {COLORS} from '../theme/colors';
-import {TouchableOpacity, StyleSheet} from 'react-native';
+import {TouchableOpacity, StyleSheet, TextInput, Keyboard} from 'react-native';
 
-export default function SearchBar({onPress}) {
+export default function SearchBar({onPress, isSearchEnabled, onSearch}) {
   return (
     <View style={styles.searchBarContainer}>
       <TouchableOpacity style={styles.searchBar} onPress={onPress}>
@@ -14,7 +14,20 @@ export default function SearchBar({onPress}) {
           color={COLORS.unlikeButtonColor}
           style={{flex: 1}}
         />
-        <Text style={{flex: 9, fontSize: 15}}>Search</Text>
+        {isSearchEnabled ? (
+          <TextInput
+            style={styles.input}
+            underlineColorAndroid="#f000"
+            placeholder="Search"
+            placeholderTextColor={COLORS.unlikeButtonColor}
+            returnKeyType="next"
+            onChangeText={text => onSearch(text)}
+            blurOnSubmit={false}
+            onSubmitEditing={() => Keyboard.dismiss()}
+          />
+        ) : (
+          <Text style={{flex: 9, fontSize: 15}}>Search</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -40,5 +53,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#D3D3D3',
     border: 3,
     borderRadius: 10,
+  },
+  input: {
+    height: 40,
+    marginVertical: 12,
+    flex: 9,
+    paddingVertical: 10,
   },
 });

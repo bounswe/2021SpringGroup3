@@ -6926,6 +6926,11 @@
   "resolved" "https://registry.npmjs.org/react-native-date-picker/-/react-native-date-picker-4.1.2.tgz"
   "version" "4.1.2"
 
+"react-native-dropdown-picker@^5.2.3":
+  "integrity" "sha512-nT2p/3pzydi6CAUPbC7WR1Yo2/FDX6napouAQ1ueuCGD48afYiWERh2J+mAUes/v4MKl68oriEz9C7GM6aAILg=="
+  "resolved" "https://registry.npmjs.org/react-native-dropdown-picker/-/react-native-dropdown-picker-5.2.3.tgz"
+  "version" "5.2.3"
+
 "react-native-element@^1.2.1":
   "integrity" "sha512-fbkzGRNyu2b5vAQEBIAKAmiYoy2RNzf2DqHEJI3W/R+cGMdatDkXFXeQISEMziNdmeMUi5YuURZcf48J+xCb/w=="
   "resolved" "https://registry.npmjs.org/react-native-element/-/react-native-element-1.2.1.tgz"
