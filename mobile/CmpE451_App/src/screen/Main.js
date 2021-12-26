@@ -100,6 +100,7 @@ export default function Main({navigation}) {
               locationFieldNames={item.locationFieldNames}
               isLiked={item.isLiked}
               likeCount={item.likeCount}
+              commentCount={item.commentCount}
             />
           </TouchableOpacity>
         )}
