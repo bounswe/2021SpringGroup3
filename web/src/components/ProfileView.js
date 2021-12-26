@@ -42,12 +42,14 @@ const ProfileView = (props) => {
         borderRadius: '20px'
     }
 
-    const [isFollowing, setFollowing] = useState(props.userObj.isFollowing)
+    const [isFollowing, setFollowing] = useState(props.userObj.isFollowing);
+    //const [followerCount, setFollowerCount] = useState(props.userObj.followerCount);
 
     const followUser = (userId) => {
         console.log(`Trying to follow user, send a POST request to users/${userId}/follow`);
         if (props.userObj.isProfilePublic) {
             setFollowing(true)
+            //setFollowerCount(followerCount += 1)
         } else {
             notification.success({
                 message: 'Follow request sent!',
@@ -95,6 +97,7 @@ const ProfileView = (props) => {
                         <Avatar size={100} src={props.userObj.profilePhotoUrl} />
                         <Text style={{fontSize: "30px", fontWeight: 'bold'}}>{props.userObj.username}</Text>
                         {loginState.username != props.userObj.username && <>
+                        {/*<Text style={{ color: 'grey', fontSize: '12px' }}>{followerCount + ' followers'}</Text>*/}
                         <Tooltip title={isFollowing ? 'Unfollow' : 'Follow user'}>
                             {isFollowing ?
                                 <Button style={cancelButtonStyle} shape="round" icon={<UserDeleteOutlined />} onClick={() => stopFollowingUser(props.userObj.id)}>Unfollow</Button> :
