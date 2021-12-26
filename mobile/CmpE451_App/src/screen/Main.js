@@ -10,9 +10,9 @@ import {
 
 import {PAGE_VARIABLES} from '../constants';
 import * as client from '../services/BoxyClient';
-import {headerContainerStyle} from '../theme/styles';
+import {COLORS} from '../theme/colors';
 import PostDetailComponent from '../component/PostDetail';
-import {headerTextStyle} from '../theme/styles';
+import SearchBar from '../component/SearchBar';
 
 export default function Main({navigation}) {
   const [memberCommunityList, setMemberCommunityList] = useState([]);
@@ -72,12 +72,14 @@ export default function Main({navigation}) {
     navigation.navigate('PostDetail');
   }
 
+  function navigateToSearch() {
+    navigation.navigate('Search');
+  }
+
   return (
     <View style={styles.container}>
-      <View style={headerContainerStyle}>
-        <View style={{flex: 1}} />
-        <Text style={headerTextStyle}>Home</Text>
-        <View style={{flex: 1}} />
+      <View style={styles.headerContainer}>
+        <SearchBar onPress={navigateToSearch} />
       </View>
       <FlatList
         refreshControl={
@@ -118,5 +120,13 @@ const styles = StyleSheet.create({
   },
   feed: {
     marginHorizontal: 16,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 7,
+    backgroundColor: COLORS.screenHeaderBackground,
+    height: 55,
   },
 });
