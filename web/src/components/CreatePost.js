@@ -12,7 +12,7 @@ import { GetPostTypes as GetPostTypesRequest } from '../utils/helper';
 import { GetPostTypeDetail as GetPostTypeDetailRequest } from '../utils/helper';
 import MapPicker from 'react-google-map-picker'
 
-const DefaultLocation = { lat: 41, lng: 29};
+const DefaultLocation = { lat: 41, lng: 29 };
 const DefaultZoom = 10;
 
 const { Text, Title } = Typography;
@@ -27,33 +27,34 @@ const CreatePost = (props) => {
   const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
   const [location, setLocation] = useState(defaultLocation);
   const [zoom, setZoom] = useState(DefaultZoom);
-  function handleChangeLocation (lat, lng){
-    setLocation({lat:lat, lng:lng});
+  function handleChangeLocation(lat, lng) {
+    setLocation({ lat: lat, lng: lng });
   }
-  
-  function handleChangeZoom (newZoom){
+
+  function handleChangeZoom(newZoom) {
     setZoom(newZoom);
   }
 
-  function handleResetLocation(){
-    setDefaultLocation({ ... DefaultLocation});
+  function handleResetLocation() {
+    setDefaultLocation({ ...DefaultLocation });
     setZoom(DefaultZoom);
   }
-  const MapPickerElement =                 
+
+  const MapPickerElement =
     <div>
-      <button onClick={handleResetLocation}>Reset Location</button><br/>
-      <label>Latitute:</label><input type='text' value={location.lat} disabled/><br/>
-      <label>Longitute:</label><input type='text' value={location.lng} disabled/><br/>
-      <label>Zoom:</label><input type='text' value={zoom} disabled/><br/>
-      
+      <button onClick={handleResetLocation}>Reset Location</button><br />
+      <label>Latitute:</label><input type='text' value={location.lat} disabled /><br />
+      <label>Longitute:</label><input type='text' value={location.lng} disabled /><br />
+      <label>Zoom:</label><input type='text' value={zoom} disabled /><br />
+
 
       <MapPicker defaultLocation={defaultLocation}
         zoom={zoom}
         mapTypeId="roadmap"
-        style={{height:'700px'}}
-        onChangeLocation={handleChangeLocation} 
+        style={{ height: '700px' }}
+        onChangeLocation={handleChangeLocation}
         onChangeZoom={handleChangeZoom}
-        apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}/>
+        apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY} />
     </div>
 
   const { communityId } = useParams();
@@ -72,7 +73,7 @@ const CreatePost = (props) => {
     marginTop: '3px',
     marginBottom: '3px',
     fontWeight: 'bold'
-}
+  }
 
   const [textFieldsNames, setTextFieldsNames] = useState([]);
   const [numberFieldsNames, setNumberFieldsNames] = useState([]);
@@ -104,15 +105,15 @@ const CreatePost = (props) => {
 
     for (let key of Object.keys(values)) {
       if (textFieldsNames.includes(key)) {
-        body.textFields.push({name: key, value: values[key]})
+        body.textFields.push({ name: key, value: values[key] })
       } else if (numberFieldsNames.includes(key)) {
-        body.numberFields.push({name: key, value: values[key]})
+        body.numberFields.push({ name: key, value: values[key] })
       } else if (linkFieldsNames.includes(key)) {
-        body.linkFields.push({name: key, value: values[key]})
+        body.linkFields.push({ name: key, value: values[key] })
       } else if (dateFieldsNames.includes(key)) {
-        body.dateFields.push({name: key, value: values[key]._d})
+        body.dateFields.push({ name: key, value: values[key]._d })
       } else if (locationFieldsNames.includes(key)) {
-        body.locationFields.push({name: key, value: { geo: {longitude: location.lng, latitude:  location.lat} , description: "text"}})
+        body.locationFields.push({ name: key, value: { geo: { longitude: location.lng, latitude: location.lat }, description: "text" } })
       }
     }
 
@@ -123,7 +124,7 @@ const CreatePost = (props) => {
     } else {
       navigate(`/communities/${communityId}`)
     }
-  
+
   }
 
   const onFinishFailed = (error) => {
@@ -167,7 +168,7 @@ const CreatePost = (props) => {
   const handlePostTypeChange = (selectedId) => {
     resetFields();
     setPostTypeId(selectedId);
-    console.log('sdafasdfasdfdsa',communityId, selectedId)
+    console.log('sdafasdfasdfdsa', communityId, selectedId)
     GetPostTypeDetailRequest({ communityId: communityId, postTypeId: selectedId }, loginState.token, dispatch)
       .then(result => {
         setTextFieldsNames([...result.data.textFieldNames]);
@@ -228,7 +229,7 @@ const CreatePost = (props) => {
                   name={name}
                   required
                   rules={[{ required: true, message: `Please enter ${name}` }]}>
-                  <DatePicker format="MMM Do YY"/>
+                  <DatePicker showTime />
                 </Form.Item>
               </Col>
             </Row>
@@ -239,9 +240,9 @@ const CreatePost = (props) => {
             <Row key={name}>
               <Col span={24}><Text strong>{name}</Text></Col>
               <Col span={24}>
-                <Form.Item 
+                <Form.Item
                   name={name}
-                  required 
+                  required
                 >
                   {MapPickerElement}
                 </Form.Item>
@@ -255,10 +256,10 @@ const CreatePost = (props) => {
   return (
     <Card size="small" style={postCardStyle}>
       <Row>
-      <Col span={10} offset={7}  align="middle">
-      <Title level={2} strong="true">Create a New Post</Title>
-      </Col>
-        
+        <Col span={10} offset={7} align="middle">
+          <Title level={2} strong="true">Create a New Post</Title>
+        </Col>
+
         <Col span={10} offset={7} style={{ marginTop: '20px' }} align="middle">
           <Col span={24}>
             <Text><b>Select Community to Post in</b></Text>
@@ -276,11 +277,11 @@ const CreatePost = (props) => {
             {dateFields}
             {locationFields}
             <Col span={24} align='middle'>
-              { postTypeId ?
+              {postTypeId ?
                 <Form.Item>
-                <Button style={buttonStyle} type="primary" htmlType="submit" shape="round">
-                  Submit Post
-                </Button>
+                  <Button style={buttonStyle} type="primary" htmlType="submit" shape="round">
+                    Submit Post
+                  </Button>
                 </Form.Item> : <></>
               }
             </Col>

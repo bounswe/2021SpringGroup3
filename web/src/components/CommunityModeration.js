@@ -48,9 +48,6 @@ const CommunityModeration = (props) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-
-    console.log(loginState)
-
     const [requests, setRequests] = useState(props.pendingMembers.map(user => {
         return <div key={user.id}>
             <Col span={24} style={{ marginBottom: '3px' }}>
