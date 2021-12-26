@@ -17,8 +17,6 @@ const PostView = (props) => {
 
   const navigate = useNavigate()
 
-  console.log(props.postObj)
-
   props.postObj.postType = {
     color: '#6e74dc',
     name: 'Post Type',

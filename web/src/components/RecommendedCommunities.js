@@ -24,8 +24,6 @@ const RecommendedCommunities = (props) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    console.log(props)
-
     //  <Card style={cardStyle} title={'Top Communities'} align="left">
     //     <List
     //         dataSource={props.communities}
