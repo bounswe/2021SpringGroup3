@@ -2,16 +2,23 @@ import {View, Text, Linking} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {IconButton} from 'react-native-paper';
 import {COLORS} from '../theme/colors';
 import {useIsFocused} from '@react-navigation/native';
 import * as client from '../services/BoxyClient';
+import Comment from './Comment.js';
 import MapView from 'react-native-maps';
+import {textInputArea} from '../theme/styles';
+
 import {
   FlatList,
+  ScrollView,
   Image,
   StyleSheet,
   TouchableOpacity,
   ToastAndroid,
+  TextInput,
+  KeyboardAvoidingView,
 } from 'react-native';
 
 export default function PostDetail({
@@ -26,20 +33,29 @@ export default function PostDetail({
   locationFieldNames,
   isLiked,
   likeCount,
+  comments,
+  showComments = false,
+  commentCount,
 }) {
-  const [isLikedState, setIsLikedState] = useState(false);
-  const [likeCounState, setLikeCountState] = useState(0);
+  const [isLikedState, setIsLikedState] = useState();
+  const [likeCounState, setLikeCountState] = useState();
+  const [commentsState, setCommentsState] = useState(comments);
+  const [commentCountState, setCommentCountState] = useState(commentCount);
+
+  const [comment, setComment] = useState('');
   const isFocused = useIsFocused();
 
   useEffect(() => {
     async function init() {
       setIsLikedState(isLiked);
       setLikeCountState(likeCount);
+      setCommentsState(comments);
+      setCommentCountState(commentCount);
     }
     if (isFocused) {
       init();
     }
-  }, [isFocused, isLiked, likeCount]);
+  }, [commentCount, comments, isFocused, isLiked, likeCount]);
 
   const handleLikePost = async () => {
     let response = await client.likePost({postId: id});
@@ -52,151 +68,229 @@ export default function PostDetail({
     }
   };
 
+  const handleCommentPost = async () => {
+    let response = await client.commentPost({postId: id, comment: comment});
+    const status = response.status;
+    if (status === 200) {
+      setCommentsState(response.data.comments);
+      setCommentCountState(response.data.comments.length);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  };
+
   return (
-    <View style={styles.feedItem}>
-      <View>
-        <Image source={{uri: user.profilePhotoUrl}} style={styles.avatar} />
+    <ScrollView>
+      <View style={styles.feedItem}>
+        <View>
+          <Image source={{uri: user.profilePhotoUrl}} style={styles.avatar} />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <View
+              style={{
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+              }}>
+              <Text style={{fontSize: 18, color: COLORS.textColor}}>
+                {user.username}
+              </Text>
+              <Text style={{fontSize: 12, color: COLORS.textColor}}>
+                {community.name}
+              </Text>
+              <Text style={styles.timestamp}>{moment(date).fromNow()}</Text>
+            </View>
+          </View>
+        </View>
+        <View>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            data={textFieldNames}
+            renderItem={({item}) => (
+              <View>
+                <Text style={styles.fieldName}>{item.name}</Text>
+                <Text style={styles.content}>{item.value}</Text>
+                <Text />
+              </View>
+            )}
+          />
+        </View>
+        <View>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            data={numberFieldNames}
+            renderItem={({item}) => (
+              <View>
+                <Text style={styles.fieldName}>{item.name}</Text>
+                <Text style={styles.content}>{item.value}</Text>
+                <Text />
+              </View>
+            )}
+          />
+        </View>
+        <View>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            data={dateFieldNames}
+            renderItem={({item}) => (
+              <View>
+                <Text style={styles.fieldName}>{item.name}</Text>
+                <Text style={styles.content}>
+                  {moment(item.value).format('MMMM Do YYYY, h:mm:ss a')}
+                </Text>
+                <Text />
+              </View>
+            )}
+          />
+        </View>
+        <View>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            data={linkFieldNames}
+            renderItem={({item}) => (
+              <View>
+                <Text style={styles.fieldName}>{item.name}</Text>
+                <TouchableOpacity onPress={() => Linking.openURL(item.value)}>
+                  <Text style={{color: COLORS.buttonColor}}>{item.value}</Text>
+                </TouchableOpacity>
+                <Text />
+              </View>
+            )}
+          />
+        </View>
+        <View>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            data={locationFieldNames}
+            renderItem={({item, index}) => (
+              <View>
+                <View>
+                  <Text style={styles.fieldName}>
+                    {locationFieldNames[index].name}
+                  </Text>
+                  <Text style={styles.content}>
+                    {locationFieldNames[index].value.description}
+                  </Text>
+                </View>
+                <View>
+                  <MapView
+                    style={styles.map}
+                    initialRegion={{
+                      latitude: locationFieldNames[index].value.geo.latitude,
+                      longitude: locationFieldNames[index].value.geo.longitude,
+                      latitudeDelta: 0.004867,
+                      longitudeDelta: 0.006976,
+                    }}
+                  />
+                  <Text />
+                  <Text />
+                  <Text />
+                  <Text />
+                  <Text />
+                  <Text />
+                  <Text />
+                </View>
+              </View>
+            )}
+          />
+        </View>
         <View
           style={{
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            marginTop: 10,
           }}>
+          <View style={{flexDirection: 'row', top: 10, marginRight: 15}}>
+            <View>
+              {isLikedState ? (
+                <Icon
+                  name="heart"
+                  size={24}
+                  color={'red'}
+                  style={{marginRight: 4}}
+                />
+              ) : (
+                <Icon
+                  name="heart"
+                  size={24}
+                  color={COLORS.unlikeButtonColor}
+                  style={{marginRight: 8}}
+                  onPress={handleLikePost}
+                />
+              )}
+            </View>
+            <Text> {likeCounState} </Text>
+          </View>
           <View
             style={{
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              alignItems: 'baseline',
+              flexDirection: 'row',
+              marginTop: 5,
             }}>
-            <Text style={{fontSize: 18, color: COLORS.textColor}}>
-              {user.username}
-            </Text>
-            <Text style={{fontSize: 12, color: COLORS.textColor}}>
-              {community.name}
-            </Text>
-            <Text style={styles.timestamp}>{moment(date).fromNow()}</Text>
-            <Text> </Text>
-            <Text> </Text>
+            <View>
+              <IconButton
+                icon="comment"
+                size={24}
+                color={COLORS.unlikeButtonColor}
+                style={{margin: 0}}
+              />
+            </View>
+            <Text style={{marginTop: 5}}> {commentCountState} </Text>
           </View>
         </View>
       </View>
-
-      <View>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          data={textFieldNames}
-          renderItem={({item}) => (
-            <View>
-              <Text style={styles.fieldName}>{item.name}</Text>
-              <Text style={styles.content}>{item.value}</Text>
-              <Text />
-            </View>
-          )}
-        />
-      </View>
-      <View>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          data={numberFieldNames}
-          renderItem={({item}) => (
-            <View>
-              <Text style={styles.fieldName}>{item.name}</Text>
-              <Text style={styles.content}>{item.value}</Text>
-              <Text />
-            </View>
-          )}
-        />
-      </View>
-      <View>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          data={dateFieldNames}
-          renderItem={({item}) => (
-            <View>
-              <Text style={styles.fieldName}>{item.name}</Text>
-              <Text style={styles.content}>
-                {moment(item.value).format('MMMM Do YYYY, h:mm:ss a')}
-              </Text>
-              <Text />
-            </View>
-          )}
-        />
-      </View>
-      <View>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          data={linkFieldNames}
-          renderItem={({item}) => (
-            <View>
-              <Text style={styles.fieldName}>{item.name}</Text>
-              <TouchableOpacity onPress={() => Linking.openURL(item.value)}>
-                <Text style={{color: COLORS.buttonColor}}>{item.value}</Text>
-              </TouchableOpacity>
-              <Text />
-            </View>
-          )}
-        />
-      </View>
-
-      <View>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          data={locationFieldNames}
-          renderItem={({item, index}) => (
-            <View>
-              <View>
-                <Text style={styles.fieldName}>
-                  {locationFieldNames[index].name}
-                </Text>
-                <Text style={styles.content}>
-                  {locationFieldNames[index].value.description}
-                </Text>
-              </View>
-              <View>
-                <MapView
-                  style={styles.map}
-                  initialRegion={{
-                    latitude: locationFieldNames[index].value.geo.latitude,
-                    longitude: locationFieldNames[index].value.geo.longitude,
-                    latitudeDelta: 0.004867,
-                    longitudeDelta: 0.006976,
-                  }}
-                />
-                <Text />
-                <Text />
-                <Text />
-                <Text />
-                <Text />
-                <Text />
-                <Text />
-              </View>
-            </View>
-          )}
-        />
-      </View>
-
-      <View style={{flexDirection: 'row', top: 10}}>
+      {showComments && (
         <View>
-          {isLikedState ? (
-            <Icon
-              name="heart"
-              size={24}
-              color={'red'}
-              style={{marginRight: 8}}
-            />
-          ) : (
-            <Icon
-              name="heart"
-              size={24}
-              color={COLORS.unlikeButtonColor}
-              style={{marginRight: 8}}
-              onPress={handleLikePost}
-            />
+          <View style={styles.commentContainer}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingHorizontal: 5,
+              }}>
+              <TextInput
+                multiline
+                style={styles.commentText}
+                onChangeText={text => setComment(text)}
+                underlineColorAndroid="#f000"
+                placeholder="Add a comment"
+                placeholderTextColor="#8b9cb5"
+                returnKeyType="next"
+                blurOnSubmit={false}
+              />
+              <View>
+                <IconButton
+                  icon="send"
+                  size={24}
+                  color={COLORS.unlikeButtonColor}
+                  style={{flex: 1, margin: 5}}
+                  onPress={handleCommentPost}
+                />
+              </View>
+            </View>
+          </View>
+          {commentCountState > 0 && (
+            <Text style={{margin: 5}}> All Comments </Text>
           )}
+          <FlatList
+            style={styles.feed}
+            data={commentsState}
+            renderItem={({item}) => (
+              <Comment
+                id={item.id}
+                user={item.user}
+                date={item.date}
+                content={item.text}
+              />
+            )}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+          />
+          <View style={{marginVertical: 70}} />
         </View>
-
-        <Text> {likeCounState} likes </Text>
-      </View>
-    </View>
+      )}
+    </ScrollView>
   );
 }
 
@@ -206,8 +300,23 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 20,
     flexDirection: 'column',
+    marginVertical: 5,
+  },
+  commentContainer: {
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    paddingVertical: 5,
+    flexDirection: 'column',
     marginVertical: 8,
-    removeClippedSubviews: true,
+  },
+  commentText: {
+    color: 'black',
+    borderRadius: 8,
+    paddingLeft: 6,
+    borderWidth: 1,
+    borderColor: 'lightgray',
+    backgroundColor: COLORS.formInputAreaColor,
+    flex: 5,
   },
   avatar: {
     width: 36,
@@ -219,7 +328,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     color: '#454D65',
-    fontWeight: 'bold',
   },
   content: {
     fontSize: 16,
@@ -229,6 +337,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#C4C6CE',
     marginTop: 4,
+    marginBottom: 10,
   },
   map: {
     position: 'absolute',

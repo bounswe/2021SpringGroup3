@@ -3,32 +3,21 @@ import {
   Text,
   View,
   StyleSheet,
-  TextInput,
   FlatList,
   TouchableOpacity,
   RefreshControl,
 } from 'react-native';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
 import {PAGE_VARIABLES} from '../constants';
-import TabScreen from '../component/TabScreen';
-import CloseButton from '../component/CloseButton';
 import * as client from '../services/BoxyClient';
-import {headerStyle} from '../theme/styles';
 import {headerContainerStyle} from '../theme/styles';
-import {IconButton} from 'react-native-paper';
-import {COLORS} from '../theme/colors';
 import PostDetailComponent from '../component/PostDetail';
-import ScreenHeader from '../component/ScreenHeader';
 import {headerTextStyle} from '../theme/styles';
 
 export default function Main({navigation}) {
   const [memberCommunityList, setMemberCommunityList] = useState([]);
   const [postList, setPostList] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
-  const [refreshingCommunities, setRefreshingCommunities] = useState(false);
-  const [refreshingPosts, setRefreshingPosts] = useState(false);
-  const [postList2, setPostList2] = useState([]);
 
   useEffect(() => {
     async function init() {
@@ -111,6 +100,7 @@ export default function Main({navigation}) {
               locationFieldNames={item.locationFieldNames}
               isLiked={item.isLiked}
               likeCount={item.likeCount}
+              commentCount={item.commentCount}
             />
           </TouchableOpacity>
         )}

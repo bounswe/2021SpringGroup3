@@ -1,11 +1,11 @@
-import {View, Text, Linking} from 'react-native';
+import {View, Text} from 'react-native';
 import React, {useState, useEffect} from 'react';
-import {TEXT, PAGE_VARIABLES} from '../constants';
-import {AXIOS_CLIENT} from '../services/axiosCientService';
+import {PAGE_VARIABLES} from '../constants';
 import * as Requests from '../services/BoxyClient';
 import PostDetailComponent from '../component/PostDetail';
 import ScreenHeader from '../component/ScreenHeader';
 import {headerTextStyle} from '../theme/styles';
+import {useIsFocused} from '@react-navigation/native';
 
 export default function PostDetail({route, navigation}) {
   const [idState, setId] = useState([]);
@@ -19,6 +19,9 @@ export default function PostDetail({route, navigation}) {
   const [locationFieldNamesState, setLocationFieldNames] = useState([]);
   const [isLikedState, setIsLiked] = useState([]);
   const [likeCountState, setLikeCount] = useState([]);
+  const [commentsState, setCommentsState] = useState([]);
+  const [commentCountState, setCommentCount] = useState(0);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     async function init() {
@@ -38,6 +41,8 @@ export default function PostDetail({route, navigation}) {
         locationFieldNames,
         isLiked,
         likeCount,
+        comments,
+        commentCount,
       } = JSON.parse(postDetailResponse);
       setId(id);
       setUser(user);
@@ -50,9 +55,13 @@ export default function PostDetail({route, navigation}) {
       setLocationFieldNames(locationFieldNames);
       setIsLiked(isLiked);
       setLikeCount(likeCount);
+      setCommentsState(comments);
+      setCommentCount(commentCount);
     }
-    init();
-  }, []);
+    if (isFocused) {
+      init();
+    }
+  }, [isFocused]);
 
   const navigate = async () => {
     navigation.navigate('Main');
@@ -77,6 +86,9 @@ export default function PostDetail({route, navigation}) {
         locationFieldNames={locationFieldNamesState}
         isLiked={isLikedState}
         likeCount={likeCountState}
+        comments={commentsState}
+        commentCount={commentCountState}
+        showComments={true}
       />
     </View>
   );
