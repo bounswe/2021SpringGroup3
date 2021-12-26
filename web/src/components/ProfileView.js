@@ -77,6 +77,7 @@ const ProfileView = (props) => {
             </GoogleMap>
         )
     }
+
     const WrappedMap = withScriptjs(withGoogleMap(Map));
 
     const date = new Date(props.userObj.birthday);
@@ -146,7 +147,6 @@ const ProfileView = (props) => {
                 </Card>
             </Card>
         </>
-        //('value' in props.userObj.location) ? props.userObj.location.value.latitude + " " + props.userObj.location.value.longitude : "No location info"
     )
 }
 

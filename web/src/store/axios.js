@@ -3,6 +3,9 @@ import {
   LOGIN_ENDPOINT,
   LOGOUT_ENDPOINT,
   REGISTER_ENDPOINT,
+  GET_HOME_PAGE_POSTS_ENDPOINT,
+  GET_RECOMMENDED_USERS_ENDPOINT,
+  GET_RECOMMENDED_COMMUNITIES_ENDPOINT,
   CREATE_COMMUNITY_ENDPOINT,
   GET_COMMUNITIES_ENDPOINT,
   GET_COMMUNITY_PAGE_ENDPOINT,
@@ -88,6 +91,57 @@ export async function logout(info) {
     console.log(error);
 
     return error
+  }
+}
+
+export async function getHomePagePosts(token) {
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    const response = await axios.get(GET_HOME_PAGE_POSTS_ENDPOINT, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
+
+export async function getRecommendedUsers(token) {
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    const response = await axios.get(GET_RECOMMENDED_USERS_ENDPOINT, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
+
+export async function getRecommendedCommunities(token) {
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    const response = await axios.get(GET_RECOMMENDED_COMMUNITIES_ENDPOINT, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+    return error;
   }
 }
 

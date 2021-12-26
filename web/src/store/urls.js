@@ -4,6 +4,9 @@ export const LOGIN_ENDPOINT = `${BASE_URL}auth/login`;
 export const LOGOUT_ENDPOINT = `${BASE_URL}auth/logout`;
 export const REGISTER_ENDPOINT = `${BASE_URL}auth/register`;
 
+export const GET_HOME_PAGE_POSTS_ENDPOINT = `${BASE_URL}posts/homepage`;
+export const GET_RECOMMENDED_USERS_ENDPOINT = `${BASE_URL}profile/recommend`;
+export const GET_RECOMMENDED_COMMUNITIES_ENDPOINT = `${BASE_URL}communities/recommend`;
 export const CREATE_COMMUNITY_ENDPOINT = `${BASE_URL}communities`;
 export const GET_COMMUNITIES_ENDPOINT = `${BASE_URL}communities`;
 export const DELETE_COMMUNITY_ENDPOINT = `${BASE_URL}communities`;
