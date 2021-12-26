@@ -8,13 +8,13 @@ export default function SearchResultComponent({
   id,
   name,
   icon,
-  description,
+  description = '',
   isPrivate,
   onPress,
 }) {
   return (
     <View style={{width:'100%'}}>
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity onPress={() => onPress(id, name)}>
         <View style={styles.feedItem}>
           <View style={{flexDirection: 'row'}}>
             <View style={{justifyContent: 'center'}}>

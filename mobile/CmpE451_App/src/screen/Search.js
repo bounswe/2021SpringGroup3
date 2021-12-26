@@ -7,6 +7,7 @@ import CommonIcon from '../component/CommonIcon';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {IconButton} from 'react-native-paper';
 import * as client from '../services/BoxyClient';
+import {PAGE_VARIABLES} from '../constants';
 
 export default function Search({navigation}) {
   const [searchResults, setSearchResults] = useState([]);
@@ -39,10 +40,35 @@ export default function Search({navigation}) {
     },
   ]);
 
+  useEffect(() => {
+    setSearchResults([]);
+  }, [isCommunitySearch]);
+
+  const navigateCommunityPage = (id, name) => {
+    PAGE_VARIABLES.communityId = id;
+
+    navigation.navigate('Community', {
+      communityName: name,
+      communityId: id,
+    });
+  };
+
+  const navigateProfilePage = (id, name) => {
+    navigation.navigate('OtherUserProfile', {id: id});
+  };
+
   const handleSearch = async query => {
     if (query.length > 0) {
       if (isCommunitySearch) {
         let response = await client.searchCommunity({query: query});
+        const status = response.status;
+        if (status == 200) {
+          setSearchResults(response.data);
+        } else {
+          ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+        }
+      } else {
+        let response = await client.searchUser({query: query});
         const status = response.status;
         if (status == 200) {
           setSearchResults(response.data);
@@ -89,7 +115,7 @@ export default function Search({navigation}) {
               icon={item.iconUrl}
               description={item.description}
               isPrivate={item.isPrivate}
-              onPress={item.text}
+              onPress={navigateCommunityPage}
             />
           )}
           showsVerticalScrollIndicator={false}
@@ -102,11 +128,9 @@ export default function Search({navigation}) {
           renderItem={({item}) => (
             <SearchResultComponent
               id={item.id}
-              name={item.name}
-              icon={item.iconUrl}
-              description={item.description}
-              isPrivate={item.isPrivate}
-              onPress={item.text}
+              name={item.username}
+              icon={item.imageUrl}
+              onPress={navigateProfilePage}
             />
           )}
           showsVerticalScrollIndicator={false}

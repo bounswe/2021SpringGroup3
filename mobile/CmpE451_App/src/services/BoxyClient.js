@@ -513,6 +513,24 @@ export const searchCommunity = async ({query}) => {
     });
 };
 
+export const searchUser = async ({query}) => {
+  return fetch(BASE_URL + 'profile/search' + '?query=' + query, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 const returnResponse = async response => {
   const statusCode = response.status;
   response = await response.json();
