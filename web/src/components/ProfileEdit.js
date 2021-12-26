@@ -17,6 +17,8 @@ const DefaultZoom = 10;
 const { Text, Title } = Typography;
 const { TextArea } = Input;
 
+require('dotenv').config();
+
 const ProfileEdit = (props) => {
 
   const loginState = useSelector((state) => state.login);
@@ -54,7 +56,7 @@ const ProfileEdit = (props) => {
         style={{height:'700px'}}
         onChangeLocation={handleChangeLocation} 
         onChangeZoom={handleChangeZoom}
-        apiKey='AIzaSyBT4whK0_2fcQEvS_u2nmnvOXZH_9sAuzE'/>
+        apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}/>
     </div>
   
   var profileBody = {
@@ -138,8 +140,8 @@ const ProfileEdit = (props) => {
               valuePropName="fileList"
               getValueFromEvent={normFile}
               >
-                <Upload 
-                  name="pp" 
+                <Upload
+                  name="pp"
                   beforeUpload={file => {
                     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
                     if (!isJpgOrPng) {
@@ -157,8 +159,9 @@ const ProfileEdit = (props) => {
                     // Prevent upload
                     return false;
                   }}
+                  onRemove={() => {setImage64("")}}
                   listType="picture">
-                  <Button icon={<UploadOutlined />}>Click to upload</Button>
+                  { image64 ? <></> : <Button icon={<UploadOutlined />}>Click to upload</Button> } 
                 </Upload>
               </Form.Item>
             </Col>

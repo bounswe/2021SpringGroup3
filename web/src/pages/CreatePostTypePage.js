@@ -9,7 +9,7 @@ const { Header, Footer, Sider, Content } = Layout;
 function CreatePostTypePage(props) {
 
     const { state } = useLocation();
-    const { id } = state;
+    const { id, communityName } = state;
 
   return (
     <>
@@ -18,7 +18,7 @@ function CreatePostTypePage(props) {
 
 
         <Layout>
-          <Content><CreatePostType id={id}/></Content>
+          <Content><CreatePostType id={id} communityName={communityName} /></Content>
         </Layout>
         <Footer></Footer>
       </Layout>

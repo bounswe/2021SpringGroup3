@@ -1,6 +1,8 @@
 import * as loginAction from "../store/actions/loginActions";
 import { login, logout, register,
   createCommunity, getCommunities, getCommunityPage,
+  leaveCommunity, joinCommunity, joinCommunityModerator,
+  acceptUser, rejectUser, acceptModerator, rejectModerator, kickUser, deleteCommunity,
   createPost, getCommunityPosts, getPostPage,
   createPostType, getPostTypes, getPostTypeDetail, getProfile,
   getProfileSettings,
@@ -38,9 +40,9 @@ export const Register = async (info, dispatch) => {
     }
 }
 
-export const CreateCommunity = async (info, dispatch) => {
+export const CreateCommunity = async (info, token, dispatch) => {
   // dispatch(loginAction.logout());
-  const response = await createCommunity(info);
+  const response = await createCommunity(info, token);
   if(response.status === 200 || response.status === 201){
     console.log(response.data.community.id);
     return response.data.community.id;
@@ -87,9 +89,9 @@ export const GetPostTypeDetail = async (info, token, dispatch) => {
   }
 }
 
-export const GetCommunities = async (info, dispatch) => {
+export const GetCommunities = async (info, token, dispatch) => {
   // dispatch(loginAction.logout());
-  const response = await getCommunities(info);
+  const response = await getCommunities(info, token);
   if(response.status === 200 || response.status === 201){
     console.log(response.data);
     return response
@@ -103,6 +105,123 @@ export const GetCommunities = async (info, dispatch) => {
 export const GetCommunityPage = async (info, dispatch) => {
   // dispatch(loginAction.logout());
   const response = await getCommunityPage(info);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data);
+    return response
+    // dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const LeaveCommunity = async (info, token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await leaveCommunity(info, token);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data);
+    return response
+    // dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const JoinCommunity = async (info, token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await joinCommunity(info, token);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data);
+    return response
+    // dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const JoinCommunityModerator = async (info, token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await joinCommunityModerator(info, token);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data);
+    return response
+    // dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const AcceptUser = async (info, token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await acceptUser(info, token);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data);
+    return response
+    // dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const RejectUser = async (info, token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await rejectUser(info, token);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data);
+    return response
+    // dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const AcceptModerator = async (info, token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await acceptModerator(info, token);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data);
+    return response
+    // dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const RejectModerator = async (info, token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await rejectModerator(info, token);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data);
+    return response
+    // dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const KickUser = async (info, token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await kickUser(info, token);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data);
+    return response
+    // dispatch(loginAction.logoutSuccess());
+  }else{
+    // dispatch(loginAction.logoutFailure());
+    return {}
+  }
+}
+
+export const DeleteCommunity = async (info, token, dispatch) => {
+  // dispatch(loginAction.logout());
+  const response = await deleteCommunity(info, token);
   if(response.status === 200 || response.status === 201){
     console.log(response.data);
     return response
