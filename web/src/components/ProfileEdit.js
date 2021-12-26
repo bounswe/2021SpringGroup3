@@ -7,9 +7,11 @@ import 'antd/dist/antd.css';
 import { TeamOutlined, LockOutlined, SaveOutlined, UserOutlined, CheckOutlined, CloseOutlined, UploadOutlined} from '@ant-design/icons';
 
 import buttonColor from '../colors'
+import base64avatar from '../utils/images'
 import { PostProfileSettings as PostProfileSettingsRequest} from '../utils/helper';
 
 import MapPicker from 'react-google-map-picker'
+import moment from 'moment'
 
 const DefaultLocation = { lat: 41, lng: 29};
 const DefaultZoom = 10;
@@ -21,11 +23,28 @@ require('dotenv').config();
 
 const ProfileEdit = (props) => {
 
+  console.log(props)
+
+  const buttonStyle = {
+    backgroundColor: '#6f74dd',
+    borderColor: '#6f74dd',
+    color: '#ffffff',
+    cursor: 'pointer',
+    marginTop: '20px',
+    fontWeight: 'bold'
+}
+
   const loginState = useSelector((state) => state.login);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [image64,setImage64] = useState('');
+  const [isPublicProfilePhoto, setisPublicProfilePhoto] = useState(props.profileValues.profilePhotoUrl ? props.profileValues.profilePhotoUrl.isPublic : true)
+  const [isPublicBio, setisPublicBio] = useState(props.profileValues.bio ? props.profileValues.bio.isPublic : true)
+  const [isPublicBirthday, setisPublicBirthday] = useState(props.profileValues.birthday ? props.profileValues.birthday.isPublic : true)
+  const [isPublicLocation, setisPublicLocation] = useState(props.profileValues.location ? props.profileValues.location.isPublic : true)
+  const [isPublicProfile, setisPublicProfile] = useState(props.profileValues.isPublic)
+
+  const [image64,setImage64] = useState(null);
 
   //react-map-picker
   const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
@@ -85,17 +104,20 @@ const ProfileEdit = (props) => {
   const onFinish = async (values) => {
     try {
       profileBody.profilePhoto.value = image64;
-      profileBody.profilePhoto.isPublic = values.isProfilePicturePublic == true;
+      if (!profileBody.profilePhoto.value) profileBody.profilePhoto.value = base64avatar;
+      profileBody.profilePhoto.isPublic = isPublicProfilePhoto == true;
   
       profileBody.bio.value = values.bio;
-      profileBody.bio.isPublic = values.isBioPublic == true;
+      profileBody.bio.isPublic = isPublicBio == true;
   
       profileBody.birthday.value = values.birthday._d;
-      profileBody.birthday.isPublic = values.isBirthdayPublic == true;
+      profileBody.birthday.isPublic = isPublicBirthday == true;
   
       profileBody.location.value.latitude = location.lat;
       profileBody.location.value.longitude = location.lng;
-      profileBody.location.isPublic = values.isLocationPublic == true;
+      profileBody.location.isPublic = isPublicLocation == true;
+
+      //profileBody.isPublic = isPublicProfile == true;
       await PostProfileSettingsRequest(profileBody, loginState.token, dispatch);
   
       console.log('Success:', profileBody);
@@ -128,7 +150,7 @@ const ProfileEdit = (props) => {
           <Col span={12}>
             <Title level={4}>Profile Settings</Title>
           </Col>
-          <Col span={6} offset={1}>
+          <Col span={11} offset={1} align='left'>
             <Title level={4}>Privacy Settings</Title>
           </Col>
         </Row>
@@ -172,11 +194,13 @@ const ProfileEdit = (props) => {
                 </Upload>
               </Form.Item>
             </Col>
-            <Col span={4}>
-              <Form.Item name="isProfilePicturePublic" valuePropName="checked">
+            <Col offset={1} span={11} align="left">
+              <Form.Item name="isProfilePicturePublic">
                 <Switch style={buttonColor}
-                  checkedChildren={<TeamOutlined />}
-                  unCheckedChildren={<LockOutlined />}
+                  checked ={isPublicProfilePhoto}
+                  checkedChildren={<><TeamOutlined /> <Text strong style={{color: 'white'}}>Public</Text></>}
+                  unCheckedChildren={<><LockOutlined /> <Text strong style={{color: 'white'}}>Private</Text></>}
+                  onClick={() => setisPublicProfilePhoto(!isPublicProfilePhoto)}
                 />
               </Form.Item>
             </Col>
@@ -204,18 +228,17 @@ const ProfileEdit = (props) => {
           <Row>
             <Col span={12}>
             <Text strong>Bio</Text>
-              <Form.Item 
-                name="bio"
-                required
-              >
+              <Form.Item name="bio" initialValue={props.profileValues.bio.value}>
                 <TextArea rows={4} placeholder="Enter bio" />
               </Form.Item>
             </Col>
-            <Col span={4}>
-              <Form.Item name="isBioPublic" valuePropName="checked">
+            <Col offset={1} span={11} align="left">
+              <Form.Item name="isBioPublic">
                 <Switch style={buttonColor}
-                  checkedChildren={<TeamOutlined />}
-                  unCheckedChildren={<LockOutlined />}
+                  checked ={isPublicBio}
+                  checkedChildren={<><TeamOutlined /> <Text strong style={{color: 'white'}}>Public</Text></>}
+                  unCheckedChildren={<><LockOutlined /> <Text strong style={{color: 'white'}}>Private</Text></>}
+                  onClick={() => setisPublicBio(!isPublicBio)}
                 />
               </Form.Item>
             </Col>
@@ -224,15 +247,17 @@ const ProfileEdit = (props) => {
           <Row>
             <Col span={12}>
             <Text strong>Birthday</Text>
-              <Form.Item name="birthday">
-                <DatePicker format="MMM Do YY"/>
+              <Form.Item name="birthday" initialValue={moment(props.profileValues.birthday.value)}>
+                <DatePicker format="MMM Do YYYY"/>
               </Form.Item>
             </Col>
-            <Col span={4}>
-              <Form.Item name="isBirthdayPublic" valuePropName="checked">
+            <Col offset={1} span={11} align="left">
+              <Form.Item name="isBirthdayPublic">
                 <Switch style={buttonColor}
-                  checkedChildren={<TeamOutlined />}
-                  unCheckedChildren={<LockOutlined />}
+                  checked ={isPublicBirthday}
+                  checkedChildren={<><TeamOutlined /> <Text strong style={{color: 'white'}}>Public</Text></>}
+                  unCheckedChildren={<><LockOutlined /> <Text strong style={{color: 'white'}}>Private</Text></>}
+                  onClick={() => setisPublicBirthday(!isPublicBirthday)}
                 />
               </Form.Item>
             </Col>
@@ -249,11 +274,13 @@ const ProfileEdit = (props) => {
                 {MapPickerElement}
               </Form.Item>
             </Col>
-            <Col span={4}>
-              <Form.Item name="isLocationPublic" valuePropName="checked">
+            <Col offset={1} span={11} align="left">
+              <Form.Item name="isLocationPublic">
                 <Switch style={buttonColor}
-                  checkedChildren={<TeamOutlined />}
-                  unCheckedChildren={<LockOutlined />}
+                  checked ={isPublicLocation}
+                  checkedChildren={<><TeamOutlined /> <Text strong style={{color: 'white'}}>Public</Text></>}
+                  unCheckedChildren={<><LockOutlined /> <Text strong style={{color: 'white'}}>Private</Text></>}
+                  onClick={() => setisPublicLocation(!isPublicLocation)}
                 />
               </Form.Item>
             </Col>
@@ -261,13 +288,20 @@ const ProfileEdit = (props) => {
           
           <Row>
             <Col span={12}>
-              <Text>Other users must send me a request to follow my profile</Text>
+              <Col span={24}>
+              <Text strong>Follow Requests</Text>
+              </Col>
+              <Col span={24}>
+              <Text>If you set your pofile to private, other users must send you a request to follow your profile to message you or to view your private information.</Text>
+              </Col>
             </Col>
-            <Col span={4}>
-              <Form.Item name="isProfilePublic" valuePropName="checked">
+            <Col offset={1} span={11} align="left">
+              <Form.Item name="isProfilePublic">
                 <Switch style={buttonColor}
-                  checkedChildren={<CheckOutlined  />}
-                  unCheckedChildren={<CloseOutlined />}
+                  checked ={isPublicProfile}
+                  checkedChildren={<><TeamOutlined /> <Text strong style={{color: 'white'}}>Public</Text></>}
+                  unCheckedChildren={<><LockOutlined /> <Text strong style={{color: 'white'}}>Private</Text></>}
+                  onClick={() => setisPublicProfile(!isPublicProfile)}
                 />
               </Form.Item>
             </Col>
@@ -275,7 +309,7 @@ const ProfileEdit = (props) => {
 
           <Form.Item>
           <Col span={24} align='middle'>
-            <Button type="primary" htmlType="submit" shape="round" icon={<SaveOutlined />} style={buttonColor}>
+            <Button type="primary" htmlType="submit" shape="round" icon={<SaveOutlined />} style={buttonStyle}>
               Save Profile
             </Button>
             </Col>
