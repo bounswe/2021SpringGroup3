@@ -9,7 +9,8 @@ import { login, logout, register,
   createPostType, getPostTypes, getPostTypeDetail, getProfile,
   getProfileSettings,
   postProfileSettings, 
-  getProfileOther } from '../store/axios';
+  getProfileOther,
+  searchWikidata } from '../store/axios';
 
 export const Login = async (info, dispatch) => {
 
@@ -365,7 +366,19 @@ export const PostProfileSettings = async (info, token, dispatch) => {
   if(response.status === 200 || response.status === 201){
     return response;
 
-  }else{
+  } else {
+
+    return {}
+  }
+}
+
+export const SearchWikidata = async (info) => {
+
+  const response = await searchWikidata(info);
+  if(response.status === 200 || response.status === 201){
+    return response;
+
+  } else {
 
     return {}
   }

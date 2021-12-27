@@ -29,7 +29,8 @@ import {
   GET_PROFILE_ENDPOINT,
   GET_PROFILE_SETTINGS_ENDPOINT,
   POST_PROFILE_SETTINGS_ENDPOINT,
-  GET_PROFILE_OTHER_ENDPOINT
+  GET_PROFILE_OTHER_ENDPOINT,
+  SEARCH_WIKIDATA_ENDPOINT
 } from './urls';
 
 export async function login(info) {
@@ -609,6 +610,18 @@ export async function postProfileSettings(info, token) {
     }
     console.log(info)
     const response = await axios.post(POST_PROFILE_SETTINGS_ENDPOINT, { ...info }, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function searchWikidata(info) {
+  try {
+    const response = await axios.get(SEARCH_WIKIDATA_ENDPOINT + `?action=wbsearchentities&language=en&format=json&search=${info.tag}`);
+    console.log(response)
     return response;
   } catch (error) {
     console.log(error);

@@ -1,15 +1,13 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { React, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Card, Row, Col, Button, Typography, Space, Avatar } from 'antd';
+import { Card, Row, Col, Button, Typography, Space, Avatar, Tag, Popover } from 'antd';
 import '../App.css';
 import FieldContent from './FieldContent';
-
-
-import React from "react";
-
 import { LikeOutlined, LikeFilled, CommentOutlined, FlagOutlined, FlagFilled } from '@ant-design/icons';
 import 'antd/dist/antd.css';
+
+import { SearchWikidata as SearchWikidataRequest } from '../utils/helper';
 
 const { Text } = Typography;
 
@@ -25,27 +23,27 @@ const PostView = (props) => {
 
   let contentFields = [];
 
-  contentFields.push(... props.postObj.textFieldNames.map((fieldContent) => {
+  contentFields.push(...props.postObj.textFieldNames.map((fieldContent) => {
     fieldContent.type = 'text';
     return <FieldContent fieldContent={fieldContent} />
   }))
 
-  contentFields.push(... props.postObj.numberFieldNames.map((fieldContent) => {
+  contentFields.push(...props.postObj.numberFieldNames.map((fieldContent) => {
     fieldContent.type = 'number';
     return <FieldContent fieldContent={fieldContent} />
   }))
 
-  contentFields.push(... props.postObj.dateFieldNames.map((fieldContent) => {
+  contentFields.push(...props.postObj.dateFieldNames.map((fieldContent) => {
     fieldContent.type = 'date';
     return <FieldContent fieldContent={fieldContent} />
   }))
 
-  contentFields.push(... props.postObj.linkFieldNames.map((fieldContent) => {
+  contentFields.push(...props.postObj.linkFieldNames.map((fieldContent) => {
     fieldContent.type = 'link';
     return <FieldContent fieldContent={fieldContent} />
   }))
 
-  contentFields.push(... props.postObj.locationFieldNames.map((fieldContent) => {
+  contentFields.push(...props.postObj.locationFieldNames.map((fieldContent) => {
     fieldContent.type = 'location';
     return <FieldContent fieldContent={fieldContent} />
   }))
@@ -67,6 +65,7 @@ const PostView = (props) => {
   }
 
   const [isLiked, setLiked] = useState(props.postObj.isLiked)
+  const [tagDefinition, setTagDefinition] = useState('')
 
   const likePost = (postId) => {
     console.log(`Trying to like post, send a POST request to posts/${postId}/likes`);
@@ -102,6 +101,20 @@ const PostView = (props) => {
     console.log(`Trying to report post, open post report selection component with ${postId}`)
   }
 
+  const defineTag = async (tag) => {
+    const result = SearchWikidataRequest({ tag: tag })
+    if (result && result.search && result.search.length > 0) {
+      setTagDefinition(result.search[0].description)
+    } else  {
+      setTagDefinition(`No definition found for ${tag}.`)
+    }
+    
+  }
+
+  const cancelTag = () => {
+    setTagDefinition('')
+  }
+
   return (
     <>
       <Card size="small" style={postCardStyle}>
@@ -109,10 +122,10 @@ const PostView = (props) => {
           <Space size={'middle'}>
             <Col>
 
-              <Avatar size={50} style={{cursor: 'pointer'}} src={props.postObj.user.profilePhotoUrl} onClick={() => getUser(props.postObj.user.id)} />
+              <Avatar size={50} style={{ cursor: 'pointer' }} src={props.postObj.user.profilePhotoUrl} onClick={() => getUser(props.postObj.user.id)} />
             </Col>
             <Col>
-              <Row>
+              {/*<Row>
                 <Col>
                   <Space size={'large'}>
                     <h3><strong
@@ -122,8 +135,8 @@ const PostView = (props) => {
                     </strong></h3>
                   </Space>
                 </Col>
-              </Row>
-              <Row>
+              </Row>*/}
+              <Space direction='vertical'>
                 <Col>
                   <Space size={'small'}>
                     <Space size={'small'}>
@@ -142,21 +155,37 @@ const PostView = (props) => {
                         {props.postObj.community.name}
                       </strong>
                     </Space>
-                    • {props.postObj.date} • 
+                    {/* 
+                    • {props.postObj.date} •
                     <strong
                       style={postTypeStyle}
                       onClick={() => getPostType(props.postObj.postType.id)}>
                       {props.postObj.postType.name}
                     </strong>
+                    */}
                   </Space>
                 </Col>
-              </Row>
-
+                <Space size='0px'>
+                  {props.postObj.tags.map(tag => {
+                    return (
+                      <Popover content={tagDefinition} title={tag}>
+                        <Tag
+                          color="#6f74dd"
+                          onMouseEnter={() => defineTag(tag)}
+                          onMouseLeave={() => cancelTag()}
+                          style={{ cursor: 'pointer' }}>
+                          {tag}
+                        </Tag> </Popover>
+                    )
+                  })
+                  }
+                </Space>
+              </Space>
             </Col>
           </Space>
         </Row>
         <Row>
-          <Card size="small" style={{ width: '100%', borderRadius: '10px', borderColor: '#ffffff', marginTop: "10px", marginBottom: "10px"}}>
+          <Card size="small" style={{ width: '100%', borderRadius: '10px', borderColor: '#ffffff', marginTop: "10px", marginBottom: "10px" }}>
             <Space direction="vertical">
               {contentFields}
             </Space>
