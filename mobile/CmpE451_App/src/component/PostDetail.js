@@ -8,7 +8,6 @@ import {useIsFocused} from '@react-navigation/native';
 import * as client from '../services/BoxyClient';
 import Comment from './Comment.js';
 import MapView from 'react-native-maps';
-import {textInputArea} from '../theme/styles';
 
 import {
   FlatList,
@@ -18,7 +17,6 @@ import {
   TouchableOpacity,
   ToastAndroid,
   TextInput,
-  KeyboardAvoidingView,
 } from 'react-native';
 
 export default function PostDetail({
