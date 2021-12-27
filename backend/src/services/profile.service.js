@@ -158,7 +158,7 @@ exports.setNotificationId = async ({ token, notificationId }) => {
   };
 };
 
-exports.search = async ({ query, communityId }) => {
+exports.search = async ({ token, query, communityId }) => {
   if (communityId) {
     const community = await Community.findById(communityId).populate({
       path: 'members',
@@ -167,7 +167,7 @@ exports.search = async ({ query, communityId }) => {
       },
       options: { sort: { followerCount: -1 } },
     });
-    return formatters.formatUsers(community.members);
+    return formatters.formatUsers(community.members, token.user);
   }
 
   const users = await User.find({
@@ -175,7 +175,7 @@ exports.search = async ({ query, communityId }) => {
   })
     .sort({ followerCount: -1 })
     .lean();
-  return formatters.formatUsers(users);
+  return formatters. formatUsers(users, token.user);
 };
 
 exports.recommend = async ({ token }) => {
