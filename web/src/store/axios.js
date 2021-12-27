@@ -6,6 +6,8 @@ import {
   GET_HOME_PAGE_POSTS_ENDPOINT,
   GET_RECOMMENDED_USERS_ENDPOINT,
   GET_RECOMMENDED_COMMUNITIES_ENDPOINT,
+  SEARCH_USERS_ENDPOINT,
+  SEARCH_COMMUNITIES_ENDPOINT,
   CREATE_COMMUNITY_ENDPOINT,
   GET_COMMUNITIES_ENDPOINT,
   GET_COMMUNITY_PAGE_ENDPOINT,
@@ -138,6 +140,40 @@ export async function getRecommendedCommunities(token) {
       },
     }
     const response = await axios.get(GET_RECOMMENDED_COMMUNITIES_ENDPOINT, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
+
+export async function searchCommunities(info, token) {
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    const response = await axios.get(SEARCH_COMMUNITIES_ENDPOINT + '?query=' + info.query, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
+
+export async function searchUsers(info, token) {
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    const response = await axios.get(SEARCH_USERS_ENDPOINT + '?query=' + info.query + '&communityId=' + info.communityId, { ...header });
     return response;
   } catch (error) {
     console.log(error);

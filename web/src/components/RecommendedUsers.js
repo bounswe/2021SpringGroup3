@@ -24,8 +24,6 @@ const RecommendedUsers = (props) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    console.log(props)
-
     return (
         <div style={{ marginTop: '20px', marginLeft: '20px' }}>
             <Card style={cardStyle} title={'Recommended Users'} align="left">

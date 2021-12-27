@@ -1,6 +1,6 @@
 import { useState, React, useEffect } from 'react';
 
-import { Col, Descriptions, Button, Image, Card, Row, Space, notification, Tooltip, Typography, Popconfirm, message, Avatar } from 'antd';
+import { Col, Descriptions, Button, Image, Card, Row, Space, notification, Tooltip, Typography, Popconfirm, message, Avatar, Badge } from 'antd';
 import { CheckOutlined, CloseOutlined, UserDeleteOutlined, DeleteOutlined, ExclamationCircleOutlined, TeamOutlined, LockOutlined } from '@ant-design/icons';
 
 import { useSelector } from 'react-redux';
@@ -132,12 +132,17 @@ const CommunityModeration = (props) => {
 
     const [clickedUser, setClickedUser] = useState({})
 
+    useEffect(() => {
+        if (clickedUser.actionType == 'request') setRequests(requests.filter(u => u.key != clickedUser.id));
+        if (clickedUser.actionType == 'modRequest') setModRequests(modRequests.filter(u => u.key != clickedUser.id));
+        if (clickedUser.actionType == 'kick') setMembers(members.filter(u => u.key != clickedUser.id));
+    }, [clickedUser])
+
     const accept = async (user) => {
         try {
-            setClickedUser(user)
-            setRequests(requests.filter(u => u.key != user.id))
+            setClickedUser({ ...user, actionType: 'request' })
             let body = { communityId: props.communityId, userId: user.id }
-            const result = await AcceptUserRequest(body, loginState.token, dispatch)
+            const result = await AcceptUserRequest(body, loginState.token, dispatch);
             notification.success({
                 message: `Accepted join request of ${user.username}.`
             });
@@ -150,8 +155,7 @@ const CommunityModeration = (props) => {
 
     const reject = async (user) => {
         try {
-            setClickedUser(user)
-            setRequests(requests.filter(u => u.key != user.id))
+            setClickedUser({ ...user, actionType: 'request' })
             let body = { communityId: props.communityId, userId: user.id }
             const result = await RejectUserRequest(body, loginState.token, dispatch);
             notification.success({
@@ -166,8 +170,7 @@ const CommunityModeration = (props) => {
 
     const acceptMod = async (user) => {
         try {
-            setClickedUser(user)
-            setModRequests(modRequests.filter(u => u.key != user.id))
+            setClickedUser({ ...user, actionType: 'modRequest' })
             let body = { communityId: props.communityId, userId: user.id }
             const result = await AcceptModeratorRequest(body, loginState.token, dispatch);
             notification.success({
@@ -182,8 +185,7 @@ const CommunityModeration = (props) => {
 
     const rejectMod = async (user) => {
         try {
-            setClickedUser(user)
-            setModRequests(modRequests.filter(u => u.key != user.id))
+            setClickedUser({ ...user, actionType: 'modRequest' })
             let body = { communityId: props.communityId, userId: user.id }
             const result = await RejectModeratorRequest(body, loginState.token, dispatch);
             notification.success({
@@ -198,8 +200,7 @@ const CommunityModeration = (props) => {
 
     const kick = async (user) => {
         try {
-            setClickedUser(user)
-            setMembers(members.filter(u => u.key != user.id))
+            setClickedUser({ ...user, actionType: 'kick' })
             let body = { communityId: props.communityId, userId: user.id }
             const result = await KickUserRequest(body, loginState.token, dispatch);
             notification.success({
@@ -231,13 +232,13 @@ const CommunityModeration = (props) => {
 
     return (
         <div>
-            <Card style={cardStyle} title={requests.length > 0 ? `Join requests to ${props.name} - (${requests.length})` : `There are no existing join requests for ${props.name}`} size="small" align="left">
+            <Card style={cardStyle} title={requests.length > 0 ? <Space><Text>{`Join requests to ${props.name}`}</Text><Badge count={requests.length}/></Space> : `There are no existing join requests for ${props.name}`} size="small" align="left">
                 {requests}
             </Card>
-            <Card style={{ ...cardStyle, marginTop: "20px" }} title={modRequests.length > 0 ? `Moderator role requests to ${props.name} (${modRequests.length})` : `There are no existing mod role requests for ${props.name}`} size="small" align="left">
+            <Card style={{ ...cardStyle, marginTop: "20px" }} title={modRequests.length > 0 ? <Space><Text>{`Moderator role requests to ${props.name}`}</Text><Badge count={modRequests.length} /></Space> : `There are no existing mod role requests for ${props.name}`} size="small" align="left">
                 {modRequests}
             </Card>
-            <Card style={{ ...cardStyle, marginTop: "20px" }} title={`Members of ${props.name} (${members.length})`} size="small" align="left">
+            <Card style={{ ...cardStyle, marginTop: "20px" }} title={<Space><Text>{`Members of ${props.name}`}</Text><Badge style={{backgroundColor: 'green'}}count={members.length} /></Space>} size="small" align="left">
                 {members}
             </Card>
             <Col span={24} align="right" style={{ marginTop: "20px" }}>

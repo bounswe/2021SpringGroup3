@@ -1,5 +1,5 @@
 import { useState, React } from 'react';
-import { Row, Col, Form, Input, Typography, Button, Radio, Select, Card, Upload, message } from 'antd';
+import { Row, Col, Form, Input, Typography, Button, Radio, Select, Card, Upload, message, notification } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -49,8 +49,18 @@ const CreateCommunity = (props) => {
         communityBody.name = values.communityName;
         communityBody.description = values.description;
         communityBody.isPrivate = isPrivate;
-        const id = await CreateCommunityRequest(communityBody,  loginState.token, dispatch);
-        navigate(`/communities/${id}`)
+        const id = await CreateCommunityRequest(communityBody, loginState.token, dispatch);
+        console.log(id)
+        if (id && id.length > 0) {
+            navigate(`/communities/${id}`)
+            notification.success({
+                message: `Community Created.`,
+            });
+        } else {
+            notification.error({
+                message: `An error occured.`,
+            });
+        }
     }
 
     const onFinishFailed = (error) => {
@@ -76,7 +86,7 @@ const CreateCommunity = (props) => {
                                 {
                                     required: true,
                                     message: "Community name cannot be empty!"
-                                }, 
+                                },
                                 {
                                     min: 2,
                                     message: "Community name should be at least 2 characters."
@@ -92,7 +102,7 @@ const CreateCommunity = (props) => {
                         >
                             <Input.TextArea placeholder="Community Description" />
                         </Form.Item>
-                        
+
                         <Text><b>Icon URL</b></Text>
                         <Form.Item
                             name="iconUrl"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Form, Input, Button, Select, Space, Card, Typography } from 'antd';
+import { Row, Col, Form, Input, Button, Select, Space, Card, Typography, notification } from 'antd';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -40,7 +40,6 @@ const CreatePostType = (props) => {
   const [form] = Form.useForm();
 
   const onFinish = async (values) => {
-
     values.communityId = props.id;
 
     if (!values.fields || values.fields.length < 1) {
@@ -57,8 +56,18 @@ const CreatePostType = (props) => {
 
     delete values.fields;
 
-    await CreatePostTypeRequest(values, loginState.token, dispatch);
-    navigate(`/communities/`)
+    const response = await CreatePostTypeRequest(values, loginState.token, dispatch);
+    if (response.status == 201) {
+      navigate(`/communities/${response.data.community.id}`);
+      notification.success({
+        message: `Post Type Created.`,
+    });
+    } else {
+      notification.error({
+        message: `An error occured.`,
+      })
+    }
+
   }
 
 
