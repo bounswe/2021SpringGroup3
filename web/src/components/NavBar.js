@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { Logout } from '../utils/helper';
-import { logout } from '../store/actions/loginActions';
 import logo from '../utils/BoxyHeadlineCat.png'
 import GetCommunities from './GetCommunities'
 

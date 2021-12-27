@@ -46,7 +46,7 @@ const  LoginReducer = (state = initialState, action) => {
       return {
           ...state,
           loading:false,
-          isAuthenticated:true,
+          isAuthenticated:false,
           username: action.payload.username,
           email: action.payload.email,
           password: action.payload.password,

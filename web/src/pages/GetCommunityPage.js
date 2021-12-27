@@ -53,9 +53,11 @@ function GetCommunityPage(props) {
           <Content>
             <Row>
               <Col span={5} align="right">
-                <AboutCommunity image={result.iconUrl ? result.iconUrl : ''} name={result.name} description={result.description} members={result.members} moderators={result.moderators}
-                  isMember={result.isMember} isModerator={result.isModerator} isPrivate={result.isPrivate} creator={result.user} communityId={id}
-                  />
+              {
+                result && <AboutCommunity image={result.iconUrl ? result.iconUrl : ''} name={result.name} description={result.description} members={result.members} moderators={result.moderators}
+                isMember={result.isMember} isModerator={result.isModerator} isPrivate={result.isPrivate} creator={result.user} communityId={id}
+                />
+              }
               </Col>
               <Col span={19}>
                 <div style={{margin: "20px"}}>

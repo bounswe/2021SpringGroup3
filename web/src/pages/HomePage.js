@@ -26,20 +26,20 @@ function HomePage() {
   const [communities, setCommunities] = useState([]);
 
   useEffect(() => {
-    // GetHomePagePostsRequest(loginState.token, dispatch)
-    //   .then(posts => {
-    //     setPosts(posts.data.map((post) => {
-    //       return <div style={{ marginBottom: '20px' }}><PostView postObj={post} /></div>
-    //     }))
-    //   })
-    // GetRecommendedUsersRequest(loginState.token, dispatch)
-    //   .then(users => {
-    //     setUsers(users.data)
-    //   })
-    // GetRecommendedCommunitiesRequest(loginState.token, dispatch)
-    //   .then(communities => {
-    //     setCommunities(communities.data)
-    //   })
+    GetHomePagePostsRequest(loginState.token, dispatch)
+      .then(posts => {
+        setPosts(posts.data.map((post) => {
+          return <div style={{ marginBottom: '20px' }}><PostView postObj={post} /></div>
+        }))
+      })
+    GetRecommendedUsersRequest(loginState.token, dispatch)
+      .then(users => {
+        setUsers(users.data)
+      })
+    GetRecommendedCommunitiesRequest(loginState.token, dispatch)
+      .then(communities => {
+        setCommunities(communities.data)
+      })
   }, [])
 
   return (

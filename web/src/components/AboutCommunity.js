@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Col, Descriptions, Button, Image, Card, Row, Space, notification, Tooltip, Typography, Avatar } from 'antd';
 import { TeamOutlined, LockOutlined } from '@ant-design/icons';
@@ -46,6 +46,10 @@ const AboutCommunity = (props) => {
 
     const [isMember, setIsMember] = useState(props.isMember);
 
+    useEffect(() => {
+        setIsMember(props.isMember)
+    }, [])
+
     const loginState = useSelector((state) => state.login);
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -57,6 +61,7 @@ const AboutCommunity = (props) => {
             notification.success({
                 message: props.isPrivate ? `Join request sent to ${props.name} mods.` : `Joined to ${props.name} community.`,
             });
+
             if (!props.isPrivate) setIsMember(true);
         } catch (err) {
             notification.error({
