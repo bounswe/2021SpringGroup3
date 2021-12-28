@@ -93,7 +93,7 @@ export function Navigator() {
         name="OtherUserProfile"
         component={OtherUserProfile}
       />
-       <Stack.Screen
+      <Stack.Screen
         options={{headerShown: false}}
         name="PendingRequests"
         component={PendingRequests}
@@ -150,7 +150,9 @@ function BottomNavigator() {
         }}
       />
       <Tab.Screen
-        options={screenOptionStyle}
+        options={{
+          headerShown: false,
+        }}
         name="Search"
         component={Search}
         listeners={({navigation, route}) => ({})}
