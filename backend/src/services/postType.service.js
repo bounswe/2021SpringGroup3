@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 
 const ApiError = require('../utils/ApiError');
 const { formatters } = require('../utils');
-const { PostType, Community } = require('../models');
+const { PostType, Community, PostTypeACS } = require('../models');
 
 exports.getPostTypes = async ({ communityId }) => {
   const community = await Community.findById(communityId).lean();
@@ -38,7 +38,7 @@ exports.createPostType = async ({
   if ((await PostType.countDocuments({ name, community: communityId })) > 0) {
     throw new ApiError(httpStatus.CONFLICT, 'Post type with this name exists in this community');
   }
-  const postyType = await PostType.create({
+  const postType = await PostType.create({
     name,
     community: community._id,
     creator: token.user._id,
@@ -49,9 +49,16 @@ exports.createPostType = async ({
     linkFieldNames,
     locationFieldNames,
   });
+  const acs = await PostTypeACS.create({
+    summary: `${token.user.username} created a post type`,
+    type: 'Create',
+    actor: token.user,
+    object: postType,
+  });
+  console.log(acs);
   return {
     message: 'Post type  is created',
-    postyType: formatters.formatPreviewPostType(postyType),
+    postType: formatters.formatPreviewPostType(postType),
     community: formatters.formatPreviewCommunity(community),
   };
 };

@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 
 const ApiError = require('../utils/ApiError');
 const { coreUtil, baseUtil, formatters } = require('../utils');
-const { UserToken, User } = require('../models');
+const { UserACS, UserToken, User } = require('../models');
 
 exports.logout = async ({ token }) => {
   await UserToken.findByIdAndDelete(token._id);
@@ -47,11 +47,19 @@ exports.register = async ({ email, password, username }) => {
       throw new ApiError(httpStatus.CONFLICT, 'Username is already taken');
     }
   }
-  await User.create({
+  const user = await User.create({
     email,
     password,
     username,
   });
+  const acs = await UserACS.create({
+    summary: `${username} created an account`,
+    type: 'Create',
+    actor: user,
+    object: user,
+  });
+  console.log(acs);
+
   return {
     message: 'Register is success',
   };
@@ -69,6 +77,14 @@ exports.changePassword = async ({ token, password }) => {
     password,
   });
   user.save();
+  const acs = await UserACS.create({
+    summary: `${user.username} changed password`,
+    type: 'Update',
+    actor: user,
+    object: user,
+  });
+  console.log(acs);
+
   return {
     message: 'Your password has changed successfully',
   };
