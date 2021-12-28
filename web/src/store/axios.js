@@ -22,6 +22,7 @@ import {
   DELETE_COMMUNITY_ENDPOINT,
   CREATE_POST_ENDPOINT,
   GET_POSTS_ENDPOINT,
+  SEARCH_POSTS_ENDPOINT,
   GET_POSTTYPES_ENDPOINT,
   GET_POSTTYPE_DETAIL_ENDPOINT,
   GET_POST_PAGE_ENDPOINT,
@@ -29,7 +30,8 @@ import {
   GET_PROFILE_ENDPOINT,
   GET_PROFILE_SETTINGS_ENDPOINT,
   POST_PROFILE_SETTINGS_ENDPOINT,
-  GET_PROFILE_OTHER_ENDPOINT
+  GET_PROFILE_OTHER_ENDPOINT,
+  SEARCH_WIKIDATA_ENDPOINT
 } from './urls';
 
 export async function login(info) {
@@ -174,6 +176,7 @@ export async function searchUsers(info, token) {
       },
     }
     const response = await axios.get(SEARCH_USERS_ENDPOINT + '?query=' + info.query + '&communityId=' + info.communityId, { ...header });
+    console.log(response)
     return response;
   } catch (error) {
     console.log(error);
@@ -560,6 +563,25 @@ export async function getCommunityPosts(info) {
   }
 }
 
+export async function searchCommunityPosts(info, token) {
+  try {
+    const header = {
+      headers: {
+        'x-platform': 'WEB',
+        'accept': '*/*',
+        'authorization': token
+      },
+    }
+    const response = await axios.get(SEARCH_POSTS_ENDPOINT + "?communityId=" + info.communityId + (info.tag ? "&tag=" +  info.tag : "") + (info.postTypeId ? "&postTypeId=" +  info.postTypeId : ""), { ...header });
+    console.log(response)
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
 export async function getPostPage(info) {
   try {
     const header = {
@@ -609,6 +631,18 @@ export async function postProfileSettings(info, token) {
     }
     console.log(info)
     const response = await axios.post(POST_PROFILE_SETTINGS_ENDPOINT, { ...info }, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function searchWikidata(info) {
+  try {
+    const response = await axios.get(SEARCH_WIKIDATA_ENDPOINT + `?action=wbsearchentities&language=en&format=json&search=${info.tag}`);
+    console.log(response)
     return response;
   } catch (error) {
     console.log(error);

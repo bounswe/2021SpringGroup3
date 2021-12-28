@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Col, Descriptions, Button, Image, Card, Row, Space, notification, Tooltip, Typography, Avatar } from 'antd';
+import { Col, Descriptions, Button, Image, Card, Row, Space, notification, Tooltip, Typography, Avatar, message } from 'antd';
 import { TeamOutlined, LockOutlined } from '@ant-design/icons';
 
 import { useSelector } from 'react-redux';
@@ -64,9 +64,7 @@ const AboutCommunity = (props) => {
 
             if (!props.isPrivate) setIsMember(true);
         } catch (err) {
-            notification.error({
-                message: `An error occured.`,
-            });
+            message.error('An error occured');
         }
     }
 
@@ -79,9 +77,7 @@ const AboutCommunity = (props) => {
             });
             navigate(`/`)
         } catch (err) {
-            notification.error({
-                message: `An error occured.`,
-            });
+            message.error('An error occured');
         }
     }
 
@@ -93,9 +89,7 @@ const AboutCommunity = (props) => {
                 message: `Mod role request sent to ${props.name} mods.`,
             });
         } catch (err) {
-            notification.error({
-                message: `An error occured.`,
-            });
+            message.error('An error occured');
         }
     }
 
