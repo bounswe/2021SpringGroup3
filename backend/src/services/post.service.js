@@ -216,7 +216,7 @@ exports.search = async ({ token, communityId, tag, postTypeId, sortBy }) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
   let posts = [];
-  if (tag) {
+  if (!postTypeId) {
     posts = await Post.find({
       $and: [{ community: community._id }, { 'tags.name': { $regex: tag, $options: 'i' } }],
     })

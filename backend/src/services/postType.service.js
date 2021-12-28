@@ -69,7 +69,7 @@ exports.getPostTypeDetail = async ({ communityId, postTypeId }) => {
 };
 
 exports.searchPostTypes = async ({ communityId, query }) => {
-  const community = await Community.find(communityId).lean();
+  const community = await Community.findById(communityId).lean();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }

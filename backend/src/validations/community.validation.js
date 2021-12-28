@@ -69,7 +69,7 @@ exports.updateCommunity = {
 exports.searchCommunity = {
   query: Joi.object()
     .keys({
-      query: Joi.string().required(),
+      query: Joi.string().allow('', null).required(),
     })
     .required(),
 };

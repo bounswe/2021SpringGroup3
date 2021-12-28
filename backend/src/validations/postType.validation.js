@@ -38,7 +38,7 @@ exports.searchPostTypes = {
   query: Joi.object()
     .keys({
       communityId: Joi.string().custom(objectId).required(),
-      query: Joi.string().required(),
+      query: Joi.string().allow('', null).required(),
     })
     .required(),
 };
