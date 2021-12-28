@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Card, Row, Col, Button, Typography, Space, Avatar } from 'antd';
+import { useSelector, useDispatch } from 'react-redux';
+import { Card, Row, Col, Button, Typography, Space, Avatar, notification } from 'antd';
 import '../App.css';
 import FieldContent from './FieldContent';
+import { LikePost as LikePostRequest, DislikePost as DislikePostRequest, DislikePost } from '../utils/helper';
 
 
 import React from "react";
@@ -15,7 +17,9 @@ const { Text } = Typography;
 
 const PostView = (props) => {
 
-  const navigate = useNavigate()
+  const loginState = useSelector((state) => state.login);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   props.postObj.postType = {
     color: '#6e74dc',
@@ -68,14 +72,41 @@ const PostView = (props) => {
 
   const [isLiked, setLiked] = useState(props.postObj.isLiked)
 
-  const likePost = (postId) => {
-    console.log(`Trying to like post, send a POST request to posts/${postId}/likes`);
-    setLiked(true)
+  const likePost = async (likedPostId) => {
+    console.log(`Trying to like post, send a POST request to posts/${likedPostId}/likes`);
+    
+    try {
+      let body = { postId: likedPostId }
+      const result = await LikePostRequest(body, loginState.token, dispatch);
+      notification.success({
+          message: 'Liked post.'
+      });
+    } catch (err) {
+        notification.error({
+            message: `An error occured.`,
+        });
+    }
+    setLiked(true);
   }
 
-  const revertLikePost = (postId) => {
-    console.log(`Trying to revert the like on a post, send a DELETE request to posts/${postId}/likes`);
+  const revertLikePost = async (likedPostId) => {
+    /*
+    console.log(`Trying to revert the like on a post, send a DELETE request to posts/${likedPostId}/likes`);
+
+    try {
+      let body = { postId: likedPostId }
+      const result = await DislikePostRequest(body, loginState.token, dispatch);
+      notification.success({
+          message: 'Disliked post.'
+      });
+    } catch (err) {
+        notification.error({
+            message: `An error occured.`,
+        });
+    }
+
     setLiked(false)
+    */
   }
 
   const getPost = (communityId, postId) => {
@@ -164,7 +195,7 @@ const PostView = (props) => {
         </Row>
         <Row>
           <Col span={8} align="middle">
-            {isLiked ?
+            {!isLiked ?
               <Button type="text" icon={<LikeOutlined />} onClick={() => likePost(props.postObj.id)}></Button> :
               <Button type="text" icon={<LikeFilled />} onClick={() => revertLikePost(props.postObj.id)}></Button>
             }

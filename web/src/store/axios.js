@@ -29,7 +29,8 @@ import {
   GET_PROFILE_ENDPOINT,
   GET_PROFILE_SETTINGS_ENDPOINT,
   POST_PROFILE_SETTINGS_ENDPOINT,
-  GET_PROFILE_OTHER_ENDPOINT
+  GET_PROFILE_OTHER_ENDPOINT,
+  LIKE_POST_ENDPOINT
 } from './urls';
 
 export async function login(info) {
@@ -609,6 +610,44 @@ export async function postProfileSettings(info, token) {
     }
     console.log(info)
     const response = await axios.post(POST_PROFILE_SETTINGS_ENDPOINT, { ...info }, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function likePost(info, token) {
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    console.log(info)
+    const response = await axios.post(LIKE_POST_ENDPOINT + "?postId=" + info.postId, { ...info }, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function dislikePost(info, token) {
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    console.log(info)
+    const response = await axios.delete(LIKE_POST_ENDPOINT + "?postId=" + info.postId, { ...info }, { ...header });
     return response;
   } catch (error) {
     console.log(error);

@@ -9,7 +9,9 @@ import { login, logout, register,
   createPostType, getPostTypes, getPostTypeDetail, getProfile,
   getProfileSettings,
   postProfileSettings, 
-  getProfileOther } from '../store/axios';
+  getProfileOther, 
+  likePost,
+  dislikePost} from '../store/axios';
 
 export const Login = async (info, dispatch) => {
 
@@ -362,6 +364,30 @@ export const GetProfileSettings = async (info, dispatch) => {
 export const PostProfileSettings = async (info, token, dispatch) => {
 
   const response = await postProfileSettings(info, token);
+  if(response.status === 200 || response.status === 201){
+    return response;
+
+  }else{
+
+    return {}
+  }
+}
+
+export const LikePost = async (info, token, dispatch) => {
+
+  const response = await likePost(info, token);
+  if(response.status === 200 || response.status === 201){
+    return response;
+
+  }else{
+
+    return {}
+  }
+}
+
+export const DislikePost = async (info, token, dispatch) => {
+
+  const response = await dislikePost(info, token);
   if(response.status === 200 || response.status === 201){
     return response;
 

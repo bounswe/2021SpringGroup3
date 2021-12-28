@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import { Layout, Col, Row } from 'antd';
 import NavBar from '../components/NavBar';
 import PostView from '../components/PostView';
+import CommentView from '../components/CommentView';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -21,11 +22,13 @@ function GetPostPage(props) {
   const { postId, communityId } = useParams();
 
   const [result, setResult] = useState('');
+  const [comments, setComments] = useState('');
 
   useEffect(() => {
     GetPostPageRequest({ postId: postId, communityId: communityId, token: loginState.token }, dispatch)
       .then(result => {
-        setResult(<PostView postObj={result.data}/>)
+        setResult(<PostView postObj={result.data}/>);
+        setComments(result.data.comments);
     });
   }, [])
 
@@ -38,6 +41,14 @@ function GetPostPage(props) {
             <Row>
               <Col offset={1} span={21} style={{marginTop: '30px'}}>
                   {result}
+              </Col>
+              <Col span={24}>
+                  {Object.values(comments).map( currentComment => (
+                    <CommentView comment={currentComment}/>
+                  ))}
+              </Col>
+              <Col>
+                    Comment Form Here
               </Col>
             </Row>  
           </Content>
