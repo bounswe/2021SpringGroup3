@@ -237,7 +237,6 @@ exports.search = async ({ token, communityId, tag, postTypeId, sortBy }) => {
       .populate(['creator'])
       .lean();
   }
-  console.log(posts);
   return formatters.formatPosts(
     posts.map((p) => ({ ...p, community })),
     token.user
