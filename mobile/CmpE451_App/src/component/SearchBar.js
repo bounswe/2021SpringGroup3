@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E5E4E2',
     border: 3,
     borderRadius: 2,
+    marginHorizontal: 4,
   },
   searchBar: {
     flexDirection: 'row',

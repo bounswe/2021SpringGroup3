@@ -91,25 +91,6 @@ export default function SelectPostType({navigation, route}) {
   );
 }
 
-const mockPostTypeList = [
-  {
-    name: 'Discussion',
-    id: 1,
-  },
-  {
-    name: 'Tournament',
-    id: 2,
-  },
-  {
-    name: 'Question',
-    id: 3,
-  },
-  {
-    name: 'Story',
-    id: 4,
-  },
-];
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
