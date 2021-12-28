@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-import { Layout, Button, Col, Row, Tabs, Typography, Space, Form, message, Input, Card } from 'antd';
-import { IdcardOutlined, TeamOutlined, FilterOutlined } from '@ant-design/icons';
+import { Layout, Button, Col, Row, Tabs, Typography, Space, Form, message, Input, Card, AutoComplete, Avatar } from 'antd';
+import { IdcardOutlined, TeamOutlined, LockOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons';
 
 import NavBar from '../components/NavBar';
 import AboutCommunity from '../components/AboutCommunity';
@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { GetCommunityPage as GetCommunityPageRequest } from "../utils/helper";
 import { GetCommunityPosts as GetCommunityPostsRequest } from "../utils/helper";
 import { SearchCommunityPosts as SearchCommunityPostsRequest } from "../utils/helper";
+import { SearchUsers as SearchMembersRequest } from "../utils/helper";
 import CommunityModeration from "../components/CommunityModeration";
 
 const { Text, Title } = Typography;
@@ -52,6 +53,7 @@ function GetCommunityPage(props) {
   const [posts, setPosts] = useState([]);
   const [filters, setFilters] = useState({});
   const [postTypes, setPostTypes] = useState(<></>);
+  const [searchedMembers, setSearchedMembers] = useState([]);
 
 
   useEffect(() => {
@@ -84,11 +86,11 @@ function GetCommunityPage(props) {
       if (filters.postTypeId) body.postTypeId = filters.postTypeId;
       if (!body.postTypeId && !body.tag) {
         GetCommunityPostsRequest({ id: id, token: loginState.token }, dispatch)
-        .then(posts => {
-          setPosts(posts.data.map((post) => {
-            return <div style={{ marginBottom: '20px' }}><PostView postObj={post} /></div>
-          }))
-        })
+          .then(posts => {
+            setPosts(posts.data.map((post) => {
+              return <div style={{ marginBottom: '20px' }}><PostView postObj={post} /></div>
+            }))
+          })
         message.success('All posts returned');
         return
       }
@@ -106,9 +108,46 @@ function GetCommunityPage(props) {
     }
   }
 
+  const searchMember = async (value) => {
+    if (!value) {
+      setSearchedMembers([]);
+      return;
+    }
+    let resultMembers = await SearchMembersRequest({ query: value, communityId: id }, loginState.token, dispatch);
+    setSearchedMembers(resultMembers.data)
+  }
+
   const onFilterFailed = async () => {
     message.error('An error occured whie filtering');
   }
+
+  const renderTitle = (title) => (
+    <span>
+      {title}
+    </span>
+  );
+
+  const renderMember = (user) => ({
+    value: (<Col key={user.id} span={24} style={{ cursor: 'pointer', marginBottom: '5px', marginTop: '5px' }} onClick={() => navigate(`/profiles/${user.id}`)}>
+      <Space size='middle'>
+        <Avatar size={40} src={user.profilePhotoUrl.value} />
+        <Space direction='vertical' size='0px'>
+          <Space>
+            <Text strong>{user.username}</Text>
+            {user.isProfilePrivate ? <LockOutlined /> : <TeamOutlined />}
+          </Space>
+          <Text style={{ color: 'grey', fontSize: '12px' }}>{user.followerCount + ' followers'}</Text>
+        </Space>
+      </Space>
+    </Col>)
+  });
+
+  const options = [
+    {
+      label: renderTitle("Members of " + result.name),
+      options: searchedMembers.filter(m => id !== m.id).map(m => renderMember(m))
+    }
+  ]
 
   return (
     <div key={id}>
@@ -126,7 +165,21 @@ function GetCommunityPage(props) {
               </Col>
               <Col span={19}>
                 <div style={{ margin: "20px" }}>
-                  <Tabs defaultActiveKey="1" type="card">
+                  <Tabs defaultActiveKey="1" type="card" tabBarExtraContent={
+                    result.isMember || !result.isPrivate ?
+                    <Col span={24} align="middle" position="left">
+                      <AutoComplete
+                        dropdownClassName="certain-category-search-dropdown"
+                        dropdownMatchSelectWidth={400}
+                        style={{ width: 400, height: 35 }}
+                        onChange={(value) => { searchMember(value) }}
+                        onSelect={(item) => { navigate(`/profiles/${item.key}`) }}
+                        options={options}
+                      >
+                        <Input.Search size="large" placeholder={"Search Members of " + result.name} />
+                      </AutoComplete>
+                    </Col> : <></>
+                  }>
                     {result.isMember || !result.isPrivate ?
                       <TabPane
                         tab={
@@ -144,7 +197,7 @@ function GetCommunityPage(props) {
                         tab={
                           <span>
                             <FilterOutlined />
-                            <b>Filter</b>
+                            <b>Filter Posts</b>
                           </span>
                         }
                         key="2"

@@ -176,6 +176,7 @@ export async function searchUsers(info, token) {
       },
     }
     const response = await axios.get(SEARCH_USERS_ENDPOINT + '?query=' + info.query + '&communityId=' + info.communityId, { ...header });
+    console.log(response)
     return response;
   } catch (error) {
     console.log(error);

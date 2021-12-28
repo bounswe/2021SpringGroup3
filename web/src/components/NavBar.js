@@ -75,7 +75,7 @@ const NavBar = (props) => {
     );
 
     const renderCommunity = (community) => ({
-        value: (<Col span={24} style={{ cursor: 'pointer', marginBottom: '5px', marginTop: '5px' }} onClick={() => { navigate(`/communities/${community.id}`)}}>
+        value: (<Col key={community.id} span={24} style={{ cursor: 'pointer', marginBottom: '5px', marginTop: '5px' }} onClick={() => { navigate(`/communities/${community.id}`)}}>
             <Space size='middle'>
                 <Avatar size={40} src={community.iconUrl} />
                 <Space direction='vertical' size='0px'>
@@ -177,6 +177,7 @@ const NavBar = (props) => {
                                 dropdownMatchSelectWidth={400}
                                 style={{ width: 400, height: 55 }}
                                 onChange={(value) => { searchValue(value) }}
+                                onSelect={(item) => { navigate(`/communities/${item.key}`)}}
                                 options={options}
                             >
                                 <Input.Search size="large" placeholder="Search Communities" />
