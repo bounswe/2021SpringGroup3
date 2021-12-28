@@ -35,7 +35,7 @@ exports.createPostType = async ({
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
-  if ((await PostType.countDocuments({ name: new RegExp(`^${name}$`), community: communityId })) > 0) {
+  if ((await PostType.countDocuments({ name, community: communityId })) > 0) {
     throw new ApiError(httpStatus.CONFLICT, 'Post type with this name exists in this community');
   }
   const postyType = await PostType.create({
@@ -66,4 +66,16 @@ exports.getPostTypeDetail = async ({ communityId, postTypeId }) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community ID does not match');
   }
   return formatters.formatPostTypeDetail(postType);
+};
+
+exports.searchPostTypes = async ({ communityId, query }) => {
+  const community = await Community.findById(communityId).lean();
+  if (!community) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  const postTypes = await PostType.find({
+    community: community._id,
+    name: { $regex: query, $options: 'i' },
+  }).lean();
+  return formatters.formatPostTypes(postTypes);
 };

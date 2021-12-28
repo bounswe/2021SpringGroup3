@@ -26,6 +26,11 @@ const locationField = Joi.object().keys({
   value: Joi.object().required(),
 });
 
+const tagField = Joi.object().keys({
+  name: Joi.string().required(),
+  id: Joi.string().required(),
+});
+
 exports.createPost = {
   body: Joi.object()
     .keys({
@@ -36,7 +41,7 @@ exports.createPost = {
       dateFields: Joi.array().items(dateField).max(10),
       linkFields: Joi.array().items(linkField).max(10),
       locationFields: Joi.array().items(locationField).max(10),
-      tags: Joi.array().items(Joi.string()),
+      tags: Joi.array().items(tagField).max(10),
     })
     .required(),
 };
@@ -45,6 +50,7 @@ exports.getPosts = {
   query: Joi.object()
     .keys({
       communityId: Joi.string().custom(objectId).required(),
+      sortBy: Joi.string().valid('createdAt', 'likeCount').default('createdAt'),
     })
     .required(),
 };
@@ -61,7 +67,7 @@ exports.getPostDetail = {
 exports.likePost = {
   query: Joi.object()
     .keys({
-      communityId: Joi.string().custom(objectId).required(),
+      postId: Joi.string().custom(objectId).required(),
     })
     .required(),
 };
@@ -75,10 +81,25 @@ exports.deletePost = {
 };
 
 exports.createComment = {
+  query: Joi.object()
+    .keys({
+      postId: Joi.string().custom(objectId).required(),
+    })
+    .required(),
   body: Joi.object()
     .keys({
       text: Joi.string().min(2).max(300).required(),
-      postId: Joi.string().custom(objectId).required(),
+    })
+    .required(),
+};
+
+exports.search = {
+  query: Joi.object()
+    .keys({
+      communityId: Joi.string().custom(objectId).required(),
+      sortBy: Joi.string().valid('createdAt', 'likeCount').default('createdAt'),
+      tag: Joi.string().allow('', null),
+      postTypeId: Joi.string().custom(objectId).allow('', null),
     })
     .required(),
 };

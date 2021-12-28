@@ -65,3 +65,11 @@ exports.updateCommunity = {
     })
     .required(),
 };
+
+exports.searchCommunity = {
+  query: Joi.object()
+    .keys({
+      query: Joi.string().allow('', null).required(),
+    })
+    .required(),
+};

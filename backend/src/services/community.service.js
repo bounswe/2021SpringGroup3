@@ -3,16 +3,17 @@ const httpStatus = require('http-status');
 const _ = require('lodash');
 
 const { formatters, baseUtil } = require('../utils');
-const { Community, PostType, Post, Comment } = require('../models');
+const { Community, PostType, Post, Comment, User } = require('../models');
 const ApiError = require('../utils/ApiError');
+const onesignalService = require('./onesignal.service');
 
 const populateCommunity = async (communityId) => {
   return Community.findById(communityId)
     .populate('creator')
-    .populate({ path: 'members', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
-    .populate({ path: 'moderators', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
-    .populate({ path: 'pendingMembers', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] })
-    .populate({ path: 'pendingModerators', model: 'User', select: ['_id', 'username', 'profilePhotoUrl'] });
+    .populate({ path: 'members', model: 'User' })
+    .populate({ path: 'moderators', model: 'User' })
+    .populate({ path: 'pendingMembers', model: 'User' })
+    .populate({ path: 'pendingModerators', model: 'User' });
 };
 
 exports.getCommunities = async ({ token, isModerator, isMember }) => {
@@ -72,7 +73,7 @@ exports.getCommunityDetail = async ({ token, communityId }) => {
 };
 
 exports.joinCommunity = async ({ token, communityId }) => {
-  let community = await Community.findById(communityId).lean();
+  let community = await Community.findById(communityId).populate('moderators').lean();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
@@ -88,6 +89,19 @@ exports.joinCommunity = async ({ token, communityId }) => {
         pendingMembers: token.user._id,
       },
     });
+    const notificationIds = community.moderators
+      .filter((m) => m.notificationId && m.notificationId.length)
+      .map((m) => m.notificationId);
+    if (notificationIds.length) {
+      onesignalService.createNotification({
+        message: `${token.user.username} wants to join ${community.name}`,
+        data: {
+          communityId,
+          userId: token.user._id.toString(),
+        },
+        notificationIds,
+      });
+    }
   } else {
     community = await Community.findByIdAndUpdate(
       community._id,
@@ -113,6 +127,9 @@ exports.removeUserFromCommunity = async ({ userId, communityId }) => {
       $pull: {
         members: userId,
         moderators: userId,
+      },
+      $inc: {
+        memberCount: -1,
       },
     },
     { new: true }
@@ -170,6 +187,9 @@ exports.kickFromCommunity = async ({ token, userId, communityId }) => {
     $pull: {
       members: userId,
     },
+    $inc: {
+      memberCount: -1,
+    },
   });
   community = await populateCommunity(communityId);
   return {
@@ -193,6 +213,9 @@ exports.approveJoinRequest = async ({ token, userId, communityId }) => {
           $pull: {
             pendingMembers: userId,
           },
+          $inc: {
+            memberCount: 1,
+          },
         });
       } else {
         // to be sure
@@ -210,6 +233,16 @@ exports.approveJoinRequest = async ({ token, userId, communityId }) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to approve a join request');
   }
   community = await populateCommunity(communityId);
+  const user = await User.findById(userId).lean();
+  if (user.notificationId) {
+    onesignalService.createNotification({
+      message: `Your join request for ${community.name} is accepted`,
+      data: {
+        communityId,
+      },
+      notificationIds: [user.notificationId],
+    });
+  }
   return {
     ...formatters.formatCommunityDetails(community, token.user),
     message: 'Join request is approved',
@@ -249,6 +282,16 @@ exports.rejectJoinRequest = async ({ token, userId, communityId }) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to reject a join request');
   }
   community = await populateCommunity(communityId);
+  const user = await User.findById(userId).lean();
+  if (user.notificationId) {
+    onesignalService.createNotification({
+      message: `Your join request for ${community.name} is rejected`,
+      data: {
+        communityId,
+      },
+      notificationIds: [user.notificationId],
+    });
+  }
   return {
     ...formatters.formatCommunityDetails(community, token.user),
     message: 'Join request is rejected',
@@ -315,6 +358,16 @@ exports.rejectModeratorRequest = async ({ token, userId, communityId }) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to reject a moderator join request');
   }
   community = await populateCommunity(communityId);
+  const user = await User.findById(userId).lean();
+  if (user.notificationId) {
+    onesignalService.createNotification({
+      message: `Your moderator join request for ${community.name} is rejected`,
+      data: {
+        communityId,
+      },
+      notificationIds: [user.notificationId],
+    });
+  }
   return {
     ...formatters.formatCommunityDetails(community, token.user),
     message: 'Moderator request is rejected',
@@ -374,6 +427,16 @@ exports.approveModeratorRequest = async ({ token, userId, communityId }) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to approve a moderator join request');
   }
   community = await populateCommunity(communityId);
+  const user = await User.findById(userId).lean();
+  if (user.notificationId) {
+    onesignalService.createNotification({
+      message: `Your moderator join request for ${community.name} is accepted`,
+      data: {
+        communityId,
+      },
+      notificationIds: [user.notificationId],
+    });
+  }
   return {
     ...formatters.formatCommunityDetails(community, token.user),
     message: 'Moderator request is approved',
@@ -405,4 +468,16 @@ exports.deleteCommunity = async ({ token, communityId }) => {
   return {
     message: 'Community  is deleted',
   };
+};
+
+exports.searchCommunity = async ({ query }) => {
+  const communities = await Community.find({
+    name: { $regex: query, $options: 'i' },
+  }).lean();
+  return formatters.formatCommunities(communities);
+};
+
+exports.recommend = async () => {
+  const communities = await Community.find().sort({ memberCount: -1, createdAt: -1 }).limit(10).lean();
+  return formatters.formatCommunities(communities);
 };

@@ -1,19 +1,20 @@
 const httpStatus = require('http-status');
 
 const ApiError = require('../utils/ApiError');
-const { formatters } = require('../utils');
+const { formatters, baseUtil } = require('../utils');
 const { PostType, Community, Post, Comment } = require('../models');
 
-exports.getPosts = async ({ token, communityId }) => {
+exports.getPosts = async ({ token, communityId, sortBy }) => {
   const community = await Community.findById(communityId).lean();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
+
   const posts = await Post.find({
     community: community._id,
   })
-    .sort({ _id: -1 })
-    .populate(['creator'])
+    .sort({ [sortBy]: -1 })
+    .populate(['creator', 'postType'])
     .lean();
   return formatters.formatPosts(
     posts.map((p) => ({ ...p, community })),
@@ -93,31 +94,35 @@ exports.createPost = async ({
 };
 
 exports.getPostDetail = async ({ token, communityId, postId }) => {
-  const post = await Post.findById(postId).populate(['creator', 'community']).lean();
+  const post = await Post.findById(postId).populate(['creator', 'community', 'postType']).lean();
   if (!post) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post does not exist');
   }
   if (post.community._id.toString() !== communityId) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community ID does not match');
   }
-  const comments = await Comment.find({ post: post._id }).populate({
-    path: 'user',
-    model: 'User',
-    select: ['_id', 'username', 'profilePhotoUrl'],
-  });
+  const comments = await Comment.find({ post: post._id })
+    .sort({
+      createdAt: 1,
+    })
+    .populate({
+      path: 'user',
+      model: 'User',
+    });
   return {
     ...formatters.formatPostDetail(post, token.user),
-    comments: formatters.formatComments(comments),
+    comments: formatters.formatComments(comments, token.user),
+    commentCount: comments.length,
   };
 };
 
-exports.likePost = async ({ token, communityId, postId }) => {
-  let post = await Post.findById(postId).populate(['creator', 'community']).lean();
+exports.likePost = async ({ token, postId }) => {
+  let post = await Post.findById(postId).populate(['creator', 'community', 'postType']).lean();
   if (!post) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post does not exist');
   }
-  if (post.community._id.toString() !== communityId) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Community ID does not match');
+  if (!baseUtil.checkIfObjectIdArrayIncludesId(post.community.members, token.user._id.toString())) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You need to be a member of this community to like the post');
   }
   post = await Post.findByIdAndUpdate(
     post._id,
@@ -127,7 +132,9 @@ exports.likePost = async ({ token, communityId, postId }) => {
       },
     },
     { new: true }
-  );
+  )
+    .populate(['creator', 'community', 'postType'])
+    .lean();
   return formatters.formatPostDetail(post, token.user);
 };
 
@@ -163,15 +170,74 @@ exports.createComment = async ({ token, postId, text }) => {
     (post.community.members && new Set(post.community.members.map((m) => m.toString())).has(token.user._id.toString())) ||
     (post.creator && post.creator.toString() === token.user._id)
   ) {
-    const comment = await Comment.create({ text, user: token.user._id, post: post._id });
-    return {
-      message: 'Comment is created',
-      id: comment._id.toString(),
+    await Comment.create({
       text,
+      post: post._id,
+      user: token.user._id,
+    });
+    const comments = await Comment.find({ post: post._id })
+      .sort({
+        createdAt: 1,
+      })
+      .populate({
+        path: 'user',
+        model: 'User',
+      });
+    return {
+      comments: formatters.formatComments(comments, token.user),
     };
   }
   throw new ApiError(
     httpStatus.BAD_REQUEST,
-    'You need to be the creator of the post or moderator of the community it belongs to post a comment for it'
+    'You need to be the creator of the post or member of the community it belongs to post a comment for it'
+  );
+};
+
+exports.getHomepage = async ({ token }) => {
+  const communities = await Community.find({
+    members: {
+      $in: [token.user._id],
+    },
+  });
+  const posts = await Post.find({
+    community: {
+      $in: communities.map((c) => c._id),
+    },
+  })
+    .sort({ createdAt: -1 })
+    .populate(['creator', 'community', 'postType'])
+    .lean();
+  return formatters.formatPosts(posts, token.user);
+};
+
+exports.search = async ({ token, communityId, tag, postTypeId, sortBy }) => {
+  const community = await Community.findById(communityId).lean();
+  if (!community) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
+  }
+  let posts = [];
+  if (!postTypeId) {
+    posts = await Post.find({
+      $and: [{ community: community._id }, { 'tags.name': { $regex: tag, $options: 'i' } }],
+    })
+      .sort({ [sortBy]: -1 })
+      .populate(['community', 'creator', 'postType'])
+      .lean();
+  } else {
+    const postType = await PostType.findById(postTypeId).lean();
+    if (!postType) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Post Type does not exist');
+    }
+    posts = await Post.find({
+      community: community._id,
+      postType: postType._id,
+    })
+      .sort({ [sortBy]: -1 })
+      .populate(['community', 'creator', 'postType'])
+      .lean();
+  }
+  return formatters.formatPosts(
+    posts.map((p) => ({ ...p, community })),
+    token.user
   );
 };
