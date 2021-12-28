@@ -216,10 +216,7 @@ exports.search = async ({ token, communityId, tag, postTypeId, sortBy }) => {
   let posts = [];
   if (tag) {
     posts = await Post.find({
-      community: community._id,
-      tags: {
-        $in: [new RegExp(tag, 'i')],
-      },
+      $and: [{ community: community._id }, { 'tags.name': { $regex: tag, $options: 'i' } }],
     })
       .sort({ [sortBy]: -1 })
       .populate(['creator'])

@@ -26,6 +26,11 @@ const locationField = Joi.object().keys({
   value: Joi.object().required(),
 });
 
+const tagField = Joi.object().keys({
+  name: Joi.string().required(),
+  id: Joi.string().required(),
+});
+
 exports.createPost = {
   body: Joi.object()
     .keys({
@@ -36,7 +41,7 @@ exports.createPost = {
       dateFields: Joi.array().items(dateField).max(10),
       linkFields: Joi.array().items(linkField).max(10),
       locationFields: Joi.array().items(locationField).max(10),
-      tags: Joi.array().items(Joi.string()),
+      tags: Joi.array().items(tagField).max(10),
     })
     .required(),
 };
