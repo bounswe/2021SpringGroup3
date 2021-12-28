@@ -223,7 +223,7 @@ function GetCommunityPage(props) {
                               <Form.Item>
                                 <Col offset={6} span={12} align="middle">
                                   <Button style={buttonStyle} icon={<FilterOutlined />} type="primary" shape="round" htmlType="submit">
-                                    Filter
+                                    Apply Filters
                                   </Button>
                                 </Col>
                               </Form.Item>
