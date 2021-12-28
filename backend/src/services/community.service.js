@@ -169,7 +169,7 @@ exports.removeUserFromCommunity = async ({ user, userId, communityId }) => {
   }
   const user2 = User.findById(userId);
   const acs = await CommunityACS.create({
-    summary: `${user.username} removed ${user2.username} from community ${community.name}`,
+    summary: `${user.username} removed ${user2.username} from the community ${community.name}`,
     type: 'Remove',
     actor: user,
     object: community,
@@ -220,7 +220,7 @@ exports.kickFromCommunity = async ({ token, userId, communityId }) => {
   community = await populateCommunity(communityId);
   const user2 = User.findById(userId);
   const acs = await CommunityACS.create({
-    summary: `${token.user.username} removed ${user2.username} from community ${community.name}`,
+    summary: `${token.user.username} removed ${user2.username} from the community ${community.name}`,
     type: 'Remove',
     actor: token.user,
     object: community,
@@ -252,6 +252,15 @@ exports.approveJoinRequest = async ({ token, userId, communityId }) => {
             memberCount: 1,
           },
         });
+        const user2 = User.findById(userId);
+        const acs = await CommunityACS.create({
+          summary: `${token.user.username} accepted ${user2.username} 's join request to the community ${community.name}`,
+          type: 'Accept',
+          actor: token.user,
+          object: community,
+          target: user2,
+        });
+        console.log(acs);
       } else {
         // to be sure
         await Community.findByIdAndUpdate(community._id, {
@@ -259,15 +268,6 @@ exports.approveJoinRequest = async ({ token, userId, communityId }) => {
             pendingMembers: userId,
           },
         });
-        const user2 = User.findById(userId);
-        const acs = await CommunityACS.create({
-          summary: `${token.user.username} accepted ${user2.username} 's join request to community ${community.name}`,
-          type: 'Accept',
-          actor: token.user,
-          object: community,
-          target: user2,
-        });
-        console.log(acs);
         throw new ApiError(httpStatus.BAD_REQUEST, 'This user is already a member of this community');
       }
     } else {
@@ -310,6 +310,15 @@ exports.rejectJoinRequest = async ({ token, userId, communityId }) => {
           },
           { new: true }
         );
+        const user2 = User.findById(userId);
+        const acs = await CommunityACS.create({
+          summary: `${token.user.username} rejected ${user2.username} 's join request to the community ${community.name}`,
+          type: 'Reject',
+          actor: token.user,
+          object: community,
+          target: user2,
+        });
+        console.log(acs);
       } else {
         // to be sure
         await Community.findByIdAndUpdate(community._id, {
@@ -319,15 +328,6 @@ exports.rejectJoinRequest = async ({ token, userId, communityId }) => {
         });
         throw new ApiError(httpStatus.BAD_REQUEST, 'This user is already a member of this community');
       }
-      const user2 = User.findById(userId);
-      const acs = await CommunityACS.create({
-        summary: `${token.user.username} rejected ${user2.username} 's join request to community ${community.name}`,
-        type: 'Reject',
-        actor: token.user,
-        object: community,
-        target: user2,
-      });
-      console.log(acs);
     } else {
       throw new ApiError(httpStatus.BAD_REQUEST, 'This user has not requested to join this community');
     }
@@ -351,7 +351,7 @@ exports.rejectJoinRequest = async ({ token, userId, communityId }) => {
   };
 };
 
-exports.updateCommunity = async ({ name, iconUrl, description, isPrivate, communityId }) => {
+exports.updateCommunity = async ({ token, name, iconUrl, description, isPrivate, communityId }) => {
   let community = await Community.findById(communityId).lean();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
@@ -376,6 +376,13 @@ exports.updateCommunity = async ({ name, iconUrl, description, isPrivate, commun
     },
     { new: true }
   );
+  const acs = await CommunityACS.create({
+    summary: `${token.user.username} updated the community ${community.name}`,
+    type: 'Update',
+    actor: token.user,
+    object: community,
+  });
+  console.log(acs);
   return {
     message: 'Community  is updated',
     community: formatters.formatPreviewCommunity(community),
@@ -395,6 +402,15 @@ exports.rejectModeratorRequest = async ({ token, userId, communityId }) => {
             pendingModerators: userId,
           },
         });
+        const user2 = User.findById(userId);
+        const acs = await CommunityACS.create({
+          summary: `${token.user.username} rejected ${user2.username} 's moderator request to community ${community.name}`,
+          type: 'Reject',
+          actor: token.user,
+          object: community,
+          target: user2,
+        });
+        console.log(acs);
       } else {
         // to be sure
         await Community.findByIdAndUpdate(community._id, {
@@ -404,15 +420,6 @@ exports.rejectModeratorRequest = async ({ token, userId, communityId }) => {
         });
         throw new ApiError(httpStatus.BAD_REQUEST, 'This user is already a moderator of this community');
       }
-      const user2 = User.findById(userId);
-      const acs = await CommunityACS.create({
-        summary: `${token.user.username} rejected ${user2.username} 's moderator request to community ${community.name}`,
-        type: 'Reject',
-        actor: token.user,
-        object: community,
-        target: user2,
-      });
-      console.log(acs);
     } else {
       throw new ApiError(httpStatus.BAD_REQUEST, 'This user has not requested to become a moderator for this community');
     }
