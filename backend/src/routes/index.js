@@ -5,6 +5,7 @@ const postTypeRoute = require('./postType.route');
 const postRoute = require('./post.route');
 const profileRoute = require('./profile.route');
 const communityRoute = require('./community.route');
+const wikidataRoute = require('./wikidata.route');
 const config = require('../config/config');
 
 const router = express.Router();
@@ -29,6 +30,10 @@ const defaultRoutes = [
   {
     path: '/profile',
     route: profileRoute,
+  },
+  {
+    path: '/wikidata',
+    route: wikidataRoute,
   },
 ];
 
