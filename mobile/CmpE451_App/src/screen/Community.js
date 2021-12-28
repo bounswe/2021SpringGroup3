@@ -12,7 +12,6 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {useIsFocused} from '@react-navigation/native';
 import {COLORS} from '../theme/colors';
 import {listItem} from '../theme/styles';
-import ScreenHeader from '../component/ScreenHeader';
 import {IconButton} from 'react-native-paper';
 import {Button} from 'react-native-elements';
 import {PAGE_VARIABLES} from '../constants';
@@ -287,7 +286,7 @@ export default function Community({navigation}) {
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <HomeButton />
-        <SearchBar onPress={navigateToSearch} />
+        <SearchBar searchText="Search:Posts" onPress={navigateToSearch} />
       </View>
       {isModerator && (
         <View style={styles.rightIconContainer}>

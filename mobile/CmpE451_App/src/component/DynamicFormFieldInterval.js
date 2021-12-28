@@ -15,7 +15,7 @@ const DynamicFormFieldInterval = ({fields, fieldKey, onChangeText}) => {
           <FieldHeader name={input.name} />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={{flex: 1}}>
-              <FieldHeader name={'Start'} />
+              <FieldHeader name={'Min'} />
               <TextInput
                 multiline
                 style={textInputArea}
@@ -32,7 +32,7 @@ const DynamicFormFieldInterval = ({fields, fieldKey, onChangeText}) => {
               />
             </View>
             <View style={{flex: 1}}>
-              <FieldHeader name={'End'} />
+              <FieldHeader name={'Max'} />
               <TextInput
                 multiline
                 style={textInputArea}

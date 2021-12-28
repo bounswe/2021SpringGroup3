@@ -9,16 +9,21 @@ import DynamicLocationInput from '../component/DynamicLocationInput';
 import MapInput from '../component/MapInput';
 import CommonIcon from '../component/CommonIcon';
 import {postTypeIcon} from '../image/index';
+import {tagIcon} from '../image/index';
 import * as client from '../services/BoxyClient';
 import {PAGE_VARIABLES} from '../constants';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import {useIsFocused} from '@react-navigation/native';
 import {headerContainerStyle} from '../theme/styles';
 import CommonButton from '../component/CommonButton';
+import CommonTextInput from '../component/CommonTextInput';
 
 export default function CommunitySearch({navigation}) {
   const [searchResults, setSearchResults] = useState([]);
   const [filterByPostType, setFilterByPostType] = useState(true);
+  const [filterByTags, setFilterByTags] = useState(true);
+
+  const [tags, setTags] = useState('');
 
   const [selectedItem, setSelectedItem] = useState({id: -1, name: ''});
   const [items, setItems] = useState([]);
@@ -285,19 +290,26 @@ export default function CommunitySearch({navigation}) {
             <View
               style={{
                 flexDirection: 'row',
+                marginTop: 25,
               }}>
               <View style={{flex: 1}}>
-                <Image source={postTypeIcon} style={styles.image} />
+                <Image source={tagIcon} style={styles.image} />
               </View>
               <View style={{flex: 6}}>
                 <Text> Filter By Tags </Text>
               </View>
+              <CheckBox
+                value={filterByTags}
+                onValueChange={setFilterByTags}
+                style={{flex: 1}}
+              />
             </View>
-            <View style={{width: '100%', alignItems: 'center'}}>
+            {filterByTags && <CommonTextInput onChangeText={setTags} />}
+            <View style={{width: '100%', alignItems: 'center', marginTop: 20}}>
               <CommonButton
                 text="Apply Filters"
                 onPress={searchCommunityHandler}
-                buttonWidth={'80%'}
+                buttonWidth={'60%'}
               />
             </View>
           </ScrollView>
