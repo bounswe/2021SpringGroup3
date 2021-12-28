@@ -45,7 +45,7 @@ exports.setNotificationId = {
 
 exports.search = {
   query: Joi.object().keys({
-    query: Joi.string().required(),
+    query: Joi.string().allow('', null).required(),
     communityId: Joi.string().custom(objectId),
   }),
 };

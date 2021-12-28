@@ -116,6 +116,7 @@ exports.formatPostDetail = function (post, user) {
       id: post.community._id.toString(),
       name: post.community.name,
     },
+    postType: post.postType.name,
     date: moment(post.createdAt).format('MM/DD/YYYY HH:mm'),
     textFieldNames: post.textFields,
     numberFieldNames: post.numberFields,

@@ -98,8 +98,8 @@ exports.search = {
     .keys({
       communityId: Joi.string().custom(objectId).required(),
       sortBy: Joi.string().valid('createdAt', 'likeCount').default('createdAt'),
-      tag: Joi.string(),
-      postTypeId: Joi.string().custom(objectId),
+      tag: Joi.string().allow('', null),
+      postTypeId: Joi.string().custom(objectId).allow('', null),
     })
     .required(),
 };

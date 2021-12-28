@@ -14,7 +14,7 @@ exports.getPosts = async ({ token, communityId, sortBy }) => {
     community: community._id,
   })
     .sort({ [sortBy]: -1 })
-    .populate(['creator'])
+    .populate(['creator', 'postType'])
     .lean();
   return formatters.formatPosts(
     posts.map((p) => ({ ...p, community })),
@@ -94,7 +94,7 @@ exports.createPost = async ({
 };
 
 exports.getPostDetail = async ({ token, communityId, postId }) => {
-  const post = await Post.findById(postId).populate(['creator', 'community']).lean();
+  const post = await Post.findById(postId).populate(['creator', 'community', 'postType']).lean();
   if (!post) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post does not exist');
   }
@@ -117,7 +117,7 @@ exports.getPostDetail = async ({ token, communityId, postId }) => {
 };
 
 exports.likePost = async ({ token, postId }) => {
-  let post = await Post.findById(postId).populate(['creator', 'community']).lean();
+  let post = await Post.findById(postId).populate(['creator', 'community', 'postType']).lean();
   if (!post) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post does not exist');
   }
@@ -132,7 +132,9 @@ exports.likePost = async ({ token, postId }) => {
       },
     },
     { new: true }
-  );
+  )
+    .populate(['creator', 'community', 'postType'])
+    .lean();
   return formatters.formatPostDetail(post, token.user);
 };
 
@@ -203,7 +205,7 @@ exports.getHomepage = async ({ token }) => {
     },
   })
     .sort({ createdAt: -1 })
-    .populate(['creator', 'community'])
+    .populate(['creator', 'community', 'postType'])
     .lean();
   return formatters.formatPosts(posts, token.user);
 };
@@ -214,12 +216,12 @@ exports.search = async ({ token, communityId, tag, postTypeId, sortBy }) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
   let posts = [];
-  if (tag) {
+  if (!postTypeId) {
     posts = await Post.find({
       $and: [{ community: community._id }, { 'tags.name': { $regex: tag, $options: 'i' } }],
     })
       .sort({ [sortBy]: -1 })
-      .populate(['creator'])
+      .populate(['community', 'creator', 'postType'])
       .lean();
   } else {
     const postType = await PostType.findById(postTypeId).lean();
@@ -231,7 +233,7 @@ exports.search = async ({ token, communityId, tag, postTypeId, sortBy }) => {
       postType: postType._id,
     })
       .sort({ [sortBy]: -1 })
-      .populate(['creator'])
+      .populate(['community', 'creator', 'postType'])
       .lean();
   }
   return formatters.formatPosts(
