@@ -22,6 +22,7 @@ import {
   DELETE_COMMUNITY_ENDPOINT,
   CREATE_POST_ENDPOINT,
   GET_POSTS_ENDPOINT,
+  SEARCH_POSTS_ENDPOINT,
   GET_POSTTYPES_ENDPOINT,
   GET_POSTTYPE_DETAIL_ENDPOINT,
   GET_POST_PAGE_ENDPOINT,
@@ -552,6 +553,25 @@ export async function getCommunityPosts(info) {
       },
     }
     const response = await axios.get(GET_POSTS_ENDPOINT + "?communityId=" + info.id, { ...header });
+    console.log(response)
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function searchCommunityPosts(info, token) {
+  try {
+    const header = {
+      headers: {
+        'x-platform': 'WEB',
+        'accept': '*/*',
+        'authorization': token
+      },
+    }
+    const response = await axios.get(SEARCH_POSTS_ENDPOINT + "?communityId=" + info.communityId + (info.tag ? "&tag=" +  info.tag : "") + (info.postTypeId ? "&postTypeId=" +  info.postTypeId : ""), { ...header });
     console.log(response)
     return response;
   } catch (error) {

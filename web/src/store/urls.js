@@ -23,6 +23,7 @@ export const REJECT_COMMUNITY_MODERATOR_ENDPOINT = `${BASE_URL}communities/join/
 export const KICK_COMMUNITY_ENDPOINT = `${BASE_URL}communities/kick`;
 export const CREATE_POST_ENDPOINT = `${BASE_URL}posts`;
 export const GET_POSTS_ENDPOINT = `${BASE_URL}posts`;
+export const SEARCH_POSTS_ENDPOINT = `${BASE_URL}posts/search`;
 export const GET_POST_PAGE_ENDPOINT = `${BASE_URL}posts/detail`;
 
 export const CREATE_POSTTYPE_ENDPOINT = `${BASE_URL}post-types`;

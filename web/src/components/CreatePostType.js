@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Form, Input, Button, Select, Space, Card, Typography, notification } from 'antd';
+import { Row, Col, Form, Input, Button, Select, Space, Card, Typography, notification, message } from 'antd';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -63,9 +63,7 @@ const CreatePostType = (props) => {
         message: `Post Type Created.`,
     });
     } else {
-      notification.error({
-        message: `An error occured.`,
-      })
+      message.error('An error occured');
     }
 
   }

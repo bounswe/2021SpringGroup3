@@ -5,7 +5,7 @@ import { login, logout, register,
   createCommunity, getCommunities, getCommunityPage,
   leaveCommunity, joinCommunity, joinCommunityModerator,
   acceptUser, rejectUser, acceptModerator, rejectModerator, kickUser, deleteCommunity,
-  createPost, getCommunityPosts, getPostPage,
+  createPost, getCommunityPosts, searchCommunityPosts, getPostPage,
   createPostType, getPostTypes, getPostTypeDetail, getProfile,
   getProfileSettings,
   postProfileSettings, 
@@ -310,6 +310,19 @@ export const CreatePost = async (info, dispatch) => {
 export const GetCommunityPosts = async (info, dispatch) => {
 
   const response = await getCommunityPosts(info);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data)
+    return response
+    // dispatch(loginAction.logoutSuccess());
+  }else{
+
+    return {}
+  }
+}
+
+export const SearchCommunityPosts = async (info, token, dispatch) => {
+
+  const response = await searchCommunityPosts(info, token);
   if(response.status === 200 || response.status === 201){
     console.log(response.data)
     return response

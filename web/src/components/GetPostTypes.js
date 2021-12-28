@@ -27,13 +27,18 @@ const GetPostTypes = (props) => {
         });
     }, [])
 
+    function handleClear() {
+        props.onSelectPostType('')
+    }
+
     function handleChange(value) {
-        console.log(`selected ${value}`);
         props.onSelectPostType(value)
     }
 
     return ( 
         <Select 
+            allowClear="true"
+            onClear={handleClear}
             disabled={!props.id} 
             defaultValue="Post Types" 
             style={{ width: "100%", marginBottom: "30px"}} 

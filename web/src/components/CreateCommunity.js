@@ -57,9 +57,7 @@ const CreateCommunity = (props) => {
                 message: `Community Created.`,
             });
         } else {
-            notification.error({
-                message: `An error occured.`,
-            });
+            message.error('An error occured');
         }
     }
 
