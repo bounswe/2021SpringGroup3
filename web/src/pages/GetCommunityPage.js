@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Layout, Button, Col, Row, Tabs, Typography, Space, Form, message, Input, Card, AutoComplete, Avatar } from 'antd';
+import { Layout, Button, Col, Row, Tabs, Typography, Space, Form, message, Input, Card, AutoComplete, Avatar, Radio } from 'antd';
 import { IdcardOutlined, TeamOutlined, LockOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons';
 
 import NavBar from '../components/NavBar';
@@ -30,6 +30,15 @@ const buttonStyle = {
   fontWeight: 'bold'
 }
 
+const cancelButtonStyle = {
+  backgroundColor: '#ffffff',
+  borderColor: '#6f74dd',
+  color: '#6f74dd',
+  cursor: 'pointer',
+  marginTop: '3px',
+  marginBottom: '3px'
+}
+
 const postCardStyle = {
   width: '100%',
   backgroundColor: '#f8f8f8',
@@ -54,6 +63,7 @@ function GetCommunityPage(props) {
   const [filters, setFilters] = useState({});
   const [postTypes, setPostTypes] = useState(<></>);
   const [searchedMembers, setSearchedMembers] = useState([]);
+  const [sortIndex, setSortIndex] = useState(0);
 
 
   useEffect(() => {
@@ -83,9 +93,10 @@ function GetCommunityPage(props) {
     try {
       let body = { communityId: id }
       if (values.tag) body.tag = values.tag;
+      if (values.sortBy) body.sortBy = values.sortBy;
       if (filters.postTypeId) body.postTypeId = filters.postTypeId;
       if (!body.postTypeId && !body.tag) {
-        GetCommunityPostsRequest({ id: id, token: loginState.token }, dispatch)
+        GetCommunityPostsRequest({ id: id, sortBy: values.sortBy, token: loginState.token }, dispatch)
           .then(posts => {
             setPosts(posts.data.map((post) => {
               return <div style={{ marginBottom: '20px' }}><PostView postObj={post} /></div>
@@ -167,18 +178,18 @@ function GetCommunityPage(props) {
                 <div style={{ margin: "20px" }}>
                   <Tabs defaultActiveKey="1" type="card" tabBarExtraContent={
                     result.isMember || !result.isPrivate ?
-                    <Col span={24} align="middle" position="left">
-                      <AutoComplete
-                        dropdownClassName="certain-category-search-dropdown"
-                        dropdownMatchSelectWidth={400}
-                        style={{ width: 400, height: 35 }}
-                        onChange={(value) => { searchMember(value) }}
-                        onSelect={(item) => { navigate(`/profiles/${item.key}`) }}
-                        options={options}
-                      >
-                        <Input.Search size="large" placeholder={"Search Members of " + result.name} />
-                      </AutoComplete>
-                    </Col> : <></>
+                      <Col span={24} align="middle" position="left">
+                        <AutoComplete
+                          dropdownClassName="certain-category-search-dropdown"
+                          dropdownMatchSelectWidth={400}
+                          style={{ width: 400, height: 35 }}
+                          onChange={(value) => { searchMember(value) }}
+                          onSelect={(item) => { navigate(`/profiles/${item.key}`) }}
+                          options={options}
+                        >
+                          <Input.Search size="large" placeholder={"Search Members of " + result.name} />
+                        </AutoComplete>
+                      </Col> : <></>
                   }>
                     {result.isMember || !result.isPrivate ?
                       <TabPane
@@ -218,6 +229,18 @@ function GetCommunityPage(props) {
                                 <Col offset={6} span={12} align="middle">
                                   <Text><b>Filter by Tag</b></Text>
                                   <Input placeholder="Tag" />
+                                </Col>
+                              </Form.Item>
+                              <Col offset={6} span={12} align="middle">
+                                <Text><b>Sort Posts by</b></Text>
+                              </Col>
+                              <Form.Item
+                                name="sortBy">
+                                <Col offset={6} span={12} align="middle">
+                                  <Radio.Group>
+                                    <Radio.Button value="createdAt" buttonStyle="solid" onChange={() => setSortIndex(0)} style={sortIndex === 0 ? buttonStyle : cancelButtonStyle}>New</Radio.Button>
+                                    <Radio.Button value="likeCount" buttonStyle="solid" onChange={() => setSortIndex(1)} style={sortIndex === 1 ? buttonStyle : cancelButtonStyle}>Liked</Radio.Button>
+                                  </Radio.Group>
                                 </Col>
                               </Form.Item>
                               <Form.Item>

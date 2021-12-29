@@ -553,7 +553,7 @@ export async function getCommunityPosts(info) {
         'authorization': `${info.token}`
       },
     }
-    const response = await axios.get(GET_POSTS_ENDPOINT + "?communityId=" + info.id, { ...header });
+    const response = await axios.get(GET_POSTS_ENDPOINT + "?communityId=" + info.id + (info.sortBy ? "&sortBy=" +  info.sortBy : ""), { ...header });
     console.log(response)
     return response;
   } catch (error) {
@@ -572,7 +572,12 @@ export async function searchCommunityPosts(info, token) {
         'authorization': token
       },
     }
-    const response = await axios.get(SEARCH_POSTS_ENDPOINT + "?communityId=" + info.communityId + (info.tag ? "&tag=" +  info.tag : "") + (info.postTypeId ? "&postTypeId=" +  info.postTypeId : ""), { ...header });
+    const response = await axios.get(SEARCH_POSTS_ENDPOINT 
+      + "?communityId=" + info.communityId 
+      + (info.tag ? "&tag=" +  info.tag : "") 
+      + (info.postTypeId ? "&postTypeId=" +  info.postTypeId : "")
+      + (info.sortBy ? "&sortBy=" +  info.sortBy : "")
+      , { ...header });
     console.log(response)
     return response;
   } catch (error) {
