@@ -78,3 +78,18 @@ exports.search = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.advancedSearch = catchAsync(async (req, res) => {
+  const result = await postService.advancedSearch({
+    token: req.token,
+    communityId: req.body.communityId,
+    postTypeId: req.body.postTypeId,
+    textFields: req.body.textFields,
+    numberFields: req.body.numberFields,
+    dateFields: req.body.dateFields,
+    linkFields: req.body.linkFields,
+    locationFields: req.body.locationFields,
+    tag: req.body.tag,
+  });
+  res.send(result);
+});

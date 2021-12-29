@@ -22,13 +22,13 @@ exports.getPosts = async ({ token, communityId, sortBy }) => {
   );
 };
 
-const validateField = (fieldNames, field, fieldName) => {
+const validateField = (fieldNames, field, fieldName, onlyShouldNotExists = false) => {
   const errors = [];
   const fieldNameSet = new Set(fieldNames);
   const fieldSet = new Set(field.map((f) => f.name));
   const dbMinusReq = [...fieldNameSet].filter((x) => !fieldSet.has(x));
   const reqMinusDb = [...fieldSet].filter((x) => !fieldNameSet.has(x));
-  if (dbMinusReq.length) {
+  if (dbMinusReq.length && !onlyShouldNotExists) {
     errors.push(`${dbMinusReq.join(', ')} should exist in ${fieldName}`);
   }
   if (reqMinusDb.length) {
@@ -215,6 +215,9 @@ exports.search = async ({ token, communityId, tag, postTypeId, sortBy }) => {
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
+  if (community.isPrivate && !baseUtil.checkIfObjectIdArrayIncludesId(community.members, token.user._id.toString())) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You need to be a member of this community to search it's posts");
+  }
   let posts = [];
   if (!postTypeId) {
     posts = await Post.find({
@@ -227,6 +230,9 @@ exports.search = async ({ token, communityId, tag, postTypeId, sortBy }) => {
     const postType = await PostType.findById(postTypeId).lean();
     if (!postType) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Post Type does not exist');
+    }
+    if (postType.community.toString() !== communityId) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Post type does not exist in this community');
     }
     posts = await Post.find({
       community: community._id,
@@ -279,14 +285,20 @@ exports.advancedSearch = async ({
   if (!postType) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post Type does not exist');
   }
-  if (postType.community.toString() !== communityId) {
+  if (postType.community._id.toString() !== communityId) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community ID does not match');
   }
-  let errors = validateField(postType.textFieldNames, textFields, 'textFields');
-  errors = errors.concat(validateField(postType.numberFieldNames, numberFields, 'numberFields'));
-  errors = errors.concat(validateField(postType.dateFieldNames, dateFields, 'dateFields'));
-  errors = errors.concat(validateField(postType.linkFieldNames, linkFields, 'linkFields'));
-  errors = errors.concat(validateField(postType.locationFieldNames, locationFields, 'locationFields'));
+  if (
+    postType.community.isPrivate &&
+    !baseUtil.checkIfObjectIdArrayIncludesId(postType.community.members, token.user._id.toString())
+  ) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You need to be a member of this community to search it's posts");
+  }
+  let errors = validateField(postType.textFieldNames, textFields || [], 'textFields', true);
+  errors = errors.concat(validateField(postType.numberFieldNames, numberFields || [], 'numberFields', true));
+  errors = errors.concat(validateField(postType.dateFieldNames, dateFields || [], 'dateFields', true));
+  errors = errors.concat(validateField(postType.linkFieldNames, linkFields || [], 'linkFields', true));
+  errors = errors.concat(validateField(postType.locationFieldNames, locationFields || [], 'locationFields', true));
   if (errors.length) {
     throw new ApiError(httpStatus.BAD_REQUEST, errors.join('. '));
   }
@@ -315,7 +327,7 @@ exports.advancedSearch = async ({
       let isValid = true;
       numberFields.forEach((t) => {
         const numberField = p.numberFields.find((te) => te.name === t.name);
-        if (numberField.value < t.start || numberField.value > t.end) {
+        if (numberField.value < t.value.start || numberField.value > t.value.end) {
           isValid = false;
         }
       });
@@ -341,7 +353,7 @@ exports.advancedSearch = async ({
       let isValid = true;
       dateFields.forEach((t) => {
         const dateField = p.dateFields.find((te) => te.name === t.name);
-        if (dateField.value < new Date(t.start) || dateField.value > new Date(t.end)) {
+        if (new Date(dateField.value) < new Date(t.value.start) || new Date(dateField.value) > new Date(t.value.end)) {
           isValid = false;
         }
       });
@@ -354,13 +366,14 @@ exports.advancedSearch = async ({
       let isValid = true;
       locationFields.forEach((t) => {
         const locationField = p.locationFields.find((te) => te.name === t.name);
+        console.log(locationField);
         const locationFieldCoords = {
           lat: locationField.value.geo.latitude,
-          lon: locationField.value.geo.longitude,
+          lng: locationField.value.geo.longitude,
         };
         const reqCoords = {
           lat: t.value.geo.latitude,
-          lon: t.value.geo.longitude,
+          lng: t.value.geo.longitude,
         };
         if (calcCrow(locationFieldCoords, reqCoords) > t.value.geo.range) {
           isValid = false;

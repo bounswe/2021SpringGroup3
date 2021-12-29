@@ -132,8 +132,21 @@ exports.advancedSearch = {
           })
         )
         .max(10),
-      linkFields: Joi.array().items(linkField).max(10),
-      locationFields: Joi.array().items(locationField).max(10),
+      linkFields: Joi.array().items(textField).max(10),
+      locationFields: Joi.array()
+        .items(
+          Joi.object().keys({
+            name: Joi.string().required(),
+            value: {
+              geo: {
+                longitude: Joi.number().required(),
+                latitude: Joi.number().required(),
+                range: Joi.number().positive().required(),
+              },
+            },
+          })
+        )
+        .max(10),
       tag: Joi.string().allow('', null),
     })
     .required(),
