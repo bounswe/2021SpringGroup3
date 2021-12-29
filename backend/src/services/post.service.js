@@ -241,3 +241,143 @@ exports.search = async ({ token, communityId, tag, postTypeId, sortBy }) => {
     token.user
   );
 };
+
+function toRad(Value) {
+  return (Value * Math.PI) / 180;
+}
+
+// This function takes in latitude and longitude of two locations
+// and returns the distance between them as the crow flies (in meters)
+function calcCrow(coords1, coords2) {
+  // var R = 6.371; // km
+  const R = 6371000;
+  const dLat = toRad(coords2.lat - coords1.lat);
+  const dLon = toRad(coords2.lng - coords1.lng);
+  const lat1 = toRad(coords1.lat);
+  const lat2 = toRad(coords2.lat);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c;
+  return d;
+}
+
+exports.advancedSearch = async ({
+  token,
+  communityId,
+  postTypeId,
+  sortBy,
+  textFields,
+  numberFields,
+  dateFields,
+  linkFields,
+  locationFields,
+  tag,
+}) => {
+  const postType = await PostType.findById(postTypeId).populate('community').lean();
+  if (!postType) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post Type does not exist');
+  }
+  if (postType.community.toString() !== communityId) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community ID does not match');
+  }
+  let errors = validateField(postType.textFieldNames, textFields, 'textFields');
+  errors = errors.concat(validateField(postType.numberFieldNames, numberFields, 'numberFields'));
+  errors = errors.concat(validateField(postType.dateFieldNames, dateFields, 'dateFields'));
+  errors = errors.concat(validateField(postType.linkFieldNames, linkFields, 'linkFields'));
+  errors = errors.concat(validateField(postType.locationFieldNames, locationFields, 'locationFields'));
+  if (errors.length) {
+    throw new ApiError(httpStatus.BAD_REQUEST, errors.join('. '));
+  }
+  let posts = await Post.find({
+    postType: postType._id,
+  })
+    .sort({ [sortBy]: -1 })
+    .populate(['community', 'creator', 'postType'])
+    .lean();
+
+  if (textFields && textFields.length) {
+    posts = posts.filter((p) => {
+      let isValid = true;
+      textFields.forEach((t) => {
+        const textField = p.textFields.find((te) => te.name === t.name);
+        if (!textField.value.includes(t.value)) {
+          isValid = false;
+        }
+      });
+      return isValid;
+    });
+  }
+
+  if (numberFields && numberFields.length) {
+    posts = posts.filter((p) => {
+      let isValid = true;
+      numberFields.forEach((t) => {
+        const numberField = p.numberFields.find((te) => te.name === t.name);
+        if (numberField.value < t.start || numberField.value > t.end) {
+          isValid = false;
+        }
+      });
+      return isValid;
+    });
+  }
+
+  if (linkFields && linkFields.length) {
+    posts = posts.filter((p) => {
+      let isValid = true;
+      linkFields.forEach((t) => {
+        const linkField = p.linkFields.find((te) => te.name === t.name);
+        if (!linkField.value.includes(t.value)) {
+          isValid = false;
+        }
+      });
+      return isValid;
+    });
+  }
+
+  if (dateFields && dateFields.length) {
+    posts = posts.filter((p) => {
+      let isValid = true;
+      dateFields.forEach((t) => {
+        const dateField = p.dateFields.find((te) => te.name === t.name);
+        if (dateField.value < new Date(t.start) || dateField.value > new Date(t.end)) {
+          isValid = false;
+        }
+      });
+      return isValid;
+    });
+  }
+
+  if (locationFields && locationFields.length) {
+    posts = posts.filter((p) => {
+      let isValid = true;
+      locationFields.forEach((t) => {
+        const locationField = p.locationFields.find((te) => te.name === t.name);
+        const locationFieldCoords = {
+          lat: locationField.value.geo.latitude,
+          lon: locationField.value.geo.longitude,
+        };
+        const reqCoords = {
+          lat: t.value.geo.latitude,
+          lon: t.value.geo.longitude,
+        };
+        if (calcCrow(locationFieldCoords, reqCoords) > t.value.geo.range) {
+          isValid = false;
+        }
+      });
+      return isValid;
+    });
+  }
+
+  if (tag && tag.length) {
+    posts = posts.filter((p) => {
+      return p.tags.filter((t) => t.includes(tag)).length > 0;
+    });
+  }
+
+  return formatters.formatPosts(
+    posts.map((p) => ({ ...p, community: postType.community })),
+    token.user
+  );
+};
