@@ -56,11 +56,8 @@ export default function OtherUserProfile({navigation, route}) {
       <SafeAreaView style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.titleBar}>
-            <TouchableOpacity onPress={() => navigation.navigate('Community')}>
-              <Ionicons
-                name="ios-arrow-back"
-                size={24}
-                color="#52575D"></Ionicons>
+            <TouchableOpacity onPress={navigation.goBack}>
+              <Ionicons name="ios-arrow-back" size={24} color="#52575D" />
             </TouchableOpacity>
           </View>
           <View style={{alignSelf: 'center'}}>
@@ -71,7 +68,8 @@ export default function OtherUserProfile({navigation, route}) {
                     uri: profileImageUrl,
                   }}
                   style={styles.image}
-                  resizeMode="center"></Image>
+                  resizeMode="center"
+                />
               </View>
             ) : (
               <IconButton

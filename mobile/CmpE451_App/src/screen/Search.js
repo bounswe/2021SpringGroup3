@@ -94,17 +94,19 @@ export default function Search({navigation}) {
   };
 
   const handleRecommendation = async () => {
+    let response;
     if (isCommunitySearch) {
       setResultsTitle('Recommended Communities');
-      let response = await client.getRecommendedCommunities();
-      const status = response.status;
-      if (status == 200) {
-        setSearchResults(response.data);
-      } else {
-        ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
-      }
+      response = await client.getRecommendedCommunities();
     } else {
       setResultsTitle('Recommended Users');
+      response = await client.getRecommendedUsers();
+    }
+    const status = response.status;
+    if (status == 200) {
+      setSearchResults(response.data);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
   };
 
@@ -133,7 +135,7 @@ export default function Search({navigation}) {
           }}
         />
       </View>
-      <View style={{padding: 5, width:'100%'}}>
+      <View style={{padding: 5, width: '100%'}}>
         <Text> {resultsTitle} </Text>
       </View>
       {isCommunitySearch ? (
