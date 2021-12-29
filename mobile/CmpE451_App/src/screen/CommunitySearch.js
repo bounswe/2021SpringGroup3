@@ -71,8 +71,14 @@ export default function CommunitySearch({navigation}) {
       numberFields: numberFields,
       locationFields: locationFields,
       linkFields: linkFields,
+      tag: tags,
     };
-    console.log(JSON.stringify(body));
+    const response = await client.searchPosts({body: body});
+    if (response.status === 200) {
+      setSearchResults(response.data);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
   };
 
   const inputHandler = (fieldType, input, index) => {

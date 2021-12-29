@@ -584,6 +584,26 @@ export const getPostTypes = async ({communityId}) => {
     });
 };
 
+export const searchPosts = async ({body}) => {
+  var raw = JSON.stringify(body);
+  return fetch(BASE_URL + 'posts/search', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+    body: raw,
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 const returnResponse = async response => {
   const statusCode = response.status;
   response = await response.json();

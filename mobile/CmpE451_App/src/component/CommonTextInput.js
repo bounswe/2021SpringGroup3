@@ -23,7 +23,7 @@ const CommonTextInput = ({
           setValue(text);
         }}
         value={value}
-        placeholder={'Type tag names as comma seperated'}
+        placeholder={'Type tag name'}
       />
     </View>
   );
