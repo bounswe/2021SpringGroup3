@@ -26,6 +26,7 @@ import Community from './screen/Community';
 import OtherUserProfile from './screen/OtherUserProfile';
 import PendingRequests from './screen/PendingRequests';
 import UpdateCommunity from './screen/UpdateCommunity';
+import CommunitySearch from './screen/CommunitySearch';
 import Settings from './screen/Settings';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {screenOptionStyle} from './theme/styles';
@@ -107,6 +108,11 @@ export function Navigator() {
         options={{headerShown: false}}
         name="ProfileSettings"
         component={ProfileSettings}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="CommunitySearch"
+        component={CommunitySearch}
       />
     </Stack.Navigator>
   );

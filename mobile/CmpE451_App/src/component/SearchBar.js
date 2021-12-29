@@ -4,7 +4,12 @@ import {IconButton} from 'react-native-paper';
 import {COLORS} from '../theme/colors';
 import {TouchableOpacity, StyleSheet, TextInput, Keyboard} from 'react-native';
 
-export default function SearchBar({onPress, isSearchEnabled, onSearch}) {
+export default function SearchBar({
+  searchText = 'Search',
+  onPress,
+  isSearchEnabled,
+  onSearch,
+}) {
   return (
     <View style={styles.searchBarContainer}>
       <TouchableOpacity style={styles.searchBar} onPress={onPress}>
@@ -18,7 +23,7 @@ export default function SearchBar({onPress, isSearchEnabled, onSearch}) {
           <TextInput
             style={styles.input}
             underlineColorAndroid="#f000"
-            placeholder="Search"
+            placeholder={searchText}
             placeholderTextColor={COLORS.unlikeButtonColor}
             returnKeyType="next"
             onChangeText={text => onSearch(text)}
@@ -26,7 +31,7 @@ export default function SearchBar({onPress, isSearchEnabled, onSearch}) {
             onSubmitEditing={() => Keyboard.dismiss()}
           />
         ) : (
-          <Text style={{flex: 9, fontSize: 15}}>Search</Text>
+        <Text style={{flex: 9, fontSize: 15}}>{searchText}</Text>
         )}
       </TouchableOpacity>
     </View>
@@ -43,6 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E5E4E2',
     border: 3,
     borderRadius: 2,
+    marginHorizontal: 4,
   },
   searchBar: {
     flexDirection: 'row',

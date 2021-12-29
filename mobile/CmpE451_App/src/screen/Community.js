@@ -12,13 +12,14 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {useIsFocused} from '@react-navigation/native';
 import {COLORS} from '../theme/colors';
 import {listItem} from '../theme/styles';
-import ScreenHeader from '../component/ScreenHeader';
 import {IconButton} from 'react-native-paper';
 import {Button} from 'react-native-elements';
 import {PAGE_VARIABLES} from '../constants';
 import * as client from '../services/BoxyClient';
 import UserList from '../component/UserList';
 import CommunityPosts from '../component/CommunityPosts';
+import SearchBar from '../component/SearchBar';
+import HomeButton from '../component/HomeButton';
 
 export default function Community({navigation}) {
   const Tab = createMaterialTopTabNavigator();
@@ -278,9 +279,15 @@ export default function Community({navigation}) {
       </ScrollView>
     );
   }
+  function navigateToSearch() {
+    navigation.navigate('CommunitySearch');
+  }
   return (
     <View style={styles.container}>
-      <ScreenHeader title="Communities" navigate={navigate} />
+      <View style={styles.headerContainer}>
+        <HomeButton navigation={navigation} />
+        <SearchBar searchText="Search:Posts" onPress={navigateToSearch} />
+      </View>
       {isModerator && (
         <View style={styles.rightIconContainer}>
           <View style={{flexDirection: 'row'}}>
@@ -386,6 +393,14 @@ export default function Community({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 7,
+    backgroundColor: COLORS.screenHeaderBackground,
+    height: 55,
   },
   communityName: {
     color: COLORS.textColor,
