@@ -62,25 +62,6 @@ export default function CommunitySearch({navigation}) {
     }
   };
 
-  const searchCommunityHandler = async () => {
-    let body = {
-      postTypeId: PAGE_VARIABLES.postTypeId,
-      communityId: PAGE_VARIABLES.communityId,
-      textFields: textFields,
-      dateFields: dateFields,
-      numberFields: numberFields,
-      locationFields: locationFields,
-      linkFields: linkFields,
-      tag: tags,
-    };
-    const response = await client.searchPosts({body: body});
-    if (response.status === 200) {
-      setSearchResults(response.data);
-    } else {
-      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
-    }
-  };
-
   const inputHandler = (fieldType, input, index) => {
     switch (fieldType) {
       case 'text':
@@ -203,16 +184,75 @@ export default function CommunitySearch({navigation}) {
           name: locationFieldNames[i],
           value: {
             geo: {
-              latitude: 0,
-              longitude: 0,
+              latitude: 41,
+              longitude: 29,
             },
             range: 0,
+            isSelected: false,
           },
         });
       }
       setLocationFields(locationFieldsTemp);
     }
   };
+
+  function navigateSearchResults() {
+    let body = {
+      postTypeId: '',
+      communityId: PAGE_VARIABLES.communityId,
+      textFields: [],
+      dateFields: [],
+      numberFields: [],
+      locationFields: [],
+      linkFields: [],
+      tag: '',
+    };
+    if (filterByPostType) {
+      body.postTypeId = selectedItem.id;
+      body.textFields = textFields.filter(text => text.value !== '');
+      body.dateFields = dateFields.filter(
+        interval => Object.keys(interval.value).length !== 0,
+      );
+      body.numberFields = numberFields
+        .filter(interval => Object.keys(interval.value).length !== 0)
+        .map(convertNumberFields);
+      body.locationFields = locationFields
+        .filter(location => location.value.isSelected)
+        .map(convertLocationFields);
+      body.linkFields = linkFields.filter(text => text.value !== '');
+    }
+    if (filterByTags) {
+      body.tag = tags;
+    }
+    navigation.navigate('PostSearchResults', {
+      body: body,
+      filterByPostType: filterByPostType,
+      filterByTags: filterByTags,
+    });
+  }
+
+  function convertNumberFields(field) {
+    return {
+      name: field.name,
+      value: {
+        start: field.value.start === '' ? Math.min() : field.value.start,
+        end: field.value.start === '' ? Math.max() : field.value.end,
+      },
+    };
+  }
+
+  function convertLocationFields(field) {
+    return {
+      name: field.name,
+      value: {
+        geo: {
+          latitude: field.value.geo.latitude,
+          longitude: field.value.geo.longitude,
+          range: field.value.range === 0 ? 100 : field.value.range,
+        },
+      },
+    };
+  }
 
   return (
     <View style={styles.container}>
@@ -314,7 +354,7 @@ export default function CommunitySearch({navigation}) {
             <View style={{width: '100%', alignItems: 'center', marginTop: 20}}>
               <CommonButton
                 text="Apply Filters"
-                onPress={searchCommunityHandler}
+                onPress={navigateSearchResults}
                 buttonWidth={'60%'}
               />
             </View>

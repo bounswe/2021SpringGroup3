@@ -20,8 +20,8 @@ const MapInput = ({fields, index, chooseLocation}) => {
   const [regionState, setRegion] = useState({
     latitude: fields[index].value.geo.latitude,
     longitude: fields[index].value.geo.longitude,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
+    latitudeDelta: 3.5,
+    longitudeDelta: 0.421,
   });
 
   return (
@@ -37,6 +37,7 @@ const MapInput = ({fields, index, chooseLocation}) => {
               value: {
                 geo: markerState.coordinate,
                 range: fields[index].value.range,
+                isSelected: true,
               },
             })
           }
