@@ -103,3 +103,38 @@ exports.search = {
     })
     .required(),
 };
+
+exports.advancedSearch = {
+  body: Joi.object()
+    .keys({
+      communityId: Joi.string().custom(objectId).required(),
+      postTypeId: Joi.string().custom(objectId).required(),
+      textFields: Joi.array().items(textField).max(10),
+      numberFields: Joi.array()
+        .items(
+          Joi.object().keys({
+            name: Joi.string().required(),
+            value: {
+              start: Joi.number().required(),
+              end: Joi.number().required(),
+            },
+          })
+        )
+        .max(10),
+      dateFields: Joi.array()
+        .items(
+          Joi.object().keys({
+            name: Joi.string().required(),
+            value: {
+              start: Joi.string().isoDate().required(),
+              end: Joi.string().isoDate().required(),
+            },
+          })
+        )
+        .max(10),
+      linkFields: Joi.array().items(linkField).max(10),
+      locationFields: Joi.array().items(locationField).max(10),
+      tag: Joi.string().allow('', null),
+    })
+    .required(),
+};
