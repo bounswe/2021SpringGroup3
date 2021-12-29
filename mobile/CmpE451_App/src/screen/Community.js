@@ -285,7 +285,7 @@ export default function Community({navigation}) {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <HomeButton />
+        <HomeButton navigation={navigation} />
         <SearchBar searchText="Search:Posts" onPress={navigateToSearch} />
       </View>
       {isModerator && (
