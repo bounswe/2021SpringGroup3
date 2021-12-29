@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, FlatList, ToastAndroid} from 'react-native';
+import {View, FlatList, ToastAndroid, Text} from 'react-native';
 import {COLORS} from '../theme/colors';
 import SearchBar from '../component/SearchBar';
 import SearchResultComponent from '../component/SearchResult';
@@ -11,6 +11,8 @@ import {PAGE_VARIABLES} from '../constants';
 
 export default function Search({navigation}) {
   const [searchResults, setSearchResults] = useState([]);
+  const [searchText, setSearchText] = useState('');
+  const [resultsTitle, setResultsTitle] = useState('');
   const [open, setOpen] = useState(false);
   const [isCommunitySearch, setValue] = useState(true);
   const [items, setItems] = useState([
@@ -41,8 +43,12 @@ export default function Search({navigation}) {
   ]);
 
   useEffect(() => {
-    setSearchResults([]);
+    handleTextChange(searchText);
   }, [isCommunitySearch]);
+
+  useEffect(() => {
+    handleTextChange(searchText);
+  }, []);
 
   const navigateCommunityPage = (id, name) => {
     PAGE_VARIABLES.communityId = id;
@@ -57,25 +63,48 @@ export default function Search({navigation}) {
     navigation.navigate('OtherUserProfile', {id: id});
   };
 
-  const handleSearch = async query => {
+  const handleTextChange = async query => {
+    setSearchText(query);
     if (query.length > 0) {
-      if (isCommunitySearch) {
-        let response = await client.searchCommunity({query: query});
-        const status = response.status;
-        if (status == 200) {
-          setSearchResults(response.data);
-        } else {
-          ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
-        }
+      handleSearch(query);
+    } else {
+      handleRecommendation();
+    }
+  };
+
+  const handleSearch = async query => {
+    setResultsTitle('Results');
+    if (isCommunitySearch) {
+      let response = await client.searchCommunity({query: query});
+      const status = response.status;
+      if (status == 200) {
+        setSearchResults(response.data);
       } else {
-        let response = await client.searchUser({query: query});
-        const status = response.status;
-        if (status == 200) {
-          setSearchResults(response.data);
-        } else {
-          ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
-        }
+        ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
       }
+    } else {
+      let response = await client.searchUser({query: query});
+      const status = response.status;
+      if (status == 200) {
+        setSearchResults(response.data);
+      } else {
+        ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+      }
+    }
+  };
+
+  const handleRecommendation = async () => {
+    if (isCommunitySearch) {
+      setResultsTitle('Recommended Communities');
+      let response = await client.getRecommendedCommunities();
+      const status = response.status;
+      if (status == 200) {
+        setSearchResults(response.data);
+      } else {
+        ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+      }
+    } else {
+      setResultsTitle('Recommended Users');
     }
   };
 
@@ -87,7 +116,7 @@ export default function Search({navigation}) {
           IconColor={'white'}
           onPress={navigation.goBack}
         />
-        <SearchBar isSearchEnabled={true} onSearch={handleSearch} />
+        <SearchBar isSearchEnabled={true} onSearch={handleTextChange} />
       </View>
       <View style={{width: '95%', alignItems: 'center', marginVertical: 5}}>
         <DropDownPicker
@@ -103,6 +132,9 @@ export default function Search({navigation}) {
             height: 40,
           }}
         />
+      </View>
+      <View style={{padding: 5, width:'100%'}}>
+        <Text> {resultsTitle} </Text>
       </View>
       {isCommunitySearch ? (
         <FlatList
@@ -153,5 +185,10 @@ const styles = {
   },
   feedItem: {
     width: '100%',
+  },
+  content: {
+    color: COLORS.textColor,
+    fontSize: 16,
+    marginTop: 5,
   },
 };
