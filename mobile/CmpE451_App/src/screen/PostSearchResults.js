@@ -27,15 +27,19 @@ export default function PostSearchResults({navigation, route}) {
     if (!filterByPostType && !filterByTags) {
       response = await client.getPosts({communityId: body.communityId});
       setSearchResults(response);
+    } else if (!filterByPostType) {
+      response = await client.searchPost({
+        communityId: body.communityId,
+        tag: body.tag,
+      });
     } else {
       response = await client.advancedSearchPosts({body: body});
-      console.log(JSON.stringify(body));
-      if (response.status === 200) {
-        setSearchResults(response.data);
-      } else {
-        console.log(response.data.message);
-        ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
-      }
+    }
+    if (response.status === 200) {
+      setSearchResults(response.data);
+    } else {
+      console.log(response.data.message);
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
   };
 

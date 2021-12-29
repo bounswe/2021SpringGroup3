@@ -317,7 +317,7 @@ export default function CommunitySearch({navigation}) {
             defaultIndex={2}
             resetValue={false}
             textInputProps={{
-              placeholder: 'Post Types',
+              placeholder: 'Choose',
               style: {
                 padding: 12,
                 borderWidth: 1,
