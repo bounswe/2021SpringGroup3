@@ -604,6 +604,27 @@ export const advancedSearchPosts = async ({body}) => {
     });
 };
 
+export const searchPost = async ({communityId, tag = ''}) => {
+  return fetch(
+    BASE_URL + 'posts/search' + '?communityId=' + communityId + '&tag=' + tag,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 const returnResponse = async response => {
   const statusCode = response.status;
   response = await response.json();
