@@ -4,7 +4,7 @@ const httpStatus = require('http-status');
 const short = require('short-uuid');
 const fs = require('fs-extra');
 const { formatters, baseUtil } = require('../utils');
-const { User, Community, Post, Comment } = require('../models');
+const { User, Community, Post, Comment, UserACS } = require('../models');
 const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
 const communityService = require('./community.service');
@@ -22,6 +22,7 @@ exports.deleteProfile = async ({ token }) => {
   await Promise.all([
     communities.map((c) =>
       communityService.removeUserFromCommunity({
+        user: token.user,
         userId: token.user._id,
         communityId: c._id,
       })
@@ -104,6 +105,13 @@ exports.deleteProfile = async ({ token }) => {
       },
     }
   );
+  const acs = await UserACS.create({
+    summary: `${token.user.username} deleted his/her account`,
+    type: 'Delete',
+    actor: token.user,
+    object: token.user,
+  });
+  console.log(acs);
   await User.deleteOne({ _id: token.user._id });
 };
 
@@ -136,6 +144,13 @@ exports.setProfile = async ({ token, body }) => {
     $set: update,
   });
   const user = User.findById(token.user._id).populate(['followers', 'pendingFollowers']).lean();
+  const acs = await UserACS.create({
+    summary: `${token.user.username} updated his/her profile`,
+    type: 'Update',
+    actor: token.user,
+    object: token.user,
+  });
+  console.log(acs);
   return formatters.formatProfileSettings(user);
 };
 

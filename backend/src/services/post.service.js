@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 
 const ApiError = require('../utils/ApiError');
 const { formatters, baseUtil } = require('../utils');
-const { PostType, Community, Post, Comment } = require('../models');
+const { PostType, Community, Post, Comment, PostACS, CommentACS } = require('../models');
 
 exports.getPosts = async ({ token, communityId, sortBy }) => {
   const community = await Community.findById(communityId).lean();
@@ -84,6 +84,13 @@ exports.createPost = async ({
     locationFields,
     tags,
   });
+  const acs = await PostACS.create({
+    summary: `${token.user.username} created a post`,
+    type: 'Create',
+    actor: token.user,
+    object: post,
+  });
+  console.log(acs);
   return {
     message: 'Post is created',
     post: {
@@ -135,6 +142,13 @@ exports.likePost = async ({ token, postId }) => {
   )
     .populate(['creator', 'community', 'postType'])
     .lean();
+  const acs = await PostACS.create({
+    summary: `${token.user.username} liked a post`,
+    type: 'Like',
+    actor: token.user,
+    object: post,
+  });
+  console.log(acs);
   return formatters.formatPostDetail(post, token.user);
 };
 
@@ -150,6 +164,13 @@ exports.deletePost = async ({ token, postId }) => {
   ) {
     await Post.deleteOne({ _id: post._id });
     await Comment.deleteMany({ post: post._id });
+    const acs = await PostACS.create({
+      summary: `${token.user.username} deleted a post`,
+      type: 'Delete',
+      actor: token.user,
+      object: post,
+    });
+    console.log(acs);
   } else {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
@@ -170,11 +191,18 @@ exports.createComment = async ({ token, postId, text }) => {
     (post.community.members && new Set(post.community.members.map((m) => m.toString())).has(token.user._id.toString())) ||
     (post.creator && post.creator.toString() === token.user._id)
   ) {
-    await Comment.create({
+    const comment = await Comment.create({
       text,
       post: post._id,
       user: token.user._id,
     });
+    const acs = await CommentACS.create({
+      summary: `${token.user.username} created a comment`,
+      type: 'Create',
+      actor: token.user,
+      object: comment,
+    });
+    console.log(acs);
     const comments = await Comment.find({ post: post._id })
       .sort({
         createdAt: 1,

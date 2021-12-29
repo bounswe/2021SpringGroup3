@@ -3,7 +3,7 @@ const httpStatus = require('http-status');
 const _ = require('lodash');
 
 const { formatters, baseUtil } = require('../utils');
-const { Community, PostType, Post, Comment, User } = require('../models');
+const { User, Community, PostType, Post, Comment, CommunityACS} = require('../models');
 const ApiError = require('../utils/ApiError');
 const onesignalService = require('./onesignal.service');
 
@@ -58,6 +58,15 @@ exports.createCommunity = async ({ token, name, iconUrl, description, isPrivate 
     moderators: [token.user._id],
     members: [token.user._id],
   });
+
+  const acs = await CommunityACS.create({
+    summary: `${token.user.username} created community ${name}`,
+    type: 'Create',
+    actor: token.user,
+    object: community,
+  });
+  console.log(acs);
+
   return {
     message: 'Community  is created',
     community: formatters.formatPreviewCommunity(community),
@@ -112,6 +121,14 @@ exports.joinCommunity = async ({ token, communityId }) => {
       },
       { new: true }
     );
+
+    const acs = await CommunityACS.create({
+      summary: `${token.user.username} joined community ${community.name}`,
+      type: 'Join',
+      actor: token.user,
+      object: community,
+    });
+    console.log(acs);
   }
   community = await populateCommunity(communityId);
   return {
@@ -120,7 +137,7 @@ exports.joinCommunity = async ({ token, communityId }) => {
   };
 };
 
-exports.removeUserFromCommunity = async ({ userId, communityId }) => {
+exports.removeUserFromCommunity = async ({ user, userId, communityId }) => {
   const community = await Community.findByIdAndUpdate(
     communityId,
     {
@@ -150,6 +167,15 @@ exports.removeUserFromCommunity = async ({ userId, communityId }) => {
       await Community.findByIdAndDelete(community._id);
     }
   }
+  const user2 = User.findById(userId);
+  const acs = await CommunityACS.create({
+    summary: `${user.username} removed ${user2.username} from the community ${community.name}`,
+    type: 'Remove',
+    actor: user,
+    object: community,
+    target: user2,
+  });
+  console.log(acs);
 };
 
 exports.leaveCommunity = async ({ token, communityId }) => {
@@ -160,7 +186,7 @@ exports.leaveCommunity = async ({ token, communityId }) => {
   if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, token.user._id.toString())) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You are not a member of this community');
   }
-  exports.removeUserFromCommunity({ userId: token.user._id, communityId: community._id });
+  exports.removeUserFromCommunity({ user: token.user, userId: token.user._id, communityId: community._id });
   community = await populateCommunity(communityId);
   return {
     ...formatters.formatCommunityDetails(community, token.user),
@@ -192,6 +218,15 @@ exports.kickFromCommunity = async ({ token, userId, communityId }) => {
     },
   });
   community = await populateCommunity(communityId);
+  const user2 = User.findById(userId);
+  const acs = await CommunityACS.create({
+    summary: `${token.user.username} removed ${user2.username} from the community ${community.name}`,
+    type: 'Remove',
+    actor: token.user,
+    object: community,
+    target: user2,
+  });
+  console.log(acs);
   return {
     ...formatters.formatCommunityDetails(community, token.user),
     message: 'User has been kicked from the community',
@@ -217,6 +252,15 @@ exports.approveJoinRequest = async ({ token, userId, communityId }) => {
             memberCount: 1,
           },
         });
+        const user2 = User.findById(userId);
+        const acs = await CommunityACS.create({
+          summary: `${token.user.username} accepted ${user2.username} 's join request to the community ${community.name}`,
+          type: 'Accept',
+          actor: token.user,
+          object: community,
+          target: user2,
+        });
+        console.log(acs);
       } else {
         // to be sure
         await Community.findByIdAndUpdate(community._id, {
@@ -266,6 +310,15 @@ exports.rejectJoinRequest = async ({ token, userId, communityId }) => {
           },
           { new: true }
         );
+        const user2 = User.findById(userId);
+        const acs = await CommunityACS.create({
+          summary: `${token.user.username} rejected ${user2.username} 's join request to the community ${community.name}`,
+          type: 'Reject',
+          actor: token.user,
+          object: community,
+          target: user2,
+        });
+        console.log(acs);
       } else {
         // to be sure
         await Community.findByIdAndUpdate(community._id, {
@@ -298,7 +351,7 @@ exports.rejectJoinRequest = async ({ token, userId, communityId }) => {
   };
 };
 
-exports.updateCommunity = async ({ name, iconUrl, description, isPrivate, communityId }) => {
+exports.updateCommunity = async ({ token, name, iconUrl, description, isPrivate, communityId }) => {
   let community = await Community.findById(communityId).lean();
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
@@ -323,6 +376,13 @@ exports.updateCommunity = async ({ name, iconUrl, description, isPrivate, commun
     },
     { new: true }
   );
+  const acs = await CommunityACS.create({
+    summary: `${token.user.username} updated the community ${community.name}`,
+    type: 'Update',
+    actor: token.user,
+    object: community,
+  });
+  console.log(acs);
   return {
     message: 'Community  is updated',
     community: formatters.formatPreviewCommunity(community),
@@ -342,6 +402,15 @@ exports.rejectModeratorRequest = async ({ token, userId, communityId }) => {
             pendingModerators: userId,
           },
         });
+        const user2 = User.findById(userId);
+        const acs = await CommunityACS.create({
+          summary: `${token.user.username} rejected ${user2.username} 's moderator request to community ${community.name}`,
+          type: 'Reject',
+          actor: token.user,
+          object: community,
+          target: user2,
+        });
+        console.log(acs);
       } else {
         // to be sure
         await Community.findByIdAndUpdate(community._id, {
@@ -391,6 +460,13 @@ exports.joinModerators = async ({ token, communityId }) => {
     },
     { new: true }
   );
+  const acs = await CommunityACS.create({
+    summary: `${token.user.username} requested to be the moderator of the community ${community.name}`,
+    type: 'Offer',
+    actor: token.user,
+    object: community,
+  });
+  console.log(acs);
   community = await populateCommunity(communityId);
   return formatters.formatCommunityDetails(community, token.user);
 };
@@ -411,6 +487,15 @@ exports.approveModeratorRequest = async ({ token, userId, communityId }) => {
             pendingModerators: userId,
           },
         });
+        const user2 = User.find(userId);
+        const acs = await CommunityACS.create({
+          summary: `${token.user.username} accepted ${user2.username} 's moderator request to the community ${community.name}`,
+          type: 'Offer',
+          actor: token.user,
+          object: community,
+          target: user2,
+        });
+        console.log(acs);
       } else {
         // to be sure
         await Community.findByIdAndUpdate(community._id, {
@@ -462,6 +547,13 @@ exports.deleteCommunity = async ({ token, communityId }) => {
     });
     await PostType.deleteMany({ community: community._id });
     await Community.findByIdAndDelete(community._id);
+    const acs = await CommunityACS.create({
+      summary: `${token.user.username} deleted the community ${community.name}`,
+      type: 'Delete',
+      actor: token.user,
+      object: community,
+    });
+    console.log(acs);
   } else {
     throw new ApiError(httpStatus.BAD_REQUEST, 'You need to be a moderator to delete this community');
   }
