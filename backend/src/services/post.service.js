@@ -22,13 +22,13 @@ exports.getPosts = async ({ token, communityId, sortBy }) => {
   );
 };
 
-const validateField = (fieldNames, field, fieldName) => {
+const validateField = (fieldNames, field, fieldName, onlyShouldNotExists = false) => {
   const errors = [];
   const fieldNameSet = new Set(fieldNames);
   const fieldSet = new Set(field.map((f) => f.name));
   const dbMinusReq = [...fieldNameSet].filter((x) => !fieldSet.has(x));
   const reqMinusDb = [...fieldSet].filter((x) => !fieldNameSet.has(x));
-  if (dbMinusReq.length) {
+  if (dbMinusReq.length && !onlyShouldNotExists) {
     errors.push(`${dbMinusReq.join(', ')} should exist in ${fieldName}`);
   }
   if (reqMinusDb.length) {
@@ -215,6 +215,9 @@ exports.search = async ({ token, communityId, tag, postTypeId, sortBy }) => {
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
+  if (community.isPrivate && !baseUtil.checkIfObjectIdArrayIncludesId(community.members, token.user._id.toString())) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You need to be a member of this community to search it's posts");
+  }
   let posts = [];
   if (!postTypeId) {
     posts = await Post.find({
@@ -228,6 +231,9 @@ exports.search = async ({ token, communityId, tag, postTypeId, sortBy }) => {
     if (!postType) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Post Type does not exist');
     }
+    if (postType.community.toString() !== communityId) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Post type does not exist in this community');
+    }
     posts = await Post.find({
       community: community._id,
       postType: postType._id,
@@ -238,6 +244,153 @@ exports.search = async ({ token, communityId, tag, postTypeId, sortBy }) => {
   }
   return formatters.formatPosts(
     posts.map((p) => ({ ...p, community })),
+    token.user
+  );
+};
+
+function toRad(Value) {
+  return (Value * Math.PI) / 180;
+}
+
+// This function takes in latitude and longitude of two locations
+// and returns the distance between them as the crow flies (in meters)
+function calcCrow(coords1, coords2) {
+  // var R = 6.371; // km
+  const R = 6371000;
+  const dLat = toRad(coords2.lat - coords1.lat);
+  const dLon = toRad(coords2.lng - coords1.lng);
+  const lat1 = toRad(coords1.lat);
+  const lat2 = toRad(coords2.lat);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c;
+  return d;
+}
+
+exports.advancedSearch = async ({
+  token,
+  communityId,
+  postTypeId,
+  sortBy,
+  textFields,
+  numberFields,
+  dateFields,
+  linkFields,
+  locationFields,
+  tag,
+}) => {
+  const postType = await PostType.findById(postTypeId).populate('community').lean();
+  if (!postType) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post Type does not exist');
+  }
+  if (postType.community._id.toString() !== communityId) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Community ID does not match');
+  }
+  if (
+    postType.community.isPrivate &&
+    !baseUtil.checkIfObjectIdArrayIncludesId(postType.community.members, token.user._id.toString())
+  ) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You need to be a member of this community to search it's posts");
+  }
+  let errors = validateField(postType.textFieldNames, textFields || [], 'textFields', true);
+  errors = errors.concat(validateField(postType.numberFieldNames, numberFields || [], 'numberFields', true));
+  errors = errors.concat(validateField(postType.dateFieldNames, dateFields || [], 'dateFields', true));
+  errors = errors.concat(validateField(postType.linkFieldNames, linkFields || [], 'linkFields', true));
+  errors = errors.concat(validateField(postType.locationFieldNames, locationFields || [], 'locationFields', true));
+  if (errors.length) {
+    throw new ApiError(httpStatus.BAD_REQUEST, errors.join('. '));
+  }
+  let posts = await Post.find({
+    postType: postType._id,
+  })
+    .sort({ [sortBy]: -1 })
+    .populate(['community', 'creator', 'postType'])
+    .lean();
+
+  if (textFields && textFields.length) {
+    posts = posts.filter((p) => {
+      let isValid = true;
+      textFields.forEach((t) => {
+        const textField = p.textFields.find((te) => te.name === t.name);
+        if (!textField.value.includes(t.value)) {
+          isValid = false;
+        }
+      });
+      return isValid;
+    });
+  }
+
+  if (numberFields && numberFields.length) {
+    posts = posts.filter((p) => {
+      let isValid = true;
+      numberFields.forEach((t) => {
+        const numberField = p.numberFields.find((te) => te.name === t.name);
+        if (numberField.value < t.value.start || numberField.value > t.value.end) {
+          isValid = false;
+        }
+      });
+      return isValid;
+    });
+  }
+
+  if (linkFields && linkFields.length) {
+    posts = posts.filter((p) => {
+      let isValid = true;
+      linkFields.forEach((t) => {
+        const linkField = p.linkFields.find((te) => te.name === t.name);
+        if (!linkField.value.includes(t.value)) {
+          isValid = false;
+        }
+      });
+      return isValid;
+    });
+  }
+
+  if (dateFields && dateFields.length) {
+    posts = posts.filter((p) => {
+      let isValid = true;
+      dateFields.forEach((t) => {
+        const dateField = p.dateFields.find((te) => te.name === t.name);
+        if (new Date(dateField.value) < new Date(t.value.start) || new Date(dateField.value) > new Date(t.value.end)) {
+          isValid = false;
+        }
+      });
+      return isValid;
+    });
+  }
+
+  if (locationFields && locationFields.length) {
+    posts = posts.filter((p) => {
+      let isValid = true;
+      locationFields.forEach((t) => {
+        const locationField = p.locationFields.find((te) => te.name === t.name);
+        console.log(locationField);
+        const locationFieldCoords = {
+          lat: locationField.value.geo.latitude,
+          lng: locationField.value.geo.longitude,
+        };
+        const reqCoords = {
+          lat: t.value.geo.latitude,
+          lng: t.value.geo.longitude,
+        };
+        if (calcCrow(locationFieldCoords, reqCoords) > t.value.geo.range) {
+          isValid = false;
+        }
+      });
+      return isValid;
+    });
+  }
+
+  if (tag && tag.length) {
+    posts = posts.filter((p) => {
+      return p.tags.filter((t) => t.includes(tag)).length > 0;
+    });
+  }
+
+  return formatters.formatPosts(
+    posts.map((p) => ({ ...p, community: postType.community })),
     token.user
   );
 };

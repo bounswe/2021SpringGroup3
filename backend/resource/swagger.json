@@ -757,6 +757,67 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "If the community is private you have to be a member of it to search posts"
+          }
+        }
+      }
+    },
+    "/posts/advancedSearch": {
+      "post": {
+        "tags": ["Post Controller"],
+        "description": "Advanced Search posts by tag or post types. Post request because we need a body",
+        "operationId": "advance search posts",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": ["ANDROID", "WEB"]
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdvancedSearch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Post search result. Select posts that has query in it's name",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/Post"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "You can not search fields if it doesn't exist in the post type"
+          },
+          "401": {
+            "description": "If the community is private you have to be a member of it to search posts"
           }
         }
       }
@@ -1982,8 +2043,8 @@
     "/profile/other": {
       "post": {
         "tags": ["Profile Controller"],
-        "description": "Unfollow a user",
-        "operationId": "user unfollow",
+        "description": "Other user info",
+        "operationId": "user other info",
         "security": [
           {
             "bearerAuth": []
@@ -2309,6 +2370,23 @@
                 }
               ]
             }
+          }
+        }
+      },
+      "AdvancedSearch": {
+        "title": "AdvancedSearch model",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Post"
+          }
+        ],
+        "type": "object",
+        "properties": {
+          "sortBy": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
           }
         }
       },
