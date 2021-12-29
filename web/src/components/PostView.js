@@ -96,7 +96,6 @@ const PostView = (props) => {
     } else  {
       setTagDefinition(`No definition found for ${tag.name}.`)
     }
-    
   }
 
   const cancelTag = () => {

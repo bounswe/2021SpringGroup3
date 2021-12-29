@@ -1,15 +1,17 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router";
-import { Row, Col, Form, Input, Typography, Button, Select, DatePicker, Card } from 'antd';
+import { Row, Col, Form, Input, Typography, Button, Select, DatePicker, Card, Popover, Tag, Space } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import GetCommunities from './GetCommunities';
 import GetPostTypes from './GetPostTypes';
 import { CreatePost as CreatePostRequest } from '../utils/helper';
-import { GetPostTypes as GetPostTypesRequest } from '../utils/helper';
 import { GetPostTypeDetail as GetPostTypeDetailRequest } from '../utils/helper';
+import { SearchWikidata as SearchWikidataRequest } from '../utils/helper';
+
 import MapPicker from 'react-google-map-picker'
 
 const DefaultLocation = { lat: 41, lng: 29 };
@@ -42,16 +44,10 @@ const CreatePost = (props) => {
 
   const MapPickerElement =
     <div>
-      <button onClick={handleResetLocation}>Reset Location</button><br />
-      <label>Latitute:</label><input type='text' value={location.lat} disabled /><br />
-      <label>Longitute:</label><input type='text' value={location.lng} disabled /><br />
-      <label>Zoom:</label><input type='text' value={zoom} disabled /><br />
-
-
       <MapPicker defaultLocation={defaultLocation}
         zoom={zoom}
         mapTypeId="roadmap"
-        style={{ height: '700px' }}
+        style={{ height: '300px' }}
         onChangeLocation={handleChangeLocation}
         onChangeZoom={handleChangeZoom}
         apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY} />
@@ -101,7 +97,17 @@ const CreatePost = (props) => {
       locationFields: []
     }
 
-    console.log(locationFieldsNames)
+    console.log(values.tags)
+
+    if (values.tags && values.tags.length > 0) {
+      body.tags = values.tags.map(t => {
+        let tag = JSON.parse(t)
+        return {
+          id: tag.id,
+          name: tag.label
+        }
+      })
+    }
 
     for (let key of Object.keys(values)) {
       if (textFieldsNames.includes(key)) {
@@ -151,7 +157,7 @@ const CreatePost = (props) => {
           <Col span={24}>
             <Text><b>Select Post Type to be Used</b></Text>
           </Col>
-          <GetPostTypes id={communityId} onSelectPostType={handlePostTypeChange} />
+          <GetPostTypes id={communityId} isCreatePost={true} onSelectPostType={handlePostTypeChange} />
         </>
       )
     }
@@ -168,7 +174,6 @@ const CreatePost = (props) => {
   const handlePostTypeChange = (selectedId) => {
     resetFields();
     setPostTypeId(selectedId);
-    console.log('sdafasdfasdfdsa', communityId, selectedId)
     GetPostTypeDetailRequest({ communityId: communityId, postTypeId: selectedId }, loginState.token, dispatch)
       .then(result => {
         setTextFieldsNames([...result.data.textFieldNames]);
@@ -253,6 +258,56 @@ const CreatePost = (props) => {
       })
   }
 
+  const [tagDefinition, setTagDefinition] = useState({})
+  const [searchedTags, setSearchedTags] = useState([])
+  const [searchValue, setSearchValue] = useState([])
+
+  const searchTags = async (value) => {
+    setSearchValue(value)
+  }
+
+  useEffect(() => {
+    SearchWikidataRequest({ tag: searchValue }, loginState.token, dispatch)
+      .then(result => {
+        if (result.data && result.data.length > 0) {
+          console.log(result.data.map(t => t.description))
+          setSearchedTags(result.data.map(t => { return { label: <Space direction='vertical' size={'0px'}><b>{t.label}</b>{t.description}</Space>, value: JSON.stringify(t) } }))
+        } else {
+          setSearchedTags([])
+        }
+      });
+  }, [searchValue])
+
+  const defineTag = async (tag) => {
+    console.log(tag)
+    const result = await SearchWikidataRequest({ tag: JSON.parse(tag.value).id }, loginState.token, dispatch)
+    if (result.data && result.data.length > 0) {
+      setTagDefinition(result.data[0])
+    } else {
+      setTagDefinition({ label: '', description: `No definition found for ${tag.label}.` })
+    }
+  }
+
+  const cancelTag = () => {
+    setTagDefinition({})
+  }
+
+  const tagRender = (tag) => {
+    return (
+      <Popover content={tagDefinition.description} title={tagDefinition.label}>
+        <Tag
+          color="#6f74dd"
+          onMouseEnter={() => defineTag(tag)}
+          onMouseLeave={() => cancelTag()}
+          closable
+          onClose={tag.onClose}
+          style={{ cursor: 'pointer' }}>
+          {JSON.parse(tag.value).label}
+        </Tag>
+      </Popover>
+    )
+  }
+
   return (
     <Card size="small" style={postCardStyle}>
       <Row>
@@ -269,8 +324,24 @@ const CreatePost = (props) => {
         <Col span={10} offset={7} align="middle">
           {postTypes}
         </Col>
+
         <Col span={10} offset={7}>
           <Form name="basic" onFinish={onFinish} onFinishFailed={onFinishFailed}>
+            {postTypeId ? <Col span={24} align="middle" style={{ marginBottom: '20px' }}>
+              <Col span={24} align='middle'>
+                <Text><b>Select Tags</b></Text>
+              </Col>
+              <Form.Item
+                name='tags'>
+                <Select
+                  mode="multiple"
+                  onSearch={(value) => { searchTags(value) }}
+                  options={searchedTags}
+                  tagRender={tagRender}
+                  style={{ width: '100%' }}
+                />
+              </Form.Item>
+            </Col> : <></>}
             {textFields}
             {numberFields}
             {linkFields}

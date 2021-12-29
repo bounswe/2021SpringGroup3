@@ -13,15 +13,17 @@ import { PostProfileSettings as PostProfileSettingsRequest } from '../utils/help
 import MapPicker from 'react-google-map-picker'
 import moment from 'moment'
 
-const DefaultLocation = { lat: 41, lng: 29 };
-const DefaultZoom = 10;
-
 const { Text, Title } = Typography;
 const { TextArea } = Input;
 
 require('dotenv').config();
 
 const ProfileEdit = (props) => {
+
+  const DefaultLocation = (props.profileValues.location && props.profileValues.location.value)
+    ? { lat: props.profileValues.location.value.latitude, lng: props.profileValues.location.value.longitude }
+    : { lat: 41, lng: 29 };
+  const DefaultZoom = 10;
 
   console.log(props)
 
@@ -64,15 +66,10 @@ const ProfileEdit = (props) => {
   }
   const MapPickerElement =
     <div>
-      <button onClick={handleResetLocation}>Reset Location</button><br />
-      <label>Latitute</label><input type='text' value={location.lat} disabled /><br />
-      <label>Longitute</label><input type='text' value={location.lng} disabled /><br />
-      <label>Zoom</label><input type='text' value={zoom} disabled /><br />
-
       <MapPicker defaultLocation={defaultLocation}
         zoom={zoom}
         mapTypeId="roadmap"
-        style={{ height: '700px' }}
+        style={{ height: '300px' }}
         onChangeLocation={handleChangeLocation}
         onChangeZoom={handleChangeZoom}
         apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY} />
@@ -146,9 +143,9 @@ const ProfileEdit = (props) => {
     <Row gutter={[0, 16]}>
       <Col span={24}></Col>
       <Col span={12} offset={6}>
-            <Col span={24} align='middle'>
-              <Title level={2} strong="true">{`${props.profileValues.username}'s Settings`}</Title>
-            </Col>
+        <Col span={24} align='middle'>
+          <Title level={2} strong="true">{`${props.profileValues.username}'s Settings`}</Title>
+        </Col>
         <Row style={{ marginTop: '30px' }}>
           <Col span={12}>
             <Title level={4}>Profile Settings</Title>
