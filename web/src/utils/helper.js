@@ -11,7 +11,8 @@ import { login, logout, register,
   postProfileSettings, 
   getProfileOther, 
   likePost,
-  dislikePost} from '../store/axios';
+  dislikePost,
+  postComment} from '../store/axios';
 
 export const Login = async (info, dispatch) => {
 
@@ -388,6 +389,18 @@ export const LikePost = async (info, token, dispatch) => {
 export const DislikePost = async (info, token, dispatch) => {
 
   const response = await dislikePost(info, token);
+  if(response.status === 200 || response.status === 201){
+    return response;
+
+  }else{
+
+    return {}
+  }
+}
+
+export const PostComment = async (info, body, token, dispatch) => {
+
+  const response = await postComment(info, body, token);
   if(response.status === 200 || response.status === 201){
     return response;
 

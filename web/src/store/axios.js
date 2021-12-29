@@ -30,7 +30,8 @@ import {
   GET_PROFILE_SETTINGS_ENDPOINT,
   POST_PROFILE_SETTINGS_ENDPOINT,
   GET_PROFILE_OTHER_ENDPOINT,
-  LIKE_POST_ENDPOINT
+  LIKE_POST_ENDPOINT,
+  POST_COMMENT_ENDPOINT
 } from './urls';
 
 export async function login(info) {
@@ -648,6 +649,25 @@ export async function dislikePost(info, token) {
     }
     console.log(info)
     const response = await axios.delete(LIKE_POST_ENDPOINT + "?postId=" + info.postId, { ...info }, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function postComment(info, body, token){
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    console.log(info)
+    const response = await axios.post(POST_COMMENT_ENDPOINT + "?postId=" + info.postId, { ...body }, { ...header });
     return response;
   } catch (error) {
     console.log(error);
