@@ -639,10 +639,16 @@ export async function postProfileSettings(info, token) {
   }
 }
 
-export async function searchWikidata(info) {
+export async function searchWikidata(info, token) {
   try {
-    const response = await axios.get(SEARCH_WIKIDATA_ENDPOINT + `?action=wbsearchentities&language=en&format=json&search=${info.tag}`);
-    console.log(response)
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    const response = await axios.get(SEARCH_WIKIDATA_ENDPOINT + `?query=${info.tag.id}`, { ... header });
     return response;
   } catch (error) {
     console.log(error);

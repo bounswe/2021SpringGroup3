@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { React, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useSelector, useDispatch } from 'react-redux';
 import { Card, Row, Col, Button, Typography, Space, Avatar, Tag, Popover } from 'antd';
 import '../App.css';
 import FieldContent from './FieldContent';
@@ -13,13 +14,9 @@ const { Text } = Typography;
 
 const PostView = (props) => {
 
-  const navigate = useNavigate()
-
-  props.postObj.postType = {
-    color: '#6e74dc',
-    name: 'Post Type',
-    id: ''
-  }
+  const loginState = useSelector((state) => state.login);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   let contentFields = [];
 
@@ -49,12 +46,11 @@ const PostView = (props) => {
   }))
 
   let postTypeStyle = {
-    backgroundColor: props.postObj.postType.color,
+    backgroundColor: '#6f74dd',
     color: '#ffffff',
     paddingLeft: '8px',
     paddingRight: '8px',
     borderRadius: '20px',
-    cursor: 'pointer',
     marginButtom: '8px'
   }
 
@@ -78,23 +74,15 @@ const PostView = (props) => {
   }
 
   const getPost = (communityId, postId) => {
-    console.log(`Trying to open post information, send GET request to /communities/${communityId}/posts/${postId}`);
     navigate(`/communities/${communityId}/posts/${postId}`)
   }
 
   const getUser = (userId) => {
-    console.log(`Trying to open user profile, send GET request to users/${userId}`)
     navigate(`/profiles/${userId}`)
   }
 
   const getCommunity = (communtiyId) => {
-    console.log(`Trying to open community, send GET request to communitites/${communtiyId}`)
     navigate(`/communities/${communtiyId}`)
-  }
-
-  const getPostType = (postTypeId) => {
-    console.log(`Trying to open posts with data types, send GET request to posts/?postType=${postTypeId}`)
-    //navigate(`/post-types/detail/${postTypeId}`)
   }
 
   const reportPost = (postId) => {
@@ -102,11 +90,11 @@ const PostView = (props) => {
   }
 
   const defineTag = async (tag) => {
-    const result = SearchWikidataRequest({ tag: tag })
-    if (result && result.search && result.search.length > 0) {
-      setTagDefinition(result.search[0].description)
+    const result = await SearchWikidataRequest({ tag: tag }, loginState.token, dispatch)
+    if (result.data && result.data.length > 0) {
+      setTagDefinition(result.data[0].description)
     } else  {
-      setTagDefinition(`No definition found for ${tag}.`)
+      setTagDefinition(`No definition found for ${tag.name}.`)
     }
     
   }
@@ -155,26 +143,22 @@ const PostView = (props) => {
                         {props.postObj.community.name}
                       </strong>
                     </Space>
-                    {/* 
                     • {props.postObj.date} •
-                    <strong
-                      style={postTypeStyle}
-                      onClick={() => getPostType(props.postObj.postType.id)}>
-                      {props.postObj.postType.name}
+                    <strong style={postTypeStyle}>
+                      <span>{props.postObj.postType}</span>
                     </strong>
-                    */}
                   </Space>
                 </Col>
                 <Space size='0px'>
                   {props.postObj.tags.map(tag => {
                     return (
-                      <Popover content={tagDefinition} title={tag}>
+                      <Popover content={tagDefinition} title={tag.name}>
                         <Tag
                           color="#6f74dd"
                           onMouseEnter={() => defineTag(tag)}
                           onMouseLeave={() => cancelTag()}
                           style={{ cursor: 'pointer' }}>
-                          {tag}
+                          {tag.name}
                         </Tag> </Popover>
                     )
                   })

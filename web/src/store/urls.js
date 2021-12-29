@@ -35,4 +35,4 @@ export const GET_PROFILE_OTHER_ENDPOINT = `${BASE_URL}profile/other`;
 export const GET_PROFILE_SETTINGS_ENDPOINT = `${BASE_URL}profile/settings`;
 export const POST_PROFILE_SETTINGS_ENDPOINT = `${BASE_URL}profile/settings`;
 
-export const SEARCH_WIKIDATA_ENDPOINT = `https://www.wikidata.org/w/api.php`;
+export const SEARCH_WIKIDATA_ENDPOINT = `${BASE_URL}wikidata`;

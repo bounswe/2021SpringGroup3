@@ -385,9 +385,9 @@ export const PostProfileSettings = async (info, token, dispatch) => {
   }
 }
 
-export const SearchWikidata = async (info) => {
+export const SearchWikidata = async (info, token, dispatch) => {
 
-  const response = await searchWikidata(info);
+  const response = await searchWikidata(info, token);
   if(response.status === 200 || response.status === 201){
     return response;
 
