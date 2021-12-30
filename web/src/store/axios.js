@@ -22,6 +22,7 @@ import {
   DELETE_COMMUNITY_ENDPOINT,
   CREATE_POST_ENDPOINT,
   GET_POSTS_ENDPOINT,
+  SEARCH_POSTS_ENDPOINT,
   GET_POSTTYPES_ENDPOINT,
   GET_POSTTYPE_DETAIL_ENDPOINT,
   GET_POST_PAGE_ENDPOINT,
@@ -31,7 +32,8 @@ import {
   POST_PROFILE_SETTINGS_ENDPOINT,
   GET_PROFILE_OTHER_ENDPOINT,
   LIKE_POST_ENDPOINT,
-  POST_COMMENT_ENDPOINT
+  POST_COMMENT_ENDPOINT,
+  SEARCH_WIKIDATA_ENDPOINT
 } from './urls';
 
 export async function login(info) {
@@ -176,6 +178,7 @@ export async function searchUsers(info, token) {
       },
     }
     const response = await axios.get(SEARCH_USERS_ENDPOINT + '?query=' + info.query + '&communityId=' + info.communityId, { ...header });
+    console.log(response)
     return response;
   } catch (error) {
     console.log(error);
@@ -552,7 +555,31 @@ export async function getCommunityPosts(info) {
         'authorization': `${info.token}`
       },
     }
-    const response = await axios.get(GET_POSTS_ENDPOINT + "?communityId=" + info.id, { ...header });
+    const response = await axios.get(GET_POSTS_ENDPOINT + "?communityId=" + info.id + (info.sortBy ? "&sortBy=" +  info.sortBy : ""), { ...header });
+    console.log(response)
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function searchCommunityPosts(info, token) {
+  try {
+    const header = {
+      headers: {
+        'x-platform': 'WEB',
+        'accept': '*/*',
+        'authorization': token
+      },
+    }
+    const response = await axios.get(SEARCH_POSTS_ENDPOINT 
+      + "?communityId=" + info.communityId 
+      + (info.tag ? "&tag=" +  info.tag : "") 
+      + (info.postTypeId ? "&postTypeId=" +  info.postTypeId : "")
+      + (info.sortBy ? "&sortBy=" +  info.sortBy : "")
+      , { ...header });
     console.log(response)
     return response;
   } catch (error) {
@@ -572,7 +599,6 @@ export async function getPostPage(info) {
       },
     }
     const response = await axios.get(GET_POST_PAGE_ENDPOINT + "?communityId=" + info.communityId + "&postId=" + info.postId, { ...header });
-    console.log(response)
     return response;
   } catch (error) {
     console.log(error);
@@ -591,7 +617,6 @@ export async function getProfileSettings(info) {
       },
     }
     const response = await axios.get(GET_PROFILE_SETTINGS_ENDPOINT, { ...header });
-    console.log(response)
     return response;
   } catch (error) {
     console.log(error);
@@ -609,7 +634,6 @@ export async function postProfileSettings(info, token) {
         'authorization': `${token}`
       },
     }
-    console.log(info)
     const response = await axios.post(POST_PROFILE_SETTINGS_ENDPOINT, { ...info }, { ...header });
     return response;
   } catch (error) {
@@ -628,7 +652,6 @@ export async function likePost(info, token) {
         'authorization': `${token}`
       },
     }
-    console.log(info)
     const response = await axios.post(LIKE_POST_ENDPOINT + "?postId=" + info.postId, { ...info }, { ...header });
     return response;
   } catch (error) {
@@ -647,7 +670,6 @@ export async function dislikePost(info, token) {
         'authorization': `${token}`
       },
     }
-    console.log(info)
     const response = await axios.delete(LIKE_POST_ENDPOINT + "?postId=" + info.postId, { ...info }, { ...header });
     return response;
   } catch (error) {
@@ -666,7 +688,6 @@ export async function postComment(info, body, token){
         'authorization': `${token}`
       },
     }
-    console.log(info)
     const response = await axios.post(POST_COMMENT_ENDPOINT + "?postId=" + info.postId, { ...body }, { ...header });
     return response;
   } catch (error) {
@@ -675,3 +696,24 @@ export async function postComment(info, body, token){
     return error
   }
 }
+
+export async function searchWikidata(info, token) {
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    const response = await axios.get(SEARCH_WIKIDATA_ENDPOINT + `?query=${info.tag.id}`, { ... header });
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+  
+

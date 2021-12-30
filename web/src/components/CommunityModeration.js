@@ -147,9 +147,7 @@ const CommunityModeration = (props) => {
                 message: `Accepted join request of ${user.username}.`
             });
         } catch (err) {
-            notification.error({
-                message: `An error occured.`,
-            });
+            message.error('An error occured');
         }
     }
 
@@ -162,9 +160,7 @@ const CommunityModeration = (props) => {
                 message: `Rejected join request of ${user.username}.`,
             });
         } catch (err) {
-            notification.error({
-                message: `An error occured.`,
-            });
+            message.error('An error occured');
         }
     }
 
@@ -177,9 +173,7 @@ const CommunityModeration = (props) => {
                 message: `Accepted mod request of ${user.username}.`,
             });
         } catch (err) {
-            notification.error({
-                message: `An error occured.`,
-            });
+            message.error('An error occured');
         }
     }
 
@@ -192,9 +186,7 @@ const CommunityModeration = (props) => {
                 message: `Rejected mod request of ${user.username}.`,
             });
         } catch (err) {
-            notification.error({
-                message: `An error occured.`,
-            });
+            message.error('An error occured');
         }
     }
 
@@ -207,9 +199,7 @@ const CommunityModeration = (props) => {
                 message: `Kicked ${user.username} from ${props.name}.`,
             });
         } catch (err) {
-            notification.error({
-                message: `An error occured.`,
-            });
+            message.error('An error occured');
         }
     }
 
@@ -222,9 +212,7 @@ const CommunityModeration = (props) => {
             });
             navigate(`/`)
         } catch (err) {
-            notification.error({
-                message: `An error occured.`,
-            });
+            message.error('An error occured');
         }
     }
 

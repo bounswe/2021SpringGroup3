@@ -62,7 +62,7 @@ function HomePage() {
                   {
                     posts.length > 0 ? posts :
                       <Col span={24} align="middle" style={{ "marginTop": "50px" }}>
-                        <strong>Please search communities and join the ones you are interested in. Then, you can see posts in your home page.</strong>
+                        <strong>To see posts in your home page, please join a community.</strong>
                       </Col>
                   }
                 </div>

@@ -1,66 +1,58 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { React, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, Row, Col, Button, Typography, Space, Avatar, notification } from 'antd';
+import { Card, Row, Col, Button, Typography, Space, Avatar, notification, Tag, Popover  } from 'antd';
 import '../App.css';
 import FieldContent from './FieldContent';
 import { LikePost as LikePostRequest, DislikePost as DislikePostRequest, DislikePost } from '../utils/helper';
 
-
-import React from "react";
-
 import { LikeOutlined, LikeFilled, CommentOutlined, FlagOutlined, FlagFilled } from '@ant-design/icons';
 import 'antd/dist/antd.css';
+
+import { SearchWikidata as SearchWikidataRequest } from '../utils/helper';
 
 const { Text } = Typography;
 
 const PostView = (props) => {
 
   const loginState = useSelector((state) => state.login);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  props.postObj.postType = {
-    color: '#6e74dc',
-    name: 'Post Type',
-    id: ''
-  }
+  const dispatch = useDispatch();
 
   let contentFields = [];
 
-  contentFields.push(... props.postObj.textFieldNames.map((fieldContent) => {
+  contentFields.push(...props.postObj.textFieldNames.map((fieldContent) => {
     fieldContent.type = 'text';
     return <FieldContent fieldContent={fieldContent} />
   }))
 
-  contentFields.push(... props.postObj.numberFieldNames.map((fieldContent) => {
+  contentFields.push(...props.postObj.numberFieldNames.map((fieldContent) => {
     fieldContent.type = 'number';
     return <FieldContent fieldContent={fieldContent} />
   }))
 
-  contentFields.push(... props.postObj.dateFieldNames.map((fieldContent) => {
+  contentFields.push(...props.postObj.dateFieldNames.map((fieldContent) => {
     fieldContent.type = 'date';
     return <FieldContent fieldContent={fieldContent} />
   }))
 
-  contentFields.push(... props.postObj.linkFieldNames.map((fieldContent) => {
+  contentFields.push(...props.postObj.linkFieldNames.map((fieldContent) => {
     fieldContent.type = 'link';
     return <FieldContent fieldContent={fieldContent} />
   }))
 
-  contentFields.push(... props.postObj.locationFieldNames.map((fieldContent) => {
+  contentFields.push(...props.postObj.locationFieldNames.map((fieldContent) => {
     fieldContent.type = 'location';
     return <FieldContent fieldContent={fieldContent} />
   }))
 
   let postTypeStyle = {
-    backgroundColor: props.postObj.postType.color,
+    backgroundColor: '#6f74dd',
     color: '#ffffff',
     paddingLeft: '8px',
     paddingRight: '8px',
     borderRadius: '20px',
-    cursor: 'pointer',
     marginButtom: '8px'
   }
 
@@ -71,6 +63,7 @@ const PostView = (props) => {
   }
 
   const [isLiked, setLiked] = useState(props.postObj.isLiked)
+  const [tagDefinition, setTagDefinition] = useState('')
 
   const likePost = async (likedPostId) => {
     console.log(`Trying to like post, send a POST request to posts/${likedPostId}/likes`);
@@ -110,27 +103,33 @@ const PostView = (props) => {
   }
 
   const getPost = (communityId, postId) => {
-    console.log(`Trying to open post information, send GET request to /communities/${communityId}/posts/${postId}`);
     navigate(`/communities/${communityId}/posts/${postId}`)
   }
 
   const getUser = (userId) => {
-    console.log(`Trying to open user profile, send GET request to users/${userId}`)
     navigate(`/profiles/${userId}`)
   }
 
   const getCommunity = (communtiyId) => {
-    console.log(`Trying to open community, send GET request to communitites/${communtiyId}`)
     navigate(`/communities/${communtiyId}`)
-  }
-
-  const getPostType = (postTypeId) => {
-    console.log(`Trying to open posts with data types, send GET request to posts/?postType=${postTypeId}`)
-    //navigate(`/post-types/detail/${postTypeId}`)
   }
 
   const reportPost = (postId) => {
     console.log(`Trying to report post, open post report selection component with ${postId}`)
+  }
+
+  const defineTag = async (tag) => {
+    const result = await SearchWikidataRequest({ tag: tag }, loginState.token, dispatch)
+    if (result.data && result.data.length > 0) {
+      setTagDefinition(result.data[0].description)
+    } else  {
+      setTagDefinition(`No definition found for ${tag.name}.`)
+    }
+    
+  }
+
+  const cancelTag = () => {
+    setTagDefinition('')
   }
 
   return (
@@ -140,10 +139,10 @@ const PostView = (props) => {
           <Space size={'middle'}>
             <Col>
 
-              <Avatar size={50} style={{cursor: 'pointer'}} src={props.postObj.user.profilePhotoUrl} onClick={() => getUser(props.postObj.user.id)} />
+              <Avatar size={50} style={{ cursor: 'pointer' }} src={props.postObj.user.profilePhotoUrl} onClick={() => getUser(props.postObj.user.id)} />
             </Col>
             <Col>
-              <Row>
+              {/*<Row>
                 <Col>
                   <Space size={'large'}>
                     <h3><strong
@@ -153,8 +152,8 @@ const PostView = (props) => {
                     </strong></h3>
                   </Space>
                 </Col>
-              </Row>
-              <Row>
+              </Row>*/}
+              <Space direction='vertical'>
                 <Col>
                   <Space size={'small'}>
                     <Space size={'small'}>
@@ -173,21 +172,33 @@ const PostView = (props) => {
                         {props.postObj.community.name}
                       </strong>
                     </Space>
-                    • {props.postObj.date} • 
-                    <strong
-                      style={postTypeStyle}
-                      onClick={() => getPostType(props.postObj.postType.id)}>
-                      {props.postObj.postType.name}
+                    • {props.postObj.date} •
+                    <strong style={postTypeStyle}>
+                      <span>{props.postObj.postType}</span>
                     </strong>
                   </Space>
                 </Col>
-              </Row>
-
+                <Space size='0px'>
+                  {props.postObj.tags.map(tag => {
+                    return (
+                      <Popover content={tagDefinition} title={tag.name}>
+                        <Tag
+                          color="#6f74dd"
+                          onMouseEnter={() => defineTag(tag)}
+                          onMouseLeave={() => cancelTag()}
+                          style={{ cursor: 'pointer' }}>
+                          {tag.name}
+                        </Tag> </Popover>
+                    )
+                  })
+                  }
+                </Space>
+              </Space>
             </Col>
           </Space>
         </Row>
         <Row>
-          <Card size="small" style={{ width: '100%', borderRadius: '10px', borderColor: '#ffffff', marginTop: "10px", marginBottom: "10px"}}>
+          <Card size="small" style={{ width: '100%', borderRadius: '10px', borderColor: '#ffffff', marginTop: "10px", marginBottom: "10px" }}>
             <Space direction="vertical">
               {contentFields}
             </Space>
