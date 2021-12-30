@@ -355,7 +355,10 @@ exports.advancedSearch = async ({
       let isValid = true;
       numberFields.forEach((t) => {
         const numberField = p.numberFields.find((te) => te.name === t.name);
-        if (numberField.value < t.value.start || numberField.value > t.value.end) {
+        if (t.value.start && numberField.value < t.value.start) {
+          isValid = false;
+        }
+        if (t.value.end && numberField.value > t.value.end) {
           isValid = false;
         }
       });
@@ -381,7 +384,10 @@ exports.advancedSearch = async ({
       let isValid = true;
       dateFields.forEach((t) => {
         const dateField = p.dateFields.find((te) => te.name === t.name);
-        if (new Date(dateField.value) < new Date(t.value.start) || new Date(dateField.value) > new Date(t.value.end)) {
+        if (t.value.start && new Date(dateField.value) < new Date(t.value.start)) {
+          isValid = false;
+        }
+        if (t.value.end && new Date(dateField.value) > new Date(t.value.end)) {
           isValid = false;
         }
       });
@@ -394,7 +400,6 @@ exports.advancedSearch = async ({
       let isValid = true;
       locationFields.forEach((t) => {
         const locationField = p.locationFields.find((te) => te.name === t.name);
-        console.log(locationField);
         const locationFieldCoords = {
           lat: locationField.value.geo.latitude,
           lng: locationField.value.geo.longitude,

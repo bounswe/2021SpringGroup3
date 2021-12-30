@@ -115,8 +115,8 @@ exports.advancedSearch = {
           Joi.object().keys({
             name: Joi.string().required(),
             value: {
-              start: Joi.number().required(),
-              end: Joi.number().required(),
+              start: Joi.number(),
+              end: Joi.number().when('start', { is: null, then: Joi.number().required(), otherwise: Joi.number() }),
             },
           })
         )
@@ -126,8 +126,10 @@ exports.advancedSearch = {
           Joi.object().keys({
             name: Joi.string().required(),
             value: {
-              start: Joi.string().isoDate().required(),
-              end: Joi.string().isoDate().required(),
+              start: Joi.string().isoDate(),
+              end: Joi.string()
+                .isoDate()
+                .when('start', { is: null, then: Joi.string().isoDate().required(), otherwise: Joi.string().isoDate() }),
             },
           })
         )
