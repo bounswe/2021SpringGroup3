@@ -4,7 +4,7 @@ const httpStatus = require('http-status');
 const short = require('short-uuid');
 const fs = require('fs-extra');
 const { formatters, baseUtil } = require('../utils');
-const { User, Community, Post, Comment, UserACS } = require('../models');
+const { User, Community, Post, Comment, UserACS, CommunityACS, PostACS, CommentACS } = require('../models');
 const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
 const communityService = require('./community.service');
@@ -190,7 +190,7 @@ exports.search = async ({ token, query, communityId }) => {
   })
     .sort({ followerCount: -1 })
     .lean();
-  return formatters. formatUsers(users, token.user);
+  return formatters.formatUsers(users, token.user);
 };
 
 exports.recommend = async ({ token }) => {
@@ -319,4 +319,49 @@ exports.rejectFollowRequest = async ({ token, userId }) => {
     },
   });
   return exports.getProfileSettings({ token });
+};
+
+exports.getNotifications = async ({ token }) => {
+  let notifications = await UserACS.find({
+    object: token.user._id,
+  })
+    .populate('actor', 'object')
+    .lean();
+
+  notifications = notifications.concat(
+    await CommunityACS.find({
+      target: token.user._id,
+    })
+      .populate('actor', 'object')
+      .lean()
+  );
+
+  const posts = await Post.find({ creator: token.user._id });
+  notifications = notifications.concat(
+    await PostACS.find({
+      object: { $in: posts },
+    })
+      .populate('actor', 'object')
+      .lean()
+  );
+
+  const communities = await Community.find({ moderators: { $in: [token.user._id] } });
+  notifications = notifications.concat(
+    await CommunityACS.find({
+      object: { $in: communities },
+    })
+      .populate('actor', 'object')
+      .lean()
+  );
+
+  const comments = await Comment.find({ user: token.user._id });
+  notifications = notifications.concat(
+    await CommentACS.find({
+      object: { $in: comments },
+    })
+      .populate('actor', 'object')
+      .lean()
+  );
+  notifications = notifications.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  return formatters.formatNotifications(notifications, token.user);
 };

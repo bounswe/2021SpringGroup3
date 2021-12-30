@@ -93,3 +93,10 @@ exports.approveFollowRequest = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.getNotifications = catchAsync(async (req, res) => {
+  const result = await profileService.getNotifications({
+    token: req.token,
+  });
+  res.send(result);
+});
