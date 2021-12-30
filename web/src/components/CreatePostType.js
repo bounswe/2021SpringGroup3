@@ -51,8 +51,8 @@ const CreatePostType = (props) => {
     values.textFieldNames = values.fields.filter(field => field.type == 'text').map(item => { return item.name })
     values.numberFieldNames = values.fields.filter(field => field.type == 'number').map(item => { return item.name })
     values.linkFieldNames = values.fields.filter(field => field.type == 'link').map(item => { return item.name })
-    values.locationFieldNames = values.fields.filter(field => field.type == 'date').map(item => { return item.name })
-    values.dateFieldNames = values.fields.filter(field => field.type == 'location').map(item => { return item.name })
+    values.dateFieldNames = values.fields.filter(field => field.type == 'date').map(item => { return item.name })
+    values.locationFieldNames= values.fields.filter(field => field.type == 'location').map(item => { return item.name })
 
     delete values.fields;
 

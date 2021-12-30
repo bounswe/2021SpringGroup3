@@ -271,7 +271,6 @@ export async function getCommunities(info, token) {
         'authorization': `${token}`
       },
     }
-    console.log(token)
     const response = await axios.get(GET_COMMUNITIES_ENDPOINT + "?isMember=" + info.isMember, { ...header });
     console.log(response)
     return response;
@@ -706,7 +705,7 @@ export async function searchWikidata(info, token) {
         'authorization': `${token}`
       },
     }
-    const response = await axios.get(SEARCH_WIKIDATA_ENDPOINT + `?query=${info.tag.id}`, { ... header });
+    const response = await axios.get(SEARCH_WIKIDATA_ENDPOINT + `?query=${info.tag.id ? info.tag.id : info.tag}`, { ... header });
     return response;
   } catch (error) {
     console.log(error);

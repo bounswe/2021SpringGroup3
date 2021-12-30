@@ -37,7 +37,7 @@ const GetPostTypes = (props) => {
 
     return ( 
         <Select 
-            allowClear="true"
+            allowClear={!props.isCreatePost}
             onClear={handleClear}
             disabled={!props.id} 
             defaultValue="Post Types" 
