@@ -12,7 +12,7 @@ import { GetHomePagePosts as GetHomePagePostsRequest } from "../utils/helper";
 import { GetRecommendedUsers as GetRecommendedUsersRequest } from "../utils/helper";
 import { GetRecommendedCommunities as GetRecommendedCommunitiesRequest } from "../utils/helper";
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Footer, Content } = Layout;
 
 function HomePage() {
 
@@ -20,7 +20,8 @@ function HomePage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [result, setResult] = useState('');
+  const { id } = useParams('');
+
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
   const [communities, setCommunities] = useState([]);
@@ -28,9 +29,11 @@ function HomePage() {
   useEffect(() => {
     GetHomePagePostsRequest(loginState.token, dispatch)
       .then(posts => {
-        setPosts(posts.data.map((post) => {
-          return <div style={{ marginBottom: '20px' }}><PostView postObj={post} /></div>
-        }))
+        if (posts.data) {
+          setPosts(posts.data.filter(p => p.community.id !== id).map((post) => {
+            return <div style={{ marginBottom: '20px' }}><PostView postObj={post} /></div>
+          }))
+        }
       })
     GetRecommendedUsersRequest(loginState.token, dispatch)
       .then(users => {
@@ -45,7 +48,7 @@ function HomePage() {
   return (
     <>
       <Layout>
-        <Header style={{ backgroundColor: '#3949ab' }}><NavBar /></Header>
+        <Header style={{ backgroundColor: '#3949ab' }}><NavBar leftCommunityId={id} /></Header>
         <Layout>
           <Content>
             <Row>
