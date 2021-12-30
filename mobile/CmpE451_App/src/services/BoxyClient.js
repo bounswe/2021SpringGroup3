@@ -612,3 +612,25 @@ const returnResponse = async response => {
     data: response,
   };
 };
+
+export const getSuggesstedTags = async tag => {
+  console.log('tag: ', tag);
+  var myHeaders = new Headers();
+  myHeaders.append('X-Platform', 'ANDROID');
+  myHeaders.append('Authorization', await getToken());
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow',
+  };
+
+  return fetch(
+    'https://api.cmpegroupthree.store/wikidata?query=' + tag,
+    requestOptions,
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => console.log('error', error));
+};
