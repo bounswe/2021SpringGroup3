@@ -9,8 +9,11 @@ import { login, logout, register,
   createPostType, getPostTypes, getPostTypeDetail, getProfile,
   getProfileSettings,
   postProfileSettings, 
-  getProfileOther,
-  searchWikidata } from '../store/axios';
+  getProfileOther, 
+  likePost,
+  dislikePost,
+  postComment,
+  searchWikidata} from '../store/axios';
 
 export const Login = async (info, dispatch) => {
 
@@ -392,6 +395,42 @@ export const SearchWikidata = async (info, token, dispatch) => {
     return response;
 
   } else {
+
+    return {}
+  }
+}
+
+export const LikePost = async (info, token, dispatch) => {
+
+  const response = await likePost(info, token);
+  if(response.status === 200 || response.status === 201){
+    return response;
+
+  }else{
+
+    return {}
+  }
+}
+
+export const DislikePost = async (info, token, dispatch) => {
+
+  const response = await dislikePost(info, token);
+  if(response.status === 200 || response.status === 201){
+    return response;
+
+  }else{
+
+    return {}
+  }
+}
+
+export const PostComment = async (info, body, token, dispatch) => {
+
+  const response = await postComment(info, body, token);
+  if(response.status === 200 || response.status === 201){
+    return response;
+
+  }else{
 
     return {}
   }

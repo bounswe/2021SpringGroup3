@@ -31,6 +31,8 @@ import {
   GET_PROFILE_SETTINGS_ENDPOINT,
   POST_PROFILE_SETTINGS_ENDPOINT,
   GET_PROFILE_OTHER_ENDPOINT,
+  LIKE_POST_ENDPOINT,
+  POST_COMMENT_ENDPOINT,
   SEARCH_WIKIDATA_ENDPOINT
 } from './urls';
 
@@ -597,7 +599,6 @@ export async function getPostPage(info) {
       },
     }
     const response = await axios.get(GET_POST_PAGE_ENDPOINT + "?communityId=" + info.communityId + "&postId=" + info.postId, { ...header });
-    console.log(response)
     return response;
   } catch (error) {
     console.log(error);
@@ -616,7 +617,6 @@ export async function getProfileSettings(info) {
       },
     }
     const response = await axios.get(GET_PROFILE_SETTINGS_ENDPOINT, { ...header });
-    console.log(response)
     return response;
   } catch (error) {
     console.log(error);
@@ -634,8 +634,61 @@ export async function postProfileSettings(info, token) {
         'authorization': `${token}`
       },
     }
-    console.log(info)
     const response = await axios.post(POST_PROFILE_SETTINGS_ENDPOINT, { ...info }, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function likePost(info, token) {
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    const response = await axios.post(LIKE_POST_ENDPOINT + "?postId=" + info.postId, { ...info }, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function dislikePost(info, token) {
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    const response = await axios.delete(LIKE_POST_ENDPOINT + "?postId=" + info.postId, { ...info }, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function postComment(info, body, token){
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    const response = await axios.post(POST_COMMENT_ENDPOINT + "?postId=" + info.postId, { ...body }, { ...header });
     return response;
   } catch (error) {
     console.log(error);
@@ -661,3 +714,6 @@ export async function searchWikidata(info, token) {
     return error
   }
 }
+
+  
+

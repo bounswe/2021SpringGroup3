@@ -35,4 +35,6 @@ export const GET_PROFILE_OTHER_ENDPOINT = `${BASE_URL}profile/other`;
 export const GET_PROFILE_SETTINGS_ENDPOINT = `${BASE_URL}profile/settings`;
 export const POST_PROFILE_SETTINGS_ENDPOINT = `${BASE_URL}profile/settings`;
 
+export const LIKE_POST_ENDPOINT = `${BASE_URL}posts/like`;
+export const POST_COMMENT_ENDPOINT = `${BASE_URL}posts/comment`;
 export const SEARCH_WIKIDATA_ENDPOINT = `${BASE_URL}wikidata`;
