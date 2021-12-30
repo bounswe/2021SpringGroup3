@@ -206,7 +206,7 @@ exports.formatNotification = function (notification, user) {
   const index = notification.summary.indexOf(user.username);
   let sum = notification.summary;
   if(index != -1){
-    let mid = notification.summary.includes("'s") ? 'your' : 'you';
+    let mid = notification.summary.includes(user.username+" 's") ? 'your' : 'You';
     const startIndex = mid === 'your' ? index + user.username.length + 3 : index+user.username.length
     sum = notification.summary.slice(0, index) + mid + notification.summary.slice(startIndex)
   }

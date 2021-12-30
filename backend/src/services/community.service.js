@@ -167,7 +167,7 @@ exports.removeUserFromCommunity = async ({ user, userId, communityId }) => {
       await Community.findByIdAndDelete(community._id);
     }
   }
-  const user2 = User.findById(userId);
+  const user2 = await User.findById(userId).lean();
   const acs = await CommunityACS.create({
     summary: `${user.username} removed ${user2.username} from the community ${community.name}`,
     type: 'Remove',
@@ -218,7 +218,7 @@ exports.kickFromCommunity = async ({ token, userId, communityId }) => {
     },
   });
   community = await populateCommunity(communityId);
-  const user2 = User.findById(userId);
+  const user2 = await User.findById(userId).lean();
   const acs = await CommunityACS.create({
     summary: `${token.user.username} removed ${user2.username} from the community ${community.name}`,
     type: 'Remove',
@@ -252,7 +252,7 @@ exports.approveJoinRequest = async ({ token, userId, communityId }) => {
             memberCount: 1,
           },
         });
-        const user2 = User.findById(userId);
+        const user2 = await User.findById(userId).lean();
         const acs = await CommunityACS.create({
           summary: `${token.user.username} accepted ${user2.username} 's join request to the community ${community.name}`,
           type: 'Accept',
@@ -310,7 +310,7 @@ exports.rejectJoinRequest = async ({ token, userId, communityId }) => {
           },
           { new: true }
         );
-        const user2 = User.findById(userId);
+        const user2 = await User.findById(userId).lean();
         const acs = await CommunityACS.create({
           summary: `${token.user.username} rejected ${user2.username} 's join request to the community ${community.name}`,
           type: 'Reject',
@@ -402,7 +402,7 @@ exports.rejectModeratorRequest = async ({ token, userId, communityId }) => {
             pendingModerators: userId,
           },
         });
-        const user2 = User.findById(userId);
+        const user2 = await User.findById(userId).lean();
         const acs = await CommunityACS.create({
           summary: `${token.user.username} rejected ${user2.username} 's moderator request to community ${community.name}`,
           type: 'Reject',
@@ -487,7 +487,7 @@ exports.approveModeratorRequest = async ({ token, userId, communityId }) => {
             pendingModerators: userId,
           },
         });
-        const user2 = User.find(userId);
+        const user2 = await User.findById(userId).lean();
         const acs = await CommunityACS.create({
           summary: `${token.user.username} accepted ${user2.username} 's moderator request to the community ${community.name}`,
           type: 'Offer',
