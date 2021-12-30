@@ -152,6 +152,35 @@ exports.likePost = async ({ token, postId }) => {
   return formatters.formatPostDetail(post, token.user);
 };
 
+exports.unlikePost = async ({ token, postId }) => {
+  let post = await Post.findById(postId).populate(['creator', 'community', 'postType']).lean();
+  if (!post) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post does not exist');
+  }
+  if (!baseUtil.checkIfObjectIdArrayIncludesId(post.community.members, token.user._id.toString())) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You need to be a member of this community to like the post');
+  }
+  post = await Post.findByIdAndUpdate(
+    post._id,
+    {
+      $pull: {
+        likers: token.user._id,
+      },
+    },
+    { new: true }
+  )
+    .populate(['creator', 'community', 'postType'])
+    .lean();
+  const acs = await PostACS.create({
+    summary: `${token.user.username} removed like from a post`,
+    type: 'Remove like',
+    actor: token.user,
+    object: post,
+  });
+  console.log(acs);
+  return formatters.formatPostDetail(post, token.user);
+};
+
 exports.deletePost = async ({ token, postId }) => {
   const post = await Post.findById(postId).populate(['community']).lean();
   if (!post) {

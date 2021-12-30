@@ -12,6 +12,7 @@ router
   .get(validate(postValidation.getPosts), postController.getPosts);
 router.route('/detail').get(validate(postValidation.getPostDetail), postController.getPostDetail);
 router.route('/like').post(validate(postValidation.likePost), postController.likePost);
+router.route('/unlike').post(validate(postValidation.unlikePost), postController.unlikePost);
 router.route('/comment').post(validate(postValidation.createComment), postController.createComment);
 router.route('/homepage').get(postController.getHomepage);
 router.route('/search').get(validate(postValidation.search), postController.search);

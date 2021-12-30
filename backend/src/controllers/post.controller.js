@@ -93,3 +93,12 @@ exports.advancedSearch = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.unlikePost = catchAsync(async (req, res) => {
+  const result = await postService.unlikePost({
+    token: req.token,
+    communityId: req.query.communityId,
+    postId: req.query.postId,
+  });
+  res.send(result);
+});
