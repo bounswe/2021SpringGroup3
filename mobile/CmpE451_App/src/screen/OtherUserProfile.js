@@ -7,10 +7,13 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
+import {COLORS} from '../theme/colors';
+import {Button} from 'react-native-elements';
 import UnderConstruction from '../component/UnderConstruction';
 import * as Request from '../services/BoxyClient';
 import {
@@ -56,8 +59,8 @@ export default function OtherUserProfile({navigation, route}) {
   }, [isFocused]);
 
   async function handleFollow() {
-    let response = await client.followUser({
-      communityId: PAGE_VARIABLES.userId,
+    let response = await Request.followUser({
+      userId: id,
     });
     if (response.status === 200) {
       setIsFollower(response.data.isFollower);
@@ -67,8 +70,8 @@ export default function OtherUserProfile({navigation, route}) {
     }
   }
   async function handleUnfollow() {
-    let response = await client.unfollowUser({
-      communityId: PAGE_VARIABLES.userId,
+    let response = await Request.unfollowUser({
+      userId: id,
     });
     if (response.status === 200) {
       setIsFollower(response.data.isFollower);

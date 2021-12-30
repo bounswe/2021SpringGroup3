@@ -625,7 +625,7 @@ export const searchPost = async ({communityId, tag = ''}) => {
     });
 };
 
-/*export const followUser = async ({userId}) => {
+export const followUser = async ({userId}) => {
   return fetch(BASE_URL + 'profile/follow?userId=' + userId, {
     method: 'POST',
     headers: {
@@ -635,6 +635,8 @@ export const searchPost = async ({communityId, tag = ''}) => {
     },
   })
     .then(response => {
+      console.log('userId ', userId);
+      console.log('response: ', response);
       return returnResponse(response);
     })
     .catch(error => {
@@ -659,7 +661,7 @@ export const unfollowUser = async ({userId}) => {
       console.info(error);
       ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
     });
-};*/
+};
 
 const returnResponse = async response => {
   const statusCode = response.status;
