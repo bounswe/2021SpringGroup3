@@ -2,15 +2,17 @@ import PropTypes from 'prop-types';
 import { React, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, Row, Col, Button, Typography, Space, Avatar, notification, Tag, Popover  } from 'antd';
+import { Card, Row, Col, Button, Typography, Space, Avatar, notification, Tag, Popover, message, Popconfirm } from 'antd';
 import '../App.css';
 import FieldContent from './FieldContent';
 import { LikePost as LikePostRequest, DislikePost as DislikePostRequest, DislikePost } from '../utils/helper';
 
-import { LikeOutlined, LikeFilled, CommentOutlined, FlagOutlined, FlagFilled } from '@ant-design/icons';
+import { LikeOutlined, LikeFilled, CommentOutlined, FlagOutlined, FlagFilled, ExclamationCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 
 import { SearchWikidata as SearchWikidataRequest } from '../utils/helper';
+import { DeletePost as DeletePostRequest } from '../utils/helper';
+
 
 const { Text } = Typography;
 
@@ -131,13 +133,26 @@ const PostView = (props) => {
     setTagDefinition('')
   }
 
+  const deletePost = async () => {
+    try {
+        let body = { postId: props.postObj.id }
+        const result = await DeletePostRequest(body, loginState.token, dispatch);
+        notification.success({
+            message: `Deleted post.`,
+        });
+        navigate('/home')
+    } catch (err) {
+        message.error('An error occured');
+    }
+  }
+
   return (
     <>
       <Card size="small" style={postCardStyle}>
         <Row>
+        <Col span={22}>
           <Space size={'middle'}>
             <Col>
-
               <Avatar size={50} style={{ cursor: 'pointer' }} src={props.postObj.user.profilePhotoUrl} onClick={() => getUser(props.postObj.user.id)} />
             </Col>
             <Col>
@@ -195,6 +210,21 @@ const PostView = (props) => {
               </Space>
             </Col>
           </Space>
+          </Col>
+          <Col span={2} align="right">
+            {(props.postObj.user.username == loginState.username || props.isModerator ) &&                 
+            <Popconfirm
+                    icon={<ExclamationCircleOutlined style={{ color: 'red' }} />}
+                    placement="left"
+                    title={`Are you sure that you want to delete this post?`}
+                    onConfirm={() => deletePost()}
+                    okText="Confirm Delete"
+                    cancelText="Cancel"
+                >
+                    <Button type='primary' shape="circle" style={{ borderColor: "red", backgroundColor: "red" }} icon={<DeleteOutlined />}>
+                    </Button>
+                </Popconfirm>}
+          </Col>
         </Row>
         <Row>
           <Card size="small" style={{ width: '100%', borderRadius: '10px', borderColor: '#ffffff', marginTop: "10px", marginBottom: "10px" }}>
