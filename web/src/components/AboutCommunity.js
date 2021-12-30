@@ -70,12 +70,14 @@ const AboutCommunity = (props) => {
 
     const leave = async () => {
         try {
-            let body = { communityId: props.communityId }
-            const result = await LeaveCommunityRequest(body, loginState.token, dispatch);
-            notification.success({
-                message: `Left ${props.name} community.`,
-            });
-            navigate(`/`)
+            navigate(`/leftCommunity/${props.communityId}`)
+            setTimeout(async () => {
+                let body = { communityId: props.communityId }
+                const result = await LeaveCommunityRequest(body, loginState.token, dispatch);
+                notification.success({
+                    message: `Left ${props.name} community.`,
+                });
+            }, 1000);
         } catch (err) {
             message.error('An error occured');
         }

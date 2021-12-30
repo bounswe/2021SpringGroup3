@@ -311,7 +311,7 @@ export async function leaveCommunity(info, token) {
         'authorization': `${token}`
       },
     }
-    const response = await axios.post(LEAVE_COMMUNITY_ENDPOINT + "?communityId=" + info.communityId, { ...info }, { ...header });
+    const response = await axios.post(LEAVE_COMMUNITY_ENDPOINT + "?communityId=" + info.communityId, {}, { ...header });
     console.log(response)
     return response;
   } catch (error) {
@@ -599,6 +599,25 @@ export async function advancedSearch(info, token) {
       },
     }
     const response = await axios.post(ADVANCED_SEARCH_ENDPOINT, { ...info }, { ...header });
+    console.log(response)
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function deletePost(info, token) {
+  try {
+    const header = {
+      headers: {
+        'x-platform': 'WEB',
+        'accept': '*/*',
+        'authorization': token
+      },
+    }
+    const response = await axios.delete(GET_POSTS_ENDPOINT + `?postId=${info.postId}`, { ...header });
     console.log(response)
     return response;
   } catch (error) {

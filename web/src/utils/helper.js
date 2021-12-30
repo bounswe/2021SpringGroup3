@@ -5,7 +5,7 @@ import { login, logout, register,
   createCommunity, getCommunities, getCommunityPage,
   leaveCommunity, joinCommunity, joinCommunityModerator,
   acceptUser, rejectUser, acceptModerator, rejectModerator, kickUser, deleteCommunity,
-  createPost, getCommunityPosts, searchCommunityPosts, getPostPage, advancedSearch,
+  createPost, getCommunityPosts, searchCommunityPosts, getPostPage, advancedSearch, deletePost,
   createPostType, getPostTypes, getPostTypeDetail, getProfile,
   getProfileSettings,
   postProfileSettings, 
@@ -338,6 +338,18 @@ export const SearchCommunityPosts = async (info, token, dispatch) => {
 export const AdvancedSearch = async (info, token, dispatch) => {
 
   const response = await advancedSearch(info, token);
+  if(response.status === 200 || response.status === 201){
+    console.log(response.data)
+    return response
+  }else{
+
+    return {}
+  }
+}
+
+export const DeletePost = async (info, token, dispatch) => {
+
+  const response = await deletePost(info, token);
   if(response.status === 200 || response.status === 201){
     console.log(response.data)
     return response

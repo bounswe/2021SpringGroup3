@@ -38,12 +38,12 @@ function GetCommunityPage(props) {
     GetCommunityPageRequest({ id: id, token: loginState.token }, dispatch)
       .then(result => {
         setResult(result.data);
-      })
-    GetCommunityPostsRequest({ id: id, token: loginState.token }, dispatch)
-      .then(posts => {
-        setPosts(posts.data.map((post) => {
-          return <div style={{ marginBottom: '20px' }}><PostView postObj={post} /></div>
-        }))
+        GetCommunityPostsRequest({ id: id, token: loginState.token }, dispatch)
+        .then(posts => {
+          setPosts(posts.data.map((post) => {
+            return <div style={{ marginBottom: '20px' }}><PostView postObj={post} isModerator={result.data.isModerator} /></div>
+          }))
+        })
       })
   }, [id])
 

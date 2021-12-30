@@ -29,6 +29,7 @@ export default function RouteList() {
         <Route path="/register" exact element={<PublicRoute><RegistrationPage/></PublicRoute>} />
         <Route path="/confirmation" exact element={<PublicRoute><ConfirmationPage/></PublicRoute>} />
         <Route path="/home" exact element={<AuthRoute><HomePage/></AuthRoute>} />
+        <Route path="/leftCommunity/:id" element={<AuthRoute><HomePage /></AuthRoute>} />
         <Route path="/createCommunity" exact element={<AuthRoute><CreateCommunityPage /></AuthRoute>} />
         <Route path="/createPostType" exact element={<AuthRoute><CreatePostTypePage /></AuthRoute>} />
         <Route path="/createPost" element={<AuthRoute><CreatePostPage /></AuthRoute>} />
