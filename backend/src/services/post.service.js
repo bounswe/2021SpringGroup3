@@ -131,11 +131,17 @@ exports.likePost = async ({ token, postId }) => {
   if (!baseUtil.checkIfObjectIdArrayIncludesId(post.community.members, token.user._id.toString())) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'You need to be a member of this community to like the post');
   }
+  if (baseUtil.checkIfObjectIdArrayIncludesId(post.likers, token.user._id.toString())) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You have already liked the post');
+  }
   post = await Post.findByIdAndUpdate(
     post._id,
     {
       $addToSet: {
         likers: token.user._id,
+      },
+      $inc: {
+        likeCount: 1,
       },
     },
     { new: true }
@@ -160,11 +166,17 @@ exports.unlikePost = async ({ token, postId }) => {
   if (!baseUtil.checkIfObjectIdArrayIncludesId(post.community.members, token.user._id.toString())) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'You need to be a member of this community to like the post');
   }
+  if (!baseUtil.checkIfObjectIdArrayIncludesId(post.likers, token.user._id.toString())) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You need to like the post before you unlike');
+  }
   post = await Post.findByIdAndUpdate(
     post._id,
     {
       $pull: {
         likers: token.user._id,
+      },
+      $inc: {
+        likeCount: -1,
       },
     },
     { new: true }
