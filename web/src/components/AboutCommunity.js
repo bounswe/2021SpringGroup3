@@ -102,8 +102,8 @@ const AboutCommunity = (props) => {
                     <Space size='middle'>
                         {
                             props.isPrivate ?
-                                <Tooltip title="Private Community"><LockOutlined /></Tooltip> :
-                                <Tooltip title="Public Community"><TeamOutlined /></Tooltip>
+                                <Tooltip placement="topLeft" title="Private Community"><LockOutlined /></Tooltip> :
+                                <Tooltip placement="topLeft" title="Public Community"><TeamOutlined /></Tooltip>
                         }
                         {props.name}
                         <Text style={{ color: 'grey', fontSize: '14px' }}>{props.members === undefined ? "0 members" : props.members.length + ' members'}</Text>
