@@ -198,5 +198,6 @@ exports.formatComments = function (comments = [], user) {
     id: comment._id.toString(),
     text: comment.text,
     user: formatCreator(comment.user, baseUtil.checkIfObjectIdArrayIncludesId(comment.user.followers, user._id.toString())),
+    createdAt: comment.createdAt
   }));
 };
