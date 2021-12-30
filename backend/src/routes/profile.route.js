@@ -22,5 +22,6 @@ router.route('/follow').get(validate(profileValidation.follow), profileControlle
 router.route('/unfollow').get(validate(profileValidation.follow), profileController.unfollowProfile);
 router.route('/approve').get(validate(profileValidation.follow), profileController.approveFollowRequest);
 router.route('/reject').get(validate(profileValidation.follow), profileController.rejectFollowRequest);
+router.route('/notification').get(profileController.getNotifications);
 
 module.exports = router;

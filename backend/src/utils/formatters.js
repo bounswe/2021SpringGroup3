@@ -201,3 +201,22 @@ exports.formatComments = function (comments = [], user) {
     createdAt: comment.createdAt
   }));
 };
+
+exports.formatNotification = function (notification, user) {
+  const index = notification.summary.indexOf(user.username);
+  let sum = notification.summary;
+  if(index != -1){
+    let mid = notification.summary.includes("'s") ? 'your' : 'you';
+    const startIndex = mid === 'your' ? index + user.username.length + 3 : index+user.username.length
+    sum = notification.summary.slice(0, index) + mid + notification.summary.slice(startIndex)
+  }
+  return {
+    summary: sum,
+    createdAt: notification.createdAt,
+  };
+};
+exports.formatNotifications = function (notifications = [], user) {
+  return notifications.map((notification) => exports.formatNotification(notification, user));
+
+};
+
