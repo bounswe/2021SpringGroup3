@@ -23,6 +23,7 @@ import {
   CREATE_POST_ENDPOINT,
   GET_POSTS_ENDPOINT,
   SEARCH_POSTS_ENDPOINT,
+  ADVANCED_SEARCH_ENDPOINT,
   GET_POSTTYPES_ENDPOINT,
   GET_POSTTYPE_DETAIL_ENDPOINT,
   GET_POST_PAGE_ENDPOINT,
@@ -579,6 +580,25 @@ export async function searchCommunityPosts(info, token) {
       + (info.postTypeId ? "&postTypeId=" +  info.postTypeId : "")
       + (info.sortBy ? "&sortBy=" +  info.sortBy : "")
       , { ...header });
+    console.log(response)
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function advancedSearch(info, token) {
+  try {
+    const header = {
+      headers: {
+        'x-platform': 'WEB',
+        'accept': '*/*',
+        'authorization': token
+      },
+    }
+    const response = await axios.post(ADVANCED_SEARCH_ENDPOINT, { ...info }, { ...header });
     console.log(response)
     return response;
   } catch (error) {

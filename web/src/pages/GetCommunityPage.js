@@ -7,6 +7,7 @@ import NavBar from '../components/NavBar';
 import AboutCommunity from '../components/AboutCommunity';
 import GetPostTypes from '../components/GetPostTypes';
 import PostView from '../components/PostView';
+import PostFilter from '../components/PostFilter';
 import { useParams, useNavigate } from "react-router";
 import { useSelector, useDispatch } from 'react-redux';
 import { GetCommunityPage as GetCommunityPageRequest } from "../utils/helper";
@@ -20,36 +21,6 @@ const { Header, Footer, Sider, Content } = Layout;
 
 const { TabPane } = Tabs;
 
-const buttonStyle = {
-  backgroundColor: '#6f74dd',
-  borderColor: '#6f74dd',
-  color: '#ffffff',
-  cursor: 'pointer',
-  marginTop: '3px',
-  marginBottom: '3px',
-  fontWeight: 'bold'
-}
-
-const cancelButtonStyle = {
-  backgroundColor: '#ffffff',
-  borderColor: '#6f74dd',
-  color: '#6f74dd',
-  cursor: 'pointer',
-  marginTop: '3px',
-  marginBottom: '3px'
-}
-
-const postCardStyle = {
-  width: '100%',
-  backgroundColor: '#f8f8f8',
-  borderRadius: '20px'
-}
-
-function useForceUpdate() {
-  const [value, setValue] = useState(0); // integer state
-  return () => setValue(value => value + 1); // update the state to force render
-}
-
 function GetCommunityPage(props) {
 
   const loginState = useSelector((state) => state.login);
@@ -60,10 +31,7 @@ function GetCommunityPage(props) {
 
   const [result, setResult] = useState('');
   const [posts, setPosts] = useState([]);
-  const [filters, setFilters] = useState({});
-  const [postTypes, setPostTypes] = useState(<></>);
   const [searchedMembers, setSearchedMembers] = useState([]);
-  const [sortIndex, setSortIndex] = useState(0);
 
 
   useEffect(() => {
@@ -77,47 +45,7 @@ function GetCommunityPage(props) {
           return <div style={{ marginBottom: '20px' }}><PostView postObj={post} /></div>
         }))
       })
-    if (id) {
-      setPostTypes(
-        <>
-          <Col span={24}>
-            <Text><b>Filter by Post Type</b></Text>
-          </Col>
-          <GetPostTypes id={id} onSelectPostType={(selectedId) => { setFilters({ ...filters, postTypeId: selectedId }) }} />
-        </>
-      )
-    }
   }, [id])
-
-  const onFilter = async (values) => {
-    try {
-      let body = { communityId: id }
-      if (values.tag) body.tag = values.tag;
-      if (values.sortBy) body.sortBy = values.sortBy;
-      if (filters.postTypeId) body.postTypeId = filters.postTypeId;
-      if (!body.postTypeId && !body.tag) {
-        GetCommunityPostsRequest({ id: id, sortBy: values.sortBy, token: loginState.token }, dispatch)
-          .then(posts => {
-            setPosts(posts.data.map((post) => {
-              return <div style={{ marginBottom: '20px' }}><PostView postObj={post} /></div>
-            }))
-          })
-        message.success('All posts returned');
-        return
-      }
-      let posts = await SearchCommunityPostsRequest(body, loginState.token, dispatch);
-      if (!posts.data || posts.data.length < 1) {
-        message.warning('No posts found for given filters');
-        return
-      }
-      setPosts(posts.data.map((post) => {
-        return <div style={{ marginBottom: '20px' }}><PostView postObj={post} /></div>
-      }))
-      message.success('Posts filtered');
-    } catch (err) {
-      message.error('An error occured whie filtering');
-    }
-  }
 
   const searchMember = async (value) => {
     if (!value) {
@@ -126,10 +54,6 @@ function GetCommunityPage(props) {
     }
     let resultMembers = await SearchMembersRequest({ query: value, communityId: id }, loginState.token, dispatch);
     setSearchedMembers(resultMembers.data)
-  }
-
-  const onFilterFailed = async () => {
-    message.error('An error occured whie filtering');
   }
 
   const renderTitle = (title) => (
@@ -213,47 +137,7 @@ function GetCommunityPage(props) {
                         }
                         key="2"
                       >
-                        {
-                          <Card style={postCardStyle}>
-                            <Col offset={6} span={12} align="middle">
-                              {postTypes}
-                            </Col>
-
-                            <Form
-                              name="basic"
-                              onFinish={onFilter}
-                              onFinishFailed={onFilterFailed}
-                            >
-                              <Form.Item
-                                name="tag">
-                                <Col offset={6} span={12} align="middle">
-                                  <Text><b>Filter by Tag</b></Text>
-                                  <Input placeholder="Tag" />
-                                </Col>
-                              </Form.Item>
-                              <Col offset={6} span={12} align="middle">
-                                <Text><b>Sort Posts by</b></Text>
-                              </Col>
-                              <Form.Item
-                                name="sortBy">
-                                <Col offset={6} span={12} align="middle">
-                                  <Radio.Group>
-                                    <Radio.Button value="createdAt" buttonStyle="solid" onChange={() => setSortIndex(0)} style={sortIndex === 0 ? buttonStyle : cancelButtonStyle}>New</Radio.Button>
-                                    <Radio.Button value="likeCount" buttonStyle="solid" onChange={() => setSortIndex(1)} style={sortIndex === 1 ? buttonStyle : cancelButtonStyle}>Liked</Radio.Button>
-                                  </Radio.Group>
-                                </Col>
-                              </Form.Item>
-                              <Form.Item>
-                                <Col offset={6} span={12} align="middle">
-                                  <Button style={buttonStyle} icon={<FilterOutlined />} type="primary" shape="round" htmlType="submit">
-                                    Apply Filters
-                                  </Button>
-                                </Col>
-                              </Form.Item>
-                            </Form>
-                          </Card>
-
-                        }
+                        {<PostFilter onSelectFilters={(posts) => { setPosts(posts) }}/>}
                       </TabPane> : <></>}
                     {result.isModerator ?
                       <TabPane

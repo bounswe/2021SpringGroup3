@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router";
-import { Row, Col, Form, Input, Typography, Button, Select, DatePicker, Card, Popover, Tag, Space } from 'antd';
+import { Row, Col, Form, Input, Typography, Button, Select, DatePicker, Card, Popover, Tag, Space, InputNumber } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -172,6 +172,11 @@ const CreatePost = (props) => {
   }
 
   const handlePostTypeChange = (selectedId) => {
+    if (!selectedId) {
+      resetFields();
+      setPostTypeId('');
+      return
+    }
     resetFields();
     setPostTypeId(selectedId);
     GetPostTypeDetailRequest({ communityId: communityId, postTypeId: selectedId }, loginState.token, dispatch)
@@ -205,7 +210,7 @@ const CreatePost = (props) => {
                   name={name}
                   required
                   rules={[{ required: true, message: `Please enter ${name}` }]}>
-                  <Input type='number' placeholder={`Enter ${name}`} />
+                  <InputNumber style={{ width: '50%' }} placeholder={`Enter ${name}`} />
                 </Form.Item></Col>
             </Row>
           )
@@ -234,7 +239,7 @@ const CreatePost = (props) => {
                   name={name}
                   required
                   rules={[{ required: true, message: `Please enter ${name}` }]}>
-                  <DatePicker showTime />
+                  <DatePicker style={{ width: '50%' }} showTime />
                 </Form.Item>
               </Col>
             </Row>
