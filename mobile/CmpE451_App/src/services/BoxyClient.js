@@ -584,10 +584,10 @@ export const getPostTypes = async ({communityId}) => {
     });
 };
 
-export const searchPosts = async ({body}) => {
+export const advancedSearchPosts = async ({body}) => {
   var raw = JSON.stringify(body);
-  return fetch(BASE_URL + 'posts/search', {
-    method: 'GET',
+  return fetch(BASE_URL + 'posts/advancedSearch', {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'X-Platform': 'ANDROID',

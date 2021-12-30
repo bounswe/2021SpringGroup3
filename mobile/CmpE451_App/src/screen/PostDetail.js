@@ -64,14 +64,15 @@ export default function PostDetail({route, navigation}) {
   }, [isFocused]);
 
   const navigate = async () => {
-    navigation.navigate('Main');
+    alert("back");
+    navigation.goback();
   };
 
   return (
     <View>
       <ScreenHeader
         titleComponent={<Text style={headerTextStyle}></Text>}
-        navigate={navigate}
+        navigate={navigation.goBack}
         iconName="arrow-left-circle"
       />
       <PostDetailComponent

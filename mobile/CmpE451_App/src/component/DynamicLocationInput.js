@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TextInput} from 'react-native';
+import {View, TextInput, TouchableOpacity, Text} from 'react-native';
 import {IconButton} from 'react-native-paper';
 import FieldHeader from '../component/FieldHeader';
 import {COLORS} from '../theme/colors';
@@ -29,14 +29,15 @@ const DynamicLocationInput = ({fields, fieldKey, onPress, onChangeText}) => {
               multiline
               style={styles.locationTextInput}
               placeholder="radius"
-              onChangeText={text => {
+              onChangeText={textInput => {
                 onChangeText(
                   fieldKey,
                   {
                     name: input.name,
                     value: {
                       geo: input.value.geo,
-                      range: text,
+                      range: textInput,
+                      isSelected: input.value.isSelected,
                     },
                   },
                   index,
@@ -45,6 +46,27 @@ const DynamicLocationInput = ({fields, fieldKey, onPress, onChangeText}) => {
               value={input.value.range}
             />
           </View>
+          <TouchableOpacity
+            style={{paddingVertical: 10}}
+            onPress={() => {
+              onChangeText(
+                fieldKey,
+                {
+                  name: input.name,
+                  value: {
+                    geo: {
+                      latitude: 41,
+                      longitude: 29,
+                    },
+                    range: 0,
+                    isSelected: false,
+                  },
+                },
+                index,
+              );
+            }}>
+            <Text>Clear Filter</Text>
+          </TouchableOpacity>
         </View>
       ))}
     </View>
