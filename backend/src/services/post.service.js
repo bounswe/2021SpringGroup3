@@ -132,7 +132,7 @@ exports.likePost = async ({ token, postId }) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'You need to be a member of this community to like the post');
   }
   if (baseUtil.checkIfObjectIdArrayIncludesId(post.likers, token.user._id.toString())) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'You have already liked the post');
+    throw new ApiError(httpStatus.EXPECTATION_FAILED, 'You have already liked the post');
   }
   post = await Post.findByIdAndUpdate(
     post._id,
@@ -167,7 +167,7 @@ exports.unlikePost = async ({ token, postId }) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'You need to be a member of this community to like the post');
   }
   if (!baseUtil.checkIfObjectIdArrayIncludesId(post.likers, token.user._id.toString())) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'You need to like the post before you unlike');
+    throw new ApiError(httpStatus.EXPECTATION_FAILED, 'You need to like the post before you unlike');
   }
   post = await Post.findByIdAndUpdate(
     post._id,
