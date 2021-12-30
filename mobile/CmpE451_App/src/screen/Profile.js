@@ -66,7 +66,7 @@ export default function Profile() {
   ) : (
     <View style={styles.container}>
       <ScreenHeader
-        titleComponent={<Text style={headerTextStyle}>Create Community</Text>}
+        titleComponent={<Text style={headerTextStyle}>Profile</Text>}
         navigate={navigate}
       />
       <View style={styles.titleBar}>
