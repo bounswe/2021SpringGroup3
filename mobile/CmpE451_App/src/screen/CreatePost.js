@@ -1,5 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TextInput, ScrollView, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  Alert,
+  Modal,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import {BackHandler, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {IconButton} from 'react-native-paper';
@@ -31,6 +40,10 @@ export default function CreatePost({route}) {
   const [showTags, setShowTags] = useState(false);
   const [address, setAddress] = useState('');
   const [locationIndex, setLocationIndex] = useState(-1);
+  const [showModal, setShowModal] = useState(false);
+  const [modalText, setModalText] = useState();
+  const [suggestedTags, setSuggestedTags] = useState([]);
+  const [index, setIndex] = useState(0);
   const textFieldKey = 'text';
   const numberFieldKey = 'number';
   const dateFieldKey = 'date';
@@ -320,7 +333,7 @@ export default function CreatePost({route}) {
 
   const addTagFieldHandler = () => {
     const _tagInputs = [...tags];
-    _tagInputs.push('');
+    _tagInputs.push({id: '', label: ''});
     setTags(_tagInputs);
   };
 
@@ -328,6 +341,103 @@ export default function CreatePost({route}) {
     const _tagInputs = tags.filter((input, index) => index !== deleteIndex);
     setTags(_tagInputs);
   };
+
+  async function setSuggestedTagsHelper(text) {
+    if (text === '') return;
+    const suggesTedTags = await Requests.getSuggesstedTags(text);
+    setSuggestedTags(
+      suggesTedTags?.data.map(tag => {
+        return {
+          id: tag.id,
+          label: tag.label,
+          description: tag.description,
+        };
+      }),
+    );
+  }
+  function setInputHandler(item) {
+    inputHandler('tag', item, index);
+  }
+  function customModal() {
+    return (
+      <Modal
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => {
+          setShowModal(false);
+        }}>
+        <View style={{backgroundColor: '#000000aa', flex: 1}}>
+          <View
+            style={{
+              backgroundColor: '#ffffff',
+              margin: 50,
+              borderRadius: 10,
+              flex: 1,
+            }}>
+            <View style={headerContainerStyle}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyItems: 'space-between',
+                  justifyContent: 'space-between',
+                }}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                    flex: 5,
+                  }}>
+                  <Text style={{color: 'white', fontSize: 20}}>
+                    Post to {communityName}
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.textInput}
+                placeholder={'Enter tag name'}
+                value={customModal}
+                onChangeText={text => {
+                  setModalText(text.toUpperCase());
+                  setSuggestedTagsHelper(text.toUpperCase());
+                }}
+              />
+            </View>
+            <FlatList
+              data={suggestedTags}
+              showsVerticalScrollIndicator={false}
+              renderItem={({item, index}) => (
+                <TouchableOpacity
+                  style={{
+                    borderWidth: 0.3,
+                    margin: 5,
+                    padding: 5,
+                    borderRadius: 4,
+                    borderColor: 'gray',
+                  }}
+                  onPress={() => {
+                    setInputHandler({id: item.id, name: item.label});
+                    setShowModal(false);
+                  }}>
+                  <Text style={{fontSize: 16, fontWeight: '600'}}>
+                    {item?.label?.toUpperCase()}
+                  </Text>
+                  <Text style={{fontSize: 12, fontWeight: '400'}}>
+                    {item.description}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item, index) => item.id}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
+        </View>
+      </Modal>
+    );
+  }
 
   function getTags() {
     return (
@@ -387,10 +497,11 @@ export default function CreatePost({route}) {
                   <TextInput
                     style={styles.textInput}
                     placeholder={'Enter tag name'}
-                    value={input.value}
-                    onChangeText={text =>
-                      inputHandler(tagFieldKey, text, index)
-                    }
+                    value={input?.name?.toUpperCase()}
+                    onPressIn={() => {
+                      setIndex(index);
+                      setShowModal(true);
+                    }}
                   />
                 </View>
                 <DeleteButton onPress={() => deleteTagFieldHandler(index)} />
@@ -432,7 +543,9 @@ export default function CreatePost({route}) {
   }
   return (
     <View style={styles.container}>
-      {showTags ? (
+      {showModal ? (
+        customModal()
+      ) : showTags ? (
         getTags()
       ) : showMap ? (
         getMapView()
