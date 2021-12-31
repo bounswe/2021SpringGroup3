@@ -1,10 +1,12 @@
 import { Row, Col, Card, Space, Avatar, Typography } from 'antd';
 import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 const { Text, Title } = Typography;
 
 const CommentView = (props) => {
 
+    const loginState = useSelector((state) => state.login);
     const navigate = useNavigate();
 
     let postCardStyle = {
@@ -13,10 +15,13 @@ const CommentView = (props) => {
         borderRadius: '20px'
     }
 
-    const getUser = (userId) => {
-        console.log(`Trying to open user profile, send GET request to users/${userId}`)
-        navigate(`/profiles/${userId}`)
-    }
+    const getUser = (userId, username) => {
+        if (username === loginState.username) {
+          navigate(`/profile`)
+        } else {
+          navigate(`/profiles/${userId}`)
+        }
+      }
 
     const date = new Date(props.comment.createdAt);
     const dateTimeFormat = new Intl.DateTimeFormat('en', {
@@ -35,11 +40,11 @@ const CommentView = (props) => {
                 <Row>
                     <Space size={"middle"}>
                         <Col>
-                            <Avatar size={35} style={{cursor: "pointer"}} src={props.comment.user.profilePhotoUrl} onClick={() => getUser(props.comment.user.id)}/>
+                            <Avatar size={35} style={{cursor: "pointer"}} src={props.comment.user.profilePhotoUrl || ''} onClick={() => getUser(props.comment.user.id, props.comment.user.username)}/>
                         </Col>
                         <Space size={"0px"} direction="vertical">
                             <Space size={"middle"}>
-                                <Text strong style={{cursor: "pointer"}} onClick={() => getUser(props.comment.user.id)}>{props.comment.user.username}</Text>
+                                <Text strong style={{cursor: "pointer"}} onClick={() => getUser(props.comment.user.id, props.comment.user.username)}>{props.comment.user.username}</Text>
                                 <Text style={{color: 'grey', fontSize: "12px"}}>{props.comment.createdAt}</Text>
                             </Space>
                             <Col>

@@ -31,6 +31,7 @@ import {
   GET_PROFILE_ENDPOINT,
   GET_PROFILE_SETTINGS_ENDPOINT,
   POST_PROFILE_SETTINGS_ENDPOINT,
+  NOTIFICATION_ENDPOINT,
   GET_PROFILE_OTHER_ENDPOINT,
   LIKE_POST_ENDPOINT,
   POST_COMMENT_ENDPOINT,
@@ -655,6 +656,24 @@ export async function getProfileSettings(info) {
       },
     }
     const response = await axios.get(GET_PROFILE_SETTINGS_ENDPOINT, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function getNotifications(token) {
+  try {
+    const header = {
+      headers: {
+        'x-platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    const response = await axios.get(NOTIFICATION_ENDPOINT, { ...header });
     return response;
   } catch (error) {
     console.log(error);

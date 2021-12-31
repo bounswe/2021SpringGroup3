@@ -7,7 +7,7 @@ import { login, logout, register,
   acceptUser, rejectUser, acceptModerator, rejectModerator, kickUser, deleteCommunity,
   createPost, getCommunityPosts, searchCommunityPosts, getPostPage, advancedSearch, deletePost,
   createPostType, getPostTypes, getPostTypeDetail, getProfile,
-  getProfileSettings,
+  getProfileSettings, getNotifications,
   postProfileSettings, 
   getProfileOther, 
   likePost,
@@ -393,6 +393,15 @@ export const GetProfileOtherPage = async (info, dispatch) => {
 
 export const GetProfileSettings = async (info, dispatch) => {
   const response = await getProfileSettings(info);
+  if(response.status === 200 || response.status === 201) {
+    return response;
+  } else {
+    return {}
+  }
+}
+
+export const GetNotifications = async (token, dispatch) => {
+  const response = await getNotifications(token);
   if(response.status === 200 || response.status === 201) {
     return response;
   } else {
