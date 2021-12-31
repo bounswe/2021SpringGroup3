@@ -24,6 +24,11 @@ const userACSSchema = mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'User',
     },
+
+    objectType: {
+      type: String,
+      default: 'User',
+    },
   },
   {
     timestamps: true,

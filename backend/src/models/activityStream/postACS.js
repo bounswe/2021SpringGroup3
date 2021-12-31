@@ -24,6 +24,11 @@ const postACSSchema = mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'Post',
     },
+
+    objectType: {
+      type: String,
+      default: 'Post',
+    },
   },
   {
     timestamps: true,

@@ -28,6 +28,10 @@ const communityACSSchema = mongoose.Schema(
       ref: 'User',
       default: null,
     },
+    objectType: {
+      type: String,
+      default: 'Community',
+    },
   },
   {
     timestamps: true,
