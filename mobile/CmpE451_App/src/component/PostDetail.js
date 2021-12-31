@@ -130,6 +130,40 @@ export default function PostDetail({
     );
   }
 
+  async function prepareTagDetail(id) {
+    const response = await client.getSuggesstedTags(tags[index].id);
+    setTagDetail(response.data[0]);
+    console.log('tag.detail: ', tagDetail);
+  }
+
+  function getTagDetail() {
+    return (
+      <Modal
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => {
+          setShowModal(false);
+        }}>
+        <View style={{backgroundColor: '#000000aa', flex: 1}}>
+          <View
+            style={{
+              backgroundColor: '#ffffff',
+              margin: 20,
+              borderRadius: 10,
+              flex: 1,
+            }}>
+            <WebView
+              source={{
+                uri: tagDetail.concepturi,
+              }}
+              style={{marginTop: 20}}
+            />
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+
   return showModal ? (
     getTagDetail()
   ) : (
