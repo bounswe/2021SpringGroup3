@@ -625,10 +625,25 @@ export const getSuggesstedTags = async tag => {
     redirect: 'follow',
   };
 
-  return fetch(
-    'https://api.cmpegroupthree.store/wikidata?query=' + tag,
-    requestOptions,
-  )
+  return fetch(BASE_URL + 'wikidata?query=' + tag, requestOptions)
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => console.log('error', error));
+};
+
+export const getNotifications = async () => {
+  var myHeaders = new Headers();
+  myHeaders.append('X-Platform', 'ANDROID');
+  myHeaders.append('Authorization', await getToken());
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow',
+  };
+
+  return fetch(BASE_URL + 'profile/notification', requestOptions)
     .then(response => {
       return returnResponse(response);
     })

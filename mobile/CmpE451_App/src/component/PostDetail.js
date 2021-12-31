@@ -1,4 +1,11 @@
-import {View, Text, Linking, Modal} from 'react-native';
+import {
+  View,
+  Text,
+  Linking,
+  Modal,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -78,11 +85,19 @@ export default function PostDetail({
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
   };
-
   async function prepareTagDetail(id) {
-    const response = await client.getSuggesstedTags(tags[index].id);
+    const response = await client.getSuggesstedTags(id);
     setTagDetail(response.data[0]);
-    console.log('tag.detail: ', tagDetail);
+    return response;
+  }
+
+  function tagDetailLoading() {
+    return (
+      <ActivityIndicator
+        style={{position: 'center', top: 250, left: 250}}
+        size="large"
+      />
+    );
   }
 
   function getTagDetail() {
@@ -102,6 +117,8 @@ export default function PostDetail({
               flex: 1,
             }}>
             <WebView
+              startInLoadingState={true}
+              onLorenderLoadingad={tagDetailLoading}
               source={{
                 uri: tagDetail.concepturi,
               }}
@@ -281,10 +298,15 @@ export default function PostDetail({
                   marginTop: 5,
                 }}
                 onPress={() => {
-                  prepareTagDetail(item.id).then(res => {
-                    setIndex(index);
-                    setShowModal(true);
-                  });
+                  console.log('ITEM_ID: ', item.id);
+                  prepareTagDetail(item.id)
+                    .then(res => {
+                      setIndex(index);
+                      setShowModal(true);
+                    })
+                    .catch(err => {
+                      Alert.alert('Detail of the Tag is not available');
+                    });
                 }}>
                 <View>
                   <IconButton
