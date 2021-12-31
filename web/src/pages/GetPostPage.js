@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { Layout, Col, Row, Form, Input, Button } from 'antd';
+import { SendOutlined } from '@ant-design/icons';
+
 import NavBar from '../components/NavBar';
 import PostView from '../components/PostView';
 import CommentView from '../components/CommentView';
@@ -11,9 +13,16 @@ import { GetPostPage as GetPostPageRequest, PostComment, PostComment as PostComm
 
 const { Header, Footer, Sider, Content } = Layout;
 
-function GetPostPage(props) {
+const buttonStyle = {
+  backgroundColor: '#6f74dd',
+  borderColor: '#6f74dd',
+  color: '#ffffff',
+  cursor: 'pointer',
+  marginTop: '3px',
+  marginBottom: '6px'
+}
 
-  let post = <></>;
+function GetPostPage(props) {
 
   const loginState = useSelector((state) => state.login);
   const navigate = useNavigate()
@@ -27,25 +36,29 @@ function GetPostPage(props) {
   useEffect(() => {
     GetPostPageRequest({ postId: postId, communityId: communityId, token: loginState.token }, dispatch)
       .then(result => {
-        setResult(<PostView postObj={result.data}/>);
-        setComments(result.data.comments);
-    });
+        setResult(<PostView postObj={result.data} />);
+        setComments(Object.values(result.data.comments).map(currentComment => (
+          <CommentView comment={currentComment} />
+        )));
+      });
   }, [])
 
   const [form] = Form.useForm();
+
   const onFinish = (values) => {
     console.log('Success:', values);
 
     const body = {
       text: values.comment
     }
-    
-    PostCommentRequest({postId:postId},body,loginState.token);
+    PostCommentRequest({ postId: postId }, body, loginState.token);
     GetPostPageRequest({ postId: postId, communityId: communityId, token: loginState.token }, dispatch)
-    .then(result => {
-      setResult(<PostView postObj={result.data}/>);
-      setComments(result.data.comments);
-    });
+      .then(result => {
+        setResult(<PostView postObj={result.data} />);
+        setComments(Object.values(result.data.comments).map(currentComment => (
+          <CommentView comment={currentComment} />
+        )));
+      });
     form.resetFields();
   };
 
@@ -60,41 +73,39 @@ function GetPostPage(props) {
         <Layout>
           <Content>
             <Row>
-              <Col offset={1} span={21} style={{marginTop: '30px'}}>
-                  {result}
+              <Col offset={3} span={18} style={{ marginTop: '30px' }}>
+                {result}
               </Col>
-              <Col span={24}>
-                  {Object.values(comments).map( currentComment => (
-                    <CommentView comment={currentComment}/>
-                  ))}
+              <Col offset={3} span={18}>
+                {comments}
               </Col>
-              <Col offset={1} span={21}>
+              <Col offset={3} span={18} style={{ marginTop: "10px" }}>
                 <Form
                   form={form}
                   name="basic"
-                  labelCol={{ span: 4 }}
-                  wrapperCol={{ span: 16 }}
                   initialValues={{ remember: true }}
                   onFinish={onFinish}
                   onFinishFailed={onFinishFailed}
                   autoComplete="off"
                 >
                   <Form.Item
-                    label="Comment"
+                    style={{ marginBottom: '10px' }}
                     name="comment"
-                    rules={[{ required: true, message: 'Please enter a comment!' }]}
+                    rules={[{ required: true, message: 'Please input comment' }]}
                   >
-                    <Input />
+                    <Input.TextArea style={{ width: "100%", borderRadius: "20px" }} placeholder="Enter Comment" />
                   </Form.Item>
 
-                  <Form.Item wrapperCol={{ offset: 4, span: 20 }}>
-                    <Button type="primary" htmlType="submit">
-                      Send Comment
-                    </Button>
+                  <Form.Item>
+                    <Col span={24} align="middle">
+                      <Button shape="round" type="primary" htmlType="submit" style={buttonStyle} icon={<SendOutlined />}>
+                        Send Comment
+                      </Button>
+                    </Col>
                   </Form.Item>
                 </Form>
               </Col>
-            </Row>  
+            </Row>
           </Content>
         </Layout>
         <Footer></Footer>
