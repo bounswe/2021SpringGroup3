@@ -24,6 +24,11 @@ const commentACSSchema = mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'Comment',
     },
+
+    objectType: {
+      type: String,
+      default: 'Comment',
+    },
   },
   {
     timestamps: true,

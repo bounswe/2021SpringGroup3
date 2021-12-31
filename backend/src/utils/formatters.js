@@ -205,7 +205,7 @@ exports.formatComments = function (comments = [], user) {
 exports.formatNotification = function (notification, user) {
   const index = notification.summary.indexOf(user.username);
   let sum = notification.summary;
-  if(index != -1){
+  if(index !== -1){
     let mid = notification.summary.includes(user.username+" 's") ? 'your' : 'You';
     const startIndex = mid === 'your' ? index + user.username.length + 3 : index+user.username.length
     sum = notification.summary.slice(0, index) + mid + notification.summary.slice(startIndex)
@@ -213,6 +213,9 @@ exports.formatNotification = function (notification, user) {
   return {
     summary: sum,
     createdAt: notification.createdAt,
+    actor: notification.actor,
+    object: notification.object,
+    objectType: notification.objectType
   };
 };
 exports.formatNotifications = function (notifications = [], user) {

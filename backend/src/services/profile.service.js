@@ -324,43 +324,33 @@ exports.rejectFollowRequest = async ({ token, userId }) => {
 exports.getNotifications = async ({ token }) => {
   let notifications = await UserACS.find({
     object: token.user._id,
-  })
-    .populate('actor', 'object')
-    .lean();
+  }).lean();
 
   notifications = notifications.concat(
     await CommunityACS.find({
       target: token.user._id,
-    })
-      .populate('actor', 'object')
-      .lean()
+    }).lean()
   );
 
   const posts = await Post.find({ creator: token.user._id });
   notifications = notifications.concat(
     await PostACS.find({
       object: { $in: posts },
-    })
-      .populate('actor', 'object')
-      .lean()
+    }).lean()
   );
 
   const communities = await Community.find({ moderators: { $in: [token.user._id] } });
   notifications = notifications.concat(
     await CommunityACS.find({
       object: { $in: communities },
-    })
-      .populate('actor', 'object')
-      .lean()
+    }).lean()
   );
 
   const comments = await Comment.find({ user: token.user._id });
   notifications = notifications.concat(
     await CommentACS.find({
       object: { $in: comments },
-    })
-      .populate('actor', 'object')
-      .lean()
+    }).lean()
   );
   notifications = notifications.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
   return formatters.formatNotifications(notifications, token.user);
