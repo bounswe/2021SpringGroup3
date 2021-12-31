@@ -1,4 +1,11 @@
-import {View, Text, Linking, Modal} from 'react-native';
+import {
+  View,
+  Text,
+  Linking,
+  Modal,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -78,6 +85,50 @@ export default function PostDetail({
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
   };
+  async function prepareTagDetail(id) {
+    const response = await client.getSuggesstedTags(id);
+    setTagDetail(response.data[0]);
+    return response;
+  }
+
+  function tagDetailLoading() {
+    return (
+      <ActivityIndicator
+        style={{position: 'center', top: 250, left: 250}}
+        size="large"
+      />
+    );
+  }
+
+  function getTagDetail() {
+    return (
+      <Modal
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => {
+          setShowModal(false);
+        }}>
+        <View style={{backgroundColor: '#000000aa', flex: 1}}>
+          <View
+            style={{
+              backgroundColor: '#ffffff',
+              margin: 20,
+              borderRadius: 10,
+              flex: 1,
+            }}>
+            <WebView
+              startInLoadingState={true}
+              onLorenderLoadingad={tagDetailLoading}
+              source={{
+                uri: tagDetail.concepturi,
+              }}
+              style={{marginTop: 20}}
+            />
+          </View>
+        </View>
+      </Modal>
+    );
+  }
 
   async function prepareTagDetail(id) {
     const response = await client.getSuggesstedTags(tags[index].id);
@@ -281,10 +332,15 @@ export default function PostDetail({
                   marginTop: 5,
                 }}
                 onPress={() => {
-                  prepareTagDetail(item.id).then(res => {
-                    setIndex(index);
-                    setShowModal(true);
-                  });
+                  console.log('ITEM_ID: ', item.id);
+                  prepareTagDetail(item.id)
+                    .then(res => {
+                      setIndex(index);
+                      setShowModal(true);
+                    })
+                    .catch(err => {
+                      Alert.alert('Detail of the Tag is not available');
+                    });
                 }}>
                 <View>
                   <IconButton

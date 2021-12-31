@@ -32,7 +32,7 @@ export default function StyleSwipeableRow(props) {
         <View style={styles.totalaction}>
           <RectButton
             style={[styles.leftAction, {backgroundColor: '#ffff'}]}
-            onPress={() => console.log('@@@@@@@')}>
+            onPress={() => console.log('')}>
             <Ionicons
               name={'trash'}
               style={{marginTop: hp('1%'), marginBottom: hp('1%')}}
