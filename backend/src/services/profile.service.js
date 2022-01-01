@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 const httpStatus = require('http-status');
@@ -122,6 +123,9 @@ exports.getProfileSettings = async ({ token }) => {
 
 exports.setProfile = async ({ token, body }) => {
   const update = {};
+  if (typeof body.isPublic === 'boolean') {
+    update.isPrivate = body.isPublic;
+  }
   for (const key in body) {
     if (body[key].value !== null && body[key].value !== undefined) {
       update[`${key}.value`] = body[key].value;
@@ -143,14 +147,13 @@ exports.setProfile = async ({ token, body }) => {
   await User.findByIdAndUpdate(token.user._id, {
     $set: update,
   });
-  const user = User.findById(token.user._id).populate(['followers', 'pendingFollowers']).lean();
-  const acs = await UserACS.create({
+  const user = await User.findById(token.user._id).populate(['followers', 'pendingFollowers']).lean();
+  await UserACS.create({
     summary: `${token.user.username} updated his/her profile`,
     type: 'Update',
     actor: token.user,
     object: token.user,
   });
-  console.log(acs);
   return formatters.formatProfileSettings(user);
 };
 
@@ -159,7 +162,14 @@ exports.getOtherProfile = async ({ userId, token }) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
   }
-  return formatters.formatOtherProfile(user, token.user);
+  return {
+    ...formatters.formatOtherProfile(user, token.user),
+    followStatus: baseUtil.checkIfObjectIdArrayIncludesId(user.followers, token.user._id.toString())
+      ? 'followed'
+      : baseUtil.checkIfObjectIdArrayIncludesId(user.pendingFollowers, token.user._id.toString())
+      ? 'waiting'
+      : undefined,
+  };
 };
 
 exports.setNotificationId = async ({ token, notificationId }) => {

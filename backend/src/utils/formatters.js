@@ -68,9 +68,12 @@ exports.formatPreviewCommunity = function (community) {
 exports.formatCommunityDetails = function (community, user) {
   const com = {
     ...exports.formatPreviewCommunity(community),
-    user: community.creator ? formatCreator(
-      community.creator,
-      baseUtil.checkIfObjectIdArrayIncludesId(community.creator.followers, user._id.toString())) : "CREATOR IS NOT AVAILABLE",
+    user: community.creator
+      ? formatCreator(
+          community.creator,
+          baseUtil.checkIfObjectIdArrayIncludesId(community.creator.followers, user._id.toString())
+        )
+      : 'CREATOR IS NOT AVAILABLE',
     members: (community.members || []).map(formatUserPreview),
     moderators: (community.moderators || []).map(formatUserPreview),
     isModerator: baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, user._id.toString()),
@@ -172,6 +175,7 @@ exports.formatOtherProfile = function (profile, user) {
     location: getValueFromProfileField(profile.location, isFollowing),
     isPrivate: profile.isPrivate || false,
     followerCount: user.followerCount,
+    isFollowing,
   };
 };
 
@@ -198,28 +202,26 @@ exports.formatComments = function (comments = [], user) {
     id: comment._id.toString(),
     text: comment.text,
     user: formatCreator(comment.user, baseUtil.checkIfObjectIdArrayIncludesId(comment.user.followers, user._id.toString())),
-    createdAt: comment.createdAt
+    createdAt: comment.createdAt,
   }));
 };
 
 exports.formatNotification = function (notification, user) {
   const index = notification.summary.indexOf(user.username);
   let sum = notification.summary;
-  if(index !== -1){
-    let mid = notification.summary.includes(user.username+" 's") ? 'your' : 'You';
-    const startIndex = mid === 'your' ? index + user.username.length + 3 : index+user.username.length
-    sum = notification.summary.slice(0, index) + mid + notification.summary.slice(startIndex)
+  if (index !== -1) {
+    let mid = notification.summary.includes(user.username + " 's") ? 'your' : 'You';
+    const startIndex = mid === 'your' ? index + user.username.length + 3 : index + user.username.length;
+    sum = notification.summary.slice(0, index) + mid + notification.summary.slice(startIndex);
   }
   return {
     summary: sum,
     createdAt: notification.createdAt,
     actor: notification.actor,
     object: notification.object,
-    objectType: notification.objectType
+    objectType: notification.objectType,
   };
 };
 exports.formatNotifications = function (notifications = [], user) {
   return notifications.map((notification) => exports.formatNotification(notification, user));
-
 };
-
