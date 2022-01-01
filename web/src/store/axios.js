@@ -36,7 +36,12 @@ import {
   LIKE_POST_ENDPOINT,
   POST_COMMENT_ENDPOINT,
   SEARCH_WIKIDATA_ENDPOINT,
-  UNLIKE_POST_ENDPOINT
+  UNLIKE_POST_ENDPOINT,
+  FOLLOW_ENDPOINT,
+  UNFOLLOW_ENDPOINT,
+  ACCEPT_FOLLOWER_ENDPOINT,
+  REJECT_FOLLOWER_ENDPOINT,
+  SEARCH_WIKIDATA_ENDPOINT
 } from './urls';
 
 export async function login(info) {
@@ -729,6 +734,80 @@ export async function unlikePost(info, token) {
       },
     }
     const response = await axios.post(UNLIKE_POST_ENDPOINT + "?postId=" + info.postId + "&communityId=" + info.communityId , { ...info }, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function follow(info, token) {
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    const response = await axios.get(FOLLOW_ENDPOINT + "?userId=" + info.userId, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function unfollow(info, token) {
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    const response = await axios.get(UNFOLLOW_ENDPOINT + "?userId=" + info.userId, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+
+
+export async function acceptFollower(info, token) {
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    const response = await axios.get(ACCEPT_FOLLOWER_ENDPOINT + "?userId=" + info.userId, { ...header });
+    return response;
+  } catch (error) {
+    console.log(error);
+
+    return error
+  }
+}
+
+export async function rejectFollower(info, token) {
+  try {
+    const header = {
+      headers: {
+        'X-Platform': 'WEB',
+        'accept': '*/*',
+        'authorization': `${token}`
+      },
+    }
+    const response = await axios.get(REJECT_FOLLOWER_ENDPOINT + "?userId=" + info.userId, { ...header });
     return response;
   } catch (error) {
     console.log(error);

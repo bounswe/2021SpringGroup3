@@ -37,6 +37,7 @@ function GetCommunityPage(props) {
   useEffect(() => {
     GetCommunityPageRequest({ id: id, token: loginState.token }, dispatch)
       .then(result => {
+        console.log(result.data)
         setResult(result.data);
         GetCommunityPostsRequest({ id: id, token: loginState.token }, dispatch)
         .then(posts => {

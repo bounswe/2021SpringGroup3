@@ -44,7 +44,7 @@ const ProfileEdit = (props) => {
   const [isPublicBio, setisPublicBio] = useState(props.profileValues.bio ? props.profileValues.bio.isPublic : true)
   const [isPublicBirthday, setisPublicBirthday] = useState(props.profileValues.birthday ? props.profileValues.birthday.isPublic : true)
   const [isPublicLocation, setisPublicLocation] = useState(props.profileValues.location ? props.profileValues.location.isPublic : true)
-  const [isPublicProfile, setisPublicProfile] = useState(props.profileValues.isPublic)
+  const [isPublicProfile, setisPublicProfile] = useState(!props.profileValues.isPrivate)
 
   const [image64, setImage64] = useState(null);
 
@@ -114,7 +114,7 @@ const ProfileEdit = (props) => {
       profileBody.location.value.longitude = location.lng;
       profileBody.location.isPublic = isPublicLocation == true;
 
-      //profileBody.isPublic = isPublicProfile == true;
+      profileBody.isPublic = !isPublicProfile;
       await PostProfileSettingsRequest(profileBody, loginState.token, dispatch);
 
       console.log('Success:', profileBody);
