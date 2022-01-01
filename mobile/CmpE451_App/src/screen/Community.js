@@ -206,11 +206,13 @@ export default function Community({navigation}) {
     );
   }
 
-  const navigate = async () => {
-    navigation.navigate('Main');
-  };
+  function navigateToPost(postId) {
+    PAGE_VARIABLES.postId = postId;
+    navigation.navigate('PostDetail');
+  }
+
   function CommunityPostsTab() {
-    return <CommunityPosts />;
+    return <CommunityPosts onPress={navigateToPost} />;
   }
   const navigatePendingRequests = () => {
     navigation.navigate('PendingRequests', {
