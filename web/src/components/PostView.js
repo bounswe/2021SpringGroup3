@@ -108,8 +108,12 @@ const PostView = (props) => {
     navigate(`/communities/${communityId}/posts/${postId}`)
   }
 
-  const getUser = (userId) => {
-    navigate(`/profiles/${userId}`)
+  const getUser = (userId, username) => {
+    if (username === loginState.username) {
+      navigate(`/profile`)
+    } else {
+      navigate(`/profiles/${userId}`)
+    }
   }
 
   const getCommunity = (communtiyId) => {
@@ -153,7 +157,7 @@ const PostView = (props) => {
         <Col span={22}>
           <Space size={'middle'}>
             <Col>
-              <Avatar size={50} style={{ cursor: 'pointer' }} src={props.postObj.user.profilePhotoUrl} onClick={() => getUser(props.postObj.user.id)} />
+              <Avatar size={50} style={{ cursor: 'pointer' }} src={props.postObj.user.profilePhotoUrl} onClick={() => getUser(props.postObj.user.id, props.postObj.user.username)} />
             </Col>
             <Col>
               {/*<Row>
@@ -173,7 +177,7 @@ const PostView = (props) => {
                     <Space size={'small'}>
                       Posted by
                       <strong
-                        onClick={() => getUser(props.postObj.user.id)}
+                        onClick={() => getUser(props.postObj.user.id, props.postObj.user.username)}
                         style={{ cursor: 'pointer' }}>
                         {props.postObj.user.username}
                       </strong>

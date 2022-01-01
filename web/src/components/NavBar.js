@@ -42,6 +42,11 @@ const NavBar = (props) => {
         navigate('/createPost')
     }
 
+    const onNotifications = () => {
+        console.log("Navigating to notifications page");
+        navigate('/notifications')
+    }
+
     const handleProfileNavigate = () => {
         console.log("Navigating to profile page");
         navigate('/profile')
@@ -190,7 +195,7 @@ const NavBar = (props) => {
                         <a target="_blank" rel="noopener noreferrer">
                             <MessageFilled style={{ fontSize: '32px', color: "#ffffff" }} />
                         </a>
-                        <a target="_blank" rel="noopener noreferrer">
+                        <a onClick={() => onNotifications()}>
                             <BellFilled style={{ fontSize: '32px', color: "#ffffff" }} />
                         </a>
                         <Dropdown overlay={profileMenu} placement="bottomLeft">
