@@ -610,10 +610,10 @@ export const searchPost = async ({communityId, tag = '', sortBy}) => {
       'posts/search' +
       '?communityId=' +
       communityId +
-      '&tag=' +
-      tag +
       '&sortBy=' +
-      sortBy,
+      sortBy +
+      '&tag=' +
+      tag,
     {
       method: 'GET',
       headers: {
