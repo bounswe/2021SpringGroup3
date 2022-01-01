@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
   communityInfoHeader: {
     width: '100%',
     backgroundColor: COLORS.fieldHeaderColor,
-    paddingTop: 40,
+    paddingTop: 0,
   },
   rightIconContainer: {
     width: '100%',
