@@ -16,10 +16,11 @@ import SearchableDropdown from 'react-native-searchable-dropdown';
 import {useIsFocused} from '@react-navigation/native';
 import {headerContainerStyle} from '../theme/styles';
 import CommonButton from '../component/CommonButton';
+import SwitchButton from '../component/SwitchButton';
 import CommonTextInput from '../component/CommonTextInput';
+import {IconButton} from 'react-native-paper';
 
 export default function CommunitySearch({navigation}) {
-  const [searchResults, setSearchResults] = useState([]);
   const [filterByPostType, setFilterByPostType] = useState(true);
   const [filterByTags, setFilterByTags] = useState(true);
 
@@ -42,6 +43,8 @@ export default function CommunitySearch({navigation}) {
 
   const [showMap, setShowMap] = useState(false);
   const [locationIndex, setLocationIndex] = useState(-1);
+
+  const [sortType, setSortType] = useState('createdAt');
 
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -228,6 +231,7 @@ export default function CommunitySearch({navigation}) {
       body: body,
       filterByPostType: filterByPostType,
       filterByTags: filterByTags,
+      sortBy: sortType,
     });
   }
 
@@ -278,8 +282,8 @@ export default function CommunitySearch({navigation}) {
           <View
             style={{
               flexDirection: 'row',
-              alignItems: 'flex-start',
               marginTop: 15,
+              alignItems: 'center',
             }}>
             <View style={{flex: 1}}>
               <Image source={postTypeIcon} style={styles.image} />
@@ -337,6 +341,7 @@ export default function CommunitySearch({navigation}) {
               style={{
                 flexDirection: 'row',
                 marginTop: 25,
+                alignItems: 'center',
               }}>
               <View style={{flex: 1}}>
                 <Image source={tagIcon} style={styles.image} />
@@ -351,6 +356,30 @@ export default function CommunitySearch({navigation}) {
               />
             </View>
             {filterByTags && <CommonTextInput onChangeText={setTags} />}
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 10,
+                alignItems: 'center',
+              }}>
+              <View style={{flex: 1}}>
+                <IconButton
+                  icon="sort-ascending"
+                  color={COLORS.fieldHeaderColor}
+                  size={40}
+                  style={{margin: 0, marginLeft: 7}}
+                />
+              </View>
+              <View style={{flex: 6}}>
+                <Text> Sort </Text>
+              </View>
+            </View>
+            <SwitchButton
+              firstText={'Hot'}
+              secondText={'Popular'}
+              firstPress={setSortType}
+              secondPress={setSortType}
+            />
             <View style={{width: '100%', alignItems: 'center', marginTop: 20}}>
               <CommonButton
                 text="Apply Filters"

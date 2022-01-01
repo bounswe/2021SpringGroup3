@@ -31,7 +31,7 @@ export default function SearchBar({
             onSubmitEditing={() => Keyboard.dismiss()}
           />
         ) : (
-        <Text style={{flex: 9, fontSize: 15}}>{searchText}</Text>
+          <Text style={{flex: 9, fontSize: 15}}>{searchText}</Text>
         )}
       </TouchableOpacity>
     </View>
