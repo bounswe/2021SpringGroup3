@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import {
+  Alert,
   Text,
   Linking,
   View,
   ToastAndroid,
   TextInput,
   Modal,
-  Pressable,
 } from 'react-native';
 import {SettingsPage, NavigateRow, BaseRow} from 'react-native-settings-view';
 
@@ -38,6 +38,25 @@ export default function Settings({navigation, route}) {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
   }
+
+  const showAlert = () => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to delete your account?',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => handleDeleteAccount(),
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+  };
 
   async function handleChangePassword() {
     const body = {
@@ -124,9 +143,7 @@ export default function Settings({navigation, route}) {
             type: 'material-community',
             color: COLORS.buttonColor,
           }}
-          onPress={() => {
-            handleDeleteAccount();
-          }}
+          onPress={() => showAlert()}
         />
         <View style={styles.sectionHeaderContainer}>
           <Text style={styles.sectionText}>ABOUT</Text>
