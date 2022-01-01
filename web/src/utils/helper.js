@@ -13,6 +13,7 @@ import { login, logout, register,
   likePost,
   dislikePost,
   postComment,
+  follow, unfollow, acceptFollower, rejectFollower,
   searchWikidata} from '../store/axios';
 
 export const Login = async (info, dispatch) => {
@@ -448,6 +449,54 @@ export const LikePost = async (info, token, dispatch) => {
 export const DislikePost = async (info, token, dispatch) => {
 
   const response = await dislikePost(info, token);
+  if(response.status === 200 || response.status === 201){
+    return response;
+
+  }else{
+
+    return {}
+  }
+}
+
+export const Follow = async (info, token, dispatch) => {
+
+  const response = await follow(info, token);
+  if(response.status === 200 || response.status === 201){
+    return response;
+
+  }else{
+
+    return {}
+  }
+}
+
+export const Unfollow = async (info, token, dispatch) => {
+
+  const response = await unfollow(info, token);
+  if(response.status === 200 || response.status === 201){
+    return response;
+
+  }else{
+
+    return {}
+  }
+}
+
+export const AcceptFollower = async (info, token, dispatch) => {
+
+  const response = await acceptFollower(info, token);
+  if(response.status === 200 || response.status === 201){
+    return response;
+
+  }else{
+
+    return {}
+  }
+}
+
+export const RejectFollower = async (info, token, dispatch) => {
+
+  const response = await rejectFollower(info, token);
   if(response.status === 200 || response.status === 201){
     return response;
 

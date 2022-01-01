@@ -105,6 +105,7 @@ const Notification = (props) => {
 
   return (
     <>
+    { user &&
       <Card size="small" style={postCardStyle}>
         <Row>
           <Space size={"middle"}>
@@ -123,6 +124,7 @@ const Notification = (props) => {
           </Space>
         </Row>
       </Card>
+      }
     </>
   )
 }

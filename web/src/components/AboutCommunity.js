@@ -199,11 +199,11 @@ const AboutCommunity = (props) => {
                         </Col>
                     )
                 })}
+                {!props.creator || typeof props.creator === 'string' ? <></> :
                 <Col span={24} style={{ marginTop: "20px", marginBottom: "20px" }}>
                     <Col span={24} style={{ marginTop: "20px" }}>
                         <b>Creator</b>
                     </Col>
-                    {props.creator ?
                         <Col span={24} style={{ cursor: 'pointer', marginBottom: '15px' }} onClick={() => navigate(`/profiles/${props.creator.id}`)}>
                             <Space size='middle'>
                                 <Avatar size={40} src={props.creator.profilePhotoUrl.value} />
@@ -215,8 +215,8 @@ const AboutCommunity = (props) => {
                                     <Text style={{ color: 'grey', fontSize: '12px' }}>{props.creator.followerCount + ' followers'}</Text>
                                 </Space>
                             </Space>
-                        </Col> : "-"}
-                </Col>
+                        </Col>
+                </Col>}
                 <Col span={24} align="middle">
                     {!props.isModerator ?
                         <Button style={buttonStyle} shape="round" type='primary'
