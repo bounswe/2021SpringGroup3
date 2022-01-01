@@ -419,7 +419,7 @@ export default function PostDetail({
               <Comment
                 id={item.id}
                 user={item.user}
-                date={item.date}
+                date={item.createdAt}
                 content={item.text}
               />
             )}
