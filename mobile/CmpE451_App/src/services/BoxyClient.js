@@ -377,7 +377,6 @@ export const getOtherProfile = async id => {
   var myHeaders = new Headers();
   myHeaders.append('Authorization', await getToken());
   myHeaders.append('X-Platform', 'ANDROID');
-  console.log('IDDDDDD: ', id);
   var requestOptions = {
     method: 'GET',
     headers: myHeaders,
@@ -390,7 +389,7 @@ export const getOtherProfile = async id => {
   )
     .then(response => response.text())
     .then(result => {
-      console.log('userIduserId ', id);
+      //console.log('userIduserId ', id);
       console.log('userProfile: ', result);
       return JSON.parse(result);
     })
@@ -723,4 +722,42 @@ export const getNotifications = async () => {
       return returnResponse(response);
     })
     .catch(error => console.log('error', error));
+};
+
+export const followUser = async ({userId}) => {
+  return fetch(BASE_URL + 'profile/follow?userId=' + userId, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(result => {
+      console.log(result);
+      return returnResponse(result);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const unfollowUser = async ({userId}) => {
+  return fetch(BASE_URL + 'profile/unfollow?userId=' + userId, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      console.log(response);
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
 };

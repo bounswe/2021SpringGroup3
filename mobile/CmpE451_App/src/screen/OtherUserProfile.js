@@ -7,10 +7,14 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  ToastAndroid,
+  Alert,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
+import {COLORS} from '../theme/colors';
+import {Button} from 'react-native-elements';
 import UnderConstruction from '../component/UnderConstruction';
 import * as Request from '../services/BoxyClient';
 import {
@@ -31,6 +35,8 @@ export default function OtherUserProfile({navigation, route}) {
   const [profileImageUrl, setProfileImageUrl] = useState();
   const [username, setUsername] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [isFollower, setIsFollower] = useState(false);
+  const [isPendingFollower, setIsPendingFollower] = useState(false);
 
   const [profileImageIsPublic, setProfileImageIsPublic] = useState(false);
 
@@ -45,11 +51,83 @@ export default function OtherUserProfile({navigation, route}) {
       setProfileImageUrl(profile.profilePhotoUrl);
       setUsername(profile.username);
       setProfileImageIsPublic(true);
+      if(profile.followStatus==="followed"){
+        setIsFollower(true);
+        setIsPendingFollower(false);
+      }
+      else if(profile.followStatus==="waiting"){
+        setIsFollower(false);
+        setIsPendingFollower(true);
+      }
+      else{
+        setIsFollower(false);
+        setIsPendingFollower(false);
+      }
     }
     if (isFocused) {
       getProfile();
     }
   }, [isFocused]);
+
+  async function handleFollow() {
+    let response = await Request.followUser({
+      userId: id,
+    });
+    if (response.status === 200) {
+      if(response.data.followStatus === "followed"){
+        setIsFollower(true);
+        setIsPendingFollower(false);
+      }
+      else if(response.data.followStatus === "waiting"){
+        setIsFollower(false);
+        setIsPendingFollower(true);
+      }
+      else{
+        setIsFollower(false);
+        setIsPendingFollower(false);
+      }
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  }
+  async function handleUnfollow() {
+    let response = await Request.unfollowUser({
+      userId: id,
+    });
+    if (response.status === 200) {
+      if(response.data.followStatus === "followed"){
+        setIsFollower(true);
+      }
+      else if(response.data.followStatus === "pending"){
+        setIsPendingFollower(true);
+      }
+      else{
+        setIsFollower(false);
+        setIsPendingFollower(false);
+      }
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  }
+
+  const showUnfollowAlert = () => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to unfollow?',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => handleUnfollow(),
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -77,6 +155,37 @@ export default function OtherUserProfile({navigation, route}) {
                 size={22}
                 color="black"
                 style={{marginHorizontal: 0}}
+              />
+            )}
+          </View>
+
+          <View style={{alignItems: 'flex-end'}}>
+            {isFollower || isPendingFollower ? (
+              <Button
+                title={isFollower ? 'Followed' : 'Pending'}
+                type="outline"
+                buttonStyle={styles.followedButton}
+                titleStyle={styles.followedText}
+                onPress={() => {
+                  if (isFollower) {
+                    showUnfollowAlert();
+                  }
+                }}
+              />
+            ) : (
+              <Button
+                title="Follow"
+                buttonStyle={styles.followButton}
+                titleStyle={styles.followText}
+                onPress={handleFollow}
+                icon={
+                  <IconButton
+                    icon="plus"
+                    size={13}
+                    color="white"
+                    style={{margin: 0}}
+                  />
+                }
               />
             )}
           </View>
@@ -285,5 +394,32 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginTop: 3,
     marginRight: 20,
+  },
+  followedButton: {
+    borderColor: COLORS.buttonColor,
+    borderRadius: 20,
+    height: 25,
+    width: 70,
+    paddingVertical: 0,
+  },
+  followedText: {
+    color: COLORS.buttonColor,
+    fontSize: 10,
+    margin: 0,
+    paddingVertical: 0,
+  },
+  followButton: {
+    borderColor: COLORS.buttonColor,
+    backgroundColor: COLORS.buttonColor,
+    borderRadius: 20,
+    height: 25,
+    width: 70,
+    paddingVertical: 0,
+  },
+  followText: {
+    color: COLORS.buttonTextColor,
+    fontSize: 10,
+    margin: 0,
+    paddingVertical: 0,
   },
 });
