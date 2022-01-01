@@ -23,6 +23,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
+            rm -rf images
             cp -r 2021SpringGroup3/backend/images images
             rm -rf 2021SpringGroup3
             git clone -b backend/master https://github.com/bounswe/2021SpringGroup3 # clone the repo into the 'app' folder
