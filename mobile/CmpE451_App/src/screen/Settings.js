@@ -1,15 +1,30 @@
-import React from 'react';
-import {Text, Linking, View, ToastAndroid} from 'react-native';
+import React, {useState} from 'react';
+import {
+  Alert,
+  Text,
+  Linking,
+  View,
+  ToastAndroid,
+  TextInput,
+  Modal,
+} from 'react-native';
 import {SettingsPage, NavigateRow, BaseRow} from 'react-native-settings-view';
 
 import {COLORS} from '../theme/colors';
 import {headerTextStyle} from '../theme/styles';
+import {textInputArea} from '../theme/styles';
+import {textInputContainer} from '../theme/styles';
 import ScreenHeader from '../component/ScreenHeader';
+import FieldHeader from '../component/FieldHeader';
+import CommonButton from '../component/CommonButton';
 import * as client from '../services/BoxyClient';
 import {removeToken} from '../services/asyncStorageService';
 import RNRestart from 'react-native-restart';
 
 export default function Settings({navigation, route}) {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [password, setPassword] = useState();
+
   const navigate = async () => {
     navigation.navigate('Main');
   };
@@ -24,12 +39,90 @@ export default function Settings({navigation, route}) {
     }
   }
 
+  const showAlert = () => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to delete your account?',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => handleDeleteAccount(),
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+  };
+
+  async function handleChangePassword() {
+    const body = {
+      password: password,
+    };
+    let response = await client.changePassword({body: body});
+
+    if (response.status / 100 == 2) {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  }
+
   return (
     <View style={styles.container}>
       <ScreenHeader
         titleComponent={<Text style={headerTextStyle}>Settings</Text>}
         navigate={navigate}
       />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <View style={textInputContainer}>
+              <FieldHeader name={'New Password'} />
+              <TextInput
+                multiline
+                style={textInputArea}
+                onChangeText={newPassword => setPassword(newPassword)}
+                value={password}
+                underlineColorAndroid="#f000"
+                placeholder="Enter your new password"
+                placeholderTextColor="#8b9cb5"
+                autoCapitalize="sentences"
+                returnKeyType="next"
+                blurOnSubmit={false}
+              />
+            </View>
+            <View style={{flexDirection: 'row'}}>
+              <CommonButton
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}
+                text={'Cancel'}
+                buttonWidth={'40%'}
+                buttonMarginRight={4}
+              />
+              <CommonButton
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => {
+                  handleChangePassword();
+                  setModalVisible(!modalVisible);
+                }}
+                text={'Confirm'}
+                buttonWidth={'40%'}
+                buttonMarginLeft={4}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
       <SettingsPage>
         <View style={styles.sectionHeaderContainer}>
           <Text style={styles.sectionText}>ACCOUNT</Text>
@@ -41,12 +134,7 @@ export default function Settings({navigation, route}) {
             type: 'font-awesome',
             color: COLORS.buttonColor,
           }}
-          onPress={() => {
-            ToastAndroid.show(
-              'This feature will be enabled soon',
-              ToastAndroid.SHORT,
-            );
-          }}
+          onPress={() => setModalVisible(true)}
         />
         <NavigateRow
           text="Delete Account"
@@ -55,9 +143,7 @@ export default function Settings({navigation, route}) {
             type: 'material-community',
             color: COLORS.buttonColor,
           }}
-          onPress={() => {
-            handleDeleteAccount();
-          }}
+          onPress={() => showAlert()}
         />
         <View style={styles.sectionHeaderContainer}>
           <Text style={styles.sectionText}>ABOUT</Text>
@@ -128,5 +214,26 @@ const styles = {
     color: '#555555',
     fontSize: 13,
     fontWeight: '500',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 };
