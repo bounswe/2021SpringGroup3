@@ -68,10 +68,9 @@ exports.formatPreviewCommunity = function (community) {
 exports.formatCommunityDetails = function (community, user) {
   const com = {
     ...exports.formatPreviewCommunity(community),
-    user: formatCreator(
+    user: community.creator ? formatCreator(
       community.creator,
-      baseUtil.checkIfObjectIdArrayIncludesId(community.creator.followers, user._id.toString())
-    ),
+      baseUtil.checkIfObjectIdArrayIncludesId(community.creator.followers, user._id.toString())) : "CREATOR IS NOT AVAILABLE",
     members: (community.members || []).map(formatUserPreview),
     moderators: (community.moderators || []).map(formatUserPreview),
     isModerator: baseUtil.checkIfObjectIdArrayIncludesId(community.moderators, user._id.toString()),
