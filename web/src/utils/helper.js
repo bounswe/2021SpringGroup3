@@ -11,7 +11,7 @@ import { login, logout, register,
   postProfileSettings, 
   getProfileOther, 
   likePost,
-  dislikePost,
+  unlikePost,
   postComment,
   follow, unfollow, acceptFollower, rejectFollower,
   searchWikidata} from '../store/axios';
@@ -446,9 +446,9 @@ export const LikePost = async (info, token, dispatch) => {
   }
 }
 
-export const DislikePost = async (info, token, dispatch) => {
+export const UnlikePost = async (info, token, dispatch) => {
 
-  const response = await dislikePost(info, token);
+  const response = await unlikePost(info, token);
   if(response.status === 200 || response.status === 201){
     return response;
 

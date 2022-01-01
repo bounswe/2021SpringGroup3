@@ -38,6 +38,7 @@ export const POST_PROFILE_SETTINGS_ENDPOINT = `${BASE_URL}profile/settings`;
 export const NOTIFICATION_ENDPOINT = `${BASE_URL}profile/notification`;
 
 export const LIKE_POST_ENDPOINT = `${BASE_URL}posts/like`;
+export const UNLIKE_POST_ENDPOINT = `${BASE_URL}posts/unlike`;
 export const FOLLOW_ENDPOINT = `${BASE_URL}profile/follow`;
 export const UNFOLLOW_ENDPOINT = `${BASE_URL}profile/unfollow`;
 export const ACCEPT_FOLLOWER_ENDPOINT = `${BASE_URL}profile/approve`;
