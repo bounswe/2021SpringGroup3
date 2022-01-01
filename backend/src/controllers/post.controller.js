@@ -90,6 +90,7 @@ exports.advancedSearch = catchAsync(async (req, res) => {
     linkFields: req.body.linkFields,
     locationFields: req.body.locationFields,
     tag: req.body.tag,
+    sortBy: req.body.sortBy,
   });
   res.send(result);
 });

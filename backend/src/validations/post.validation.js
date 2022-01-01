@@ -160,6 +160,7 @@ exports.advancedSearch = {
         )
         .max(10),
       tag: Joi.string().allow('', null),
+      sortBy: Joi.string().valid('createdAt', 'likeCount').default('createdAt'),
     })
     .required(),
 };
