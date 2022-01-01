@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 
 import {FlatList} from 'react-native-gesture-handler';
@@ -16,7 +17,13 @@ import {
 import StyleSwipeableRow from './SwipleableRowForNotification';
 import moment from 'moment';
 
-export default function Dragable({data, navigation, user, id}) {
+export default function Dragable({
+  data,
+  navigation,
+  onRefresh,
+  refreshing,
+  deleteNotification,
+}) {
   function gotoRoom() {
     console.log('>>>>>>>>>>>>>>>>>');
   }
@@ -29,16 +36,15 @@ export default function Dragable({data, navigation, user, id}) {
           <Image
             style={styles.photo}
             source={{
-              uri: item.uri,
+              uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
             }}
           />
-          <View style={{marginLeft: 10, width: wp('63%')}}>
-            <View style={{justifyContent: 'flex-start', flexDirection: 'row'}}>
-              <Text style={styles.nameText}>{item.name}</Text>
-            </View>
-            <Text style={styles.messageText}>{item.message}</Text>
+          <View style={{width: wp('63%'), padding: 10}}>
+            <Text style={styles.nameText}>{item.summary}</Text>
           </View>
-          <Text style={styles.dateText}>{moment(item.timestamp).fromNow()}</Text>
+          <Text style={styles.dateText}>
+            {moment(item.createdAt).fromNow()}
+          </Text>
         </TouchableOpacity>
       </StyleSwipeableRow>
     );
@@ -47,8 +53,10 @@ export default function Dragable({data, navigation, user, id}) {
   return (
     <FlatList
       data={data}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       showsVerticalScrollIndicator={false}
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
       renderItem={({item, index}) => <SwipeableRow item={item} index={index} />}
       keyExtractor={(item, index) => `message ${index}`}
     />
@@ -92,7 +100,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: wp('91%'),
-    height: wp('17%'),
+    height: wp('30%'),
     borderRadius: 10,
     backgroundColor: '#ffffff',
     marginLeft: 20,

@@ -455,15 +455,49 @@ export const getPosts = async ({communityId}) => {
     });
 };
 
-export const likePost = async ({postId}) => {
-  return fetch(BASE_URL + 'posts/like' + '?postId=' + postId, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Platform': 'ANDROID',
-      Authorization: await getToken(),
+export const likePost = async ({communityId, postId}) => {
+  return fetch(
+    BASE_URL +
+      'posts/like' +
+      '?communityId=' +
+      communityId +
+      '&postId=' +
+      postId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
     },
-  })
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const unlikePost = async ({communityId, postId}) => {
+  return fetch(
+    BASE_URL +
+      'posts/unlike' +
+      '?communityId=' +
+      communityId +
+      '&postId=' +
+      postId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
     .then(response => {
       return returnResponse(response);
     })
@@ -624,7 +658,66 @@ export const searchPost = async ({communityId, tag = ''}) => {
     });
 };
 
-export const followUser = async ({userId}) => {
+export const changePassword = async ({body}) => {
+  var raw = JSON.stringify(body);
+  return fetch(BASE_URL + 'auth/changePassword', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+    body: raw,
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+const returnResponse = async response => {
+  const statusCode = response.status;
+  response = await response.json();
+  return {
+    status: statusCode,
+    data: response,
+  };
+};
+
+export const getSuggesstedTags = async tag => {
+  console.log('tag: ', tag);
+  var myHeaders = new Headers();
+  myHeaders.append('X-Platform', 'ANDROID');
+  myHeaders.append('Authorization', await getToken());
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow',
+  };
+
+  return fetch(BASE_URL + 'wikidata?query=' + tag, requestOptions)
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => console.log('error', error));
+};
+
+export const getNotifications = async () => {
+  var myHeaders = new Headers();
+  myHeaders.append('X-Platform', 'ANDROID');
+  myHeaders.append('Authorization', await getToken());
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow',
+  };
+
+  export const followUser = async ({userId}) => {
   return fetch(BASE_URL + 'profile/follow?userId=' + userId, {
     method: 'GET',
     headers: {
@@ -662,11 +755,9 @@ export const unfollowUser = async ({userId}) => {
     });
 };
 
-const returnResponse = async response => {
-  const statusCode = response.status;
-  response = await response.json();
-  return {
-    status: statusCode,
-    data: response,
-  };
+  return fetch(BASE_URL + 'profile/notification', requestOptions)
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => console.log('error', error));
 };

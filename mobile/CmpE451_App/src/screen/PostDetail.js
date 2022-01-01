@@ -22,6 +22,7 @@ export default function PostDetail({route, navigation}) {
   const [commentsState, setCommentsState] = useState([]);
   const [commentCountState, setCommentCount] = useState(0);
   const isFocused = useIsFocused();
+  const [tags, setTags] = useState();
 
   useEffect(() => {
     async function init() {
@@ -43,7 +44,9 @@ export default function PostDetail({route, navigation}) {
         likeCount,
         comments,
         commentCount,
+        tags,
       } = JSON.parse(postDetailResponse);
+      setTags(tags);
       setId(id);
       setUser(user);
       setDate(date);
@@ -63,15 +66,10 @@ export default function PostDetail({route, navigation}) {
     }
   }, [isFocused]);
 
-  const navigate = async () => {
-    alert("back");
-    navigation.goback();
-  };
-
   return (
     <View>
       <ScreenHeader
-        titleComponent={<Text style={headerTextStyle}></Text>}
+        titleComponent={<Text style={headerTextStyle} />}
         navigate={navigation.goBack}
         iconName="arrow-left-circle"
       />
@@ -90,6 +88,7 @@ export default function PostDetail({route, navigation}) {
         comments={commentsState}
         commentCount={commentCountState}
         showComments={true}
+        tags={tags}
       />
     </View>
   );

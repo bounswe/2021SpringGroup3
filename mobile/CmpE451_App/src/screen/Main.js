@@ -103,6 +103,7 @@ export default function Main({navigation}) {
               isLiked={item.isLiked}
               likeCount={item.likeCount}
               commentCount={item.commentCount}
+              tags={item.tags}
             />
           </TouchableOpacity>
         )}

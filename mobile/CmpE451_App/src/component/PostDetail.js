@@ -1,4 +1,11 @@
-import {View, Text, Linking} from 'react-native';
+import {
+  View,
+  Text,
+  Linking,
+  Modal,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -8,7 +15,7 @@ import {useIsFocused} from '@react-navigation/native';
 import * as client from '../services/BoxyClient';
 import Comment from './Comment.js';
 import MapView from 'react-native-maps';
-
+import {WebView} from 'react-native-webview';
 import {
   FlatList,
   ScrollView,
@@ -34,15 +41,17 @@ export default function PostDetail({
   comments,
   showComments = false,
   commentCount,
+  tags,
 }) {
   const [isLikedState, setIsLikedState] = useState();
   const [likeCounState, setLikeCountState] = useState();
   const [commentsState, setCommentsState] = useState(comments);
   const [commentCountState, setCommentCountState] = useState(commentCount);
-
+  const [index, setIndex] = useState(0);
+  const [showModal, setShowModal] = useState(false);
   const [comment, setComment] = useState('');
   const isFocused = useIsFocused();
-
+  const [tagDetail, setTagDetail] = useState();
   useEffect(() => {
     async function init() {
       setIsLikedState(isLiked);
@@ -56,7 +65,24 @@ export default function PostDetail({
   }, [commentCount, comments, isFocused, isLiked, likeCount]);
 
   const handleLikePost = async () => {
-    let response = await client.likePost({postId: id});
+    let response = await client.likePost({
+      communityId: community.id,
+      postId: id,
+    });
+    const status = response.status;
+    if (status === 200) {
+      setLikeCountState(response.data.likeCount);
+      setIsLikedState(response.data.isLiked);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  };
+
+  const handleUnlikePost = async () => {
+    let response = await client.unlikePost({
+      communityId: community.id,
+      postId: id,
+    });
     const status = response.status;
     if (status === 200) {
       setLikeCountState(response.data.likeCount);
@@ -67,17 +93,101 @@ export default function PostDetail({
   };
 
   const handleCommentPost = async () => {
-    let response = await client.commentPost({postId: id, comment: comment});
+    let response = await client.commentPost({
+      postId: id,
+      comment: comment,
+    });
     const status = response.status;
     if (status === 200) {
       setCommentsState(response.data.comments);
       setCommentCountState(response.data.comments.length);
+      setComment('');
     } else {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
   };
+  async function prepareTagDetail(id) {
+    const response = await client.getSuggesstedTags(id);
+    setTagDetail(response.data[0]);
+    return response;
+  }
 
-  return (
+  function tagDetailLoading() {
+    return (
+      <ActivityIndicator
+        style={{position: 'center', top: 250, left: 250}}
+        size="large"
+      />
+    );
+  }
+
+  function getTagDetail() {
+    return (
+      <Modal
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => {
+          setShowModal(false);
+        }}>
+        <View style={{backgroundColor: '#000000aa', flex: 1}}>
+          <View
+            style={{
+              backgroundColor: '#ffffff',
+              margin: 20,
+              borderRadius: 10,
+              flex: 1,
+            }}>
+            <WebView
+              startInLoadingState={true}
+              onLorenderLoadingad={tagDetailLoading}
+              source={{
+                uri: tagDetail.concepturi,
+              }}
+              style={{marginTop: 20}}
+            />
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+
+  async function prepareTagDetail(id) {
+    const response = await client.getSuggesstedTags(tags[index].id);
+    setTagDetail(response.data[0]);
+    console.log('tag.detail: ', tagDetail);
+  }
+
+  function getTagDetail() {
+    return (
+      <Modal
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => {
+          setShowModal(false);
+        }}>
+        <View style={{backgroundColor: '#000000aa', flex: 1}}>
+          <View
+            style={{
+              backgroundColor: '#ffffff',
+              margin: 20,
+              borderRadius: 10,
+              flex: 1,
+            }}>
+            <WebView
+              source={{
+                uri: tagDetail.concepturi,
+              }}
+              style={{marginTop: 20}}
+            />
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+
+  return showModal ? (
+    getTagDetail()
+  ) : (
     <ScrollView>
       <View style={styles.feedItem}>
         <View>
@@ -195,11 +305,10 @@ export default function PostDetail({
             )}
           />
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 10,
-          }}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{direction: 'row'}}>
           <View style={{flexDirection: 'row', top: 10, marginRight: 15}}>
             <View>
               {isLikedState ? (
@@ -208,6 +317,7 @@ export default function PostDetail({
                   size={24}
                   color={'red'}
                   style={{marginRight: 4}}
+                  onPress={handleUnlikePost}
                 />
               ) : (
                 <Icon
@@ -236,7 +346,37 @@ export default function PostDetail({
             </View>
             <Text style={{marginTop: 5}}> {commentCountState} </Text>
           </View>
-        </View>
+          {tags?.map((item, index) => {
+            return (
+              <TouchableOpacity
+                style={{
+                  flexDirection: 'row',
+                  marginTop: 5,
+                }}
+                onPress={() => {
+                  console.log('ITEM_ID: ', item.id);
+                  prepareTagDetail(item.id)
+                    .then(res => {
+                      setIndex(index);
+                      setShowModal(true);
+                    })
+                    .catch(err => {
+                      Alert.alert('Detail of the Tag is not available');
+                    });
+                }}>
+                <View>
+                  <IconButton
+                    icon="tag"
+                    size={24}
+                    color={COLORS.unlikeButtonColor}
+                    style={{margin: 0}}
+                  />
+                </View>
+                <Text style={{marginTop: 5}}> {item.name} </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
       </View>
       {showComments && (
         <View>
@@ -251,6 +391,7 @@ export default function PostDetail({
                 multiline
                 style={styles.commentText}
                 onChangeText={text => setComment(text)}
+                value={comment}
                 underlineColorAndroid="#f000"
                 placeholder="Add a comment"
                 placeholderTextColor="#8b9cb5"
@@ -278,7 +419,7 @@ export default function PostDetail({
               <Comment
                 id={item.id}
                 user={item.user}
-                date={item.date}
+                date={item.createdAt}
                 content={item.text}
               />
             )}
