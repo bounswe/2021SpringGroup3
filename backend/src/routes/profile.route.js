@@ -6,11 +6,8 @@ const profileController = require('../controllers/profile.controller');
 const router = express.Router();
 
 router.route('/').get(profileController.getProfile);
-router
-  .route('/settings')
-  .get(profileController.getProfileSettings)
-  .delete(profileController.deleteProfile)
-  .post(validate(profileValidation.setProfile), profileController.setProfile);
+router.post('/settings', validate(profileValidation.setProfile), profileController.setProfile);
+router.route('/settings').get(profileController.getProfileSettings).delete(profileController.deleteProfile);
 
 router.route('/other').get(validate(profileValidation.getOtherProfile), profileController.getOtherProfile);
 
