@@ -35,7 +35,8 @@ import {
   GET_PROFILE_OTHER_ENDPOINT,
   LIKE_POST_ENDPOINT,
   POST_COMMENT_ENDPOINT,
-  SEARCH_WIKIDATA_ENDPOINT
+  SEARCH_WIKIDATA_ENDPOINT,
+  UNLIKE_POST_ENDPOINT
 } from './urls';
 
 export async function login(info) {
@@ -709,7 +710,7 @@ export async function likePost(info, token) {
         'authorization': `${token}`
       },
     }
-    const response = await axios.post(LIKE_POST_ENDPOINT + "?postId=" + info.postId, { ...info }, { ...header });
+    const response = await axios.post(LIKE_POST_ENDPOINT + "?postId=" + info.postId + "&communityId=" + info.communityId , { ...info }, { ...header });
     return response;
   } catch (error) {
     console.log(error);
@@ -718,7 +719,7 @@ export async function likePost(info, token) {
   }
 }
 
-export async function dislikePost(info, token) {
+export async function unlikePost(info, token) {
   try {
     const header = {
       headers: {
@@ -727,7 +728,7 @@ export async function dislikePost(info, token) {
         'authorization': `${token}`
       },
     }
-    const response = await axios.delete(LIKE_POST_ENDPOINT + "?postId=" + info.postId, { ...info }, { ...header });
+    const response = await axios.post(UNLIKE_POST_ENDPOINT + "?postId=" + info.postId + "&communityId=" + info.communityId , { ...info }, { ...header });
     return response;
   } catch (error) {
     console.log(error);

@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Card, Row, Col, Button, Typography, Space, Avatar, notification, Tag, Popover, message, Popconfirm } from 'antd';
 import '../App.css';
 import FieldContent from './FieldContent';
-import { LikePost as LikePostRequest, DislikePost as DislikePostRequest, DislikePost } from '../utils/helper';
+import { LikePost as LikePostRequest, UnlikePost as UnlikePostRequest} from '../utils/helper';
 
 import { LikeOutlined, LikeFilled, CommentOutlined, FlagOutlined, FlagFilled, ExclamationCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
@@ -64,6 +64,7 @@ const PostView = (props) => {
     borderRadius: '20px'
   }
 
+  const [likeCount, setLikeCount] = useState(props.postObj.likeCount);
   const [isLiked, setLiked] = useState(props.postObj.isLiked)
   const [tagDefinition, setTagDefinition] = useState('')
 
@@ -71,7 +72,7 @@ const PostView = (props) => {
     console.log(`Trying to like post, send a POST request to posts/${likedPostId}/likes`);
     
     try {
-      let body = { postId: likedPostId }
+      let body = { postId: likedPostId, communityId: props.postObj.community.id }
       const result = await LikePostRequest(body, loginState.token, dispatch);
       notification.success({
           message: 'Liked post.'
@@ -81,16 +82,19 @@ const PostView = (props) => {
             message: `An error occured.`,
         });
     }
+
+    setLikeCount(likeCount + 1);
     setLiked(true);
   }
 
   const revertLikePost = async (likedPostId) => {
-    /*
     console.log(`Trying to revert the like on a post, send a DELETE request to posts/${likedPostId}/likes`);
 
+    console.log(props.postObj.community.id);
+
     try {
-      let body = { postId: likedPostId }
-      const result = await DislikePostRequest(body, loginState.token, dispatch);
+      let body = { postId: likedPostId, communityId: props.postObj.community.id }
+      const result = await UnlikePostRequest(body, loginState.token, dispatch);
       notification.success({
           message: 'Disliked post.'
       });
@@ -100,8 +104,8 @@ const PostView = (props) => {
         });
     }
 
+    setLikeCount(likeCount - 1);
     setLiked(false)
-    */
   }
 
   const getPost = (communityId, postId) => {
@@ -243,7 +247,7 @@ const PostView = (props) => {
               <Button type="text" icon={<LikeOutlined />} onClick={() => likePost(props.postObj.id)}></Button> :
               <Button type="text" icon={<LikeFilled />} onClick={() => revertLikePost(props.postObj.id)}></Button>
             }
-            {props.postObj.likeCount} Likes
+            {likeCount} Likes
           </Col>
 
           <Col span={8} align="middle">
