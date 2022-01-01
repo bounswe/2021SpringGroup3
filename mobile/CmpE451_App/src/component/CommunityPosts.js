@@ -1,28 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  FlatList,
-  ScrollView,
-  TouchableOpacity,
-  Linking,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import moment from 'moment';
-import {TEXT, PAGE_VARIABLES} from '../constants';
+import {StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import {PAGE_VARIABLES} from '../constants';
 import * as Request from '../util/Requests';
 import PostDetail from './PostDetail';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import MessageList from '../component/MessageList';
-import {COLORS} from '../theme/colors';
-import MapView, {Marker} from 'react-native-maps';
 
-export default function CommunityPosts({}) {
+export default function CommunityPosts({onPress}) {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     async function getPosts() {
@@ -34,176 +20,31 @@ export default function CommunityPosts({}) {
     getPosts();
   }, []);
 
-  function PostDetail({
-    user,
-    date,
-    community,
-    textFieldNames,
-    numberFieldNames,
-    dateFieldNames,
-    linkFieldNames,
-    locationFieldNames,
-    isLiked,
-    likeCount,
-  }) {
-    return (
-      <TouchableOpacity onPress={() => {}} style={styles.container}>
-        <View>
-          <Image source={{uri: user.imageUrl}} style={styles.avatar} />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <View
-              style={{
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                alignItems: 'baseline',
-              }}>
-              <Text style={{fontSize: 18, color: COLORS.textColor}}>
-                {user.username}
-              </Text>
-              <Text style={{fontSize: 12, color: COLORS.textColor}}>
-                {community.name}
-              </Text>
-              <Text style={styles.timestamp}>{moment(date).fromNow()}</Text>
-              <Text> </Text>
-              <Text> </Text>
-            </View>
-          </View>
-        </View>
-        <View style={{flexDirection: 'column', marginLeft: 6}}>
-          <View style={{flexDirection: 'column'}}>
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              data={textFieldNames}
-              renderItem={({item}) => (
-                <View style={{width: '90%'}}>
-                  <Text style={styles.fieldName}>{item.name}</Text>
-                  <Text style={styles.content}>{item.value}</Text>
-                  <Text></Text>
-                </View>
-              )}
-            />
-          </View>
-          <View style={{flexDirection: 'column'}}>
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              data={numberFieldNames}
-              renderItem={({item}) => (
-                <View>
-                  <Text style={styles.fieldName}>{item.name}</Text>
-                  <Text style={styles.content}>{item.value}</Text>
-                  <Text></Text>
-                </View>
-              )}
-            />
-          </View>
-          <View style={{flexDirection: 'column'}}>
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              data={dateFieldNames}
-              renderItem={({item}) => (
-                <View>
-                  <Text style={styles.fieldName}>{item.name}</Text>
-                  <Text style={styles.content}>
-                    {moment(item.value).format('MMMM Do YYYY, h:mm:ss a')}
-                  </Text>
-                  <Text></Text>
-                </View>
-              )}
-            />
-          </View>
-          <View style={{flexDirection: 'column'}}>
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              data={linkFieldNames}
-              renderItem={({item}) => (
-                <View style={{width: '90%'}}>
-                  <Text style={styles.fieldName}>{item.name}</Text>
-                  <TouchableOpacity onPress={() => Linking.openURL(item.value)}>
-                    <Text style={{color: COLORS.buttonColor}}>
-                      {item.value}
-                    </Text>
-                  </TouchableOpacity>
-                  <Text></Text>
-                </View>
-              )}
-            />
-          </View>
-          <View style={{flexDirection: 'column'}}>
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              data={locationFieldNames}
-              renderItem={({item, index}) => (
-                <View>
-                  <View>
-                    <Text style={styles.fieldName}>
-                      {locationFieldNames[index].name}
-                    </Text>
-                    <Text style={styles.content}>
-                      {locationFieldNames[index].value.description}
-                    </Text>
-                  </View>
-                  <View>
-                    <MapView
-                      style={styles.map}
-                      initialRegion={{
-                        latitude:
-                          locationFieldNames[index]['value']['geo']['latitude'],
-                        longitude:
-                          locationFieldNames[index]['value']['geo'][
-                            'longitude'
-                          ],
-                        latitudeDelta: 0.004757,
-                        longitudeDelta: 0.006866,
-                      }}></MapView>
-                    <Text></Text>
-                    <Text></Text>
-                    <Text></Text>
-                    <Text></Text>
-                    <Text></Text>
-                    <Text></Text>
-                    <Text></Text>
-                  </View>
-                </View>
-              )}
-            />
-          </View>
-        </View>
-        <View style={{flexDirection: 'row', top: 18}}>
-          <Icon
-            name="heart"
-            size={24}
-            color={isLiked ? COLORS.buttonColor : COLORS.unlikeButtonColor}
-            style={{marginRight: 8}}
-          />
-          <Text> {likeCount} likes </Text>
-        </View>
-      </TouchableOpacity>
-    );
-  }
-
   return (
     <FlatList
       data={posts}
-      renderItem={({item, index}) =>
-        PostDetail({
-          user: item.user,
-          date: item.date,
-          community: item.community,
-          textFieldNames: item.textFieldNames,
-          numberFieldNames: item.numberFieldNames,
-          dateFieldNames: item.dateFieldNames,
-          linkFieldNames: item.linkFieldNames,
-          locationFieldNames: item.locationFieldNames,
-          isLiked: item.isLiked,
-          likeCount: item.likeCount,
-        })
-      }
+      renderItem={({item}) => (
+        <TouchableOpacity onPress={() => onPress(item.id)}>
+          <PostDetail
+            id={item.id}
+            user={item.user}
+            date={item.date}
+            community={item.community}
+            textFieldNames={item.textFieldNames}
+            numberFieldNames={item.numberFieldNames}
+            dateFieldNames={item.dateFieldNames}
+            linkFieldNames={item.linkFieldNames}
+            locationFieldNames={item.locationFieldNames}
+            isLiked={item.isLiked}
+            likeCount={item.likeCount}
+            commentCount={item.commentCount}
+            tags={item.tags}
+          />
+        </TouchableOpacity>
+      )}
       keyExtractor={(item, index) => item.id}
-      showsVerticalScrollIndicator={false}></FlatList>
+      showsVerticalScrollIndicator={false}
+    />
   );
 }
 
