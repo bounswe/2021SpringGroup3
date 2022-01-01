@@ -659,6 +659,26 @@ export const searchPost = async ({communityId, tag = ''}) => {
     });
 };
 
+export const changePassword = async ({body}) => {
+  var raw = JSON.stringify(body);
+  return fetch(BASE_URL + 'auth/changePassword', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+    body: raw,
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 const returnResponse = async response => {
   const statusCode = response.status;
   response = await response.json();
