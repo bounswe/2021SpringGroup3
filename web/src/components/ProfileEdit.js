@@ -114,7 +114,7 @@ const ProfileEdit = (props) => {
       profileBody.location.value.longitude = location.lng;
       profileBody.location.isPublic = isPublicLocation == true;
 
-      profileBody.isPublic = isPublicProfile == true;
+      profileBody.isPublic = !isPublicProfile;
       await PostProfileSettingsRequest(profileBody, loginState.token, dispatch);
 
       console.log('Success:', profileBody);
