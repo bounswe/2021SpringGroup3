@@ -78,6 +78,20 @@ export default function PostDetail({
     }
   };
 
+  const handleUnlikePost = async () => {
+    let response = await client.unlikePost({
+      communityId: community.id,
+      postId: id,
+    });
+    const status = response.status;
+    if (status === 200) {
+      setLikeCountState(response.data.likeCount);
+      setIsLikedState(response.data.isLiked);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  };
+
   const handleCommentPost = async () => {
     let response = await client.commentPost({
       postId: id,
@@ -303,6 +317,7 @@ export default function PostDetail({
                   size={24}
                   color={'red'}
                   style={{marginRight: 4}}
+                  onPress={handleUnlikePost}
                 />
               ) : (
                 <Icon

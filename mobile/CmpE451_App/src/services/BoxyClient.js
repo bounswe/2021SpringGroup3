@@ -482,6 +482,32 @@ export const likePost = async ({communityId, postId}) => {
     });
 };
 
+export const unlikePost = async ({communityId, postId}) => {
+  return fetch(
+    BASE_URL +
+      'posts/unlike' +
+      '?communityId=' +
+      communityId +
+      '&postId=' +
+      postId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
 export const commentPost = async ({postId, comment}) => {
   return fetch(BASE_URL + 'posts/comment' + '?postId=' + postId, {
     method: 'POST',
