@@ -123,7 +123,7 @@ exports.getProfileSettings = async ({ token }) => {
 
 exports.setProfile = async ({ token, body }) => {
   const update = {};
-  if (typeof body.isPrivate === 'boolean') {
+  if (typeof body.isPublic === 'boolean') {
     update.isPrivate = body.isPublic;
   }
   for (const key in body) {
@@ -147,14 +147,13 @@ exports.setProfile = async ({ token, body }) => {
   await User.findByIdAndUpdate(token.user._id, {
     $set: update,
   });
-  const user = User.findById(token.user._id).populate(['followers', 'pendingFollowers']).lean();
-  const acs = await UserACS.create({
+  const user = await User.findById(token.user._id).populate(['followers', 'pendingFollowers']).lean();
+  await UserACS.create({
     summary: `${token.user.username} updated his/her profile`,
     type: 'Update',
     actor: token.user,
     object: token.user,
   });
-  console.log(acs);
   return formatters.formatProfileSettings(user);
 };
 
