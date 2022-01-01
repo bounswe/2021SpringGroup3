@@ -717,7 +717,14 @@ export const getNotifications = async () => {
     redirect: 'follow',
   };
 
-  export const followUser = async ({userId}) => {
+  return fetch(BASE_URL + 'profile/notification', requestOptions)
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => console.log('error', error));
+};
+
+export const followUser = async ({userId}) => {
   return fetch(BASE_URL + 'profile/follow?userId=' + userId, {
     method: 'GET',
     headers: {
@@ -753,11 +760,4 @@ export const unfollowUser = async ({userId}) => {
       console.info(error);
       ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
     });
-};
-
-  return fetch(BASE_URL + 'profile/notification', requestOptions)
-    .then(response => {
-      return returnResponse(response);
-    })
-    .catch(error => console.log('error', error));
 };
