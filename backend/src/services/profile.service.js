@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 const httpStatus = require('http-status');
@@ -159,7 +160,14 @@ exports.getOtherProfile = async ({ userId, token }) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
   }
-  return formatters.formatOtherProfile(user, token.user);
+  return {
+    ...formatters.formatOtherProfile(user, token.user),
+    followStatus: baseUtil.checkIfObjectIdArrayIncludesId(user.followers, token.user._id.toString())
+      ? 'followed'
+      : baseUtil.checkIfObjectIdArrayIncludesId(user.pendingFollowers, token.user._id.toString())
+      ? 'waiting'
+      : undefined,
+  };
 };
 
 exports.setNotificationId = async ({ token, notificationId }) => {
