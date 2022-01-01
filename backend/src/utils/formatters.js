@@ -164,6 +164,7 @@ const getValueFromProfileField = (field, isFollowing) => {
 exports.formatOtherProfile = function (profile, user) {
   const isFollowing = baseUtil.checkIfObjectIdArrayIncludesId(profile.followers, user._id.toString());
   return {
+    id: profile._id,
     username: profile.username,
     profilePhotoUrl: getValueFromProfileField(profile.profilePhotoUrl, isFollowing),
     bio: getValueFromProfileField(profile.bio, isFollowing),
@@ -188,7 +189,7 @@ exports.formatProfileSettings = function (user) {
     location: user.location || defaultProfileField,
     isPrivate: user.isPrivate || false,
     followers: (user.followers || []).map((f) => exports.formatOtherProfile(f, user)),
-    pendingFollowers: (user.followers || []).map((f) => exports.formatOtherProfile(f, user)),
+    pendingFollowers: (user.pendingFollowers || []).map((f) => exports.formatOtherProfile(f, user)),
   };
 };
 
