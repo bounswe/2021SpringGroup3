@@ -123,6 +123,9 @@ exports.getProfileSettings = async ({ token }) => {
 
 exports.setProfile = async ({ token, body }) => {
   const update = {};
+  if (typeof body.isPrivate === 'boolean') {
+    update.isPrivate = body.isPublic;
+  }
   for (const key in body) {
     if (body[key].value !== null && body[key].value !== undefined) {
       update[`${key}.value`] = body[key].value;
