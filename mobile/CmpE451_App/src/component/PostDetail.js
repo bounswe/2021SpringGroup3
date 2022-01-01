@@ -65,7 +65,10 @@ export default function PostDetail({
   }, [commentCount, comments, isFocused, isLiked, likeCount]);
 
   const handleLikePost = async () => {
-    let response = await client.likePost({postId: id});
+    let response = await client.likePost({
+      communityId: community.id,
+      postId: id,
+    });
     const status = response.status;
     if (status === 200) {
       setLikeCountState(response.data.likeCount);
@@ -76,11 +79,15 @@ export default function PostDetail({
   };
 
   const handleCommentPost = async () => {
-    let response = await client.commentPost({postId: id, comment: comment});
+    let response = await client.commentPost({
+      postId: id,
+      comment: comment,
+    });
     const status = response.status;
     if (status === 200) {
       setCommentsState(response.data.comments);
       setCommentCountState(response.data.comments.length);
+      setComment('');
     } else {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
@@ -369,6 +376,7 @@ export default function PostDetail({
                 multiline
                 style={styles.commentText}
                 onChangeText={text => setComment(text)}
+                value={comment}
                 underlineColorAndroid="#f000"
                 placeholder="Add a comment"
                 placeholderTextColor="#8b9cb5"
