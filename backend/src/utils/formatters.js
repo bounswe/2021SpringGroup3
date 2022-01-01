@@ -126,7 +126,7 @@ exports.formatPostDetail = function (post, user) {
     linkFieldNames: post.linkFields,
     locationFieldNames: post.locationFields,
     isLiked: baseUtil.checkIfObjectIdArrayIncludesId(post.likers, user._id.toString()),
-    likeCount: post.likers.length,
+    likeCount: post.likeCount,
     tags: post.tags,
   };
 };

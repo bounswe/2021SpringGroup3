@@ -164,7 +164,7 @@ exports.unlikePost = async ({ token, postId }) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post does not exist');
   }
   if (!baseUtil.checkIfObjectIdArrayIncludesId(post.community.members, token.user._id.toString())) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'You need to be a member of this community to like the post');
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You need to be a member of this community to unlike the post');
   }
   if (!baseUtil.checkIfObjectIdArrayIncludesId(post.likers, token.user._id.toString())) {
     throw new ApiError(httpStatus.EXPECTATION_FAILED, 'You need to like the post before you unlike');
