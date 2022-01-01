@@ -64,7 +64,7 @@ const CommunityModeration = (props) => {
                                 onClick={() => reject(user)}>
                             </Button>
                         </Tooltip>
-                        <Avatar size={40} src={user.profilePhotoUrl.value} />
+                        <Avatar size={40} src={user.profilePhotoUrl} />
                         <Space direction='vertical' size='0px' style={{ cursor: 'pointer' }} onClick={() => navigate(`/profiles/${user.id}`)}>
                             <Space>
                                 <Text strong>{user.username}</Text>
@@ -93,7 +93,7 @@ const CommunityModeration = (props) => {
                                 onClick={() => rejectMod(user)}>
                             </Button>
                         </Tooltip>
-                        <Avatar size={40} src={user.profilePhotoUrl.value} />
+                        <Avatar size={40} src={user.profilePhotoUrl} />
                         <Space direction='vertical' size='0px' style={{ cursor: 'pointer' }} onClick={() => navigate(`/profiles/${user.id}`)}>
                             <Space>
                                 <Text strong>{user.username}</Text>
@@ -116,7 +116,7 @@ const CommunityModeration = (props) => {
                                 onClick={() => kick(user)}>
                             </Button>
                         </Tooltip>
-                        <Avatar size={40} src={user.profilePhotoUrl.value} />
+                        <Avatar size={40} src={user.profilePhotoUrl} />
                         <Space direction='vertical' size='0px' style={{ cursor: 'pointer' }} onClick={() => navigate(`/profiles/${user.id}`)}>
                             <Space>
                                 <Text strong>{user.username}</Text>
