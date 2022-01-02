@@ -801,7 +801,6 @@ export const rejectFollowRequest = async ({userId}) => {
     },
   )
     .then(response => {
-      console.log(response);
       return returnResponse(response);
     })
     .catch(error => {
