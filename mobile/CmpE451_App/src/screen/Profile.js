@@ -24,6 +24,7 @@ import MapView, {Marker} from 'react-native-maps';
 import {useIsFocused} from '@react-navigation/native';
 import ScreenHeader from '../component/ScreenHeader';
 import {headerTextStyle} from '../theme/styles';
+import IconBadge from 'react-native-icon-badge';
 export default function Profile() {
   const navigation = useNavigation();
   const [bio, setBio] = useState();
@@ -32,7 +33,10 @@ export default function Profile() {
   const [profileImageUrl, setProfileImageUrl] = useState();
   const [username, setUsername] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [isPrivate, setIsPrivate] = useState(false);
+  const [pendingFollowerList, setPendingFollowerList] = useState([]);
   const isFocused = useIsFocused();
+
   useEffect(() => {
     async function getMyProfile() {
       const profile = await Request.getMyProfile();
@@ -44,8 +48,15 @@ export default function Profile() {
       setUsername(profile.username);
       setIsLoading(false);
     }
+    async function getUserSettings() {
+      const {pendingFollowers, isPrivate} =
+        await Request.getUserSettings();
+        setPendingFollowerList(pendingFollowers);
+        setIsPrivate(isPrivate);
+    }
     if (isFocused) {
       getMyProfile();
+      getUserSettings();
     }
   }, [isFocused]);
 
@@ -61,6 +72,11 @@ export default function Profile() {
       _profileImageUrl: profileImageUrl,
     });
   }
+  function navigatePendingRequests(){
+    navigation.navigate('PendingRequestsFollow', {
+      pendingFollowerList,
+    });
+  }
   return isLoading ? (
     <Loader loading={'loading'}></Loader>
   ) : (
@@ -73,9 +89,34 @@ export default function Profile() {
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
         </TouchableOpacity>
-        <TouchableOpacity onPress={navigateSettings}>
-          <Ionicons name="settings" size={24} color="#52575D"></Ionicons>
-        </TouchableOpacity>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity onPress={navigateSettings}>
+            <Ionicons name="settings" size={24} color="#52575D"></Ionicons>
+          </TouchableOpacity>
+          {isPrivate &&
+            <IconBadge
+              MainElement={
+                <TouchableOpacity onPress={navigatePendingRequests}>
+                  <Ionicons name="mail" size={24} color="#52575D"></Ionicons>
+                </TouchableOpacity>
+              }
+              BadgeElement={
+                <Text style={{color:'#FFFFFF'}}>{pendingFollowerList.length}</Text>
+              }
+              IconBadgeStyle={
+                {position:'absolute',
+                left:14,
+                width:15,
+                height:20,
+                borderRadius:15,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#FF0000'}
+              }
+              Hidden={pendingFollowerList.length==0}
+              />
+          }
+        </View>
       </View>
       <View style={{alignSelf: 'center'}}>
         <View style={styles.profileImage}>

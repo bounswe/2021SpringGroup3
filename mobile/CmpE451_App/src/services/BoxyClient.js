@@ -761,3 +761,51 @@ export const unfollowUser = async ({userId}) => {
       ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
     });
 };
+
+export const acceptFollowRequest = async ({userId}) => {
+  return fetch(
+    BASE_URL +
+      'profile/approve?userId=' +
+      userId,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      console.log(response);
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const rejectFollowRequest = async ({userId}) => {
+  return fetch(
+    BASE_URL +
+      'profile/reject?userId=' +
+      userId,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      console.log(response);
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};

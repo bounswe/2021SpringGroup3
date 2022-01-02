@@ -25,6 +25,7 @@ import Communities from './screen/Communities';
 import Community from './screen/Community';
 import OtherUserProfile from './screen/OtherUserProfile';
 import PendingRequests from './screen/PendingRequests';
+import PendingRequestsFollow from './screen/PendingRequestsFollow';
 import UpdateCommunity from './screen/UpdateCommunity';
 import CommunitySearch from './screen/CommunitySearch';
 import PostSearchResults from './screen/PostSearchResults';
@@ -109,6 +110,11 @@ export function Navigator() {
         options={{headerShown: false}}
         name="ProfileSettings"
         component={ProfileSettings}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="PendingRequestsFollow"
+        component={PendingRequestsFollow}
       />
       <Stack.Screen
         options={{headerShown: false}}
