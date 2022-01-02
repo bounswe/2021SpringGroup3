@@ -79,6 +79,7 @@ export default function PostSearchResults({navigation, route}) {
                 isLiked={item.isLiked}
                 likeCount={item.likeCount}
                 commentCount={item.commentCount}
+                tags={item.tags}
               />
             </TouchableOpacity>
           )}
@@ -102,7 +103,10 @@ export default function PostSearchResults({navigation, route}) {
 }
 
 const styles = {
-  container: {flex: 1, alignItems: 'center'},
+  container: {flex: 1},
+  feed: {
+    marginHorizontal: 16,
+  },
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'center',

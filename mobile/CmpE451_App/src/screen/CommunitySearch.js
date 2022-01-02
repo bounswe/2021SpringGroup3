@@ -152,35 +152,35 @@ export default function CommunitySearch({navigation}) {
       textFieldNames,
       locationFieldNames,
     } = JSON.parse(postTypeDetail);
-    if (dateFieldNames != null && dateFieldNames.length > 0) {
+    if (dateFieldNames != null) {
       const dataFieldsTemp = [];
       for (let i = 0; i < dateFieldNames.length; i++) {
         dataFieldsTemp.push({name: dateFieldNames[i], value: {}});
       }
       setDateFields(dataFieldsTemp);
     }
-    if (linkFieldNames != null && linkFieldNames.length > 0) {
+    if (linkFieldNames != null) {
       const linkFieldsTemp = [];
       for (let i = 0; i < linkFieldNames.length; i++) {
         linkFieldsTemp.push({name: linkFieldNames[i], value: ''});
       }
       setLinkFields(linkFieldsTemp);
     }
-    if (textFieldNames != null && textFieldNames.length > 0) {
+    if (textFieldNames != null) {
       const textFieldsTemp = [];
       for (let i = 0; i < textFieldNames.length; i++) {
         textFieldsTemp.push({name: textFieldNames[i], value: ''});
       }
       setTextFields(textFieldsTemp);
     }
-    if (numberFieldNames != null && numberFieldNames.length > 0) {
-      const numberFielsTemp = [];
+    if (numberFieldNames != null) {
+      const numberFieldsTemp = [];
       for (let i = 0; i < numberFieldNames.length; i++) {
-        numberFielsTemp.push({name: numberFieldNames[i], value: {}});
+        numberFieldsTemp.push({name: numberFieldNames[i], value: {}});
       }
-      setNumberFields(numberFielsTemp);
+      setNumberFields(numberFieldsTemp);
     }
-    if (locationFieldNames != null && locationFieldNames.length > 0) {
+    if (locationFieldNames != null) {
       const locationFieldsTemp = [];
       for (let i = 0; i < locationFieldNames.length; i++) {
         locationFieldsTemp.push({
