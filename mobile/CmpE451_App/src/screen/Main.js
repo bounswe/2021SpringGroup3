@@ -21,39 +21,15 @@ export default function Main({navigation}) {
 
   useEffect(() => {
     async function init() {
-      const _memberCommunityList = await client.getCommunities({
-        isMember: true,
-      });
-      setMemberCommunityList(_memberCommunityList);
-      const tempPostList = [];
-      for (let i = 0; i < _memberCommunityList.length; i++) {
-        const communityPostList = await client.getPosts({
-          communityId: _memberCommunityList[i].id,
-        });
-        for (let j = 0; j < communityPostList.length; j++) {
-          tempPostList.push(communityPostList[j]);
-        }
-      }
-      setPostList(tempPostList);
+      const _postList = await client.getPostsHome({});
+      setPostList(_postList);
     }
     init();
   }, []);
 
   const _onRefreshPosts = async () => {
-    const _memberCommunityList = await client.getCommunities({
-      isMember: true,
-    });
-    setMemberCommunityList(_memberCommunityList);
-    const tempPostList = [];
-    for (let i = 0; i < _memberCommunityList.length; i++) {
-      const communityPostList = await client.getPosts({
-        communityId: _memberCommunityList[i].id,
-      });
-      for (let j = 0; j < communityPostList.length; j++) {
-        tempPostList.push(communityPostList[j]);
-      }
-    }
-    setPostList(tempPostList);
+    const _postList = await client.getPostsHome({});
+    setPostList(_postList);
   };
 
   const onRefresh = React.useCallback(() => {
