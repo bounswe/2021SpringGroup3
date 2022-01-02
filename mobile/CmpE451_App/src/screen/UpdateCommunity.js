@@ -21,7 +21,7 @@ import {headerTextStyle} from '../theme/styles';
 import * as client from '../services/BoxyClient';
 import {PAGE_VARIABLES} from '../constants';
 
-export default function CreateCommunity({navigation, route}) {
+export default function UpdateCommunity({navigation, route}) {
   let {name, iconUrl, description, isPrivate} = route.params;
 
   const [newName, setName] = useState(name);

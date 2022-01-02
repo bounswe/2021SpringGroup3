@@ -3,15 +3,14 @@ import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
 import ToastAndroid from 'react-native';
 
 export const createPost = async body => {
-  var myHeaders = new Headers();
-  myHeaders.append('Authorization', await getToken());
-  myHeaders.append('X-Platform', 'ANDROID');
-  myHeaders.append('Content-Type', 'application/json');
-
   var raw = JSON.stringify(body);
   var requestOptions = {
     method: 'POST',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     body: raw,
     redirect: 'follow',
   };
@@ -28,13 +27,13 @@ export const createPost = async body => {
 };
 
 export const getPostTypeDetail = async ({communityId, postTypeId}) => {
-  var myHeaders = new Headers();
-  myHeaders.append('X-Platform', 'ANDROID');
-  myHeaders.append('Authorization', await getToken());
-
   var requestOptions = {
     method: 'GET',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     redirect: 'follow',
   };
 
@@ -349,13 +348,13 @@ export const joinModerators = async ({communityId}) => {
 };
 
 export const getPostDetail = async ({communityId, postId}) => {
-  var myHeaders = new Headers();
-  myHeaders.append('X-Platform', 'ANDROID');
-  myHeaders.append('Authorization', await getToken());
-
   var requestOptions = {
     method: 'GET',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     redirect: 'follow',
   };
 
@@ -374,12 +373,13 @@ export const getPostDetail = async ({communityId, postId}) => {
 };
 
 export const getOtherProfile = async id => {
-  var myHeaders = new Headers();
-  myHeaders.append('Authorization', await getToken());
-  myHeaders.append('X-Platform', 'ANDROID');
   var requestOptions = {
     method: 'GET',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     redirect: 'follow',
   };
 
@@ -695,14 +695,13 @@ const returnResponse = async response => {
 };
 
 export const getSuggesstedTags = async tag => {
-  console.log('tag: ', tag);
-  var myHeaders = new Headers();
-  myHeaders.append('X-Platform', 'ANDROID');
-  myHeaders.append('Authorization', await getToken());
-
   var requestOptions = {
     method: 'GET',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     redirect: 'follow',
   };
 
@@ -714,13 +713,13 @@ export const getSuggesstedTags = async tag => {
 };
 
 export const getNotifications = async () => {
-  var myHeaders = new Headers();
-  myHeaders.append('X-Platform', 'ANDROID');
-  myHeaders.append('Authorization', await getToken());
-
   var requestOptions = {
     method: 'GET',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     redirect: 'follow',
   };
 
