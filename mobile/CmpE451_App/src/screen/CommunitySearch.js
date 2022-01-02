@@ -375,7 +375,7 @@ export default function CommunitySearch({navigation}) {
               </View>
             </View>
             <SwitchButton
-              firstText={'Hot'}
+              firstText={'New'}
               secondText={'Popular'}
               firstPress={setSortType}
               secondPress={setSortType}
