@@ -390,7 +390,7 @@ export const getOtherProfile = async id => {
     .then(response => response.text())
     .then(result => {
       //console.log('userIduserId ', id);
-      console.log('userProfile: ', result);
+      //console.log('userProfile: ', result);
       return JSON.parse(result);
     })
     .catch(error => console.log('error', error));
@@ -734,7 +734,6 @@ export const followUser = async ({userId}) => {
     },
   })
     .then(result => {
-      console.log(result);
       return returnResponse(result);
     })
     .catch(error => {
@@ -753,7 +752,6 @@ export const unfollowUser = async ({userId}) => {
     },
   })
     .then(response => {
-      console.log(response);
       return returnResponse(response);
     })
     .catch(error => {
@@ -777,7 +775,6 @@ export const acceptFollowRequest = async ({userId}) => {
     },
   )
     .then(response => {
-      console.log(response);
       return returnResponse(response);
     })
     .catch(error => {
