@@ -14,7 +14,7 @@ export default function SearchResultComponent({
 }) {
   return (
     <View style={{width:'100%'}}>
-      <TouchableOpacity onPress={() => onPress(id, name)}>
+      <TouchableOpacity testID="button" onPress={() => onPress(id, name)}>
         <View style={styles.feedItem}>
           <View style={{flexDirection: 'row'}}>
             <View style={{justifyContent: 'center'}}>
@@ -24,7 +24,7 @@ export default function SearchResultComponent({
               <Text style={styles.name}>{name}</Text>
             </View>
             {isPrivate && (
-              <View style={{justifyContent: 'center'}}>
+              <View testID="lockIcon" style={{justifyContent: 'center'}}>
                 <CommonIcon icon={'lock'} IconColor={'#36454F'} />
               </View>
             )}

@@ -309,7 +309,9 @@ export default function PostDetail({
           horizontal
           showsHorizontalScrollIndicator={false}
           style={{direction: 'row'}}>
-          <View style={{flexDirection: 'row', top: 10, marginRight: 15}}>
+          <View
+            style={{flexDirection: 'row', top: 10, marginRight: 15}}
+            key={1}>
             <View>
               {isLikedState ? (
                 <Icon
@@ -335,7 +337,8 @@ export default function PostDetail({
             style={{
               flexDirection: 'row',
               marginTop: 5,
-            }}>
+            }}
+            key={2}>
             <View>
               <IconButton
                 icon="comment"
@@ -349,6 +352,7 @@ export default function PostDetail({
           {tags?.map((item, index) => {
             return (
               <TouchableOpacity
+                key={index}
                 style={{
                   flexDirection: 'row',
                   marginTop: 5,

@@ -1,4 +1,3 @@
-var myHeaders = new Headers();
 import {getToken} from '../services/asyncStorageService';
 import {
   TEXT,
@@ -8,17 +7,16 @@ import {
 } from '../constants';
 
 export const createPost = async body => {
-  var myHeaders = new Headers();
-  myHeaders.append('Authorization', await getToken());
-  myHeaders.append('X-Platform', 'ANDROID');
-  myHeaders.append('Content-Type', 'application/json');
-
   var raw = JSON.stringify(body);
   console.log(body);
 
   var requestOptions = {
     method: 'POST',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     body: raw,
     redirect: 'follow',
   };
@@ -34,13 +32,13 @@ export const createPost = async body => {
     .catch(error => console.log('error', error));
 };
 export const getMyProfile = async () => {
-  var myHeaders = new Headers();
-  const token = await getToken();
-  myHeaders.append('X-Platform', 'ANDROID');
-  myHeaders.append('Authorization', token);
   var requestOptions = {
     method: 'GET',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     redirect: 'follow',
   };
   return fetch(BASE_URL + 'profile', requestOptions)
@@ -71,13 +69,13 @@ export const getCommunities = async isMember => {
 };
 
 export const getPostTypeDetail = async ({communityId, postTypeId}) => {
-  var myHeaders = new Headers();
-  myHeaders.append('X-Platform', 'ANDROID');
-  myHeaders.append('Authorization', await getToken());
-
   var requestOptions = {
     method: 'GET',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     redirect: 'follow',
   };
 
@@ -97,15 +95,13 @@ export const getPostTypeDetail = async ({communityId, postTypeId}) => {
 };
 
 export const updateUserSettings = async body => {
-  var myHeaders = new Headers();
-  console.log('body: ', body);
-  const token = await getToken();
-  myHeaders.append('X-Platform', 'ANDROID');
-  myHeaders.append('Authorization', token);
-  myHeaders.append('Content-Type', 'application/json');
   var requestOptions = {
     method: 'POST',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     redirect: 'follow',
     body: JSON.stringify(body),
   };
@@ -122,13 +118,13 @@ export const updateUserSettings = async body => {
 };
 
 export const getUserSettings = async () => {
-  var myHeaders = new Headers();
-  myHeaders.append('Authorization', await getToken());
-  myHeaders.append('X-Platform', 'ANDROID');
-
   var requestOptions = {
     method: 'GET',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     redirect: 'follow',
   };
 
@@ -141,14 +137,13 @@ export const getUserSettings = async () => {
 };
 
 export const getCommunityPosts = async communityId => {
-  var myHeaders = new Headers();
-  myHeaders.append('Authorization', await getToken());
-  myHeaders.append('X-Platform', 'ANDROID');
-  myHeaders.append('Content-Type', 'application/json');
-
   var requestOptions = {
     method: 'GET',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     redirect: 'follow',
   };
 
