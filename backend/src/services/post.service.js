@@ -383,7 +383,7 @@ exports.advancedSearch = async ({
       let isValid = true;
       textFields.forEach((t) => {
         const textField = p.textFields.find((te) => te.name === t.name);
-        if (!textField.value.includes(t.value)) {
+        if (!textField.value.toLowerCase().includes(t.value.toLowerCase())) {
           isValid = false;
         }
       });
@@ -412,7 +412,7 @@ exports.advancedSearch = async ({
       let isValid = true;
       linkFields.forEach((t) => {
         const linkField = p.linkFields.find((te) => te.name === t.name);
-        if (!linkField.value.includes(t.value)) {
+        if (!linkField.value.toLowerCase().includes(t.value.toLowerCase())) {
           isValid = false;
         }
       });
@@ -459,7 +459,7 @@ exports.advancedSearch = async ({
 
   if (tag && tag.length) {
     posts = posts.filter((p) => {
-      return p.tags.filter((t) => t.includes(tag)).length > 0;
+      return p.tags && p.tags.map((t) => t.name).filter((t) => t && t.toLowerCase().includes(tag.toLowerCase())).length > 0;
     });
   }
 
