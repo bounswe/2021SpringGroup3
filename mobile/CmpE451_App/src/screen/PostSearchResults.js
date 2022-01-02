@@ -15,7 +15,7 @@ import CommonIcon from '../component/CommonIcon';
 import {notFoundImg} from '../image/index';
 
 export default function PostSearchResults({navigation, route}) {
-  let {body, filterByPostType, filterByTags} = route.params;
+  let {body, filterByPostType, filterByTags, sortBy} = route.params;
   const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
@@ -24,16 +24,14 @@ export default function PostSearchResults({navigation, route}) {
 
   const searchCommunityHandler = async () => {
     let response;
-    if (!filterByPostType && !filterByTags) {
-      response = await client.getPosts({communityId: body.communityId});
-      setSearchResults(response);
-    } else if (!filterByPostType) {
+    if (!filterByPostType) {
       response = await client.searchPost({
         communityId: body.communityId,
         tag: body.tag,
+        sortBy: sortBy,
       });
     } else {
-      response = await client.advancedSearchPosts({body: body});
+      response = await client.advancedSearchPosts({body: body, sortBy: sortBy});
     }
     if (response.status === 200) {
       setSearchResults(response.data);
@@ -81,6 +79,7 @@ export default function PostSearchResults({navigation, route}) {
                 isLiked={item.isLiked}
                 likeCount={item.likeCount}
                 commentCount={item.commentCount}
+                tags={item.tags}
               />
             </TouchableOpacity>
           )}
@@ -104,7 +103,10 @@ export default function PostSearchResults({navigation, route}) {
 }
 
 const styles = {
-  container: {flex: 1, alignItems: 'center'},
+  container: {flex: 1},
+  feed: {
+    marginHorizontal: 16,
+  },
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'center',

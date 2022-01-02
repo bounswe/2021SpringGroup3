@@ -617,9 +617,9 @@ export const getPostTypes = async ({communityId}) => {
     });
 };
 
-export const advancedSearchPosts = async ({body}) => {
+export const advancedSearchPosts = async ({body, sortBy}) => {
   var raw = JSON.stringify(body);
-  return fetch(BASE_URL + 'posts/advancedSearch', {
+  return fetch(BASE_URL + 'posts/advancedSearch?sortBy=' + sortBy, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -637,9 +637,16 @@ export const advancedSearchPosts = async ({body}) => {
     });
 };
 
-export const searchPost = async ({communityId, tag = ''}) => {
+export const searchPost = async ({communityId, tag = '', sortBy}) => {
   return fetch(
-    BASE_URL + 'posts/search' + '?communityId=' + communityId + '&tag=' + tag,
+    BASE_URL +
+      'posts/search' +
+      '?communityId=' +
+      communityId +
+      '&sortBy=' +
+      sortBy +
+      '&tag=' +
+      tag,
     {
       method: 'GET',
       headers: {
