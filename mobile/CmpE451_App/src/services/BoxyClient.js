@@ -390,11 +390,12 @@ export const getOtherProfile = async id => {
     .then(response => response.text())
     .then(result => {
       //console.log('userIduserId ', id);
-      console.log('userProfile: ', result);
+      //console.log('userProfile: ', result);
       return JSON.parse(result);
     })
     .catch(error => console.log('error', error));
 };
+
 export const deleteAccount = async () => {
   return fetch(BASE_URL + 'profile/settings', {
     method: 'DELETE',
@@ -772,7 +773,6 @@ export const followUser = async ({userId}) => {
     },
   })
     .then(result => {
-      console.log(result);
       return returnResponse(result);
     })
     .catch(error => {
@@ -791,8 +791,77 @@ export const unfollowUser = async ({userId}) => {
     },
   })
     .then(response => {
-      console.log(response);
       return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const acceptFollowRequest = async ({userId}) => {
+  return fetch(
+    BASE_URL +
+      'profile/approve?userId=' +
+      userId,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const rejectFollowRequest = async ({userId}) => {
+  return fetch(
+    BASE_URL +
+      'profile/reject?userId=' +
+      userId,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const getPostsHome = async ({}) => {
+  return fetch(BASE_URL + 'posts/homepage' , {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(async response => {
+      const status = response.status;
+      response = await response.json();
+      if (status === 200) {
+        return response;
+      } else {
+        ToastAndroid.show(response.message, ToastAndroid.SHORT);
+      }
     })
     .catch(error => {
       console.info(error);
