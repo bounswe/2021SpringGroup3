@@ -6,6 +6,7 @@ import PostDetailComponent from '../component/PostDetail';
 import ScreenHeader from '../component/ScreenHeader';
 import {headerTextStyle} from '../theme/styles';
 import {useIsFocused} from '@react-navigation/native';
+import * as request from '../util/Requests';
 
 export default function PostDetail({route, navigation}) {
   const [idState, setId] = useState([]);
@@ -23,6 +24,9 @@ export default function PostDetail({route, navigation}) {
   const [commentCountState, setCommentCount] = useState(0);
   const isFocused = useIsFocused();
   const [tags, setTags] = useState();
+  const [isViewerPoster, setIsViewerPoster] = useState(false);
+
+  const {isModerator} = route.params;
 
   useEffect(() => {
     async function init() {
@@ -46,6 +50,8 @@ export default function PostDetail({route, navigation}) {
         commentCount,
         tags,
       } = JSON.parse(postDetailResponse);
+      const profile = await request.getMyProfile();
+
       setTags(tags);
       setId(id);
       setUser(user);
@@ -60,20 +66,33 @@ export default function PostDetail({route, navigation}) {
       setLikeCount(likeCount);
       setCommentsState(comments);
       setCommentCount(commentCount);
+
+      if((profile.username===user.username) || isModerator){
+        setIsViewerPoster(true);
+      }
+      else{
+        setIsViewerPoster(false);
+      }
+
     }
     if (isFocused) {
       init();
     }
   }, [isFocused]);
 
+  const navigate = async () => {
+    navigation.navigate('Main');
+  };
+
   return (
     <View>
       <ScreenHeader
         titleComponent={<Text style={headerTextStyle} />}
-        navigate={navigation.goBack}
-        iconName="arrow-left-circle"
+        navigate={navigate}
+        iconName='home-circle-outline'
       />
       <PostDetailComponent
+        Main={"Main"}
         id={idState}
         user={userState}
         date={dateState}
@@ -88,6 +107,7 @@ export default function PostDetail({route, navigation}) {
         comments={commentsState}
         commentCount={commentCountState}
         showComments={true}
+        showDelete={isViewerPoster}
         tags={tags}
       />
     </View>
