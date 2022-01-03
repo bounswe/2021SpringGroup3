@@ -22,6 +22,7 @@ export default function PostDetail({route, navigation}) {
   const [likeCountState, setLikeCount] = useState([]);
   const [commentsState, setCommentsState] = useState([]);
   const [commentCountState, setCommentCount] = useState(0);
+  const [postTypeState, setpostTypeState] = useState();
   const isFocused = useIsFocused();
   const [tags, setTags] = useState();
   const [isViewerPoster, setIsViewerPoster] = useState(false);
@@ -49,6 +50,7 @@ export default function PostDetail({route, navigation}) {
         comments,
         commentCount,
         tags,
+        postType,
       } = JSON.parse(postDetailResponse);
       const profile = await request.getMyProfile();
 
@@ -66,6 +68,7 @@ export default function PostDetail({route, navigation}) {
       setLikeCount(likeCount);
       setCommentsState(comments);
       setCommentCount(commentCount);
+      setpostTypeState(postType);
 
       if((profile.username===user.username) || isModerator){
         setIsViewerPoster(true);
@@ -109,6 +112,7 @@ export default function PostDetail({route, navigation}) {
         showComments={true}
         showDelete={isViewerPoster}
         tags={tags}
+        postType={postTypeState}
       />
     </View>
   );

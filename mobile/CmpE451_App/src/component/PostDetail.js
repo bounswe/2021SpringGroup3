@@ -17,6 +17,7 @@ import Comment from './Comment.js';
 import MapView from 'react-native-maps';
 import {WebView} from 'react-native-webview';
 import {useNavigation} from '@react-navigation/native';
+import {Button} from 'react-native-elements';
 
 import {
   FlatList,
@@ -46,6 +47,7 @@ export default function PostDetail({
   commentCount,
   tags,
   showDelete,
+  postType,
 }) {
   const [isLikedState, setIsLikedState] = useState();
   const [likeCounState, setLikeCountState] = useState();
@@ -228,13 +230,15 @@ export default function PostDetail({
   function isImage(text) {
     console.log('text: ', text);
     for (let i = 0; i < extensions.length; i++) {
-      if (text.value.toString().includes(extensions[i])) return true;
+      if (text.value.toString().includes(extensions[i])) {
+        return true;
+      }
     }
     return false;
   }
 
   function renderLinkFields(item) {
-    if (isImage(item))
+    if (isImage(item)) {
       return (
         <View>
           <Text style={styles.fieldName}>{item.name}</Text>
@@ -246,6 +250,7 @@ export default function PostDetail({
           <Text />
         </View>
       );
+    }
     return (
       <View>
         <Text style={styles.fieldName}>{item.name}</Text>
@@ -286,9 +291,19 @@ export default function PostDetail({
     <ScrollView>
       <View style={styles.feedItem}>
         <View>
-          <TouchableOpacity onPress={selectUser}>
-            <Image source={{uri: user.profilePhotoUrl}} style={styles.avatar} />
-          </TouchableOpacity>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <TouchableOpacity onPress={selectUser}>
+              <Image
+                source={{uri: user.profilePhotoUrl}}
+                style={styles.avatar}
+              />
+            </TouchableOpacity>
+            <Button
+              title={postType}
+              buttonStyle={styles.postTypeContainer}
+              titleStyle={styles.postTypeText}
+            />
+          </View>
           <View
             style={{
               flexDirection: 'row',
@@ -596,5 +611,19 @@ const styles = StyleSheet.create({
     color: '#fff',
     lineHeight: 20,
     margin: 20,
+  },
+  postTypeContainer: {
+    borderColor: COLORS.buttonColor,
+    backgroundColor: COLORS.buttonColor,
+    borderRadius: 20,
+    height: 25,
+    width: 120,
+    paddingVertical: 0,
+  },
+  postTypeText: {
+    color: COLORS.buttonTextColor,
+    fontSize: 10,
+    margin: 0,
+    paddingVertical: 0,
   },
 });

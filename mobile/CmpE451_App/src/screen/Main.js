@@ -88,6 +88,7 @@ export default function Main({navigation}) {
               commentCount={item.commentCount}
               tags={item.tags}
               showDelete={false}
+              postType={item.postType}
             />
           </TouchableOpacity>
         )}
