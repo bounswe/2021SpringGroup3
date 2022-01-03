@@ -51,15 +51,13 @@ export default function OtherUserProfile({navigation, route}) {
       setProfileImageUrl(profile.profilePhotoUrl);
       setUsername(profile.username);
       setProfileImageIsPublic(true);
-      if(profile.followStatus==="followed"){
+      if (profile.followStatus === 'followed') {
         setIsFollower(true);
         setIsPendingFollower(false);
-      }
-      else if(profile.followStatus==="waiting"){
+      } else if (profile.followStatus === 'waiting') {
         setIsFollower(false);
         setIsPendingFollower(true);
-      }
-      else{
+      } else {
         setIsFollower(false);
         setIsPendingFollower(false);
       }
@@ -74,15 +72,13 @@ export default function OtherUserProfile({navigation, route}) {
       userId: id,
     });
     if (response.status === 200) {
-      if(response.data.followStatus === "followed"){
+      if (response.data.followStatus === 'followed') {
         setIsFollower(true);
         setIsPendingFollower(false);
-      }
-      else if(response.data.followStatus === "waiting"){
+      } else if (response.data.followStatus === 'waiting') {
         setIsFollower(false);
         setIsPendingFollower(true);
-      }
-      else{
+      } else {
         setIsFollower(false);
         setIsPendingFollower(false);
       }
@@ -95,13 +91,11 @@ export default function OtherUserProfile({navigation, route}) {
       userId: id,
     });
     if (response.status === 200) {
-      if(response.data.followStatus === "followed"){
+      if (response.data.followStatus === 'followed') {
         setIsFollower(true);
-      }
-      else if(response.data.followStatus === "pending"){
+      } else if (response.data.followStatus === 'pending') {
         setIsPendingFollower(true);
-      }
-      else{
+      } else {
         setIsFollower(false);
         setIsPendingFollower(false);
       }
@@ -200,7 +194,7 @@ export default function OtherUserProfile({navigation, route}) {
               <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
                 User name:
               </Text>
-              <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
+              <Text style={[styles.text, {fontWeight: '200', fontSize: 25}]}>
                 {username}
               </Text>
             </View>
@@ -213,7 +207,7 @@ export default function OtherUserProfile({navigation, route}) {
               <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
                 Bio:
               </Text>
-              <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
+              <Text style={[styles.text, {fontWeight: '200', fontSize: 18}]}>
                 {bio != null ? (
                   bio
                 ) : (
@@ -248,7 +242,7 @@ export default function OtherUserProfile({navigation, route}) {
               <Text style={[styles.key, {color: '#AEB5BC', fontSize: 15}]}>
                 Birthday:
               </Text>
-              <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
+              <Text style={[styles.text, {fontWeight: '200', fontSize: 25}]}>
                 {birthday != null ? (
                   birthday.substring(0, birthday.lastIndexOf(':') - 6)
                 ) : (
@@ -415,6 +409,7 @@ const styles = StyleSheet.create({
     height: 25,
     width: 70,
     paddingVertical: 0,
+    margin: 30,
   },
   followText: {
     color: COLORS.buttonTextColor,

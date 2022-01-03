@@ -16,7 +16,7 @@ import * as client from '../services/BoxyClient';
 import Comment from './Comment.js';
 import MapView from 'react-native-maps';
 import {WebView} from 'react-native-webview';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 import {
   FlatList,
@@ -56,7 +56,6 @@ export default function PostDetail({
   const [comment, setComment] = useState('');
   const isFocused = useIsFocused();
   const [tagDetail, setTagDetail] = useState();
-  const [tagUrl, setTagUrl] = useState(null);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -113,11 +112,16 @@ export default function PostDetail({
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
   };
+  async function prepareTagDetail(id) {
+    const response = await client.getSuggesstedTags(id);
+    setTagDetail(response.data[0]);
+    return response;
+  }
 
   function tagDetailLoading() {
     return (
       <ActivityIndicator
-        style={{position: 'absolute', top: 250, left: 250}}
+        style={{position: 'center', top: 250, left: 250}}
         size="large"
       />
     );
@@ -153,9 +157,10 @@ export default function PostDetail({
     );
   }
 
-  async function prepareTagDetail(index) {
+  async function prepareTagDetail(id) {
     const response = await client.getSuggesstedTags(tags[index].id);
-    setTagUrl(response.data[0].concepturi);
+    setTagDetail(response.data[0]);
+    console.log('tag.detail: ', tagDetail);
   }
 
   function getTagDetail() {
@@ -176,7 +181,7 @@ export default function PostDetail({
             }}>
             <WebView
               source={{
-                uri: tagUrl,
+                uri: tagDetail.concepturi,
               }}
               style={{marginTop: 20}}
             />
@@ -196,6 +201,60 @@ export default function PostDetail({
     } else {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
+  };
+
+  const extensions = [
+    'jpg',
+    'jpeg',
+    'png',
+    'JPEG',
+    'PNG',
+    'JPG',
+    'JPE',
+    'jpe',
+    'TIFF',
+    'TIF',
+    'tiff',
+    'tif',
+    'HDR',
+    'hdr',
+    'PIC',
+    'pic',
+    'WEBP',
+    'webp',
+    'BMP',
+    'bmp',
+  ];
+  function isImage(text) {
+    console.log('text: ', text);
+    for (let i = 0; i < extensions.length; i++) {
+      if (text.value.toString().includes(extensions[i])) return true;
+    }
+    return false;
+  }
+
+  function renderLinkFields(item) {
+    if (isImage(item))
+      return (
+        <View>
+          <Text style={styles.fieldName}>{item.name}</Text>
+          <Image
+            resizeMode="contain"
+            source={{uri: item.value}}
+            style={{width: '90%', height: 300, borderRadius: 3}}
+          />
+          <Text />
+        </View>
+      );
+    return (
+      <View>
+        <Text style={styles.fieldName}>{item.name}</Text>
+        <TouchableOpacity onPress={() => Linking.openURL(item.value)}>
+          <Text style={{color: COLORS.buttonColor}}>{item.value}</Text>
+        </TouchableOpacity>
+        <Text />
+      </View>
+    );
   }
 
   const pressedDelete = () => {
@@ -243,15 +302,15 @@ export default function PostDetail({
               </Text>
               <Text style={styles.timestamp}>{moment(date).fromNow()}</Text>
             </View>
-            {showDelete &&
+            {showDelete && (
               <IconButton
                 icon="delete"
                 size={30}
-                color='red'
-                style={{alignSelf: 'flex-end', top:-30}}
-                onPress={()=>pressedDelete()}
+                color="red"
+                style={{alignSelf: 'flex-end', top: -30}}
+                onPress={() => pressedDelete()}
               />
-            }
+            )}
           </View>
         </View>
         <View>
@@ -299,15 +358,7 @@ export default function PostDetail({
           <FlatList
             showsHorizontalScrollIndicator={false}
             data={linkFieldNames}
-            renderItem={({item}) => (
-              <View>
-                <Text style={styles.fieldName}>{item.name}</Text>
-                <TouchableOpacity onPress={() => Linking.openURL(item.value)}>
-                  <Text style={{color: COLORS.buttonColor}}>{item.value}</Text>
-                </TouchableOpacity>
-                <Text />
-              </View>
-            )}
+            renderItem={({item}) => renderLinkFields(item)}
           />
         </View>
         <View>
@@ -399,9 +450,10 @@ export default function PostDetail({
                   marginTop: 5,
                 }}
                 onPress={() => {
-                  setIndex(index);
-                  prepareTagDetail(index)
+                  console.log('ITEM_ID: ', item.id);
+                  prepareTagDetail(item.id)
                     .then(res => {
+                      setIndex(index);
                       setShowModal(true);
                     })
                     .catch(err => {
