@@ -276,13 +276,19 @@ export default function PostDetail({
     );
   };
 
+  function selectUser() {
+    navigation.navigate('OtherUserProfile', {id: user.id});
+  }
+
   return showModal ? (
     getTagDetail()
   ) : (
     <ScrollView>
       <View style={styles.feedItem}>
         <View>
-          <Image source={{uri: user.profilePhotoUrl}} style={styles.avatar} />
+          <TouchableOpacity onPress={selectUser}>
+            <Image source={{uri: user.profilePhotoUrl}} style={styles.avatar} />
+          </TouchableOpacity>
           <View
             style={{
               flexDirection: 'row',
