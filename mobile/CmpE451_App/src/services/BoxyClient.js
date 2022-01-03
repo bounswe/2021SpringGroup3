@@ -635,7 +635,6 @@ const returnResponse = async response => {
 };
 
 export const getSuggesstedTags = async tag => {
-  console.log('tag: ', tag);
   var myHeaders = new Headers();
   myHeaders.append('X-Platform', 'ANDROID');
   myHeaders.append('Authorization', await getToken());
