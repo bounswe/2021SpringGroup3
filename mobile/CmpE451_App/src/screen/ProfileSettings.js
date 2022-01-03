@@ -45,6 +45,7 @@ export default function ProfileSettings({route}) {
   const [birthdayToggle, setToggleBirthday] = useState();
   const [locationToggle, setToggleLocation] = useState();
   const [profileImageToggle, setToggleProfileImage] = useState(true);
+  const [followToggle, setToggleFollow] = useState(false);
 
   const [showMap, setShowMap] = useState(false);
 
@@ -69,12 +70,13 @@ export default function ProfileSettings({route}) {
 
   useEffect(() => {
     async function getUserSettings() {
-      const {username, profilePhotoUrl, bio, birthday, location} =
+      const {username, profilePhotoUrl, bio, birthday, location, isPrivate} =
         await Request.getUserSettings();
       setToggleProfileImage(profilePhotoUrl.isPublic);
       setToggleBio(bio.isPublic);
       setToggleBirthday(birthday.isPublic);
       setToggleLocation(location.isPublic);
+      setToggleFollow(isPrivate);
     }
     getUserSettings();
   }, []);
@@ -97,6 +99,7 @@ export default function ProfileSettings({route}) {
   async function updateUserSettings() {
     const response = await Request.updateUserSettings(
       CleanEmptyValuesObject({
+        isPublic: followToggle,
         profilePhoto: profileImage
           ? {
               value: profileImage.base64,
@@ -241,6 +244,42 @@ export default function ProfileSettings({route}) {
             </View>
           </View>
           <View style={styles.infoContainer}>
+            <View
+              style={{
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignSelf: 'center',
+              }}>
+              <Text style={[styles.key, {color: '#AEB5BC', fontSize: 10}]}>
+                Follow request
+              </Text>
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    fontWeight: '200',
+                    fontSize: 16,
+                    width: '100%',
+                    alignSelf: 'center',
+                    marginLeft: 5,
+                  },
+                ]}>
+                Send me a request when someone wants to follow.
+              </Text>
+              <View style= {{marginBottom:8}}>
+              <ToggleSwitch
+                  isOn={followToggle}
+                  onColor="green"
+                  offColor="red"
+                  labelStyle={{color: 'black', fontWeight: '900'}}
+                  size="small"
+                  alignSelf="center"
+                  onToggle={isOn => setToggleFollow(!followToggle)}
+                  
+                />
+                </View>
+            </View>
+
             <View
               style={{
                 flexDirection: 'column',
