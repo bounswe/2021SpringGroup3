@@ -4,11 +4,10 @@ const { baseUtil } = require('../utils');
 const DEFAULT_PROFILE_PHOTO_URL = 'https://exoffender.org/wp-content/uploads/2016/09/empty-profile.png';
 
 const formatProfilePhotoUrl = (user, isFollowing = false) => {
-  let profilePhotoUrl = DEFAULT_PROFILE_PHOTO_URL;
-  if (user.profilePhotoUrl && (user.profilePhotoUrl.isPublic || isFollowing) && user.profilePhotoUrl.length > 0) {
-    profilePhotoUrl = user.profilePhotoUrl.value;
+  if (user.profilePhotoUrl && (user.profilePhotoUrl.isPublic || isFollowing) && user.profilePhotoUrl.value.length > 0) {
+    return user.profilePhotoUrl.value;
   }
-  return profilePhotoUrl;
+  return DEFAULT_PROFILE_PHOTO_URL;
 };
 
 const formatCreator = function (creator, isFollowing = false) {
