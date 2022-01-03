@@ -23,8 +23,11 @@ import MessageList from '../component/MessageList';
 import {COLORS} from '../theme/colors';
 import MapView, {Marker} from 'react-native-maps';
 import PostDetailComponent from '../component/PostDetail';
+import {useNavigation} from '@react-navigation/native';
 
-export default function CommunityPosts({}) {
+export default function CommunityPosts() {
+  const navigation = useNavigation();
+
   const [posts, setPosts] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -32,9 +35,18 @@ export default function CommunityPosts({}) {
     const _posts = await Request.getCommunityPosts(PAGE_VARIABLES.communityId);
     setPosts(_posts);
   }
+  function navigateToPost(postId, communityId) {
+    PAGE_VARIABLES.postId = postId;
+    PAGE_VARIABLES.communityId = communityId;
+    navigation.navigate('PostDetail', {isModerator: isModerator});
+  }
+
   useEffect(() => {
     getPosts();
   }, []);
+  const wait = timeout => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     getPosts();

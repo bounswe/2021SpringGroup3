@@ -54,8 +54,8 @@ export default function CreatePost({route}) {
   const [markerState, setMarker] = useState({
     target: 347,
     coordinate: {
-      latitude: 37.76135920121826,
-      longitude: -122.4682573019337,
+      latitude: 41,
+      longitude: 29,
     },
     position: {
       x: 150,
@@ -63,10 +63,10 @@ export default function CreatePost({route}) {
     },
   });
   const [regionState, setRegion] = useState({
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
+    latitude: 41,
+    longitude: 29,
+    latitudeDelta: 0.024867,
+    longitudeDelta: 0.036976,
   });
   const navigation = useNavigation();
 
