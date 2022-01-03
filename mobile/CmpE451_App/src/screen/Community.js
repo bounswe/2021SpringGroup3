@@ -234,7 +234,7 @@ export default function Community({navigation}) {
 
   function navigateToPost(postId) {
     PAGE_VARIABLES.postId = postId;
-    navigation.navigate('PostDetail');
+    navigation.navigate('PostDetail', {isModerator: isModerator},);
   }
 
   function CommunityPostsTab() {

@@ -26,6 +26,8 @@ export default function PostDetail({route, navigation}) {
   const [tags, setTags] = useState();
   const [isViewerPoster, setIsViewerPoster] = useState(false);
 
+  const {isModerator} = route.params;
+
   useEffect(() => {
     async function init() {
       const postDetailResponse = await Requests.getPostDetail({
@@ -65,7 +67,7 @@ export default function PostDetail({route, navigation}) {
       setCommentsState(comments);
       setCommentCount(commentCount);
 
-      if(profile.username===user.username){
+      if((profile.username===user.username) || isModerator){
         setIsViewerPoster(true);
       }
       else{

@@ -44,7 +44,7 @@ export default function PostSearchResults({navigation, route}) {
   function navigateToPost(postId, communityId) {
     PAGE_VARIABLES.postId = postId;
     PAGE_VARIABLES.communityId = communityId;
-    navigation.navigate('PostDetail');
+    navigation.navigate('PostDetail', {isModerator: false});
   }
 
   return (
