@@ -9,7 +9,11 @@ exports.getPosts = async ({ token, communityId, sortBy }) => {
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community does not exist');
   }
-
+  if (community.isPrivate) {
+    if (!baseUtil.checkIfObjectIdArrayIncludesId(community.members, token.user._id.toString())) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'You have to be a member of the community to be able to see the posts');
+    }
+  }
   const posts = await Post.find({
     community: community._id,
   })
