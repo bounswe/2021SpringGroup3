@@ -21,7 +21,7 @@ const communitySchema = mongoose.Schema(
     creator: { type: mongoose.SchemaTypes.ObjectId, ref: 'User', required: true, index: true },
     moderators: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
     members: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
-    memberCount: { type: Number, default: 0 },
+    memberCount: { type: Number, default: 1 },
     pendingMembers: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
     pendingModerators: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
     isCreatorDeleted: { type: Boolean, default: false },
