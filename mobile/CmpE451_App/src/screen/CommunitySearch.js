@@ -20,6 +20,29 @@ import SwitchButton from '../component/SwitchButton';
 import CommonTextInput from '../component/CommonTextInput';
 import {IconButton} from 'react-native-paper';
 
+export function convertNumberFields(field) {
+  return {
+    name: field.name,
+    value: {
+      start: field.value.start === '' ? Number.MIN_SAFE_INTEGER : field.value.start,
+      end: field.value.end === '' ? Number.MAX_SAFE_INTEGER : field.value.end,
+    },
+  };
+}
+
+export function convertLocationFields(field) {
+  return {
+    name: field.name,
+    value: {
+      geo: {
+        latitude: field.value.geo.latitude,
+        longitude: field.value.geo.longitude,
+        range: field.value.range === 0 ? 100 : field.value.range,
+      },
+    },
+  };
+}
+
 export default function CommunitySearch({navigation}) {
   const [filterByPostType, setFilterByPostType] = useState(true);
   const [filterByTags, setFilterByTags] = useState(true);
@@ -233,29 +256,6 @@ export default function CommunitySearch({navigation}) {
       filterByTags: filterByTags,
       sortBy: sortType,
     });
-  }
-
-  function convertNumberFields(field) {
-    return {
-      name: field.name,
-      value: {
-        start: field.value.start === '' ? Math.min() : field.value.start,
-        end: field.value.start === '' ? Math.max() : field.value.end,
-      },
-    };
-  }
-
-  function convertLocationFields(field) {
-    return {
-      name: field.name,
-      value: {
-        geo: {
-          latitude: field.value.geo.latitude,
-          longitude: field.value.geo.longitude,
-          range: field.value.range === 0 ? 100 : field.value.range,
-        },
-      },
-    };
   }
 
   return (

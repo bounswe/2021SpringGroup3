@@ -395,6 +395,7 @@ export const getOtherProfile = async id => {
     })
     .catch(error => console.log('error', error));
 };
+
 export const deleteAccount = async () => {
   return fetch(BASE_URL + 'profile/settings', {
     method: 'DELETE',
@@ -528,8 +529,12 @@ export const commentPost = async ({postId, comment}) => {
     });
 };
 
+export function getSearchCommunityUrl(query) {
+  return BASE_URL + 'communities/search' + '?query=' + query;
+}
+
 export const searchCommunity = async ({query}) => {
-  return fetch(BASE_URL + 'communities/search' + '?query=' + query, {
+  return fetch(getSearchCommunityUrl(query), {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -545,9 +550,13 @@ export const searchCommunity = async ({query}) => {
       ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
     });
 };
+
+export function getSearchUserUrl(query) {
+  return BASE_URL + 'profile/search' + '?query=' + query;
+}
 
 export const searchUser = async ({query}) => {
-  return fetch(BASE_URL + 'profile/search' + '?query=' + query, {
+  return fetch(getSearchUserUrl(query), {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -563,9 +572,13 @@ export const searchUser = async ({query}) => {
       ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
     });
 };
+
+export function getRecommendedCommunitiesUrl() {
+  return BASE_URL + 'communities/recommend';
+}
 
 export const getRecommendedCommunities = async () => {
-  return fetch(BASE_URL + 'communities/recommend', {
+  return fetch(getRecommendedCommunitiesUrl(), {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -582,8 +595,12 @@ export const getRecommendedCommunities = async () => {
     });
 };
 
+export function getRecommendedUsersUrl() {
+  return BASE_URL + 'profile/recommend';
+}
+
 export const getRecommendedUsers = async () => {
-  return fetch(BASE_URL + 'profile/recommend', {
+  return fetch(getRecommendedUsersUrl(), {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -599,8 +616,13 @@ export const getRecommendedUsers = async () => {
       ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
     });
 };
+
+export function getPostTypesUrl(communityId) {
+  return BASE_URL + 'post-types?communityId=' + communityId;
+}
+
 export const getPostTypes = async ({communityId}) => {
-  return fetch(BASE_URL + 'post-types?communityId=' + communityId, {
+  return fetch(getPostTypesUrl(communityId), {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -616,10 +638,14 @@ export const getPostTypes = async ({communityId}) => {
       ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
     });
 };
+
+export function getAdvancedSearchPostsUrl(sortBy) {
+  return BASE_URL + 'posts/advancedSearch?sortBy=' + sortBy;
+}
 
 export const advancedSearchPosts = async ({body, sortBy}) => {
   var raw = JSON.stringify(body);
-  return fetch(BASE_URL + 'posts/advancedSearch?sortBy=' + sortBy, {
+  return fetch(getAdvancedSearchPostsUrl(sortBy), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -637,25 +663,28 @@ export const advancedSearchPosts = async ({body, sortBy}) => {
     });
 };
 
-export const searchPost = async ({communityId, tag = '', sortBy}) => {
-  return fetch(
+export function getSearchPostsUrl(communityId, tag, sortBy) {
+  return (
     BASE_URL +
-      'posts/search' +
-      '?communityId=' +
-      communityId +
-      '&sortBy=' +
-      sortBy +
-      '&tag=' +
-      tag,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Platform': 'ANDROID',
-        Authorization: await getToken(),
-      },
+    'posts/search' +
+    '?communityId=' +
+    communityId +
+    '&sortBy=' +
+    sortBy +
+    '&tag=' +
+    tag
+  );
+}
+
+export const searchPost = async ({communityId, tag = '', sortBy}) => {
+  return fetch(getSearchPostsUrl(communityId, tag, sortBy), {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
     },
-  )
+  })
     .then(response => {
       return returnResponse(response);
     })
@@ -664,6 +693,10 @@ export const searchPost = async ({communityId, tag = '', sortBy}) => {
       ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
     });
 };
+
+export function getChangePasswordUrl() {
+  return BASE_URL + 'auth/changePassword';
+}
 
 export const changePassword = async ({body}) => {
   var raw = JSON.stringify(body);
