@@ -119,3 +119,15 @@ exports.joinModerators = catchAsync(async (req, res) => {
   });
   res.send(result);
 });
+
+exports.searchCommunity = catchAsync(async (req, res) => {
+  const result = await communityService.searchCommunity({
+    query: req.query.query,
+  });
+  res.send(result);
+});
+
+exports.recommend = catchAsync(async (req, res) => {
+  const result = await communityService.recommend();
+  res.send(result);
+});

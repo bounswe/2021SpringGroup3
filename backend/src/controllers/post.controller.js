@@ -6,6 +6,7 @@ exports.getPosts = catchAsync(async (req, res) => {
   const result = await postService.getPosts({
     token: req.token,
     communityId: req.query.communityId,
+    sortBy: req.query.sortBy,
   });
   res.send(result);
 });
@@ -47,7 +48,7 @@ exports.createComment = catchAsync(async (req, res) => {
   const result = await postService.createComment({
     token: req.token,
     text: req.body.text,
-    postId: req.body.postId,
+    postId: req.query.postId,
   });
   res.send(result);
 });
@@ -55,6 +56,49 @@ exports.createComment = catchAsync(async (req, res) => {
 exports.deletePost = catchAsync(async (req, res) => {
   const result = await postService.deletePost({
     token: req.token,
+    postId: req.query.postId,
+  });
+  res.send(result);
+});
+
+exports.getHomepage = catchAsync(async (req, res) => {
+  const result = await postService.getHomepage({
+    token: req.token,
+  });
+  res.send(result);
+});
+
+exports.search = catchAsync(async (req, res) => {
+  const result = await postService.search({
+    token: req.token,
+    communityId: req.query.communityId,
+    tag: req.query.tag,
+    postTypeId: req.query.postTypeId,
+    sortBy: req.query.sortBy,
+  });
+  res.send(result);
+});
+
+exports.advancedSearch = catchAsync(async (req, res) => {
+  const result = await postService.advancedSearch({
+    token: req.token,
+    communityId: req.body.communityId,
+    postTypeId: req.body.postTypeId,
+    textFields: req.body.textFields,
+    numberFields: req.body.numberFields,
+    dateFields: req.body.dateFields,
+    linkFields: req.body.linkFields,
+    locationFields: req.body.locationFields,
+    tag: req.body.tag,
+    sortBy: req.body.sortBy,
+  });
+  res.send(result);
+});
+
+exports.unlikePost = catchAsync(async (req, res) => {
+  const result = await postService.unlikePost({
+    token: req.token,
+    communityId: req.query.communityId,
     postId: req.query.postId,
   });
   res.send(result);

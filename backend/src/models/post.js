@@ -40,6 +40,16 @@ const locationField = new mongoose.Schema(
   }
 );
 
+const tagField = new mongoose.Schema(
+  {
+    id: { type: String },
+    name: { type: String },
+  },
+  {
+    _id: false,
+  }
+);
+
 const postSchema = mongoose.Schema(
   {
     postType: {
@@ -62,7 +72,7 @@ const postSchema = mongoose.Schema(
     locationFields: [locationField],
     likeCount: { type: Number, default: 0 },
     likers: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'User', index: true }],
-    tags: [{ type: String }],
+    tags: [tagField],
     isCreatorDeleted: { type: Boolean, default: false },
   },
   {
