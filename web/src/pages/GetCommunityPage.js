@@ -66,7 +66,7 @@ function GetCommunityPage(props) {
   const renderMember = (user) => ({
     value: (<Col key={user.id} span={24} style={{ cursor: 'pointer', marginBottom: '5px', marginTop: '5px' }} onClick={() => navigate(`/profiles/${user.id}`)}>
       <Space size='middle'>
-        <Avatar size={40} src={user.profilePhotoUrl.value} />
+        <Avatar size={40} src={user.profilePhotoUrl} />
         <Space direction='vertical' size='0px'>
           <Space>
             <Text strong>{user.username}</Text>
