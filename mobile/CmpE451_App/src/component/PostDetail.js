@@ -56,6 +56,7 @@ export default function PostDetail({
   const [comment, setComment] = useState('');
   const isFocused = useIsFocused();
   const [tagDetail, setTagDetail] = useState();
+  const [tagUrl, setTagUrl] = useState(null);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -112,16 +113,11 @@ export default function PostDetail({
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
   };
-  async function prepareTagDetail(id) {
-    const response = await client.getSuggesstedTags(id);
-    setTagDetail(response.data[0]);
-    return response;
-  }
 
   function tagDetailLoading() {
     return (
       <ActivityIndicator
-        style={{position: 'center', top: 250, left: 250}}
+        style={{position: 'absolute', top: 250, left: 250}}
         size="large"
       />
     );
@@ -157,10 +153,9 @@ export default function PostDetail({
     );
   }
 
-  async function prepareTagDetail(id) {
+  async function prepareTagDetail(index) {
     const response = await client.getSuggesstedTags(tags[index].id);
-    setTagDetail(response.data[0]);
-    console.log('tag.detail: ', tagDetail);
+    setTagUrl(response.data[0].concepturi);
   }
 
   function getTagDetail() {
@@ -181,7 +176,7 @@ export default function PostDetail({
             }}>
             <WebView
               source={{
-                uri: tagDetail.concepturi,
+                uri: tagUrl,
               }}
               style={{marginTop: 20}}
             />
@@ -404,10 +399,9 @@ export default function PostDetail({
                   marginTop: 5,
                 }}
                 onPress={() => {
-                  console.log('ITEM_ID: ', item.id);
-                  prepareTagDetail(item.id)
+                  setIndex(index);
+                  prepareTagDetail(index)
                     .then(res => {
-                      setIndex(index);
                       setShowModal(true);
                     })
                     .catch(err => {
