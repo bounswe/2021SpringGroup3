@@ -67,6 +67,7 @@ export default function PostSearchResults({navigation, route}) {
             <TouchableOpacity
               onPress={() => navigateToPost(item.id, item.community.id)}>
               <PostDetailComponent
+                Main={"Main"}
                 id={item.id}
                 user={item.user}
                 date={item.date}
@@ -80,6 +81,7 @@ export default function PostSearchResults({navigation, route}) {
                 likeCount={item.likeCount}
                 commentCount={item.commentCount}
                 tags={item.tags}
+                showDelete={false}
               />
             </TouchableOpacity>
           )}

@@ -41,7 +41,6 @@ export default function Profile() {
     async function getMyProfile() {
       const profile = await Request.getMyProfile();
       setLocation(profile.location);
-      console.log('location: ', location);
       setBio(profile.bio);
       setBirthday(profile.birthday);
       setProfileImageUrl(profile.profilePhotoUrl);
