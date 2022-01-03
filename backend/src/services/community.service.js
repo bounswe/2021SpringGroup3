@@ -118,6 +118,9 @@ exports.joinCommunity = async ({ token, communityId }) => {
         $addToSet: {
           members: token.user._id,
         },
+        $inc: {
+          memberCount: 1,
+        },
       },
       { new: true }
     );

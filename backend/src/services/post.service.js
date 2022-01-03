@@ -137,6 +137,9 @@ exports.likePost = async ({ token, postId }) => {
       $addToSet: {
         likers: token.user._id,
       },
+      $inc: {
+        likeCount: 1,
+      },
     },
     { new: true }
   )
@@ -165,6 +168,9 @@ exports.unlikePost = async ({ token, postId }) => {
     {
       $pull: {
         likers: token.user._id,
+      },
+      $inc: {
+        likeCount: -1,
       },
     },
     { new: true }

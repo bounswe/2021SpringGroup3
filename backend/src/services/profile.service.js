@@ -103,6 +103,9 @@ exports.deleteProfile = async ({ token }) => {
       $pull: {
         pendingFollowers: token.user._id,
       },
+      $inc: {
+        pendingFollowerCount: -1,
+      },
     }
   );
   const acs = await UserACS.create({

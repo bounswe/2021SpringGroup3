@@ -61,7 +61,7 @@ exports.formatPreviewCommunity = function (community) {
     iconUrl: community.iconUrl,
     description: community.description,
     isPrivate: community.isPrivate,
-    memberCount: community.memberCount || 0,
+    memberCount: community.memberCount,
   };
 };
 
