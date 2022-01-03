@@ -168,7 +168,7 @@ const AboutCommunity = (props) => {
                     return (
                         <Col span={24} style={{ cursor: 'pointer', marginBottom: '15px' }} onClick={() => navigate(`/profiles/${user.id}`)}>
                             <Space size='middle'>
-                                <Avatar size={40} src={user.profilePhotoUrl.value} />
+                                <Avatar size={40} src={user.profilePhotoUrl} />
                                 <Space direction='vertical' size='0px'>
                                     <Space>
                                         <Text strong>{user.username}</Text>
@@ -187,7 +187,7 @@ const AboutCommunity = (props) => {
                     return (
                         <Col span={24} style={{ cursor: 'pointer', marginBottom: '15px' }} onClick={() => navigate(`/profiles/${user.id}`)}>
                             <Space size='middle'>
-                                <Avatar size={40} src={user.profilePhotoUrl.value} />
+                                <Avatar size={40} src={user.profilePhotoUrl} />
                                 <Space direction='vertical' size='0px'>
                                     <Space>
                                         <Text strong>{user.username}</Text>
@@ -206,7 +206,7 @@ const AboutCommunity = (props) => {
                     </Col>
                         <Col span={24} style={{ cursor: 'pointer', marginBottom: '15px' }} onClick={() => navigate(`/profiles/${props.creator.id}`)}>
                             <Space size='middle'>
-                                <Avatar size={40} src={props.creator.profilePhotoUrl.value} />
+                                <Avatar size={40} src={props.creator.profilePhotoUrl} />
                                 <Space direction='vertical' size='0px'>
                                     <Space>
                                         <Text strong>{props.creator.username}</Text>
