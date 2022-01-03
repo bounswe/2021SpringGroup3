@@ -77,6 +77,7 @@ export default function CommunityPosts() {
               likeCount={item.likeCount}
               commentCount={item.commentCount}
               tags={item.tags}
+              postType={item.postType}
             />
           </TouchableOpacity>
         )}
