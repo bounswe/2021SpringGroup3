@@ -13,47 +13,29 @@ import * as client from '../services/BoxyClient';
 import {COLORS} from '../theme/colors';
 import PostDetailComponent from '../component/PostDetail';
 import SearchBar from '../component/SearchBar';
+import { withNavigationFocus } from 'react-navigation';
+import {useIsFocused} from '@react-navigation/native';
 
 export default function Main({navigation}) {
   const [memberCommunityList, setMemberCommunityList] = useState([]);
   const [postList, setPostList] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
+  const isFocused = useIsFocused();
+
 
   useEffect(() => {
     async function init() {
-      const _memberCommunityList = await client.getCommunities({
-        isMember: true,
-      });
-      setMemberCommunityList(_memberCommunityList);
-      const tempPostList = [];
-      for (let i = 0; i < _memberCommunityList.length; i++) {
-        const communityPostList = await client.getPosts({
-          communityId: _memberCommunityList[i].id,
-        });
-        for (let j = 0; j < communityPostList.length; j++) {
-          tempPostList.push(communityPostList[j]);
-        }
-      }
-      setPostList(tempPostList);
+      const _postList = await client.getPostsHome({});
+      setPostList(_postList);
     }
-    init();
-  }, []);
+    if(isFocused){
+      init();
+    }
+  }, [isFocused]);
 
   const _onRefreshPosts = async () => {
-    const _memberCommunityList = await client.getCommunities({
-      isMember: true,
-    });
-    setMemberCommunityList(_memberCommunityList);
-    const tempPostList = [];
-    for (let i = 0; i < _memberCommunityList.length; i++) {
-      const communityPostList = await client.getPosts({
-        communityId: _memberCommunityList[i].id,
-      });
-      for (let j = 0; j < communityPostList.length; j++) {
-        tempPostList.push(communityPostList[j]);
-      }
-    }
-    setPostList(tempPostList);
+    const _postList = await client.getPostsHome({});
+    setPostList(_postList);
   };
 
   const onRefresh = React.useCallback(() => {
@@ -69,7 +51,7 @@ export default function Main({navigation}) {
   function navigateToPost(postId, communityId) {
     PAGE_VARIABLES.postId = postId;
     PAGE_VARIABLES.communityId = communityId;
-    navigation.navigate('PostDetail');
+    navigation.navigate('PostDetail', {isModerator: false});
   }
 
   function navigateToSearch() {
@@ -91,6 +73,7 @@ export default function Main({navigation}) {
           <TouchableOpacity
             onPress={() => navigateToPost(item.id, item.community.id)}>
             <PostDetailComponent
+              Main={"Main"}
               id={item.id}
               user={item.user}
               date={item.date}
@@ -104,6 +87,7 @@ export default function Main({navigation}) {
               likeCount={item.likeCount}
               commentCount={item.commentCount}
               tags={item.tags}
+              showDelete={false}
             />
           </TouchableOpacity>
         )}

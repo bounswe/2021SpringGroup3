@@ -3,15 +3,14 @@ import {TEXT, PAGE_VARIABLES, BASE_URL} from '../constants';
 import ToastAndroid from 'react-native';
 
 export const createPost = async body => {
-  var myHeaders = new Headers();
-  myHeaders.append('Authorization', await getToken());
-  myHeaders.append('X-Platform', 'ANDROID');
-  myHeaders.append('Content-Type', 'application/json');
-
   var raw = JSON.stringify(body);
   var requestOptions = {
     method: 'POST',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     body: raw,
     redirect: 'follow',
   };
@@ -28,13 +27,13 @@ export const createPost = async body => {
 };
 
 export const getPostTypeDetail = async ({communityId, postTypeId}) => {
-  var myHeaders = new Headers();
-  myHeaders.append('X-Platform', 'ANDROID');
-  myHeaders.append('Authorization', await getToken());
-
   var requestOptions = {
     method: 'GET',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     redirect: 'follow',
   };
 
@@ -349,13 +348,13 @@ export const joinModerators = async ({communityId}) => {
 };
 
 export const getPostDetail = async ({communityId, postId}) => {
-  var myHeaders = new Headers();
-  myHeaders.append('X-Platform', 'ANDROID');
-  myHeaders.append('Authorization', await getToken());
-
   var requestOptions = {
     method: 'GET',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     redirect: 'follow',
   };
 
@@ -374,13 +373,13 @@ export const getPostDetail = async ({communityId, postId}) => {
 };
 
 export const getOtherProfile = async id => {
-  var myHeaders = new Headers();
-  myHeaders.append('Authorization', await getToken());
-  myHeaders.append('X-Platform', 'ANDROID');
-  console.log('IDDDDDD: ', id);
   var requestOptions = {
     method: 'GET',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     redirect: 'follow',
   };
 
@@ -390,12 +389,13 @@ export const getOtherProfile = async id => {
   )
     .then(response => response.text())
     .then(result => {
-      console.log('userIduserId ', id);
-      console.log('userProfile: ', result);
+      //console.log('userIduserId ', id);
+      //console.log('userProfile: ', result);
       return JSON.parse(result);
     })
     .catch(error => console.log('error', error));
 };
+
 export const deleteAccount = async () => {
   return fetch(BASE_URL + 'profile/settings', {
     method: 'DELETE',
@@ -456,15 +456,49 @@ export const getPosts = async ({communityId}) => {
     });
 };
 
-export const likePost = async ({postId}) => {
-  return fetch(BASE_URL + 'posts/like' + '?postId=' + postId, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Platform': 'ANDROID',
-      Authorization: await getToken(),
+export const likePost = async ({communityId, postId}) => {
+  return fetch(
+    BASE_URL +
+      'posts/like' +
+      '?communityId=' +
+      communityId +
+      '&postId=' +
+      postId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
     },
-  })
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const unlikePost = async ({communityId, postId}) => {
+  return fetch(
+    BASE_URL +
+      'posts/unlike' +
+      '?communityId=' +
+      communityId +
+      '&postId=' +
+      postId,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
     .then(response => {
       return returnResponse(response);
     })
@@ -495,8 +529,12 @@ export const commentPost = async ({postId, comment}) => {
     });
 };
 
+export function getSearchCommunityUrl(query) {
+  return BASE_URL + 'communities/search' + '?query=' + query;
+}
+
 export const searchCommunity = async ({query}) => {
-  return fetch(BASE_URL + 'communities/search' + '?query=' + query, {
+  return fetch(getSearchCommunityUrl(query), {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -512,9 +550,13 @@ export const searchCommunity = async ({query}) => {
       ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
     });
 };
+
+export function getSearchUserUrl(query) {
+  return BASE_URL + 'profile/search' + '?query=' + query;
+}
 
 export const searchUser = async ({query}) => {
-  return fetch(BASE_URL + 'profile/search' + '?query=' + query, {
+  return fetch(getSearchUserUrl(query), {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -530,9 +572,13 @@ export const searchUser = async ({query}) => {
       ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
     });
 };
+
+export function getRecommendedCommunitiesUrl() {
+  return BASE_URL + 'communities/recommend';
+}
 
 export const getRecommendedCommunities = async () => {
-  return fetch(BASE_URL + 'communities/recommend', {
+  return fetch(getRecommendedCommunitiesUrl(), {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -548,26 +594,13 @@ export const getRecommendedCommunities = async () => {
       ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
     });
 };
+
+export function getRecommendedUsersUrl() {
+  return BASE_URL + 'profile/recommend';
+}
 
 export const getRecommendedUsers = async () => {
-  return fetch(BASE_URL + 'profile/recommend', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Platform': 'ANDROID',
-      Authorization: await getToken(),
-    },
-  })
-    .then(response => {
-      return returnResponse(response);
-    })
-    .catch(error => {
-      console.info(error);
-      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
-    });
-};
-export const getPostTypes = async ({communityId}) => {
-  return fetch(BASE_URL + 'post-types?communityId=' + communityId, {
+  return fetch(getRecommendedUsersUrl(), {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -584,9 +617,35 @@ export const getPostTypes = async ({communityId}) => {
     });
 };
 
-export const advancedSearchPosts = async ({body}) => {
+export function getPostTypesUrl(communityId) {
+  return BASE_URL + 'post-types?communityId=' + communityId;
+}
+
+export const getPostTypes = async ({communityId}) => {
+  return fetch(getPostTypesUrl(communityId), {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export function getAdvancedSearchPostsUrl(sortBy) {
+  return BASE_URL + 'posts/advancedSearch?sortBy=' + sortBy;
+}
+
+export const advancedSearchPosts = async ({body, sortBy}) => {
   var raw = JSON.stringify(body);
-  return fetch(BASE_URL + 'posts/advancedSearch', {
+  return fetch(getAdvancedSearchPostsUrl(sortBy), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -604,18 +663,52 @@ export const advancedSearchPosts = async ({body}) => {
     });
 };
 
-export const searchPost = async ({communityId, tag = ''}) => {
-  return fetch(
-    BASE_URL + 'posts/search' + '?communityId=' + communityId + '&tag=' + tag,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Platform': 'ANDROID',
-        Authorization: await getToken(),
-      },
+export function getSearchPostsUrl(communityId, tag, sortBy) {
+  return (
+    BASE_URL +
+    'posts/search' +
+    '?communityId=' +
+    communityId +
+    '&sortBy=' +
+    sortBy +
+    '&tag=' +
+    tag
+  );
+}
+
+export const searchPost = async ({communityId, tag = '', sortBy}) => {
+  return fetch(getSearchPostsUrl(communityId, tag, sortBy), {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
     },
-  )
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export function getChangePasswordUrl() {
+  return BASE_URL + 'auth/changePassword';
+}
+
+export const changePassword = async ({body}) => {
+  var raw = JSON.stringify(body);
+  return fetch(BASE_URL + 'auth/changePassword', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+    body: raw,
+  })
     .then(response => {
       return returnResponse(response);
     })
@@ -653,13 +746,13 @@ export const getSuggesstedTags = async tag => {
 };
 
 export const getNotifications = async () => {
-  var myHeaders = new Headers();
-  myHeaders.append('X-Platform', 'ANDROID');
-  myHeaders.append('Authorization', await getToken());
-
   var requestOptions = {
     method: 'GET',
-    headers: myHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
     redirect: 'follow',
   };
 
@@ -668,4 +761,128 @@ export const getNotifications = async () => {
       return returnResponse(response);
     })
     .catch(error => console.log('error', error));
+};
+
+export const followUser = async ({userId}) => {
+  return fetch(BASE_URL + 'profile/follow?userId=' + userId, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(result => {
+      return returnResponse(result);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const unfollowUser = async ({userId}) => {
+  return fetch(BASE_URL + 'profile/unfollow?userId=' + userId, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const acceptFollowRequest = async ({userId}) => {
+  return fetch(
+    BASE_URL +
+      'profile/approve?userId=' +
+      userId,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const rejectFollowRequest = async ({userId}) => {
+  return fetch(
+    BASE_URL +
+      'profile/reject?userId=' +
+      userId,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Platform': 'ANDROID',
+        Authorization: await getToken(),
+      },
+    },
+  )
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const getPostsHome = async ({}) => {
+  return fetch(BASE_URL + 'posts/homepage' , {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(async response => {
+      const status = response.status;
+      response = await response.json();
+      if (status === 200) {
+        return response;
+      } else {
+        ToastAndroid.show(response.message, ToastAndroid.SHORT);
+      }
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
+};
+
+export const deletePost = async ({postId}) => {
+  return fetch(BASE_URL + 'posts?postId=' + postId, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Platform': 'ANDROID',
+      Authorization: await getToken(),
+    },
+  })
+    .then(response => {
+      return returnResponse(response);
+    })
+    .catch(error => {
+      console.info(error);
+      ToastAndroid.show(TEXT.networkError, ToastAndroid.SHORT);
+    });
 };

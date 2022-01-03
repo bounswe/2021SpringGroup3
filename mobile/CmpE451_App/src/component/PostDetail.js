@@ -16,6 +16,8 @@ import * as client from '../services/BoxyClient';
 import Comment from './Comment.js';
 import MapView from 'react-native-maps';
 import {WebView} from 'react-native-webview';
+import { useNavigation } from '@react-navigation/native';
+
 import {
   FlatList,
   ScrollView,
@@ -27,6 +29,7 @@ import {
 } from 'react-native';
 
 export default function PostDetail({
+  Main,
   id,
   user,
   date,
@@ -42,6 +45,7 @@ export default function PostDetail({
   showComments = false,
   commentCount,
   tags,
+  showDelete,
 }) {
   const [isLikedState, setIsLikedState] = useState();
   const [likeCounState, setLikeCountState] = useState();
@@ -53,6 +57,7 @@ export default function PostDetail({
   const isFocused = useIsFocused();
   const [tagDetail, setTagDetail] = useState();
   const [tagUrl, setTagUrl] = useState(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     async function init() {
@@ -67,7 +72,24 @@ export default function PostDetail({
   }, [commentCount, comments, isFocused, isLiked, likeCount]);
 
   const handleLikePost = async () => {
-    let response = await client.likePost({postId: id});
+    let response = await client.likePost({
+      communityId: community.id,
+      postId: id,
+    });
+    const status = response.status;
+    if (status === 200) {
+      setLikeCountState(response.data.likeCount);
+      setIsLikedState(response.data.isLiked);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  };
+
+  const handleUnlikePost = async () => {
+    let response = await client.unlikePost({
+      communityId: community.id,
+      postId: id,
+    });
     const status = response.status;
     if (status === 200) {
       setLikeCountState(response.data.likeCount);
@@ -78,11 +100,15 @@ export default function PostDetail({
   };
 
   const handleCommentPost = async () => {
-    let response = await client.commentPost({postId: id, comment: comment});
+    let response = await client.commentPost({
+      postId: id,
+      comment: comment,
+    });
     const status = response.status;
     if (status === 200) {
       setCommentsState(response.data.comments);
       setCommentCountState(response.data.comments.length);
+      setComment('');
     } else {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
@@ -160,6 +186,37 @@ export default function PostDetail({
     );
   }
 
+  const deletePost = async () => {
+    let response = await client.deletePost({
+      postId: id,
+    });
+    const status = response.status;
+    if (status === 200) {
+      navigation.navigate(Main);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  }
+
+  const pressedDelete = () => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to delete the post?',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => deletePost(),
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+  };
+
   return showModal ? (
     getTagDetail()
   ) : (
@@ -186,6 +243,15 @@ export default function PostDetail({
               </Text>
               <Text style={styles.timestamp}>{moment(date).fromNow()}</Text>
             </View>
+            {showDelete &&
+              <IconButton
+                icon="delete"
+                size={30}
+                color='red'
+                style={{alignSelf: 'flex-end', top:-30}}
+                onPress={()=>pressedDelete()}
+              />
+            }
           </View>
         </View>
         <View>
@@ -284,7 +350,9 @@ export default function PostDetail({
           horizontal
           showsHorizontalScrollIndicator={false}
           style={{direction: 'row'}}>
-          <View style={{flexDirection: 'row', top: 10, marginRight: 15}}>
+          <View
+            style={{flexDirection: 'row', top: 10, marginRight: 15}}
+            key={1}>
             <View>
               {isLikedState ? (
                 <Icon
@@ -292,6 +360,7 @@ export default function PostDetail({
                   size={24}
                   color={'red'}
                   style={{marginRight: 4}}
+                  onPress={handleUnlikePost}
                 />
               ) : (
                 <Icon
@@ -309,7 +378,8 @@ export default function PostDetail({
             style={{
               flexDirection: 'row',
               marginTop: 5,
-            }}>
+            }}
+            key={2}>
             <View>
               <IconButton
                 icon="comment"
@@ -323,6 +393,7 @@ export default function PostDetail({
           {tags?.map((item, index) => {
             return (
               <TouchableOpacity
+                key={index}
                 style={{
                   flexDirection: 'row',
                   marginTop: 5,
@@ -364,6 +435,7 @@ export default function PostDetail({
                 multiline
                 style={styles.commentText}
                 onChangeText={text => setComment(text)}
+                value={comment}
                 underlineColorAndroid="#f000"
                 placeholder="Add a comment"
                 placeholderTextColor="#8b9cb5"
@@ -391,7 +463,7 @@ export default function PostDetail({
               <Comment
                 id={item.id}
                 user={item.user}
-                date={item.date}
+                date={item.createdAt}
                 content={item.text}
               />
             )}

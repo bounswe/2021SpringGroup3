@@ -70,6 +70,32 @@ export default function Community({navigation}) {
   }, [isFocused]);
 
   useEffect(() => {
+    async function fetchCommunityDetails() {
+      let response = await client.getCommunityDetail({
+        communityId: PAGE_VARIABLES.communityId,
+      });
+
+      if (response.status === 200) {
+        setIconUrl(response.data.iconUrl);
+        setName(response.data.name);
+        setDescription(response.data.description);
+        setMembers(response.data.members);
+        setModerators(response.data.moderators);
+        setPendingMembers(response.data.pendingMembers);
+        setPendingModerators(response.data.pendingModerators);
+        setIsPrivate(response.data.isPrivate);
+        setIsMember(response.data.isMember);
+        setIsModerator(response.data.isModerator);
+        setIsPendingMember(response.data.isPendingMember);
+        setIsPendingModerator(response.data.isPendingModerator);
+      } else {
+        ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+      }
+    }
+    fetchCommunityDetails();
+  }, []);
+
+  useEffect(() => {
     async function resetStates() {
       setIconUrl('url');
       setName('');
@@ -206,11 +232,13 @@ export default function Community({navigation}) {
     );
   }
 
-  const navigate = async () => {
-    navigation.navigate('Main');
-  };
+  function navigateToPost(postId) {
+    PAGE_VARIABLES.postId = postId;
+    navigation.navigate('PostDetail', {isModerator: isModerator},);
+  }
+
   function CommunityPostsTab() {
-    return <CommunityPosts />;
+    return <CommunityPosts onPress={navigateToPost} />;
   }
   const navigatePendingRequests = () => {
     navigation.navigate('PendingRequests', {
@@ -430,7 +458,7 @@ const styles = StyleSheet.create({
   communityInfoHeader: {
     width: '100%',
     backgroundColor: COLORS.fieldHeaderColor,
-    paddingTop: 40,
+    paddingTop: 0,
   },
   rightIconContainer: {
     width: '100%',

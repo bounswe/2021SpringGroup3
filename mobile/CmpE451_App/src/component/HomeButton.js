@@ -1,5 +1,4 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
 import {IconButton} from 'react-native-paper';
 
 const HomeButton = ({navigation}) => {

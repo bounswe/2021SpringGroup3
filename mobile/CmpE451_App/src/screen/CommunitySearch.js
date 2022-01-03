@@ -16,10 +16,34 @@ import SearchableDropdown from 'react-native-searchable-dropdown';
 import {useIsFocused} from '@react-navigation/native';
 import {headerContainerStyle} from '../theme/styles';
 import CommonButton from '../component/CommonButton';
+import SwitchButton from '../component/SwitchButton';
 import CommonTextInput from '../component/CommonTextInput';
+import {IconButton} from 'react-native-paper';
+
+export function convertNumberFields(field) {
+  return {
+    name: field.name,
+    value: {
+      start: field.value.start === '' ? Number.MIN_SAFE_INTEGER : field.value.start,
+      end: field.value.end === '' ? Number.MAX_SAFE_INTEGER : field.value.end,
+    },
+  };
+}
+
+export function convertLocationFields(field) {
+  return {
+    name: field.name,
+    value: {
+      geo: {
+        latitude: field.value.geo.latitude,
+        longitude: field.value.geo.longitude,
+        range: field.value.range === 0 ? 100 : field.value.range,
+      },
+    },
+  };
+}
 
 export default function CommunitySearch({navigation}) {
-  const [searchResults, setSearchResults] = useState([]);
   const [filterByPostType, setFilterByPostType] = useState(true);
   const [filterByTags, setFilterByTags] = useState(true);
 
@@ -42,6 +66,8 @@ export default function CommunitySearch({navigation}) {
 
   const [showMap, setShowMap] = useState(false);
   const [locationIndex, setLocationIndex] = useState(-1);
+
+  const [sortType, setSortType] = useState('createdAt');
 
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -149,35 +175,35 @@ export default function CommunitySearch({navigation}) {
       textFieldNames,
       locationFieldNames,
     } = JSON.parse(postTypeDetail);
-    if (dateFieldNames != null && dateFieldNames.length > 0) {
+    if (dateFieldNames != null) {
       const dataFieldsTemp = [];
       for (let i = 0; i < dateFieldNames.length; i++) {
         dataFieldsTemp.push({name: dateFieldNames[i], value: {}});
       }
       setDateFields(dataFieldsTemp);
     }
-    if (linkFieldNames != null && linkFieldNames.length > 0) {
+    if (linkFieldNames != null) {
       const linkFieldsTemp = [];
       for (let i = 0; i < linkFieldNames.length; i++) {
         linkFieldsTemp.push({name: linkFieldNames[i], value: ''});
       }
       setLinkFields(linkFieldsTemp);
     }
-    if (textFieldNames != null && textFieldNames.length > 0) {
+    if (textFieldNames != null) {
       const textFieldsTemp = [];
       for (let i = 0; i < textFieldNames.length; i++) {
         textFieldsTemp.push({name: textFieldNames[i], value: ''});
       }
       setTextFields(textFieldsTemp);
     }
-    if (numberFieldNames != null && numberFieldNames.length > 0) {
-      const numberFielsTemp = [];
+    if (numberFieldNames != null) {
+      const numberFieldsTemp = [];
       for (let i = 0; i < numberFieldNames.length; i++) {
-        numberFielsTemp.push({name: numberFieldNames[i], value: {}});
+        numberFieldsTemp.push({name: numberFieldNames[i], value: {}});
       }
-      setNumberFields(numberFielsTemp);
+      setNumberFields(numberFieldsTemp);
     }
-    if (locationFieldNames != null && locationFieldNames.length > 0) {
+    if (locationFieldNames != null) {
       const locationFieldsTemp = [];
       for (let i = 0; i < locationFieldNames.length; i++) {
         locationFieldsTemp.push({
@@ -228,30 +254,8 @@ export default function CommunitySearch({navigation}) {
       body: body,
       filterByPostType: filterByPostType,
       filterByTags: filterByTags,
+      sortBy: sortType,
     });
-  }
-
-  function convertNumberFields(field) {
-    return {
-      name: field.name,
-      value: {
-        start: field.value.start === '' ? Math.min() : field.value.start,
-        end: field.value.start === '' ? Math.max() : field.value.end,
-      },
-    };
-  }
-
-  function convertLocationFields(field) {
-    return {
-      name: field.name,
-      value: {
-        geo: {
-          latitude: field.value.geo.latitude,
-          longitude: field.value.geo.longitude,
-          range: field.value.range === 0 ? 100 : field.value.range,
-        },
-      },
-    };
   }
 
   return (
@@ -278,8 +282,8 @@ export default function CommunitySearch({navigation}) {
           <View
             style={{
               flexDirection: 'row',
-              alignItems: 'flex-start',
               marginTop: 15,
+              alignItems: 'center',
             }}>
             <View style={{flex: 1}}>
               <Image source={postTypeIcon} style={styles.image} />
@@ -337,6 +341,7 @@ export default function CommunitySearch({navigation}) {
               style={{
                 flexDirection: 'row',
                 marginTop: 25,
+                alignItems: 'center',
               }}>
               <View style={{flex: 1}}>
                 <Image source={tagIcon} style={styles.image} />
@@ -351,6 +356,30 @@ export default function CommunitySearch({navigation}) {
               />
             </View>
             {filterByTags && <CommonTextInput onChangeText={setTags} />}
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 10,
+                alignItems: 'center',
+              }}>
+              <View style={{flex: 1}}>
+                <IconButton
+                  icon="sort-ascending"
+                  color={COLORS.fieldHeaderColor}
+                  size={40}
+                  style={{margin: 0, marginLeft: 7}}
+                />
+              </View>
+              <View style={{flex: 6}}>
+                <Text> Sort </Text>
+              </View>
+            </View>
+            <SwitchButton
+              firstText={'New'}
+              secondText={'Popular'}
+              firstPress={setSortType}
+              secondPress={setSortType}
+            />
             <View style={{width: '100%', alignItems: 'center', marginTop: 20}}>
               <CommonButton
                 text="Apply Filters"
