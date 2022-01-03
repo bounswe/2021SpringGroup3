@@ -160,7 +160,7 @@ export default function CreatePost({route}) {
       Alert.alert('Something Went Wrong', response.message);
     } else {
       PAGE_VARIABLES.postId = response.post.id;
-      navigation.navigate('PostDetail');
+      navigation.navigate('PostDetail', {isModerator: false});
     }
   }
 

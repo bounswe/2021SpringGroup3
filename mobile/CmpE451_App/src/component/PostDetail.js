@@ -16,6 +16,8 @@ import * as client from '../services/BoxyClient';
 import Comment from './Comment.js';
 import MapView from 'react-native-maps';
 import {WebView} from 'react-native-webview';
+import { useNavigation } from '@react-navigation/native';
+
 import {
   FlatList,
   ScrollView,
@@ -27,6 +29,7 @@ import {
 } from 'react-native';
 
 export default function PostDetail({
+  Main,
   id,
   user,
   date,
@@ -42,6 +45,7 @@ export default function PostDetail({
   showComments = false,
   commentCount,
   tags,
+  showDelete,
 }) {
   const [isLikedState, setIsLikedState] = useState();
   const [likeCounState, setLikeCountState] = useState();
@@ -52,6 +56,8 @@ export default function PostDetail({
   const [comment, setComment] = useState('');
   const isFocused = useIsFocused();
   const [tagDetail, setTagDetail] = useState();
+  const navigation = useNavigation();
+
   useEffect(() => {
     async function init() {
       setIsLikedState(isLiked);
@@ -185,6 +191,37 @@ export default function PostDetail({
     );
   }
 
+  const deletePost = async () => {
+    let response = await client.deletePost({
+      postId: id,
+    });
+    const status = response.status;
+    if (status === 200) {
+      navigation.navigate(Main);
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  }
+
+  const pressedDelete = () => {
+    Alert.alert(
+      'Warning',
+      'Are you sure you want to delete the post?',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => deletePost(),
+        },
+      ],
+      {
+        cancelable: true,
+      },
+    );
+  };
+
   return showModal ? (
     getTagDetail()
   ) : (
@@ -211,6 +248,15 @@ export default function PostDetail({
               </Text>
               <Text style={styles.timestamp}>{moment(date).fromNow()}</Text>
             </View>
+            {showDelete &&
+              <IconButton
+                icon="delete"
+                size={30}
+                color='red'
+                style={{alignSelf: 'flex-end', top:-30}}
+                onPress={()=>pressedDelete()}
+              />
+            }
           </View>
         </View>
         <View>
