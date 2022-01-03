@@ -97,39 +97,40 @@ export default function ProfileSettings({route}) {
   }
 
   async function updateUserSettings() {
-    const response = await Request.updateUserSettings(
-      CleanEmptyValuesObject({
-        isPublic: followToggle,
-        profilePhoto: profileImage
+    let body = CleanEmptyValuesObject({
+      isPublic: followToggle,
+      profilePhoto: profileImage
+        ? {
+            value: profileImage.base64,
+            isPublic: profileImageToggle,
+          }
+        : null,
+      bio: {
+        value: bio != '' ? bio : null,
+        isPublic: bioToggle,
+      },
+      birthday:
+        birthday != ''
           ? {
-              value: profileImage.base64,
-              isPublic: profileImageToggle,
+              value: birthday != '' ? birthday.toString() : null,
+              isPublic: birthdayToggle,
             }
           : null,
-        bio: {
-          value: bio != '' ? bio : null,
-          isPublic: bioToggle,
-        },
-        birthday:
-          birthday != ''
-            ? {
-                value: birthday != '' ? birthday.toString() : null,
-                isPublic: birthdayToggle,
-              }
-            : null,
-        location:
-          location === ''
-            ? null
-            : {
-                value: {
-                  langitute: regionState.latitude,
-                  latitude: regionState.latitude,
-                },
-                isPublic: locationToggle,
-                description: address,
+      location:
+        location === ''
+          ? null
+          : {
+              value: {
+                langitute: regionState.latitude,
+                latitude: regionState.latitude,
               },
-      }),
-    );
+              isPublic: locationToggle,
+              description: address,
+            },
+    });
+    body.isPublic = followToggle;
+    const response = await Request.updateUserSettings({body: body});
+    alert(JSON.stringify(response));
     navigation.navigate('Profile');
   }
   function chooseLocation() {

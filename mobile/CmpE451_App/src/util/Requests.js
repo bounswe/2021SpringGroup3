@@ -94,7 +94,7 @@ export const getPostTypeDetail = async ({communityId, postTypeId}) => {
     .catch(error => console.log('error', error));
 };
 
-export const updateUserSettings = async body => {
+export const updateUserSettings = async ({body}) => {
   var requestOptions = {
     method: 'POST',
     headers: {
