@@ -16,7 +16,7 @@ import * as client from '../services/BoxyClient';
 import Comment from './Comment.js';
 import MapView from 'react-native-maps';
 import {WebView} from 'react-native-webview';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 import {
   FlatList,
@@ -201,6 +201,60 @@ export default function PostDetail({
     } else {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
+  };
+
+  const extensions = [
+    'jpg',
+    'jpeg',
+    'png',
+    'JPEG',
+    'PNG',
+    'JPG',
+    'JPE',
+    'jpe',
+    'TIFF',
+    'TIF',
+    'tiff',
+    'tif',
+    'HDR',
+    'hdr',
+    'PIC',
+    'pic',
+    'WEBP',
+    'webp',
+    'BMP',
+    'bmp',
+  ];
+  function isImage(text) {
+    console.log('text: ', text);
+    for (let i = 0; i < extensions.length; i++) {
+      if (text.value.toString().includes(extensions[i])) return true;
+    }
+    return false;
+  }
+
+  function renderLinkFields(item) {
+    if (isImage(item))
+      return (
+        <View>
+          <Text style={styles.fieldName}>{item.name}</Text>
+          <Image
+            resizeMode="contain"
+            source={{uri: item.value}}
+            style={{width: '90%', height: 300, borderRadius: 3}}
+          />
+          <Text />
+        </View>
+      );
+    return (
+      <View>
+        <Text style={styles.fieldName}>{item.name}</Text>
+        <TouchableOpacity onPress={() => Linking.openURL(item.value)}>
+          <Text style={{color: COLORS.buttonColor}}>{item.value}</Text>
+        </TouchableOpacity>
+        <Text />
+      </View>
+    );
   }
 
   const pressedDelete = () => {
@@ -248,15 +302,15 @@ export default function PostDetail({
               </Text>
               <Text style={styles.timestamp}>{moment(date).fromNow()}</Text>
             </View>
-            {showDelete &&
+            {showDelete && (
               <IconButton
                 icon="delete"
                 size={30}
-                color='red'
-                style={{alignSelf: 'flex-end', top:-30}}
-                onPress={()=>pressedDelete()}
+                color="red"
+                style={{alignSelf: 'flex-end', top: -30}}
+                onPress={() => pressedDelete()}
               />
-            }
+            )}
           </View>
         </View>
         <View>
@@ -304,15 +358,7 @@ export default function PostDetail({
           <FlatList
             showsHorizontalScrollIndicator={false}
             data={linkFieldNames}
-            renderItem={({item}) => (
-              <View>
-                <Text style={styles.fieldName}>{item.name}</Text>
-                <TouchableOpacity onPress={() => Linking.openURL(item.value)}>
-                  <Text style={{color: COLORS.buttonColor}}>{item.value}</Text>
-                </TouchableOpacity>
-                <Text />
-              </View>
-            )}
+            renderItem={({item}) => renderLinkFields(item)}
           />
         </View>
         <View>

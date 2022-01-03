@@ -728,13 +728,13 @@ const returnResponse = async response => {
 };
 
 export const getSuggesstedTags = async tag => {
+  var myHeaders = new Headers();
+  myHeaders.append('X-Platform', 'ANDROID');
+  myHeaders.append('Authorization', await getToken());
+
   var requestOptions = {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Platform': 'ANDROID',
-      Authorization: await getToken(),
-    },
+    headers: myHeaders,
     redirect: 'follow',
   };
 
