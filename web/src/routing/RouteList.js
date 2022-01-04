@@ -19,7 +19,7 @@ import GetCommunityPage from '../pages/GetCommunityPage';
 import GetPostPage from '../pages/GetPostPage';
 import ProfilePage from '../pages/ProfilePage';
 import ProfileEditPage from '../pages/ProfileEditPage';
-
+import NotificationsPage from '../pages/NotificationsPage';
 
 export default function RouteList() {
   return (
@@ -29,6 +29,7 @@ export default function RouteList() {
         <Route path="/register" exact element={<PublicRoute><RegistrationPage/></PublicRoute>} />
         <Route path="/confirmation" exact element={<PublicRoute><ConfirmationPage/></PublicRoute>} />
         <Route path="/home" exact element={<AuthRoute><HomePage/></AuthRoute>} />
+        <Route path="/leftCommunity/:id" element={<AuthRoute><HomePage /></AuthRoute>} />
         <Route path="/createCommunity" exact element={<AuthRoute><CreateCommunityPage /></AuthRoute>} />
         <Route path="/createPostType" exact element={<AuthRoute><CreatePostTypePage /></AuthRoute>} />
         <Route path="/createPost" element={<AuthRoute><CreatePostPage /></AuthRoute>} />
@@ -38,6 +39,7 @@ export default function RouteList() {
         <Route path="/profile" element={<AuthRoute><ProfilePage /></AuthRoute>} />
         <Route path="/profile/edit" element={<AuthRoute><ProfileEditPage/></AuthRoute>} />
         <Route path="/profiles/:id" element={<AuthRoute><ProfilePage /></AuthRoute>} />
+        <Route path="/notifications" element={<AuthRoute><NotificationsPage /></AuthRoute>} />
         <Route path="*" element={<Navigate replace to="/login" />} />
       </Routes>
     </Router>

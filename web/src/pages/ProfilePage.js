@@ -4,10 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import NavBar from '../components/NavBar';
 import ProfileView from '../components/ProfileView';
-import { GetProfilePage as GetProfilePageRequest} from "../utils/helper";
+import { GetProfilePage as GetProfilePageRequest } from "../utils/helper";
 import { GetProfileOtherPage as GetProfileOtherPageRequest } from "../utils/helper";
 
-import { Layout, Col  } from 'antd';
+import { Layout, Col } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 
 function ProfilePage(props) {
@@ -15,6 +15,8 @@ function ProfilePage(props) {
     const loginState = useSelector((state) => state.login);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    console.log(loginState)
 
     const { id } = useParams('');
 
@@ -24,33 +26,32 @@ function ProfilePage(props) {
 
     useEffect(() => {
         if (id) {
-            GetProfileOtherPageRequest({token: loginState.token, id: id}, dispatch)
-            .then( result => {
-                setResult(result.data);
-                if('value' in result.data.location){
-                    setLatitude(result.data.location.value.latitude);
-                    setLongitude(result.data.location.value.longitude);
-                }
-
-                console.log(result);
-            })
+            GetProfileOtherPageRequest({ token: loginState.token, id: id }, dispatch)
+                .then(result => {
+                    setResult(result.data);
+                    if (result.data.location && result.data.location.value) {
+                        setLatitude(result.data.location.latitude);
+                        setLongitude(result.data.location.longitude);
+                    }
+                })
         } else {
-            GetProfilePageRequest({token: loginState.token}, dispatch)
-            .then( result => {
-                setResult(result.data);
-                setLatitude(result.data.location.value.latitude);
-                setLongitude(result.data.location.value.longitude);
-                console.log(result);
-            });
+            GetProfilePageRequest({ token: loginState.token }, dispatch)
+                .then(result => {
+                    setResult({... result.data, location: result.data.location.value ? {latitude: result.data.location.value.latitude, longitude: result.data.location.value.longitude } : {latitude: 29, longitude: 41 }});
+                    setLatitude(result.data.location.latitude);
+                    setLongitude(result.data.location.longitude);
+                });
         }
-    }, [])
+    }, [id])
 
     return (
         <Layout>
-            <Header ><NavBar /></Header>
+            <Header style={{ backgroundColor: '#3949ab' }}><NavBar /></Header>
             <Layout>
                 <Content>
-                    <ProfileView  userObj={result} latitude={latitude} longitude={longitude}/>
+                    <Col span={16} offset={4} style={{marginTop: '20px'}}>
+                        {result ? <ProfileView userObj={result} latitude={latitude} longitude={longitude} /> : <></>}
+                    </Col>
                 </Content>
             </Layout>
             <Footer></Footer>

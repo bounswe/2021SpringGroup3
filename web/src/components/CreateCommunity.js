@@ -1,5 +1,6 @@
-import React from 'react';
-import { Row, Col, Form, Input, Typography, Button, Radio, Select, Card} from 'antd';
+import { useState, React } from 'react';
+import { Row, Col, Form, Input, Typography, Button, Radio, Select, Card, Upload, message, notification } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -10,101 +11,122 @@ const { Option } = Select;
 
 
 const CreateCommunity = (props) => {
-    const loginState = useSelector((state) => state.login);
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
 
-    const onFinish = async (values) => {
-        console.log("Success: ", values);
-        
-        const id = await CreateCommunityRequest({name: values.communityName, token: loginState.token}, dispatch);
-        navigate(`/communities/${id}`)
+    const buttonStyle = {
+        backgroundColor: '#6f74dd',
+        borderColor: '#6f74dd',
+        color: '#ffffff',
+        cursor: 'pointer',
+        marginTop: '3px',
+        marginBottom: '3px',
+        fontWeight: 'bold'
     }
-    const onFinishFailed = (error) => {
-        console.log("Failed: ",error);
+
+    const cancelButtonStyle = {
+        backgroundColor: '#ffffff',
+        borderColor: '#6f74dd',
+        color: '#6f74dd',
+        cursor: 'pointer',
+        marginTop: '3px',
+        marginBottom: '3px'
     }
 
     const postCardStyle = {
         width: '100%',
         backgroundColor: '#f8f8f8',
         borderRadius: '20px'
-      }
+    }
 
-    return ( 
+    const loginState = useSelector((state) => state.login);
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const [isPrivate, setIsPrivate] = useState(false);
+
+    const onFinish = async (values) => {
+        let communityBody = {}
+        communityBody.iconUrl = values.iconUrl;
+        communityBody.name = values.communityName;
+        communityBody.description = values.description;
+        communityBody.isPrivate = isPrivate;
+        const id = await CreateCommunityRequest(communityBody, loginState.token, dispatch);
+        console.log(id)
+        if (id && id.length > 0) {
+            navigate(`/communities/${id}`)
+            notification.success({
+                message: `Community Created.`,
+            });
+        } else {
+            message.error('An error occured');
+        }
+    }
+
+    const onFinishFailed = (error) => {
+        console.log("Failed: ", error);
+    }
+
+    return (
         <Card size="small" style={postCardStyle}>
             <Row>
                 <Col span={24} align="middle">
                     <Title level={2} strong="true">Create a New Community</Title>
                 </Col>
-                <Col span={10} offset={7} align="middle">
+                <Col span={10} offset={7} align="middle" style={{ marginTop: '20px' }}>
                     <Form
                         name="basic"
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}
                     >
-                        <Text strong="true">Name</Text>
+                        <Text><b>Name</b></Text>
                         <Form.Item
                             name="communityName"
                             rules={[
                                 {
-                                    required:true,
+                                    required: true,
                                     message: "Community name cannot be empty!"
-                                }
-                            ]}
-                        > 
-                            <Input placeholder="Community Name"/>
-                        </Form.Item>
-                        
-                        <Text strong="true">Topics</Text>
-                        <Form.Item
-                            name="topics"
-                            rules={[
-                                { 
-                                    required: true, message: 'Please choose at least one topic!', type: 'array' 
+                                },
+                                {
+                                    min: 2,
+                                    message: "Community name should be at least 2 characters."
                                 }
                             ]}
                         >
-                            <Select mode="multiple">
-                                <Option value="1">Topic 1</Option>
-                                <Option value="2">Topic 2</Option>
-                                <Option value="3">Topic 3</Option>
-                            </Select>
+                            <Input placeholder="Community Name" />
                         </Form.Item>
-                        
-                        <Text strong="true">Description</Text>
+
+                        <Text><b>Description</b></Text>
                         <Form.Item
                             name="description"
                         >
-                            <Input.TextArea/>
+                            <Input.TextArea placeholder="Community Description" />
                         </Form.Item>
 
-                        <Text strong="true">Community Type</Text>
-                        <Form.Item 
+                        <Text><b>Icon URL</b></Text>
+                        <Form.Item
+                            name="iconUrl"
+                        >
+                            <Input placeholder="Community Icon URL" />
+                        </Form.Item>
+                        <Text><b>Privacy Type</b></Text>
+                        <Form.Item
                             name="communityType"
-                            rules={[
-                                {
-                                    required:true,
-                                    message: "Please choose the community type!"
-                                }
-                            ]}
                         >
                             <Radio.Group>
-                            <Radio value="public">Public</Radio>
-                            <Radio value="private">Private</Radio>
+                                <Radio.Button value="public" buttonStyle="solid" onChange={() => setIsPrivate(!isPrivate)} style={!isPrivate ? buttonStyle : cancelButtonStyle}>Public</Radio.Button>
+                                <Radio.Button value="private" buttonStyle="solid" onChange={() => setIsPrivate(!isPrivate)} style={isPrivate ? buttonStyle : cancelButtonStyle}>Private</Radio.Button>
                             </Radio.Group>
                         </Form.Item>
-
                         <Form.Item>
-                            <Button type="primary" shape="round" htmlType="submit">
-                                Submit
+                            <Button type="primary" shape="round" htmlType="submit" style={buttonStyle}>
+                                Submit Community
                             </Button>
                         </Form.Item>
-                    
+
                     </Form>
                 </Col>
-            </Row>         
+            </Row>
         </Card>
-     );
+    );
 }
- 
+
 export default CreateCommunity;

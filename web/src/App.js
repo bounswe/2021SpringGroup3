@@ -1,42 +1,16 @@
 
 import RouteList from './routing/RouteList';
-import React from "react";
+import React, { useEffect } from "react";
 import 'antd/dist/antd.css';
 import './App.css';
 
-import moment from 'moment' ;
+import OneSignal from 'react-onesignal';
 
 function App() {
 
-  let userObj = {
-    username: 'Ufuk',
-    profilePicture: 'https://avatars.githubusercontent.com/u/39625217?s=96&v=4',
-    bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    birthday: moment('11/11/2011'),
-    location: 'istanbul',
-    isProfilePicturePublic: true,
-    isBioPublic: true,
-    isBirthdayPublic: false,
-    isLocationPublic: false,
-    isProfilePublic: true
-  }
-
-  //   let userObj = {
-  //   id: 1,
-  //   username: 'Ufuk',
-  //   profilePicture: 'https://avatars.githubusercontent.com/u/39625217?s=96&v=4',
-  //   bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  //   birthday: '11/11/2011',
-  //   location: 'istanbul',
-  //   isProfilePicturePublic: true,
-  //   isBioPublic: true,
-  //   isBirthdayPublic: false,
-  //   isLocationPublic: false,
-  //   isProfilePublic: true,
-  //   followerCount: 100,
-  //   postCount: 10,
-  //   isFollowing: true
-  // }
+  // useEffect(() => {
+  //   OneSignal.init({ appId: process.env.REACT_APP_ONESIGNAL_APP_ID })
+  // });
 
   return (
     <>
