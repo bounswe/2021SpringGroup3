@@ -205,7 +205,7 @@ exports.deletePost = async ({ token, postId }) => {
   if (
     (post.community.moderators &&
       new Set(post.community.moderators.map((m) => m.toString())).has(token.user._id.toString())) ||
-    (post.creator && post.creator.toString() === token.user._id)
+    (post.creator && post.creator.toString() === token.user._id.toString())
   ) {
     await Post.deleteOne({ _id: post._id });
     await Comment.deleteMany({ post: post._id });
