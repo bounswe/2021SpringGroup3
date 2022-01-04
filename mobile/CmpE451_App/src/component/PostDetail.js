@@ -165,34 +165,6 @@ export default function PostDetail({
     console.log('tag.detail: ', tagDetail);
   }
 
-  function getTagDetail() {
-    return (
-      <Modal
-        transparent={true}
-        visible={showModal}
-        onRequestClose={() => {
-          setShowModal(false);
-        }}>
-        <View style={{backgroundColor: '#000000aa', flex: 1}}>
-          <View
-            style={{
-              backgroundColor: '#ffffff',
-              margin: 20,
-              borderRadius: 10,
-              flex: 1,
-            }}>
-            <WebView
-              source={{
-                uri: tagDetail.concepturi,
-              }}
-              style={{marginTop: 20}}
-            />
-          </View>
-        </View>
-      </Modal>
-    );
-  }
-
   const deletePost = async () => {
     let response = await client.deletePost({
       postId: id,
