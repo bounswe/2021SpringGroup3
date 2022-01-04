@@ -232,10 +232,10 @@ exports.followProfile = async ({ token, userId }) => {
       },
     });
     await UserACS.create({
-      summary: `${user.username} wants to follow ${token.user.username}`,
+      summary: `${token.user.username} wants to follow ${user.username}`,
       type: 'Request',
-      actor: user,
-      object: token.user,
+      actor: token.user,
+      object: user,
     });
   } else {
     user = await User.findByIdAndUpdate(
@@ -251,10 +251,10 @@ exports.followProfile = async ({ token, userId }) => {
       { new: true }
     );
     await UserACS.create({
-      summary: `${user.username} followed ${token.user.username}`,
+      summary: `${token.user.username} followed ${user.username}`,
       type: 'Follow',
-      actor: user,
-      object: token.user,
+      actor: token.user,
+      object: user,
     });
   }
   return {
