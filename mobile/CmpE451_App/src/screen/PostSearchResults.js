@@ -82,6 +82,7 @@ export default function PostSearchResults({navigation, route}) {
                 commentCount={item.commentCount}
                 tags={item.tags}
                 showDelete={false}
+                postType={item.postType}
               />
             </TouchableOpacity>
           )}
