@@ -43,13 +43,13 @@ let profileCardStyle = {
 
 const ProfileView = (props) => {
 
+    console.log(props.userObj)
+
     const loginState = useSelector((state) => state.login);
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const { id } = useParams();
-
-    console.log(props.userObj)
 
     const [isFollowing, setFollowing] = useState(props.userObj.isFollowing ? 1 : 0);
     const [followerCount, setFollowerCount] = useState(props.userObj.followerCount);
@@ -99,11 +99,11 @@ const ProfileView = (props) => {
         return (
             <GoogleMap
                 defaultZoom={10}
-                defaultCenter={{ lat: props.latitude, lng: props.longitude }}
+                defaultCenter={{ lat: props.userObj.location.latitude, lng: props.userObj.location.longitude }}
             >
                 <Marker
                     key={id}
-                    position={{ lat: props.latitude, lng: props.longitude }}
+                    position={{ lat: props.userObj.location.latitude, lng: props.userObj.location.longitude }}
                 />
             </GoogleMap>
         )
@@ -180,11 +180,11 @@ const ProfileView = (props) => {
                             <Col span={24}>
                                 <Space size={'middle'}>
                                     <strong>Location</strong>
-                                    {!props.latitude && <Text style={{ fontStyle: 'italic', color: "grey" }}>{`${props.userObj.username}'s location is not set, or private.`}</Text>}
+                                    {!props.userObj.location && <Text style={{ fontStyle: 'italic', color: "grey" }}>{`${props.userObj.username}'s location is not set, or private.`}</Text>}
                                 </Space>
                             </Col>
                             {
-                                props.latitude &&
+                                props.userObj.location &&
                                 <Col span={24}>
                                     <div style={{ height: "120px", width: "500px" }}>
                                         <WrappedMap

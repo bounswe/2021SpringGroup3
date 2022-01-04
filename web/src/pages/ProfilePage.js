@@ -30,16 +30,16 @@ function ProfilePage(props) {
                 .then(result => {
                     setResult(result.data);
                     if (result.data.location && result.data.location.value) {
-                        setLatitude(result.data.location.value.latitude);
-                        setLongitude(result.data.location.value.longitude);
+                        setLatitude(result.data.location.latitude);
+                        setLongitude(result.data.location.longitude);
                     }
                 })
         } else {
             GetProfilePageRequest({ token: loginState.token }, dispatch)
                 .then(result => {
-                    setResult(result.data);
-                    setLatitude(result.data.location.value.latitude);
-                    setLongitude(result.data.location.value.longitude);
+                    setResult({... result.data, location: {latitude: result.data.location.value.latitude, longitude: result.data.location.value.longitude }});
+                    setLatitude(result.data.location.latitude);
+                    setLongitude(result.data.location.longitude);
                 });
         }
     }, [id])
