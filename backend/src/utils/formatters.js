@@ -174,7 +174,7 @@ exports.formatOtherProfile = function (profile, user) {
     birthday: getValueFromProfileField(profile.birthday, isFollowing),
     location: getValueFromProfileField(profile.location, isFollowing),
     isPrivate: profile.isPrivate || false,
-    followerCount: user.followerCount,
+    followerCount: profile.followerCount,
     isFollowing,
   };
 };
