@@ -3,7 +3,8 @@ exports.CleanEmptyValuesObject = obj => {
     if (
       obj[propName] === '' ||
       obj[propName] === undefined ||
-      obj[propName] === null
+      obj[propName] === null ||
+      obj[propName].value === null
     ) {
       delete obj[propName];
     }

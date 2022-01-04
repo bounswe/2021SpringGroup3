@@ -21,7 +21,7 @@ import {headerTextStyle} from '../theme/styles';
 import * as client from '../services/BoxyClient';
 import {PAGE_VARIABLES} from '../constants';
 
-export default function CreateCommunity({navigation, route}) {
+export default function UpdateCommunity({navigation, route}) {
   let {name, iconUrl, description, isPrivate} = route.params;
 
   const [newName, setName] = useState(name);
@@ -42,6 +42,17 @@ export default function CreateCommunity({navigation, route}) {
     const status = response.status;
     if (status === 200) {
       navigate();
+    } else {
+      ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    }
+  };
+
+  const handleDeleteCommunity = async () => {
+    let response = await client.deleteCommunity({
+      communityId: PAGE_VARIABLES.communityId,
+    });
+    if (response.status / 100 == 2) {
+      navigation.navigate('Main');
     } else {
       ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
     }
@@ -129,6 +140,13 @@ export default function CreateCommunity({navigation, route}) {
               text="UPDATE"
               onPress={handleUpdateCommunity}
               buttonWidth={'80%'}
+            />
+            <CommonButton
+              text="DELETE"
+              buttonBackgroundColor={'#D22B2B'}
+              buttonMarginTop={28}
+              onPress={handleDeleteCommunity}
+              buttonWidth={'40%'}
             />
           </View>
         </KeyboardAvoidingView>

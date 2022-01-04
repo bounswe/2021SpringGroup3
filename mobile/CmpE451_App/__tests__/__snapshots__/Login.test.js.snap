@@ -1,0 +1,218 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    keyboardShouldPersistTaps="handled"
+    style={
+      Object {
+        "alignContent": "center",
+        "flex": 6,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <View
+      onLayout={[Function]}
+      style={
+        Object {
+          "flex": 1,
+          "justifyContent": "center",
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+          }
+        }
+      >
+        <Image
+          source={
+            Object {
+              "testUri": "../../../src/image/logo.png",
+            }
+          }
+          style={
+            Object {
+              "height": 100,
+              "margin": 30,
+              "resizeMode": "contain",
+              "width": "50%",
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+            "height": 40,
+            "margin": 10,
+            "marginLeft": 35,
+            "marginRight": 35,
+            "marginTop": 20,
+          }
+        }
+      >
+        <TextInput
+          autoCapitalize="sentences"
+          blurOnSubmit={false}
+          onChangeText={[Function]}
+          onSubmitEditing={[Function]}
+          placeholder="Email / Kullanıcı Adı"
+          placeholderTextColor="#8b9cb5"
+          returnKeyType="next"
+          style={
+            Object {
+              "borderColor": "#dadae8",
+              "borderRadius": 30,
+              "borderWidth": 1,
+              "color": "#141414",
+              "flex": 1,
+              "paddingLeft": 15,
+              "paddingRight": 15,
+            }
+          }
+          underlineColorAndroid="#f000"
+          value=""
+        />
+      </View>
+      <View
+        style={
+          Object {
+            "flexDirection": "row",
+            "height": 40,
+            "margin": 10,
+            "marginLeft": 35,
+            "marginRight": 35,
+            "marginTop": 20,
+          }
+        }
+      >
+        <TextInput
+          blurOnSubmit={false}
+          onChangeText={[Function]}
+          onSubmitEditing={[Function]}
+          placeholder="Şifre"
+          placeholderTextColor="#8b9cb5"
+          returnKeyType="next"
+          secureTextEntry={true}
+          style={
+            Object {
+              "borderColor": "#dadae8",
+              "borderRadius": 30,
+              "borderWidth": 1,
+              "color": "#141414",
+              "flex": 1,
+              "paddingLeft": 15,
+              "paddingRight": 15,
+            }
+          }
+          underlineColorAndroid="#f000"
+        />
+      </View>
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        nativeID="animatedComponent"
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#3849aa",
+            "borderColor": "#3849aa",
+            "borderRadius": 30,
+            "borderWidth": 0,
+            "color": "#3849aa",
+            "height": 40,
+            "marginBottom": 20,
+            "marginLeft": 35,
+            "marginRight": 35,
+            "marginTop": 20,
+            "opacity": 1,
+          }
+        }
+      >
+        <View>
+          <Text
+            style={
+              Object {
+                "color": "#ffffff",
+                "fontSize": 16,
+                "paddingVertical": 10,
+              }
+            }
+          >
+            Login
+          </Text>
+        </View>
+      </View>
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        nativeID="animatedComponent"
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#3849aa",
+            "borderColor": "#3849aa",
+            "borderRadius": 30,
+            "borderWidth": 0,
+            "color": "#3849aa",
+            "height": 40,
+            "marginBottom": 20,
+            "marginLeft": 35,
+            "marginRight": 35,
+            "marginTop": 20,
+            "opacity": 1,
+          }
+        }
+      >
+        <View>
+          <Text
+            style={
+              Object {
+                "color": "#ffffff",
+                "fontSize": 16,
+                "paddingVertical": 10,
+              }
+            }
+          >
+            Register
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+  />
+</View>
+`;

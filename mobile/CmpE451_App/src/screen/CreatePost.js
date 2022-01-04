@@ -1,5 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TextInput, ScrollView, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  Alert,
+  Modal,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import {BackHandler, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {IconButton} from 'react-native-paper';
@@ -11,13 +20,12 @@ import DynamicFormField from '../component/DynamicFormField';
 import FieldHeader from '../component/FieldHeader';
 import CommonButton from '../component/CommonButton';
 import ConfirmButton from '../component/ConfirmButton';
-import ScreenHeader from '../component/ScreenHeader';
+import DeleteButton from '../component/DeleteButton';
 import {PAGE_VARIABLES} from '../constants';
 import {COLORS} from '../theme/colors';
 import {textInputArea} from '../theme/styles';
 import {textInputContainer} from '../theme/styles';
 import {headerContainerStyle} from '../theme/styles';
-import {headerTextStyle} from '../theme/styles';
 import * as Requests from '../services/BoxyClient';
 
 export default function CreatePost({route}) {
@@ -27,20 +35,27 @@ export default function CreatePost({route}) {
   const [textFields, setTextFields] = useState([]);
   const [numberFields, setNumberFields] = useState([]);
   const [locationFields, setLocationFields] = useState([]);
+  const [tags, setTags] = useState([]);
   const [showMap, setShowMap] = useState(false);
+  const [showTags, setShowTags] = useState(false);
   const [address, setAddress] = useState('');
   const [locationIndex, setLocationIndex] = useState(-1);
+  const [showModal, setShowModal] = useState(false);
+  const [modalText, setModalText] = useState();
+  const [suggestedTags, setSuggestedTags] = useState([]);
+  const [index, setIndex] = useState(0);
   const textFieldKey = 'text';
   const numberFieldKey = 'number';
   const dateFieldKey = 'date';
   const linkFieldKey = 'link';
   const geoLocationFieldKey = 'geoLocation';
   const locationFieldKey = 'location';
+  const tagFieldKey = 'tag';
   const [markerState, setMarker] = useState({
     target: 347,
     coordinate: {
-      latitude: 37.76135920121826,
-      longitude: -122.4682573019337,
+      latitude: 41,
+      longitude: 29,
     },
     position: {
       x: 150,
@@ -48,12 +63,13 @@ export default function CreatePost({route}) {
     },
   });
   const [regionState, setRegion] = useState({
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
+    latitude: 41,
+    longitude: 29,
+    latitudeDelta: 0.024867,
+    longitudeDelta: 0.036976,
   });
   const navigation = useNavigation();
+
   function handleBackButtonClick() {
     navigation.goBack();
     return true;
@@ -137,13 +153,14 @@ export default function CreatePost({route}) {
       numberFields: numberFields,
       locationFields: locationFields,
       linkFields: linkFields,
+      tags: tags,
     });
     response = await JSON.parse(response);
     if (response.code === 400) {
       Alert.alert('Something Went Wrong', response.message);
     } else {
       PAGE_VARIABLES.postId = response.post.id;
-      navigation.navigate('PostDetail');
+      navigation.navigate('PostDetail', {isModerator: false});
     }
   }
 
@@ -190,6 +207,11 @@ export default function CreatePost({route}) {
           },
         };
         setLocationFields(_locationInputs);
+        break;
+      case 'tag':
+        const _tags = [...tags];
+        _tags[index] = input;
+        setTags(_tags);
         break;
       default:
         console.info('field type not found');
@@ -309,6 +331,193 @@ export default function CreatePost({route}) {
     );
   }
 
+  const addTagFieldHandler = () => {
+    const _tagInputs = [...tags];
+    _tagInputs.push({id: '', label: ''});
+    setTags(_tagInputs);
+  };
+
+  const deleteTagFieldHandler = deleteIndex => {
+    const _tagInputs = tags.filter((input, index) => index !== deleteIndex);
+    setTags(_tagInputs);
+  };
+
+  async function setSuggestedTagsHelper(text) {
+    if (text === '') return;
+    const suggesTedTags = await Requests.getSuggesstedTags(text);
+    setSuggestedTags(
+      suggesTedTags?.data.map(tag => {
+        return {
+          id: tag.id,
+          label: tag.label,
+          description: tag.description,
+        };
+      }),
+    );
+  }
+  function setInputHandler(item) {
+    inputHandler('tag', item, index);
+  }
+  function customModal() {
+    return (
+      <Modal
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => {
+          setShowModal(false);
+        }}>
+        <View style={{backgroundColor: '#000000aa', flex: 1}}>
+          <View
+            style={{
+              backgroundColor: '#ffffff',
+              margin: 50,
+              borderRadius: 10,
+              flex: 1,
+            }}>
+            <View style={headerContainerStyle}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyItems: 'space-between',
+                  justifyContent: 'space-between',
+                }}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                    flex: 5,
+                  }}>
+                  <Text style={{color: 'white', fontSize: 20}}>
+                    Post to {communityName}
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.textInput}
+                placeholder={'Enter tag name'}
+                value={customModal}
+                onChangeText={text => {
+                  setModalText(text.toUpperCase());
+                  setSuggestedTagsHelper(text.toUpperCase());
+                }}
+              />
+            </View>
+            <FlatList
+              data={suggestedTags}
+              showsVerticalScrollIndicator={false}
+              renderItem={({item, index}) => (
+                <TouchableOpacity
+                  style={{
+                    borderWidth: 0.3,
+                    margin: 5,
+                    padding: 5,
+                    borderRadius: 4,
+                    borderColor: 'gray',
+                  }}
+                  onPress={() => {
+                    setInputHandler({id: item.id, name: item.label});
+                    setShowModal(false);
+                  }}>
+                  <Text style={{fontSize: 16, fontWeight: '600'}}>
+                    {item?.label?.toUpperCase()}
+                  </Text>
+                  <Text style={{fontSize: 12, fontWeight: '400'}}>
+                    {item.description}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item, index) => item.id}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+
+  function getTags() {
+    return (
+      <View style={styles.container}>
+        <View style={headerContainerStyle}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyItems: 'space-between',
+              justifyContent: 'space-between',
+            }}>
+            <IconButton
+              icon="arrow-left-circle"
+              color={'white'}
+              size={30}
+              style={{flex: 1}}
+              onPress={() => {
+                setShowTags(false);
+              }}
+            />
+            <View
+              style={{justifyContent: 'center', flexDirection: 'row', flex: 5}}>
+              <Text style={{color: 'white', fontSize: 20}}>Add Tags</Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+              }}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            alignItems: 'center',
+          }}>
+          <View style={styles.fieldHeader}>
+            <Text style={styles.fieldHeaderText}>
+              {' '}
+              Tag your post (optional){' '}
+            </Text>
+            <IconButton
+              icon="plus"
+              color={COLORS.buttonColor}
+              size={30}
+              onPress={() => addTagFieldHandler()}
+            />
+          </View>
+          <View style={{alignItems: 'center', width: '80%', marginBottom: 10}}>
+            {tags.map((input, index) => (
+              <View
+                style={{
+                  width: '100%',
+                  flexDirection: 'row',
+                }}>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder={'Enter tag name'}
+                    value={input?.name?.toUpperCase()}
+                    onPressIn={() => {
+                      setIndex(index);
+                      setShowModal(true);
+                    }}
+                  />
+                </View>
+                <DeleteButton onPress={() => deleteTagFieldHandler(index)} />
+              </View>
+            ))}
+          </View>
+          <CommonButton
+            text="POST"
+            onPress={createPostHandler}
+            buttonWidth={'80%'}
+          />
+        </View>
+      </View>
+    );
+  }
+
   function postForm() {
     return (
       <View style={{width: '100%'}}>
@@ -334,17 +543,50 @@ export default function CreatePost({route}) {
   }
   return (
     <View style={styles.container}>
-      {showMap ? (
+      {showModal ? (
+        customModal()
+      ) : showTags ? (
+        getTags()
+      ) : showMap ? (
         getMapView()
       ) : (
         <>
-          <ScreenHeader
-            titleComponent={
-              <Text style={headerTextStyle}>Post to {communityName}</Text>
-            }
-            navigate={navigation.goBack}
-            iconName="arrow-left-circle"
-          />
+          <View style={headerContainerStyle}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyItems: 'space-between',
+                justifyContent: 'space-between',
+              }}>
+              <IconButton
+                icon="arrow-left-circle"
+                color={'white'}
+                size={30}
+                style={{flex: 1}}
+                onPress={navigation.goBack}
+              />
+              <View
+                style={{
+                  justifyContent: 'center',
+                  flexDirection: 'row',
+                  flex: 5,
+                }}>
+                <Text style={{color: 'white', fontSize: 20}}>
+                  Post to {communityName}
+                </Text>
+              </View>
+              <IconButton
+                icon="arrow-right-circle"
+                color={'white'}
+                size={30}
+                style={{flex: 1}}
+                onPress={() => {
+                  setShowTags(true);
+                }}
+              />
+            </View>
+          </View>
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{alignItems: 'center'}}>
               <View
@@ -354,11 +596,6 @@ export default function CreatePost({route}) {
                 }}>
                 {postForm()}
               </View>
-              <CommonButton
-                text="POST"
-                onPress={createPostHandler}
-                buttonWidth={'80%'}
-              />
             </View>
           </ScrollView>
         </>
@@ -370,6 +607,7 @@ const styles = {
   container: {
     flex: 1,
     height: '100%',
+    width: '100%',
     backgroundColor: COLORS.formBackgroundColor,
   },
   textInput: {
@@ -399,5 +637,24 @@ const styles = {
     color: '#fff',
     lineHeight: 20,
     margin: 20,
+  },
+  fieldHeaderText: {
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    color: '#00227b',
+  },
+  fieldHeader: {
+    width: '80%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 10,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgray',
   },
 };

@@ -9,7 +9,6 @@ import {
   Keyboard,
   ToastAndroid,
   TouchableOpacity,
-  ScrollView,
 } from 'react-native';
 
 import {COLORS} from '../theme/colors';
@@ -108,6 +107,7 @@ export default function Login({navigation}) {
                 passwordInputRef.current && passwordInputRef.current.focus()
               }
               blurOnSubmit={false}
+              value={username}
             />
           </View>
           <View style={styles.SectionStyle}>

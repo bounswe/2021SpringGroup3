@@ -12,14 +12,14 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {useIsFocused} from '@react-navigation/native';
 import {COLORS} from '../theme/colors';
 import {listItem} from '../theme/styles';
-import ScreenHeader from '../component/ScreenHeader';
 import {IconButton} from 'react-native-paper';
 import {Button} from 'react-native-elements';
 import {PAGE_VARIABLES} from '../constants';
 import * as client from '../services/BoxyClient';
 import UserList from '../component/UserList';
 import CommunityPosts from '../component/CommunityPosts';
-import MessageList from '../component/MessageList';
+import SearchBar from '../component/SearchBar';
+import HomeButton from '../component/HomeButton';
 
 export default function Community({navigation}) {
   const Tab = createMaterialTopTabNavigator();
@@ -70,6 +70,32 @@ export default function Community({navigation}) {
   }, [isFocused]);
 
   useEffect(() => {
+    async function fetchCommunityDetails() {
+      let response = await client.getCommunityDetail({
+        communityId: PAGE_VARIABLES.communityId,
+      });
+
+      if (response.status === 200) {
+        setIconUrl(response.data.iconUrl);
+        setName(response.data.name);
+        setDescription(response.data.description);
+        setMembers(response.data.members);
+        setModerators(response.data.moderators);
+        setPendingMembers(response.data.pendingMembers);
+        setPendingModerators(response.data.pendingModerators);
+        setIsPrivate(response.data.isPrivate);
+        setIsMember(response.data.isMember);
+        setIsModerator(response.data.isModerator);
+        setIsPendingMember(response.data.isPendingMember);
+        setIsPendingModerator(response.data.isPendingModerator);
+      } else {
+        ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+      }
+    }
+    fetchCommunityDetails();
+  }, []);
+
+  useEffect(() => {
     async function resetStates() {
       setIconUrl('url');
       setName('');
@@ -88,8 +114,6 @@ export default function Community({navigation}) {
       resetStates();
     }
   }, [navigation, isFocused]);
-
-  async function fetchPosts() {}
 
   async function handleJoinCommunity() {
     let response = await client.joinCommunity({
@@ -208,11 +232,13 @@ export default function Community({navigation}) {
     );
   }
 
-  const navigate = async () => {
-    navigation.navigate('Main');
-  };
+  function navigateToPost(postId) {
+    PAGE_VARIABLES.postId = postId;
+    navigation.navigate('PostDetail', {isModerator: isModerator},);
+  }
+
   function CommunityPostsTab() {
-    return <CommunityPosts />;
+    return <CommunityPosts onPress={navigateToPost} />;
   }
   const navigatePendingRequests = () => {
     navigation.navigate('PendingRequests', {
@@ -281,9 +307,15 @@ export default function Community({navigation}) {
       </ScrollView>
     );
   }
+  function navigateToSearch() {
+    navigation.navigate('CommunitySearch');
+  }
   return (
     <View style={styles.container}>
-      <ScreenHeader title="Communities" navigate={navigate} />
+      <View style={styles.headerContainer}>
+        <HomeButton navigation={navigation} />
+        <SearchBar searchText="Search:Posts" onPress={navigateToSearch} />
+      </View>
       {isModerator && (
         <View style={styles.rightIconContainer}>
           <View style={{flexDirection: 'row'}}>
@@ -390,6 +422,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 7,
+    backgroundColor: COLORS.screenHeaderBackground,
+    height: 55,
+  },
   communityName: {
     color: COLORS.textColor,
     fontSize: 25,
@@ -418,7 +458,7 @@ const styles = StyleSheet.create({
   communityInfoHeader: {
     width: '100%',
     backgroundColor: COLORS.fieldHeaderColor,
-    paddingTop: 40,
+    paddingTop: 0,
   },
   rightIconContainer: {
     width: '100%',

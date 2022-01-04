@@ -25,7 +25,10 @@ import Communities from './screen/Communities';
 import Community from './screen/Community';
 import OtherUserProfile from './screen/OtherUserProfile';
 import PendingRequests from './screen/PendingRequests';
+import PendingRequestsFollow from './screen/PendingRequestsFollow';
 import UpdateCommunity from './screen/UpdateCommunity';
+import CommunitySearch from './screen/CommunitySearch';
+import PostSearchResults from './screen/PostSearchResults';
 import Settings from './screen/Settings';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {screenOptionStyle} from './theme/styles';
@@ -93,7 +96,7 @@ export function Navigator() {
         name="OtherUserProfile"
         component={OtherUserProfile}
       />
-       <Stack.Screen
+      <Stack.Screen
         options={{headerShown: false}}
         name="PendingRequests"
         component={PendingRequests}
@@ -107,6 +110,21 @@ export function Navigator() {
         options={{headerShown: false}}
         name="ProfileSettings"
         component={ProfileSettings}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="PendingRequestsFollow"
+        component={PendingRequestsFollow}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="CommunitySearch"
+        component={CommunitySearch}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="PostSearchResults"
+        component={PostSearchResults}
       />
     </Stack.Navigator>
   );
@@ -150,7 +168,9 @@ function BottomNavigator() {
         }}
       />
       <Tab.Screen
-        options={screenOptionStyle}
+        options={{
+          headerShown: false,
+        }}
         name="Search"
         component={Search}
         listeners={({navigation, route}) => ({})}

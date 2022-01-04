@@ -1,44 +1,69 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, Image, FlatList, StatusBar} from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import {View, Text} from 'react-native';
+import React from 'react';
+import {IconButton} from 'react-native-paper';
+import {COLORS} from '../theme/colors';
+import {TouchableOpacity, StyleSheet, TextInput, Keyboard} from 'react-native';
 
-export default function SearchBar() {
-  const [search, setSearch] = useState('Arama....');
+export default function SearchBar({
+  searchText = 'Search',
+  onPress,
+  isSearchEnabled,
+  onSearch,
+}) {
   return (
-    <View style={styles.container}>
-      <Ionicons name="md-search-outline" style={styles.searchIcon}></Ionicons>
-      <TextInput
-        style={styles.searcHInput}
-        placeholder={search}
-        onChangeText={() => {
-          setSearch(search, ...search);
-        }}></TextInput>
+    <View style={styles.searchBarContainer}>
+      <TouchableOpacity style={styles.searchBar} onPress={onPress}>
+        <IconButton
+          icon="magnify"
+          size={24}
+          color={COLORS.unlikeButtonColor}
+          style={{flex: 1}}
+        />
+        {isSearchEnabled ? (
+          <TextInput
+            style={styles.input}
+            underlineColorAndroid="#f000"
+            placeholder={searchText}
+            placeholderTextColor={COLORS.unlikeButtonColor}
+            returnKeyType="next"
+            onChangeText={text => onSearch(text)}
+            blurOnSubmit={false}
+            onSubmitEditing={() => Keyboard.dismiss()}
+          />
+        ) : (
+          <Text style={{flex: 9, fontSize: 15}}>{searchText}</Text>
+        )}
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: '60%',
-    height: '90%',
-    backgroundColor: '#d5d5db',
-    borderRadius: 8,
+  searchBarContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
+    height: '95%',
+    width: '90%',
+    backgroundColor: '#E5E4E2',
+    border: 3,
+    borderRadius: 2,
+    marginHorizontal: 4,
   },
-  searcHInput: {
-    width: '100%',
-    height: '100%',
-    paddingLeft: 15,
-    fontSize: 16,
-    paddingTop: 10,
+  searchBar: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '80%',
+    width: '95%',
+    backgroundColor: '#D3D3D3',
+    border: 3,
+    borderRadius: 10,
   },
-  searchIcon: {
-    color: 'black',
-    marginLeft: 30,
-    marginTop: 15,
-    height: 20,
-    width: 20,
+  input: {
+    height: 40,
+    marginVertical: 12,
+    flex: 9,
+    paddingVertical: 10,
   },
 });

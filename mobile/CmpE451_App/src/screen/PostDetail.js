@@ -1,42 +1,33 @@
-import {View, Text, Linking} from 'react-native';
+import {View, Text} from 'react-native';
 import React, {useState, useEffect} from 'react';
-import {TEXT, PAGE_VARIABLES} from '../constants';
-import {AXIOS_CLIENT} from '../services/axiosCientService';
+import {PAGE_VARIABLES} from '../constants';
 import * as Requests from '../services/BoxyClient';
 import PostDetailComponent from '../component/PostDetail';
 import ScreenHeader from '../component/ScreenHeader';
 import {headerTextStyle} from '../theme/styles';
+import {useIsFocused} from '@react-navigation/native';
+import * as request from '../util/Requests';
 
 export default function PostDetail({route, navigation}) {
-  const [id, setId] = useState([]);
-  const [user, setUser] = useState([]);
-  const [community, setCommunity] = useState([]);
-  const [date, setDate] = useState([]);
-  const [dateFieldNames, setDateFieldNames] = useState([]);
-  const [linkFieldNames, setLinkFieldNames] = useState([]);
-  const [textFieldNames, setTextFieldNames] = useState([]);
-  const [numberFieldNames, setNumberFieldNames] = useState([]);
-  const [locationFieldNames, setLocationFieldNames] = useState([]);
-  const [isLiked, setIsLiked] = useState([]);
-  const [likeCount, setLikeCount] = useState([]);
+  const [idState, setId] = useState([]);
+  const [userState, setUser] = useState([]);
+  const [communityState, setCommunity] = useState([]);
+  const [dateState, setDate] = useState([]);
+  const [dateFieldNamesState, setDateFieldNames] = useState([]);
+  const [linkFieldNamesState, setLinkFieldNames] = useState([]);
+  const [textFieldNamesState, setTextFieldNames] = useState([]);
+  const [numberFieldNamesState, setNumberFieldNames] = useState([]);
+  const [locationFieldNamesState, setLocationFieldNames] = useState([]);
+  const [isLikedState, setIsLiked] = useState([]);
+  const [likeCountState, setLikeCount] = useState([]);
+  const [commentsState, setCommentsState] = useState([]);
+  const [commentCountState, setCommentCount] = useState(0);
+  const [postTypeState, setpostTypeState] = useState();
+  const isFocused = useIsFocused();
+  const [tags, setTags] = useState();
+  const [isViewerPoster, setIsViewerPoster] = useState(false);
 
-  const [markerState, setMarker] = useState({
-    target: 347,
-    coordinate: {
-      latitude: 37.76135920121826,
-      longitude: -122.4682573019337,
-    },
-    position: {
-      x: 150,
-      y: 269,
-    },
-  });
-  const [regionState, setRegion] = useState({
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
+  const {isModerator} = route.params;
 
   useEffect(() => {
     async function init() {
@@ -56,8 +47,14 @@ export default function PostDetail({route, navigation}) {
         locationFieldNames,
         isLiked,
         likeCount,
+        comments,
+        commentCount,
+        tags,
+        postType,
       } = JSON.parse(postDetailResponse);
+      const profile = await request.getMyProfile();
 
+      setTags(tags);
       setId(id);
       setUser(user);
       setDate(date);
@@ -69,9 +66,22 @@ export default function PostDetail({route, navigation}) {
       setLocationFieldNames(locationFieldNames);
       setIsLiked(isLiked);
       setLikeCount(likeCount);
+      setCommentsState(comments);
+      setCommentCount(commentCount);
+      setpostTypeState(postType);
+
+      if((profile.username===user.username) || isModerator){
+        setIsViewerPoster(true);
+      }
+      else{
+        setIsViewerPoster(false);
+      }
+
     }
-    init();
-  }, []);
+    if (isFocused) {
+      init();
+    }
+  }, [isFocused]);
 
   const navigate = async () => {
     navigation.navigate('Main');
@@ -80,22 +90,29 @@ export default function PostDetail({route, navigation}) {
   return (
     <View>
       <ScreenHeader
-        titleComponent={<Text style={headerTextStyle}></Text>}
+        titleComponent={<Text style={headerTextStyle} />}
         navigate={navigate}
-        iconName="arrow-left-circle"
+        iconName='home-circle-outline'
       />
       <PostDetailComponent
-        id={id}
-        user={user}
-        date={date}
-        community={community}
-        textFieldNames={textFieldNames}
-        numberFieldNames={numberFieldNames}
-        dateFieldNames={dateFieldNames}
-        linkFieldNames={linkFieldNames}
-        locationFieldNames={locationFieldNames}
-        isLiked={isLiked}
-        likeCount={likeCount}
+        Main={"Main"}
+        id={idState}
+        user={userState}
+        date={dateState}
+        community={communityState}
+        textFieldNames={textFieldNamesState}
+        numberFieldNames={numberFieldNamesState}
+        dateFieldNames={dateFieldNamesState}
+        linkFieldNames={linkFieldNamesState}
+        locationFieldNames={locationFieldNamesState}
+        isLiked={isLikedState}
+        likeCount={likeCountState}
+        comments={commentsState}
+        commentCount={commentCountState}
+        showComments={true}
+        showDelete={isViewerPoster}
+        tags={tags}
+        postType={postTypeState}
       />
     </View>
   );

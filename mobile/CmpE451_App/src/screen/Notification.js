@@ -6,80 +6,36 @@ import {
 } from 'react-native-responsive-screen';
 import NotificationList from '../component/NotificationList';
 import UnderConstruction from '../component/UnderConstruction';
+import * as Request from '../services/BoxyClient';
 
 export default function Notification({navigation}) {
   const {container, headerBuble} = styles;
+  const [data, setData] = useState();
+  const [refreshing, setRefreshing] = useState(true);
+
+  async function getNotifications() {
+    const response = await Request.getNotifications();
+    setData(response?.data);
+    setRefreshing(false);
+  }
+  useEffect(() => {
+    getNotifications();
+  }, []);
+
+  function deleteNotification() {
+    console.log('@@@@@ deleted @@@@');
+  }
   return (
     <View style={container}>
-      {/* <Image source={{uri:"https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc"}} style={headerBuble} /> */}
-      <UnderConstruction pageName="NOTIFICATION" />
+      <NotificationList
+        data={data}
+        onRefresh={getNotifications}
+        refreshing={refreshing}
+        deleteNotification={deleteNotification}
+      />
     </View>
   );
 }
-
-const data = [
-  {
-    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
-    name: 'r/gaming',
-    timestamp: 1636156949000,
-    message: '2022 is shaping up to be good year for gaming',
-  },
-  {
-    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
-    name: 'Bümed',
-    timestamp: 1636156949000,
-    message: 'Bümed başarı bursları açıklandı',
-  },
-  {
-    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
-    name: 'r/gaming',
-    timestamp: 1636156949000,
-    message: '2022 is shaping up to be good year for gaming',
-  },
-  {
-    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
-    name: 'Bümed',
-    timestamp: 1636156949000,
-
-    message: 'Bümed başarı bursları açıklandı',
-  },
-  {
-    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
-    name: 'r/gaming',
-    timestamp: 1636156949000,
-    message: '2022 is shaping up to be good year for gaming',
-  },
-  {
-    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
-    name: 'Bümed',
-    timestamp: 1636156949000,
-    message: 'Bümed başarı bursları açıklandı',
-  },
-  {
-    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
-    name: 'r/gaming',
-    timestamp: 1636156949000,
-    message: '2022 is shaping up to be good year for gaming',
-  },
-  {
-    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
-    name: 'Bümed',
-    timestamp: 1636156949000,
-    message: 'Bümed başarı bursları açıklandı',
-  },
-  {
-    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
-    name: 'r/gaming',
-    timestamp: 1636156949000,
-    message: '2022 is shaping up to be good year for gaming',
-  },
-  {
-    uri: 'https://drive.google.com/uc?export=view&id=1kQCyEbaR4_n7TjEddltSnR1sld6xcoAc',
-    name: 'Bümed',
-    timestamp: 1636156949000,
-    message: 'Bümed başarı bursları açıklandı',
-  },
-];
 const styles = {
   container: {
     flex: 1,
