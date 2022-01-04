@@ -231,6 +231,12 @@ exports.followProfile = async ({ token, userId }) => {
         pendingFollowerCount: 1,
       },
     });
+    await UserACS.create({
+      summary: `${token.user.username} wants to follow ${user.username}`,
+      type: 'Request',
+      actor: token.user,
+      object: user,
+    });
   } else {
     user = await User.findByIdAndUpdate(
       user._id,
@@ -244,6 +250,12 @@ exports.followProfile = async ({ token, userId }) => {
       },
       { new: true }
     );
+    await UserACS.create({
+      summary: `${token.user.username} followed ${user.username}`,
+      type: 'Follow',
+      actor: token.user,
+      object: user,
+    });
   }
   return {
     ...formatters.formatOtherProfile(user, token.user),
@@ -359,10 +371,9 @@ exports.getNotifications = async ({ token }) => {
     }).lean()
   );
 
-  const comments = await Comment.find({ user: token.user._id });
   notifications = notifications.concat(
     await CommentACS.find({
-      object: { $in: comments },
+      'object.post': { $in: posts },
     }).lean()
   );
   notifications = notifications.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));

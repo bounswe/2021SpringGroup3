@@ -4,11 +4,10 @@ const { baseUtil } = require('../utils');
 const DEFAULT_PROFILE_PHOTO_URL = 'https://exoffender.org/wp-content/uploads/2016/09/empty-profile.png';
 
 const formatProfilePhotoUrl = (user, isFollowing = false) => {
-  let profilePhotoUrl = DEFAULT_PROFILE_PHOTO_URL;
-  if (user.profilePhotoUrl && (user.profilePhotoUrl.isPublic || isFollowing) && user.profilePhotoUrl.length > 0) {
-    profilePhotoUrl = user.profilePhotoUrl.value;
+  if (user.profilePhotoUrl && (user.profilePhotoUrl.isPublic || isFollowing) && user.profilePhotoUrl.value.length > 0) {
+    return user.profilePhotoUrl.value;
   }
-  return profilePhotoUrl;
+  return DEFAULT_PROFILE_PHOTO_URL;
 };
 
 const formatCreator = function (creator, isFollowing = false) {
@@ -18,6 +17,7 @@ const formatCreator = function (creator, isFollowing = false) {
       username: creator.username,
       profilePhotoUrl: formatProfilePhotoUrl(creator, isFollowing),
       isPrivate: creator.isPrivate || false,
+      followerCount: creator.followerCount
     };
   }
   return {
@@ -174,7 +174,7 @@ exports.formatOtherProfile = function (profile, user) {
     birthday: getValueFromProfileField(profile.birthday, isFollowing),
     location: getValueFromProfileField(profile.location, isFollowing),
     isPrivate: profile.isPrivate || false,
-    followerCount: user.followerCount,
+    followerCount: profile.followerCount,
     isFollowing,
   };
 };
