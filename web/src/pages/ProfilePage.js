@@ -37,7 +37,7 @@ function ProfilePage(props) {
         } else {
             GetProfilePageRequest({ token: loginState.token }, dispatch)
                 .then(result => {
-                    setResult({... result.data, location: {latitude: result.data.location.value.latitude, longitude: result.data.location.value.longitude }});
+                    setResult({... result.data, location: result.data.location.value ? {latitude: result.data.location.value.latitude, longitude: result.data.location.value.longitude } : {latitude: 29, longitude: 41 }});
                     setLatitude(result.data.location.latitude);
                     setLongitude(result.data.location.longitude);
                 });
