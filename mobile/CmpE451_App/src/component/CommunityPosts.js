@@ -38,7 +38,7 @@ export default function CommunityPosts() {
   function navigateToPost(postId, communityId) {
     PAGE_VARIABLES.postId = postId;
     PAGE_VARIABLES.communityId = communityId;
-    navigation.navigate('PostDetail', {isModerator: isModerator});
+    navigation.navigate('PostDetail', {isModerator: false});
   }
 
   useEffect(() => {
