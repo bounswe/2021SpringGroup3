@@ -1,8 +1,11 @@
+
+![BoxyHeadlineCat](https://user-images.githubusercontent.com/39625217/148060015-7cec8019-b0e1-4c36-b916-455ff061f513.png)
+
 # CMPE SWE 2021 Group 3
 This is the project repository of Group 3 from Software Engineering Course. 
 
 ## Our Project
-Our project aims to provide cumulative data flow about various range topics and fields that people desire to dive into. With our application, people will find the information they wish, in centralized community structures that they can create, join and follow.  
+Our project Boxy aims to provide cumulative data flow about various range topics and fields that people desire to dive into. With our application, people will find the information they wish, in centralized community structures that they can create, join and follow.  
 
 ## Team Members
 * [Kıymet Akdemir](https://github.com/bounswe/2021SpringGroup3/wiki/K%C4%B1ymet-Akdemir)
