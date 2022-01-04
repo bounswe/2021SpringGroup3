@@ -17,6 +17,7 @@ const formatCreator = function (creator, isFollowing = false) {
       username: creator.username,
       profilePhotoUrl: formatProfilePhotoUrl(creator, isFollowing),
       isPrivate: creator.isPrivate || false,
+      followerCount: creator.followerCount
     };
   }
   return {
