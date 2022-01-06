@@ -225,3 +225,25 @@ exports.formatNotification = function (notification, user) {
 exports.formatNotifications = function (notifications = [], user) {
   return notifications.map((notification) => exports.formatNotification(notification, user));
 };
+
+exports.formatACS = function (acs, user, object, target) {
+  if(target) {
+    return {
+      context: acs.context,
+      summary: acs.summary,
+      type: acs.type,
+      actor: user,
+      object: object,
+      target: target
+    };
+  }
+  else{
+    return {
+      context: acs.context,
+      summary: acs.summary,
+      type: acs.type,
+      actor: user,
+      object: object,
+    };
+  }
+};
