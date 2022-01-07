@@ -28,6 +28,9 @@
     },
     {
       "name": "Wikidata Controller"
+    },
+    {
+      "name": "Activity Stream Controller"
     }
   ],
   "paths": {
@@ -2517,6 +2520,164 @@
         }
       }
     },
+    "/profile/notification": {
+      "get": {
+        "tags": [
+          "Profile Controller"
+        ],
+        "description": "notifications of a user",
+        "operationId": "notifications of a user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ACSPreview"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/docs/acs/detail": {
+      "get": {
+        "tags": [
+          "Activity Stream Controller"
+        ],
+        "description": "Get latest Activity Streams. acsType can be one of -User, Community, Post, PostType, Comment-",
+        "operationId": "acsDetail",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "acsType",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "acsId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Given ACS object details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunityACS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/docs/acs": {
+      "get": {
+        "tags": [
+          "Activity Stream Controller"
+        ],
+        "description": "Get latest Activity Streams. acsType can be one of -User, Community, Post, PostType, Comment-. See other ACS models under the page",
+        "operationId": "acs",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Platform",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ANDROID",
+                "WEB"
+              ]
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "acsType",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Latest 10 Activity Stream with the given type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ACSPreview"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/wikidata": {
       "get": {
         "tags": [
@@ -3384,7 +3545,211 @@
             "example": "SI unit of length"
           }
         }
+      },
+      "UserACS": {
+        "title": "UserACS Model",
+        "type": "object",
+        "required": [
+          "context",
+          "summary",
+          "type",
+          "actor",
+          "object"
+        ],
+        "properties": {
+          "context": {
+            "type": "string",
+            "example": "https://www.w3.org/ns/activitystreams",
+          },
+          "summary": {
+            "type": "string",
+            "example": "Ufuk wants to follow Ahmet"
+          },
+          "type": {
+            "type": "string",
+            "example": "Request"
+          },
+          "actor": {
+            "type": "object",
+            "$ref": "#/components/schemas/UserPreview"
+          },
+          "object": {
+            "type": "object",
+            "$ref": "#/components/schemas/UserPreview"
+          }
+
+        }
+      },
+      "CommunityACS": {
+        "title": "CommunityAcs Model",
+        "type": "object",
+        "required": [
+          "context",
+          "summary",
+          "type",
+          "actor",
+          "object"
+        ],
+        "properties": {
+          "context": {
+            "type": "string",
+            "example": "https://www.w3.org/ns/activitystreams",
+          },
+          "summary": {
+            "type": "string",
+            "example": "Kaan removed Ufuk from the community History"
+          },
+          "type": {
+            "type": "string",
+            "example": "Remove"
+          },
+          "actor": {
+            "type": "object",
+            "$ref": "#/components/schemas/UserPreview"
+          },
+          "object": {
+            "type": "object",
+            "$ref": "#/components/schemas/CommunityDetail"
+          },
+          "target": {
+            "type": "object",
+            "$ref": "#/components/schemas/UserPreview"
+          }
+        }
+      },
+      "PostACS": {
+        "title": "PostACS Model",
+        "type": "object",
+        "required": [
+          "context",
+          "summary",
+          "type",
+          "actor",
+          "object"
+        ],
+        "properties": {
+          "context": {
+            "type": "string",
+            "example": "https://www.w3.org/ns/activitystreams",
+          },
+          "summary": {
+            "type": "string",
+            "example": "Ufuk likes a post"
+          },
+          "type": {
+            "type": "string",
+            "example": "Like"
+          },
+          "actor": {
+            "type": "object",
+            "$ref": "#/components/schemas/UserPreview"
+          },
+          "object": {
+            "type": "object",
+            "$ref": "#/components/schemas/Post"
+          }
+        }
+      },
+      "PostTypeACS": {
+        "title": "PostTypeACS Model",
+        "type": "object",
+        "required": [
+          "context",
+          "summary",
+          "type",
+          "actor",
+          "object"
+        ],
+        "properties": {
+          "context": {
+            "type": "string",
+            "example": "https://www.w3.org/ns/activitystreams",
+          },
+          "summary": {
+            "type": "string",
+            "example": "Ufuk created a post type"
+          },
+          "type": {
+            "type": "string",
+            "example": "Create"
+          },
+          "actor": {
+            "type": "object",
+            "$ref": "#/components/schemas/UserPreview"
+          },
+          "object": {
+            "type": "object",
+            "$ref": "#/components/schemas/PostType"
+          }
+        }
+      },
+      "CommentACS": {
+        "title": "CommentACS Model",
+        "type": "object",
+        "required": [
+          "context",
+          "summary",
+          "type",
+          "actor",
+          "object"
+        ],
+        "properties": {
+          "context": {
+            "type": "string",
+            "example": "https://www.w3.org/ns/activitystreams",
+          },
+          "summary": {
+            "type": "string",
+            "example": "Ufuk created a comment"
+          },
+          "type": {
+            "type": "string",
+            "example": "Request"
+          },
+          "actor": {
+            "type": "object",
+            "$ref": "#/components/schemas/UserPreview"
+          },
+          "object": {
+            "type": "object",
+            "$ref": "#/components/schemas/Comment"
+          }
+        }
+      },
+      "ACSPreview": {
+        "title": "ACS Preview Model",
+        "type": "object",
+        "required": [
+          "context",
+          "summary",
+          "type",
+          "actor",
+          "object"
+        ],
+        "properties": {
+          "context": {
+            "type": "string",
+            "example": "https://www.w3.org/ns/activitystreams",
+          },
+          "summary": {
+            "type": "string",
+            "example": "Sevde wants to join Community"
+          },
+          "type": {
+            "type": "string",
+            "example": "Request"
+          },
+          "actor": {
+            "type": "string",
+            "example": "user_id"
+          },
+          "object": {
+            "type": "string",
+            "example": "community_id"
+          }
+        }
       }
     }
   }
 }
+
