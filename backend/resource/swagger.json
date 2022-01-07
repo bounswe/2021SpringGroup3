@@ -3559,7 +3559,7 @@
         "properties": {
           "context": {
             "type": "string",
-            "example": "https://www.w3.org/ns/activitystreams",
+            "example": "https://www.w3.org/ns/activitystreams"
           },
           "summary": {
             "type": "string",
@@ -3577,7 +3577,6 @@
             "type": "object",
             "$ref": "#/components/schemas/UserPreview"
           }
-
         }
       },
       "CommunityACS": {
@@ -3593,7 +3592,7 @@
         "properties": {
           "context": {
             "type": "string",
-            "example": "https://www.w3.org/ns/activitystreams",
+            "example": "https://www.w3.org/ns/activitystreams"
           },
           "summary": {
             "type": "string",
@@ -3630,7 +3629,7 @@
         "properties": {
           "context": {
             "type": "string",
-            "example": "https://www.w3.org/ns/activitystreams",
+            "example": "https://www.w3.org/ns/activitystreams"
           },
           "summary": {
             "type": "string",
@@ -3663,7 +3662,7 @@
         "properties": {
           "context": {
             "type": "string",
-            "example": "https://www.w3.org/ns/activitystreams",
+            "example": "https://www.w3.org/ns/activitystreams"
           },
           "summary": {
             "type": "string",
@@ -3696,7 +3695,7 @@
         "properties": {
           "context": {
             "type": "string",
-            "example": "https://www.w3.org/ns/activitystreams",
+            "example": "https://www.w3.org/ns/activitystreams"
           },
           "summary": {
             "type": "string",
@@ -3729,7 +3728,7 @@
         "properties": {
           "context": {
             "type": "string",
-            "example": "https://www.w3.org/ns/activitystreams",
+            "example": "https://www.w3.org/ns/activitystreams"
           },
           "summary": {
             "type": "string",
@@ -3752,4 +3751,3 @@
     }
   }
 }
-
